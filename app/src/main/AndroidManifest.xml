@@ -10,14 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusLifeAssistantClient">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--注册登录Activity-->
+<!--        <activity android:name=".activity.LoginActivity"/>-->
     </application>
 
 </manifest>

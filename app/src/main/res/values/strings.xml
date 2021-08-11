@@ -7,4 +7,12 @@
         <item>大连市</item>
         <item>香港市</item>
     </string-array>
+    <string name="login_register_title">校园生活助手</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="forgetpassword">忘记密码?</string>
+    <string name="login">登\t\t\t\t\t录</string>
+    <string name="no_account">没有账号？去注册</string>
+    <string name="QQ">QQ快捷登录</string>
+    <string name="weChat">微信快捷登录</string>
 </resources>
