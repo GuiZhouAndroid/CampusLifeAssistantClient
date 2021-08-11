@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         btn.setText("Success!");
     }
 
-
 //    @OnLongClick(R2.id.btn)
 //    public void onViewOneLongClicked(){
 //        Toast.makeText(this, "我是单个Btn长按事件", Toast.LENGTH_SHORT).show();
