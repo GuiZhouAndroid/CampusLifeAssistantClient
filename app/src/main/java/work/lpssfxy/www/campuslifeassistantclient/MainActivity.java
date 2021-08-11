@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import work.lpssfxy.www.campuslifeassistantclient.utils.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R2.id.tv)
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R2.id.btn)
     public void onViewOneClicked(){
         Toast.makeText(this, "我是单个Btn点击事件", Toast.LENGTH_SHORT).show();
+        PermissionUtils.toAppSetting(this);
     }
 
     @OnClick({R2.id.btn,R2.id.tv})
