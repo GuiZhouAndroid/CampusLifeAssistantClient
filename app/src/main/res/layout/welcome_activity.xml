@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/fullscreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <!--圆形倒计时-->
+        <work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress
+            android:id="@+id/circleprogress"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            app:hintSize="10sp"
+            app:unitSize="15sp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp" />
+</RelativeLayout>

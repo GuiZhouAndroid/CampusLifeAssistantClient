@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient;
+package work.lpssfxy.www.campuslifeassistantclient.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
 
 public class myFragment extends Fragment {
     public Unbinder unbinder;//Fragment使用ButterKnife注解初始化用到的
