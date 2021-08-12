@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
-import work.lpssfxy.www.campuslifeassistantclient.utils.PermissionUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R2.id.tv)

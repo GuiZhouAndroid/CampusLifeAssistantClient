@@ -1,29 +1,18 @@
 package work.lpssfxy.www.campuslifeassistantclient.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import work.lpssfxy.www.campuslifeassistantclient.MainActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.base.BaseActivity;
-import work.lpssfxy.www.campuslifeassistantclient.utils.StatusBarUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 
 /**
  * created by on 2021/8/12
- * 描述：登录界面
+ * 描述：登录
  *
  * @author ZSAndroid
  * @create 2021-08-12-2:07
@@ -38,8 +27,10 @@ public class LoginActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);//设置状态栏颜色
-        StatusBarUtils.setStatusColor(getWindow(), ContextCompat.getColor(this, R.color.main_status_bar_blue),1f);
+        setContentView(R.layout.login_activity);
+        //设置状态栏颜色
+//        StatusBarUtils.setStatusColor(getWindow(), ContextCompat.getColor(this, R.color.main_status_bar_blue),1f);
+
         //点击登录
         tv_login=findViewById(R.id.tv_login);
         tv_login.setOnClickListener(this);

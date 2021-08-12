@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.utils;
+package work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils;
 
 import android.app.Activity;
 import android.content.Context;
