@@ -1,2 +1,2 @@
 # CampusLifeAssistantClient
-毕设App——校园生活助手
+毕设作品——Android客户端
