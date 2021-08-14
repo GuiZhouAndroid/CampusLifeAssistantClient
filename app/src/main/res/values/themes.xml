@@ -37,5 +37,16 @@
         <!-- Android 5.0+，设置状态栏全透明透明 -->
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
     </style>
+<!--QQ-->
+    <style name="Assist_Style" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="DemoMainActivity_Button_Style">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginTop">3dip</item>
+        <item name="android:layout_marginBottom">3dip</item>
+    </style>
 
 </resources>

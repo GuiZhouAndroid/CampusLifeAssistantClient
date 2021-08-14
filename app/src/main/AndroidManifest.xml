@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="work.lpssfxy.www.campuslifeassistantclient">
 
+    <!--访问网络连接,可能产生GPRS流量-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--获取网络信息状态,如当前的网络连接是否有效-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--改变WiFi状态-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!--获取当前WiFi接入的状态以及WLAN热点的信息-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--允许程序写入外部存储,如SD卡上写文件-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <!--Activity基类-->
         <activity
             android:name=".activity.BaseActivity"
@@ -30,6 +40,38 @@
             android:exported="true" />
         <!--主程序-->
         <activity android:name=".MainActivity" />
+
+
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="behind"
+            android:theme="@style/Assist_Style" />
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!--注意，这里的222222要换成app自己的appid-->
+                <data android:scheme="tencent101965703" />
+                <!-- 100380359 100381104 222222 -->
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:authorities="work.lpssfxy.www.campuslifeassistantclient.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>
