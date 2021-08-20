@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.activity;
+package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
 
 import static com.tencent.connect.common.Constants.KEY_ENABLE_SHOW_DOWNLOAD_URL;
 import static com.tencent.connect.common.Constants.KEY_QRCODE;
@@ -45,7 +45,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
+import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
 /**
@@ -283,15 +283,15 @@ public class LoginActivity extends BaseActivity{
         @Override
         public void onComplete(Object response) {
             if (null == response) {
-                Util.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
+                FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
                 return;
             }
             JSONObject jsonResponse = (JSONObject) response;
             if (jsonResponse.length() == 0) {
-                Util.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
+                FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
                 return;
             }
-            Util.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
+            FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
             // 有奖分享处理
             handlePrizeShare();
             doComplete((JSONObject)response);
@@ -303,14 +303,14 @@ public class LoginActivity extends BaseActivity{
 
         @Override
         public void onError(UiError e) {
-            Util.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
-            Util.dismissDialog();
+            FileCodeUtil.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
+            FileCodeUtil.dismissDialog();
         }
 
         @Override
         public void onCancel() {
-            Util.toastMessage(LoginActivity.this, "onCancel: ");
-            Util.dismissDialog();
+            FileCodeUtil.toastMessage(LoginActivity.this, "onCancel: ");
+            FileCodeUtil.dismissDialog();
             if (isServerSideLogin) {
                 isServerSideLogin = false;
             }
@@ -354,9 +354,9 @@ public class LoginActivity extends BaseActivity{
                             if(json.has("figureurl")){
                                 Bitmap bitmap = null;
                                 try {
-                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+                                    bitmap = FileCodeUtil.getbitmap(json.getString("figureurl_qq_2"));
                                 } catch (JSONException e) {
-                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
+                                    SLog.e(TAG, "FileCodeUtil.getBitmap() jsonException : " + e.getMessage());
                                 }
                                 Message msg = new Message();
                                 msg.obj = bitmap;

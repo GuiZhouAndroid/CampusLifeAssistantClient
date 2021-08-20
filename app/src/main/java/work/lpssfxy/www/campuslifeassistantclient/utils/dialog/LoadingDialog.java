@@ -1,6 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.utils.dialog;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Window;
@@ -27,7 +26,7 @@ public class LoadingDialog {
 	public static void showDialog(Context context){
 		dialog=new Dialog(context, R.style.dialog);
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.login_dialog);
+		dialog.setContentView(R.layout.login_dialog_item);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}

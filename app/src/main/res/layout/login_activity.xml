@@ -125,7 +125,7 @@
                 android:layout_height="40dp"
                 android:layout_marginBottom="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_20"
-                android:background="@drawable/btn_login_bg"
+                android:background="@drawable/login_btn_bg"
                 android:gravity="center"
                 android:text="@string/login"
                 android:textSize="@dimen/text_size_20"
@@ -208,13 +208,13 @@
                 <ImageView
                     android:id="@+id/iv_login_wx"
                     android:layout_weight="1"
-                    android:src="@drawable/wx_logo"
+                    android:src="@drawable/login_wx_logo"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
                 <ImageView
                     android:id="@+id/iv_login_qq"
                     android:layout_weight="1"
-                    android:src="@drawable/qq_logo"
+                    android:src="@drawable/login_qq_logo"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
 

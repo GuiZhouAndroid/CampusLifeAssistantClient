@@ -1,8 +1,6 @@
-package work.lpssfxy.www.campuslifeassistantclient;
+package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import butterknife.BindArray;
 import butterknife.BindBitmap;
@@ -19,8 +20,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionUtils;
 
+@SuppressLint("NonConstantResourceId")
 public class MainActivity extends AppCompatActivity {
     @BindView(R2.id.tv)
     TextView tv;//绑定TextView 控件
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.qwe);
+        setContentView(R.layout.main_activity);
         //初始化ButterKnife注解
         ButterKnife.bind(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.show,new Fragment()).commit();
@@ -45,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         btn.setTextColor(BtnTextColor);
         iv.setImageBitmap(bitmap);
     }
+
+
     @OnClick(R2.id.btn)
     public void onViewOneClicked(){
         Toast.makeText(this, "我是单个Btn点击事件", Toast.LENGTH_SHORT).show();

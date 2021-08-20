@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.activity;
+package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -31,7 +31,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置全局状态栏透明
-        setStatusBar();
+//        setStatusBar();
     }
 
     /**
