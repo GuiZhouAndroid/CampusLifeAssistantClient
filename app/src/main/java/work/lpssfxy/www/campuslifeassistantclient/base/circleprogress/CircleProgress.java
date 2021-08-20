@@ -97,13 +97,13 @@ public class CircleProgress extends View {
         //第二，第三文本字体大小
         mUnitSize = typedArray.getDimension(R.styleable.CircleProgressBar_unitSize, 20);
         //圆环粗细
-        mArcWidth = typedArray.getDimension(R.styleable.CircleProgressBar_arcWidth, 8);
+        mArcWidth = typedArray.getDimension(R.styleable.CircleProgressBar_arcWidth, 7);
         //圆圈背景
         mBgArcColor = typedArray.getColor(R.styleable.CircleProgressBar_bgArcColor, Color.WHITE);
         //圆圈中的内容边距
         mTextOffsetPercentInRadius = typedArray.getFloat(R.styleable.CircleProgressBar_textOffsetPercentInRadius, 0.45f);
         //开始运行倒计时
-        mCountdownTime = typedArray.getInteger(R.styleable.CircleProgressBar_countdownTime, 3);
+        mCountdownTime = typedArray.getInteger(R.styleable.CircleProgressBar_countdownTime, 5);
     }
     public void setAddCountDownListener(OnCountDownFinishListener mListener) {
         this.mListener = mListener;
