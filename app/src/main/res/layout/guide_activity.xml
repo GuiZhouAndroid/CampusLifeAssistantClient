@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_video_view_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.GuideActivity">
+    <!--圆形倒计时-->
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress
+        android:id="@+id/circleprogress"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/y30"
+        android:layout_marginEnd="@dimen/x24"
+        app:hintSize="@dimen/text_size_10"
+        app:unitSize="15sp" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView
+        android:id="@+id/Guide_Video_View"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="欢迎使用"
+        android:textColor="#fff"
+        android:textSize="50dp" />
+
+</RelativeLayout>

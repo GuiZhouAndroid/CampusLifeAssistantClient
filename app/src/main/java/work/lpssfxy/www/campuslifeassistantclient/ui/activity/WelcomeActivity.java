@@ -21,7 +21,6 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome_activity);
         //初始化View
         circleprogress = findViewById(R.id.circleprogress);
         //开始倒计时
@@ -35,5 +34,30 @@ public class WelcomeActivity extends BaseActivity {
                 overridePendingTransition(R.anim.anim_out, R.anim.anim_in);
             }
         });
+    }
+
+    @Override
+    public int bindLayout() {
+        return R.layout.welcome_activity;
+    }
+
+    @Override
+    protected void prepareData() {
+
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void initEvent() {
+
     }
 }

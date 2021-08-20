@@ -100,7 +100,7 @@ public class PermissionMgr {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + activity.getPackageName())); // 根据包名打开对应的设置界面
+                intent.setData(Uri.parse("package++:" + activity.getPackageName())); // 根据包名打开对应的设置界面
                 activity.startActivity(intent);
             }
         });

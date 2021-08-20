@@ -23,7 +23,7 @@
         android:theme="@style/TranslucentTheme">
         <!--欢迎页入口-->
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.activity.GuideActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -32,8 +32,10 @@
             </intent-filter>
         </activity>
         <!--Activity基类-->
+        <activity android:name=".ui.activity.MainActivity"/>
         <activity
             android:name=".ui.activity.BaseActivity"
+
             android:exported="true" />
         <!--注册登录Activity-->
         <activity

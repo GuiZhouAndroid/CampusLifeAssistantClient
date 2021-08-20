@@ -5,6 +5,7 @@ import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -44,7 +45,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
@@ -55,43 +58,63 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
  * @author ZSAndroid
  * @create 2021-08-12-2:07
  */
-public class LoginActivity extends BaseActivity{
-    private static final String TAG = LoginActivity.class.getName();
-    private TextView tv_login;
-    private TextView tv_go_register;
-    //微信
-    private ImageView iv_login_wx;
-    //QQ
-    private ImageView iv_login_qq;
+@SuppressLint("NonConstantResourceId")
+public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+
+    private static final String TAG = "LoginActivity";
+
+    @BindView(R2.id.iv_login_wx) ImageView iv_login_wx;//微信登录
+    @BindView(R2.id.iv_login_qq) ImageView iv_login_qq;//QQ登录
+    @BindView(R2.id.tv_go_register) TextView tv_go_register;//去注册
+    @BindView(R2.id.new_login_btn) Button mNewLoginButton;//按钮登录
+    @BindView(R2.id.ck_qr) CheckBox mQrCk; //二维码登录
+    @BindView(R2.id.check_oem_login) CheckBox mOEMLogin;//OEM登录
+    @BindView(R2.id.check_force_qr) CheckBox mCheckForceQr;//强制扫码登录
+    @BindView(R2.id.show_web_download_ui) CheckBox mShowWebDownloadUi;//显示扫码Web页下载链接
+    @BindView(R2.id.user_nickname) TextView mUserInfo;//用户姓名
+    @BindView(R2.id.user_logo) ImageView mUserLogo;//用户头像
+
+    private Button mServerSideLoginBtn;
     public static Tencent mTencent;
     private static boolean isServerSideLogin = false;
     private static Intent mPrizeIntent = null;
-    private Button mNewLoginButton;
-    private Button mServerSideLoginBtn;
-    private CheckBox mCheckForceQr;
 
-    private CheckBox mQrCk;
-    private CheckBox mOEMLogin;
-
-    private CheckBox mShowWebDownloadUi;
-
-    private TextView mUserInfo;
-    private ImageView mUserLogo;
-
+    /**
+     * 程序入口
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "-->onCreate开始");
-        setContentView(R.layout.login_activity);
-        initViews();
+    }
+    /**
+     * 绑定布局文件
+     *
+     * @return
+     */
+    @Override
+    public int bindLayout() {
+        return R.layout.login_activity;
+    }
+
+    /**
+     * 初始化SDK——QQ
+     */
+    @Override
+    protected void prepareData() {
+        Log.i(TAG, "-->onCreate结束+腾讯实例创建成功 ");
         mTencent = Tencent.createInstance("101965703", LoginActivity.this, "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
         if (mTencent == null) {
             SLog.e(TAG, "腾讯实例创建失败");
             finish();
         }
-        Log.i(TAG, "-->onCreate结束+腾讯实例创建成功 ");
-
+    }
+    /**
+     * 初始化View
+     */
+    @Override
+    protected void initView() {
         // 获取有奖分享的intent信息
         if (null != getIntent()) {
             mPrizeIntent = getIntent();
@@ -104,8 +127,8 @@ public class LoginActivity extends BaseActivity{
             Iterator<Map.Entry<String, String>> iter = params.entrySet().iterator();
 
             StringBuffer sBuf = new StringBuffer();
-            while(iter.hasNext()) {
-                Map.Entry<String, String> entry= iter.next();
+            while (iter.hasNext()) {
+                Map.Entry<String, String> entry = iter.next();
                 sBuf.append(entry.getKey() + "=" + entry.getValue()).append(" ");
             }
 
@@ -114,6 +137,31 @@ public class LoginActivity extends BaseActivity{
 
         PermissionMgr.getInstance().requestPermissions(this);
 
+        updateLoginButton();
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
+    }
+
+    /**
+     * 初始化监听事件
+     */
+    @Override
+    protected void initEvent() {
+        mNewLoginButton.setOnClickListener(this);
+//        mServerSideLoginBtn.setOnClickListener(this);
+        mQrCk.setOnClickListener(this);
+        mCheckForceQr.setOnCheckedChangeListener(this);
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (compoundButton.getId() == R.id.check_force_qr) {
+            mQrCk.setChecked(b);
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -160,50 +208,25 @@ public class LoginActivity extends BaseActivity{
         super.onDestroy();
     }
 
-    private void initViews() {
-        mNewLoginButton = (Button) findViewById(R.id.new_login_btn);
-        mNewLoginButton.setOnClickListener(this);
-
-        mServerSideLoginBtn = (Button) findViewById(R.id.server_side_login_btn);
-        mServerSideLoginBtn.setOnClickListener(this);
-
-        mQrCk = (CheckBox) findViewById(R.id.ck_qr);
-        mQrCk.setOnClickListener(this);
-
-        mCheckForceQr = (CheckBox) findViewById(R.id.check_force_qr);
-        mCheckForceQr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (compoundButton.getId() == R.id.check_force_qr) {
-                    mQrCk.setChecked(b);
-                }
-            }
-        });
-        mOEMLogin = (CheckBox)findViewById(R.id.check_oem_login);
-        mShowWebDownloadUi = (CheckBox)findViewById(R.id.show_web_download_ui);
-        mUserInfo = (TextView) findViewById(R.id.user_nickname);
-        mUserLogo = (ImageView) findViewById(R.id.user_logo);
-        updateLoginButton();
-    }
 
     private void updateLoginButton() {
         if (mTencent != null && mTencent.isSessionValid()) {
             if (isServerSideLogin) {
                 mNewLoginButton.setTextColor(Color.BLUE);
                 mNewLoginButton.setText("登录");
-                mServerSideLoginBtn.setTextColor(Color.RED);
-                mServerSideLoginBtn.setText("退出Server-Side账号");
+//                mServerSideLoginBtn.setTextColor(Color.RED);
+//                mServerSideLoginBtn.setText("退出Server-Side账号");
             } else {
                 mNewLoginButton.setTextColor(Color.RED);
                 mNewLoginButton.setText("退出帐号");
-                mServerSideLoginBtn.setTextColor(Color.BLUE);
-                mServerSideLoginBtn.setText("Server-Side登录");
+//                mServerSideLoginBtn.setTextColor(Color.BLUE);
+//                mServerSideLoginBtn.setText("Server-Side登录");
             }
         } else {
             mNewLoginButton.setTextColor(Color.BLUE);
             mNewLoginButton.setText("登录");
-            mServerSideLoginBtn.setTextColor(Color.BLUE);
-            mServerSideLoginBtn.setText("Server-Side登录");
+//            mServerSideLoginBtn.setTextColor(Color.BLUE);
+//            mServerSideLoginBtn.setText("Server-Side登录");
         }
     }
 
@@ -213,11 +236,11 @@ public class LoginActivity extends BaseActivity{
         Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
         Class<?> cls = null;
         boolean isAppbar = false;
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.new_login_btn:
-            onClickLogin();
-            view.startAnimation(shake);
-            break;
+                onClickLogin();
+                view.startAnimation(shake);
+                break;
 
         }
         view.startAnimation(shake);
@@ -230,19 +253,19 @@ public class LoginActivity extends BaseActivity{
             }
         }
     }
+
     private void onClickLogin() {
         if (!mTencent.isSessionValid()) {
             // 强制扫码登录
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
 
             if (mOEMLogin.isChecked()) {
-                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144","10000144","xxxx");
+                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144", "10000144", "xxxx");
             } else {
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                     params.put(KEY_RESTORE_LANDSCAPE, true);
                 }
-
 
                 params.put(KEY_SCOPE, "all");
                 params.put(KEY_QRCODE, mQrCk.isChecked());
@@ -278,6 +301,7 @@ public class LoginActivity extends BaseActivity{
         }
     };
 
+
     private class BaseUiListener extends DefaultUiListener {
 
         @Override
@@ -294,7 +318,7 @@ public class LoginActivity extends BaseActivity{
             FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
             // 有奖分享处理
             handlePrizeShare();
-            doComplete((JSONObject)response);
+            doComplete((JSONObject) response);
         }
 
         protected void doComplete(JSONObject values) {
@@ -327,7 +351,7 @@ public class LoginActivity extends BaseActivity{
                 mTencent.setAccessToken(token, expires);
                 mTencent.setOpenId(openId);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
     }
 
@@ -346,12 +370,12 @@ public class LoginActivity extends BaseActivity{
                     msg.obj = response;
                     msg.what = 0;
                     mHandler.sendMessage(msg);
-                    new Thread(){
+                    new Thread() {
 
                         @Override
                         public void run() {
-                            JSONObject json = (JSONObject)response;
-                            if(json.has("figureurl")){
+                            JSONObject json = (JSONObject) response;
+                            if (json.has("figureurl")) {
                                 Bitmap bitmap = null;
                                 try {
                                     bitmap = FileCodeUtil.getbitmap(json.getString("figureurl_qq_2"));
@@ -382,6 +406,7 @@ public class LoginActivity extends BaseActivity{
             mUserLogo.setVisibility(android.view.View.GONE);
         }
     }
+
     Handler mHandler = new Handler() {
 
         @Override
@@ -396,8 +421,8 @@ public class LoginActivity extends BaseActivity{
                         e.printStackTrace();
                     }
                 }
-            } else if(msg.what == 1){
-                Bitmap bitmap = (Bitmap)msg.obj;
+            } else if (msg.what == 1) {
+                Bitmap bitmap = (Bitmap) msg.obj;
                 mUserLogo.setImageBitmap(bitmap);
                 mUserLogo.setVisibility(android.view.View.VISIBLE);
             }
@@ -408,10 +433,10 @@ public class LoginActivity extends BaseActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "-->onActivityResult " + requestCode  + " resultCode=" + resultCode);
+        Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
         if (requestCode == Constants.REQUEST_LOGIN ||
                 requestCode == Constants.REQUEST_APPBAR) {
-            Tencent.onActivityResultData(requestCode,resultCode,data,loginListener);
+            Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

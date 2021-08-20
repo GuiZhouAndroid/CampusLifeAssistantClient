@@ -93,11 +93,11 @@ public class CircleProgress extends View {
         //第三文本字体显示
         mUnit = typedArray.getString(R.styleable.CircleProgressBar_unit);
         //第二，第三文本字体颜色
-        mUnitColor = typedArray.getColor(R.styleable.CircleProgressBar_unitColor, Color.BLACK);
+        mUnitColor = typedArray.getColor(R.styleable.CircleProgressBar_unitColor, Color.WHITE);
         //第二，第三文本字体大小
         mUnitSize = typedArray.getDimension(R.styleable.CircleProgressBar_unitSize, 20);
         //圆环粗细
-        mArcWidth = typedArray.getDimension(R.styleable.CircleProgressBar_arcWidth, 4);
+        mArcWidth = typedArray.getDimension(R.styleable.CircleProgressBar_arcWidth, 8);
         //圆圈背景
         mBgArcColor = typedArray.getColor(R.styleable.CircleProgressBar_bgArcColor, Color.WHITE);
         //圆圈中的内容边距
