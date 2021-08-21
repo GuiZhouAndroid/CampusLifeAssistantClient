@@ -26,6 +26,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     //Video播放器
     @BindView(R2.id.Guide_Video_View)
     GuideFullVideoView videoView;
+    //圆形倒计时
     @BindView(R2.id.circleprogress)
     CircleProgress circleprogress;
 
@@ -34,21 +35,32 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * 绑定布局
+     *
+     * @return
+     */
     @Override
     public int bindLayout() {
         return R.layout.guide_activity;
     }
 
+    /**
+     * 加载播放视频
+     */
     @Override
     protected void prepareData() {
+
         videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.guide_video));
     }
 
-
+    /**
+     * 初始化View
+     */
     @Override
     protected void initView() {
         circleprogress.startCountDown();//开始倒计时
-        circleprogress.bringToFront();
+        circleprogress.bringToFront();//：设置CircleProgress 优先级> GuideFullVideoView
     }
 
     /**
@@ -64,8 +76,8 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     protected void initEvent() {
-        videoView.setOnCompletionListener(this);
-        circleprogress.setAddCountDownListener(this);//设置倒计时
+        videoView.setOnCompletionListener(this);//监听视频播放
+        circleprogress.setAddCountDownListener(this);//监听倒计时
     }
 
     /**
@@ -75,30 +87,29 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        //
         videoView.start();
     }
 
     /**
-     * 倒计时结束
+     * 倒计时结束，跳转欢迎页
      */
     @Override
     public void countDownFinished() {
-        startActivity(new Intent(GuideActivity.this, MainActivity.class));
-        overridePendingTransition(R.anim.anim_out, R.anim.anim_in);
-        finish();
+        startActivity(new Intent(GuideActivity.this, WelcomeActivity.class)); //执行跳转
+        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);//跳转动画
+        finish();//跳转成功，结束当前Activity
     }
 
     /**
      * 播放视频
      */
     private void playVideoView() {
-
         videoView.start();
     }
 
+
     /**
-     * 返回重启加载
+     * 重启App加载播放
      */
     @Override
     protected void onRestart() {
@@ -107,12 +118,11 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
-     * 防止锁屏或者切出的时候，音乐在播放
+     * 锁屏或者切出时，播放的视频终止
      */
     @Override
     protected void onStop() {
         videoView.stopPlayback();
         super.onStop();
     }
-
 }

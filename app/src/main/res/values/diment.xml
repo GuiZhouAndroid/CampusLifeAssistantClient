@@ -161,4 +161,10 @@
     <dimen name="sp_22">22sp</dimen>
 
     <dimen name="sp_24">24sp</dimen>
+
+    <!--ViewPager欢迎页-->
+    <dimen name="welcome_fragment_padding_top">130dp</dimen>
+    <dimen name="welcome_fragment_margin_bottom">140dp</dimen>
+    <dimen name="welcome_activity_textpager_margin_top">60dp</dimen>
+    <dimen name="welcome_activity_textpager_height">70dp</dimen>
 </resources>

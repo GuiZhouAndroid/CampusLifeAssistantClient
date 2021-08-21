@@ -233,7 +233,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     @Override
     public void onClick(View view) {
         Context context = view.getContext();
-        Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
+        Animation shake = AnimationUtils.loadAnimation(context, R.anim.login_qq_shake);
         Class<?> cls = null;
         boolean isAppbar = false;
         switch (view.getId()) {

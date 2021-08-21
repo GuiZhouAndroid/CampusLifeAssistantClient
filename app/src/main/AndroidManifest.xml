@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/TranslucentTheme">
+        android:theme="@style/Theme.CampusLifeAssistantClient">
         <!--欢迎页入口-->
         <activity
             android:name=".ui.activity.GuideActivity"
@@ -31,49 +31,50 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--主程序-->
+        <activity
+            android:name=".ui.activity.WelcomeActivity"
+            android:exported="true" />
         <!--Activity基类-->
-        <activity android:name=".ui.activity.MainActivity"/>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.activity.BaseActivity"
-
             android:exported="true" />
         <!--注册登录Activity-->
         <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="true" />
-        <!--主程序-->
-        <activity android:name=".ui.activity.WelcomeActivity" />
-
-
+        <!--第三方QQ登录-->
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="behind"
             android:theme="@style/Assist_Style" />
-
         <activity
             android:name="com.tencent.tauth.AuthActivity"
+            android:exported="true"
             android:launchMode="singleTask"
-            android:noHistory="true"
-            android:exported="true">
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--注意，这里的222222要换成app自己的appid-->
+                <!--注意：tencent+appid-->
                 <data android:scheme="tencent101965703" />
-                <!-- 100380359 100381104 222222 -->
             </intent-filter>
         </activity>
-
+        <!--广播器-->
         <provider
-            android:authorities="work.lpssfxy.www.campuslifeassistantclient.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="work.lpssfxy.www.campuslifeassistantclient.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
