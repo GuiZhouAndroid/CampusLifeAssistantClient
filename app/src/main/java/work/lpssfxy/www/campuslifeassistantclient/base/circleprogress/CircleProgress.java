@@ -103,7 +103,7 @@ public class CircleProgress extends View {
         //圆圈中的内容边距
         mTextOffsetPercentInRadius = typedArray.getFloat(R.styleable.CircleProgressBar_textOffsetPercentInRadius, 0.45f);
         //开始运行倒计时
-        mCountdownTime = typedArray.getInteger(R.styleable.CircleProgressBar_countdownTime, 5);
+        mCountdownTime = typedArray.getInteger(R.styleable.CircleProgressBar_countdownTime, 3);
     }
     public void setAddCountDownListener(OnCountDownFinishListener mListener) {
         this.mListener = mListener;
