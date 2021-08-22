@@ -1,7 +1,10 @@
 package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,9 +33,55 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     @BindView(R2.id.circleprogress)
     CircleProgress circleprogress;
 
+    /**
+     * 关闭滑动返回
+     *
+     * @return false:右滑返回失效
+     */
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected Boolean isSetSwipeBackLayout() {
+        return false;
+    }
+
+    /**
+     * 关闭沉浸状态栏
+     *
+     * @return true:顶部状态栏全透明 false:顶部状态栏半透明
+     */
+    @Override
+    protected Boolean isSetStatusBarState() {
+        return false;
+    }
+
+    /**
+     * 关闭自动隐藏底部导航栏
+     * 须知：true时，必须关闭沉浸状态栏，false:必须开启沉浸式状态栏
+     *
+     * @return true:隐藏顶部状态栏+挤压底部导航栏 false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationState() {
+        return false;
+    }
+
+    /**
+     * 开启设置底部导航栏黑色半透明
+     * 此页面为视频全屏沉浸，已设置开启全屏沉浸FullScreen，因此此处设置true或false没有影响
+     * @return true:底部导航栏白色 false:底部导航栏黑色半透明
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationColor() {
+        return false;
+    }
+
+    /**
+     * 开启全屏沉浸
+     *
+     * @return true:顶部状态栏隐藏+底部导航栏隐藏  false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetImmersiveFullScreen() {
+        return true;
     }
 
     /**
@@ -61,6 +110,8 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     protected void initView() {
         circleprogress.startCountDown();//开始倒计时
         circleprogress.bringToFront();//：设置CircleProgress 优先级> GuideFullVideoView
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
     }
 
     /**
@@ -95,9 +146,32 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     public void countDownFinished() {
-        startActivity(new Intent(GuideActivity.this, WelcomeActivity.class)); //执行跳转
-        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);//跳转动画
-        finish();//跳转成功，结束当前Activity
+        SharedPreferences preferences= getSharedPreferences("count", Context.MODE_PRIVATE); // 存在则打开它，否则创建新的Preferences
+        int count = preferences.getInt("count", 0); // 取出数据
+        /**
+         *如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
+         */
+        if (count == 0) {
+            Intent intent1 = new Intent();
+            intent1.setClass(GuideActivity.this, WelcomeActivity.class);
+            startActivity(intent1);
+            finish();
+        } else {
+            Intent intent2 = new Intent();
+            intent2.setClass(GuideActivity.this, MainActivity.class);
+            startActivity(intent2);
+            finish();
+        }
+        finish();
+        //实例化Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        //存入数据
+        editor.putInt("count", 1); // 存入数据
+        //提交修改
+        editor.commit();
+//        startActivity(new Intent(GuideActivity.this, WelcomeActivity.class)); //执行跳转
+//        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);//跳转动画
+//        finish();//跳转成功，结束当前Activity
     }
 
     /**

@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -32,36 +33,124 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     private Unbinder mUnbinder;
     /** 滑动返回 */
     private SwipeBackLayout mSwipeBackLayout;
-    /** 是否沉浸状态栏 */
-    private boolean setSteepStatusBar = true;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /** 初始化绑定布局 */
         setContentView(bindLayout());
+        /** 初始化滑动返回实例 */
         mSwipeBackLayout = getSwipeBackLayout();
-        //初始化ButterKnife注解
+        /** 初始化ButterKnife实例 */
         mUnbinder = ButterKnife.bind(this);
 
-        if (setSteepStatusBar){
-            StatusBarUtils.setStatusTransparent(this);
-        }
-
-        //设置全局状态栏透明
-
-        // 准备数据
-        prepareData();
-        // 初始化标题栏
-//        initToolbar();
-        // 初始化视图
+        /** 初始化滑动返回 */
+        initSwipeBackLayoutState(isSetSwipeBackLayout());
+        /** 初始化沉浸式状态栏 */
+        initImmersiveStatusBar(isSetStatusBarState());
+        /** 初始化底部导航栏 */
+        initImmersiveBottomNaCation(isSetBottomNaviCationState());
+        /** 初始化底部导航栏颜色 */
+        initBottomNaCationColor(isSetBottomNaviCationColor());
+        /** 初始化全屏沉浸 */
+        initImmersiveFullScreen(isSetImmersiveFullScreen());
+        /** 初始化准备数据 */
+        prepareData();//
+        /** 初始化标题栏 */
+        //initToolbar();
+        /** 初始化视图 */
         initView();
-        // 初始化数据
+        /** 初始化数据 */
         initData(savedInstanceState);
-        // 初始化事件监听
+        /** 初始化监听事件 */
         initEvent();
     }
+    /**
+     * @return 是否滑动返回
+     */
+    protected abstract Boolean isSetSwipeBackLayout();
+    /**
+     * 初始化滑动返回
+     *
+     * @return true:开启滑动返回 false:关闭滑动返回
+     */
+    public void initSwipeBackLayoutState(Boolean state) {
+        if (state) {
+            mSwipeBackLayout.setEnableGesture(true);
+        }else {
+            mSwipeBackLayout.setEnableGesture(false);
+        }
+    }
+    /**
+     * @return 是否沉浸状态栏
+     */
+    protected abstract Boolean isSetStatusBarState();
 
+    /**
+     * 初始化沉浸式状态栏
+     *
+     * @return true:开启沉浸状态栏 false:开启半透明状态栏
+     */
+    public void initImmersiveStatusBar(Boolean state) {
+        if (state) {
+            StatusBarUtils.setStatusTransparent(this);
+        }else {
+            StatusBarUtils.setStatusTranslucent(this);
+        }
+    }
+
+    /**
+     * @return 是否自动固定隐藏底部导航栏
+     */
+    protected abstract Boolean isSetBottomNaviCationState();
+
+    /**
+     * 初始化底部导航栏
+     *
+     * @return true:开启自动固定隐藏底部导航栏
+     */
+    public void initImmersiveBottomNaCation(Boolean state) {
+        if (state) {
+            StatusBarUtils.setAutoFixHideNaviCation(this);//触屏有效
+        }else {
+            Log.i(TAG, "固定隐藏底部导航栏--->返回值不正确！！！");
+        }
+    }
+
+    /**
+     * @return 是否默认底部导航栏White颜色
+     */
+    protected abstract Boolean isSetBottomNaviCationColor();
+
+    /**
+     * 初始化底部导航栏White颜色,关闭时默认半透明状态
+     *
+     * @return true:开启底部导航白色无透明 false:开启底部导航黑色半透明
+     */
+    public void initBottomNaCationColor(Boolean state) {
+        if (state) {
+            StatusBarUtils.setBottomNavigationSingleColor(this, R.color.white);
+        }else {
+            StatusBarUtils.setBottomNavigationTranslucent(this);
+        }
+    }
+    /**
+     * @return 是否全屏沉浸：顶部状态栏透明+底部导航栏透明
+     */
+    protected abstract Boolean isSetImmersiveFullScreen();
+
+    /**
+     * 初始化全屏沉浸
+     *
+     * @return true:全屏沉浸
+     */
+    public void initImmersiveFullScreen(Boolean state) {
+        if (state) {
+            StatusBarUtils.fullScreen(this);
+        }else {
+            Log.i(TAG, "全屏沉浸失败--->返回值不正确！！！");
+        }
+    }
     /**
      * 绑定子类布局
      *
@@ -153,15 +242,15 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
      *
      * @param hasFocus
      */
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            getWindow().getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//        }
+//    }
 
     /**
      * 隐藏键盘

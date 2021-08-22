@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
+import work.lpssfxy.www.campuslifeassistantclient.R;
+
 /**
  * created by on 2021/8/22
  * 描述：沉浸式工具类
@@ -247,6 +249,16 @@ public class StatusBarUtils {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             activity.getWindow().setStatusBarColor(mixtureColor(color, alpha));
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        }
+    }
+
+    /**
+     * API 21-Android 5.0
+     * 设置底部导航栏单一纯色
+     */
+    public static void setBottomNavigationSingleColor(Activity activity,int color){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setNavigationBarColor(activity.getResources().getColor(color));
         }
     }
 

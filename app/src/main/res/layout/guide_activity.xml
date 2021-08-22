@@ -10,13 +10,13 @@
 
     <work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress
         android:id="@+id/circleprogress"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="@dimen/dp_45"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/y30"
-        android:layout_marginEnd="@dimen/x24"
+        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginEnd="@dimen/dp_25"
         app:hintSize="@dimen/text_size_10"
-        app:unitSize="15sp" />
+        app:unitSize="@dimen/sp_15" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView
         android:id="@+id/Guide_Video_View"
@@ -29,10 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/dp_50"
         android:gravity="center"
         android:text="欢迎使用"
         android:textColor="#fff"
-        android:textSize="50dp" />
+        android:textSize="@dimen/sp_50" />
 
 </RelativeLayout>

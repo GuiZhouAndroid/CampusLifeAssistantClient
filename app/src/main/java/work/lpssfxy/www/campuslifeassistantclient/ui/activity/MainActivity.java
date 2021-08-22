@@ -51,26 +51,96 @@ public class MainActivity extends BaseActivity {
         iv.setImageBitmap(bitmap);
     }
 
+    /**
+     * 关闭滑动返回
+     *
+     * @return false:右滑返回失效
+     */
+    @Override
+    protected Boolean isSetSwipeBackLayout() {
+        return false;
+    }
+
+    /**
+     * 开启沉浸状态栏
+     *
+     * @return true:顶部状态栏全透明 false:顶部状态栏半透明
+     */
+    @Override
+    protected Boolean isSetStatusBarState() {
+        return true;
+    }
+
+    /**
+     * 关闭自动隐藏底部导航栏
+     * 须知：true时，必须关闭沉浸状态栏，false:必须开启沉浸式状态栏
+     *
+     * @return true:隐藏顶部状态栏+挤压底部导航栏 false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationState() {
+        return false;
+    }
+
+    /**
+     * 开启设置底部导航栏白色
+     *
+     * @return true:底部导航栏白色 false:底部导航栏黑色半透明
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationColor() {
+        return true;
+    }
+
+    /**
+     * 关闭全屏沉浸
+     *
+     * @return true:顶部状态栏隐藏+底部导航栏隐藏  false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetImmersiveFullScreen() {
+        return false;
+    }
+
+    /**
+     * 绑定布局
+     *
+     * @return
+     */
     @Override
     public int bindLayout() {
         return R.layout.main_activity;
     }
 
+    /**
+     * 准备数据
+     */
     @Override
     protected void prepareData() {
 
     }
 
+    /**
+     * 初始化View
+     */
     @Override
     protected void initView() {
 
     }
 
+    /**
+     * 初始化数据
+     *
+     * @param savedInstanceState 界面非正常销毁时保存的数据
+     */
     @Override
     protected void initData(Bundle savedInstanceState) {
 
     }
 
+    /**
+     * 初始化事件
+     */
     @Override
     protected void initEvent() {
 

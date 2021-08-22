@@ -9,7 +9,47 @@ import android.os.Bundle;
  * @author ZSAndroid
  * @create 2021-08-18-15:55
  */
-public class IndexActivity extends BaseActivity{
+public class IndexActivity extends BaseActivity {
+
+    /**
+     * 开启滑动返回
+     *
+     * @return
+     */
+    @Override
+    protected Boolean isSetSwipeBackLayout() {
+        return true;
+    }
+
+    /**
+     * 开启沉浸状态栏
+     *
+     * @return
+     */
+    @Override
+    protected Boolean isSetStatusBarState() {
+        return false;
+    }
+
+    /**
+     * 开启自动隐藏底部导航栏
+     *
+     * @return
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationState() {
+        return false;
+    }
+
+    @Override
+    protected Boolean isSetBottomNaviCationColor() {
+        return null;
+    }
+
+    @Override
+    protected Boolean isSetImmersiveFullScreen() {
+        return null;
+    }
 
     @Override
     public int bindLayout() {

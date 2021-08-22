@@ -3,8 +3,11 @@ package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +32,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.MyFragmentPage
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.TextPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.FixedSpeedScroller;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.MyInterceptViewPager;
+import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
  * created by on 2021/8/13
@@ -71,9 +75,56 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
     int pageIndex = 0;//ViewPager当前索引标识
     private float startX, endX, startY, endY;//计算手势滑动坐标
 
+
+    /**
+     * 关闭滑动返回
+     *
+     * @return false:右滑返回失效
+     */
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected Boolean isSetSwipeBackLayout() {
+        return false;
+    }
+
+    /**
+     * 开启沉浸状态栏
+     *
+     * @return true:顶部状态栏全透明 false:顶部状态栏半透明
+     */
+    @Override
+    protected Boolean isSetStatusBarState() {
+        return true;
+    }
+
+    /**
+     * 关闭自动隐藏底部导航栏
+     * 须知：true时，必须关闭沉浸状态栏，false:必须开启沉浸式状态栏
+     *
+     * @return true:隐藏顶部状态栏+挤压底部导航栏 false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationState() {
+        return false;
+    }
+
+    /**
+     * 开启设置底部导航栏白色
+     *
+     * @return true:底部导航栏白色 false:底部导航栏黑色半透明
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationColor() {
+        return true;
+    }
+
+    /**
+     * 关闭全屏沉浸
+     *
+     * @return true:顶部状态栏隐藏+底部导航栏隐藏  false:log打印日志“返回值不正确”
+     */
+    @Override
+    protected Boolean isSetImmersiveFullScreen() {
+        return false;
     }
 
     /**
@@ -269,7 +320,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
                         main_text_pager.setCurrentItem(2, true);//文字滑动——跳转第三页
                     } else if (pageIndex == 2) { //第三页时——最后一页ViewPager滑动之后，跳转到主页面
                         startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                        //不finish()，用户进入主页面后，可能返回登录操作
+                        finish();
                     }
                 } else if (endX - startX >= (width / 8)) { // endX - startX   大于0 且大于宽的1/8 往前翻页(往右滑)
                     if (pageIndex == 2) { //第三页时，右滑动一次
@@ -296,4 +347,5 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
             MyApplication.AppContext = null;
         }
     }
+
 }

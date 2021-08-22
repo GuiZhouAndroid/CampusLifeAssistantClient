@@ -60,9 +60,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
  */
 @SuppressLint("NonConstantResourceId")
 public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-
     private static final String TAG = "LoginActivity";
-
     @BindView(R2.id.iv_login_wx) ImageView iv_login_wx;//微信登录
     @BindView(R2.id.iv_login_qq) ImageView iv_login_qq;//QQ登录
     @BindView(R2.id.tv_go_register) TextView tv_go_register;//去注册
@@ -80,14 +78,45 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     private static Intent mPrizeIntent = null;
 
     /**
-     * 程序入口
-     * @param savedInstanceState
+     * 开启滑动返回
+     *
+     * @return
      */
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected Boolean isSetSwipeBackLayout() {
+        return true;
     }
+
+    /**
+     * 开启沉浸状态栏
+     *
+     * @return
+     */
+    @Override
+    protected Boolean isSetStatusBarState() {
+        return false;
+    }
+
+    /**
+     * 开启自动隐藏底部导航栏
+     *
+     * @return
+     */
+    @Override
+    protected Boolean isSetBottomNaviCationState() {
+        return false;
+    }
+
+    @Override
+    protected Boolean isSetBottomNaviCationColor() {
+        return null;
+    }
+
+    @Override
+    protected Boolean isSetImmersiveFullScreen() {
+        return null;
+    }
+
     /**
      * 绑定布局文件
      *

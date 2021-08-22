@@ -20,10 +20,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CampusLifeAssistantClient">
-        <!--欢迎页入口-->
+        android:theme="@style/TranslucentTheme">
+        <!-- 注册今日头条适配方案库 -->
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="360"/>
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="640"/>
+        <!--程序主入口：你好同学-->
         <activity
-            android:name=".ui.activity.GuideActivity"
+            android:theme="@style/LaunchTheme"
+            android:name=".ui.activity.LaunchActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -31,6 +39,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--欢迎页入口-->
+
+
+        <activity
+            android:name=".ui.activity.GuideActivity"
+            android:exported="true" />
         <!--主程序-->
         <activity
             android:name=".ui.activity.WelcomeActivity"
