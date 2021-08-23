@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import static com.tencent.connect.common.Constants.KEY_ENABLE_SHOW_DOWNLOAD_URL;
 import static com.tencent.connect.common.Constants.KEY_QRCODE;
@@ -26,8 +26,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;

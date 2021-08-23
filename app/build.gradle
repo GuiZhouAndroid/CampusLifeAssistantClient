@@ -47,10 +47,20 @@ dependencies {
     //okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation  'com.squareup.okio:okio:2.8.0'
+    //Json解析
+    implementation 'com.google.code.gson:gson:2.8.8'
     //拦截器.
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     //滑动返回
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
     //今日头条适配库
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
+
+    //换肤框架
+    implementation 'skin.support:skin-support:4.0.5'                   // skin-support
+    implementation 'skin.support:skin-support-appcompat:4.0.5'         // skin-support 基础控件支持
+    implementation 'skin.support:skin-support-design:4.0.5'            // skin-support-design material design 控件支持[可选]
+    implementation 'skin.support:skin-support-cardview:4.0.5'          // skin-support-cardview CardView 控件支持[可选]
+    implementation 'skin.support:skin-support-constraint-layout:4.0.5' // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+    
 }

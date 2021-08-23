@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.fragment.welcome;
+package work.lpssfxy.www.campuslifeassistantclient.view.fragment.welcome;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.LazyLoadFragment;
-import work.lpssfxy.www.campuslifeassistantclient.ui.activity.WelcomeActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.WelcomeActivity;
 
 /**
  * created by on 2021/8/21

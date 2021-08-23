@@ -1,21 +1,24 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -27,8 +30,6 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBar
  */
 public abstract class BaseActivity extends SwipeBackActivity implements View.OnClickListener {
     private static final String TAG = "BaseActivity";
-    /** 防触碰使用的变量 */
-    private long firstTime;
     /** 解绑ButterKnife */
     private Unbinder mUnbinder;
     /** 滑动返回 */
@@ -193,14 +194,12 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     }
 
     /**
-     * 实现BaseView的showToast(CharSequence msg)
-     *
-     * @param msg 吐司显示的信息
+     * Toast提示信息
+     * @param s
      */
-    public void showToast(Activity activity, String msg) {
-        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    public static void showToast(String s) {
+        ToastUtil.showToast(s);
     }
-
 
     /**
      * 监听onClick单击事件
@@ -212,45 +211,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
 
     }
 
-    /**
-     * 防触碰处理
-     * 再按一次退出程序
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                long secondTime = System.currentTimeMillis();
-                if (secondTime - firstTime > 3000) {
-                    Toast.makeText(this, "再按一次退出程序！", Toast.LENGTH_SHORT).show();
-                    firstTime = secondTime;
-                    return true;
-                } else {
-                    System.exit(0);
-                }
-                break;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    /**
-     * 全屏沉浸隐藏底部导航栏
-     *
-     * @param hasFocus
-     */
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            getWindow().getDecorView().setSystemUiVisibility(
-//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-//        }
-//    }
 
     /**
      * 隐藏键盘
@@ -263,4 +223,58 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
+    /**
+     * Activity动画跳转过渡
+     * @param intent
+     */
+    public void startActivityAnimActivity(Intent intent) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);
+    }
+
+    /**
+     * 深入浅出：启动动画
+     *
+     * @param intent
+     */
+    public static void startActivityAnimInAndOut(Activity activity,Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.launch_anim_fade_in, R.anim.launch_anim_fade_out);
+    }
+    /**
+     * 左————>右：启动动画
+     *
+     * @param intent
+     */
+    public void startActivityAnim(Intent intent) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    /**
+     * 传值
+     * 左————>右：启动动画
+     * @param intent
+     * @param code
+     */
+    public void startActivityForResultAnim(Intent intent, int code) {
+        startActivityForResult(intent, code);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    /**
+     * 物理键返回上一页
+     * 右————>左：，启动动画
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+    }
+
+    @NonNull
+    @Override
+    public AppCompatDelegate getDelegate() {
+        return SkinAppCompatDelegateImpl.get(this, this);
+    }
 }

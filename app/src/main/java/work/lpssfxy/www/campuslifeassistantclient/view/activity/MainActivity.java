@@ -1,8 +1,13 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.SwitchPreference;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,12 +23,14 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import skin.support.SkinCompatManager;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionUtils;
 
 @SuppressLint("NonConstantResourceId")
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity{
     @BindView(R2.id.tv)
     TextView tv;//绑定TextView 控件
     @BindView(R2.id.btn)
@@ -40,7 +47,11 @@ public class MainActivity extends BaseActivity {
     Bitmap bitmap;//绑定资源文件中mipmap中的ic_launcher图片
     @BindColor(R2.color.purple_200)
     int BtnTextColor;
+    /** 防触碰使用的变量 */
+    private long firstTime;
 
+    private ListPreference mTheme;
+    private SwitchPreference mSpDayLight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +136,6 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     protected void initView() {
-
     }
 
     /**
@@ -135,7 +145,22 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
+//        //自动夜间模式
+//        boolean isAutoDayLight = SharePreferenceUtil.getInstance().getBoolean(getString(R.string.pref_auto_day_light), false);
+//        if (isAutoDayLight) {
+//            mSpAutoDayLight.setChecked(true);
+//            mSpAutoDayLight.setSummaryOn(SharePreferenceUtil.getInstance().optString(getString(R.string.summary_auto_day_light)));
+//            mSpDayLight.setChecked(true);
+//        } else {
+//            mSpAutoDayLight.setChecked(false);
+//        }
 
+        //皮肤选择
+        String skin = (String) SharePreferenceUtil.getInstance().optString("skin_cn");
+        if (!TextUtils.isEmpty(skin)) {
+            mTheme.setSummary(skin);
+            mTheme.setValue(skin);
+        }
     }
 
     /**
@@ -186,4 +211,30 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 防触碰处理
+     * 再按一次退出程序
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 3000) {
+                    BaseActivity.showToast("再按一次退出程序！");
+                    firstTime = secondTime;
+                    return true;
+                } else {
+                    System.exit(0);
+                }
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
 }

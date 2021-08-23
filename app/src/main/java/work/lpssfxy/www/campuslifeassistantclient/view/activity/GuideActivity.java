@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,8 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
+import android.view.KeyEvent;
 
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
@@ -26,12 +25,14 @@ import work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView;
  */
 @SuppressLint("NonConstantResourceId")
 public class GuideActivity extends BaseActivity implements MediaPlayer.OnCompletionListener, CircleProgress.OnCountDownFinishListener {
-    //Video播放器
+    /** Video播放器 */
     @BindView(R2.id.Guide_Video_View)
     GuideFullVideoView videoView;
-    //圆形倒计时
+    /** 圆形倒计时 */
     @BindView(R2.id.circleprogress)
     CircleProgress circleprogress;
+    /** 防触碰使用的变量 */
+    private long firstTime;
 
     /**
      * 关闭滑动返回
@@ -152,15 +153,9 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
          *如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
          */
         if (count == 0) {
-            Intent intent1 = new Intent();
-            intent1.setClass(GuideActivity.this, WelcomeActivity.class);
-            startActivity(intent1);
-            finish();
+            startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
         } else {
-            Intent intent2 = new Intent();
-            intent2.setClass(GuideActivity.this, MainActivity.class);
-            startActivity(intent2);
-            finish();
+            startActivityAnimActivity(new Intent(GuideActivity.this, MainActivity.class));
         }
         finish();
         //实例化Editor对象
@@ -168,10 +163,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         //存入数据
         editor.putInt("count", 1); // 存入数据
         //提交修改
-        editor.commit();
-//        startActivity(new Intent(GuideActivity.this, WelcomeActivity.class)); //执行跳转
-//        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);//跳转动画
-//        finish();//跳转成功，结束当前Activity
+        editor.apply();
     }
 
     /**
@@ -199,4 +191,42 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         videoView.stopPlayback();
         super.onStop();
     }
+
+    /**
+     * 屏蔽物理返回按钮
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+//    /**
+//     * 防触碰处理
+//     * 再按一次退出程序
+//     *
+//     * @param keyCode
+//     * @param event
+//     * @return
+//     */
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent event) {
+//        switch (keyCode) {
+//            case KeyEvent.KEYCODE_BACK:
+//                long secondTime = System.currentTimeMillis();
+//                if (secondTime - firstTime > 3000) {
+//                    Toast.makeText(this, "再按一次退出程序！", Toast.LENGTH_SHORT).show();
+//                    firstTime = secondTime;
+//                    return true;
+//                } else {
+//                    System.exit(0);
+//                }
+//                break;
+//        }
+//        return super.onKeyUp(keyCode, event);
+//    }
 }

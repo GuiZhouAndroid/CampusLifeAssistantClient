@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.fragment.welcome;
+package work.lpssfxy.www.campuslifeassistantclient.view.fragment.welcome;
 
 import android.os.Bundle;
 import android.widget.ImageView;

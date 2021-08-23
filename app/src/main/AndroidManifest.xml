@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -31,7 +31,7 @@
         <!--程序主入口：你好同学-->
         <activity
             android:theme="@style/LaunchTheme"
-            android:name=".ui.activity.LaunchActivity"
+            android:name=".view.activity.LaunchActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -43,22 +43,22 @@
 
 
         <activity
-            android:name=".ui.activity.GuideActivity"
+            android:name=".view.activity.GuideActivity"
             android:exported="true" />
         <!--主程序-->
         <activity
-            android:name=".ui.activity.WelcomeActivity"
+            android:name=".view.activity.WelcomeActivity"
             android:exported="true" />
         <!--Activity基类-->
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.activity.BaseActivity"
+            android:name=".view.activity.BaseActivity"
             android:exported="true" />
         <!--注册登录Activity-->
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name=".view.activity.LoginActivity"
             android:exported="true" />
         <!--第三方QQ登录-->
         <activity

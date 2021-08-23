@@ -5,7 +5,7 @@
     android:id="@+id/activity_video_view_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.GuideActivity">
+    tools:context=".view.activity.GuideActivity">
     <!--圆形倒计时-->
 
     <work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress

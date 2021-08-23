@@ -1,12 +1,9 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,45 +42,25 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(LaunchActivity.this, GuideActivity.class));
-                overridePendingTransition(R.anim.launch_fade_in, R.anim.launch_fade_out);
-                //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        finish();
-                    }
-                }, 1000);
+                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, GuideActivity.class));
+                finish();
             }
         }, 1000);
     }
 
     /**
-     * 防触碰处理
-     * 再按一次退出程序
-     *
+     * 屏蔽物理返回按钮
      * @param keyCode
      * @param event
      * @return
      */
     @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                long secondTime = System.currentTimeMillis();
-                if (secondTime - firstTime > 3000) {
-                    Toast.makeText(this, "再按一次退出程序！", Toast.LENGTH_SHORT).show();
-                    firstTime = secondTime;
-                    return true;
-                } else {
-                    System.exit(0);
-                }
-                break;
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            return true;
         }
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyDown(keyCode, event);
     }
-
     /**
      * 销毁线程
      * 清除Message和Runnable资源

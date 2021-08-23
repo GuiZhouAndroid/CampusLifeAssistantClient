@@ -1,14 +1,12 @@
-package work.lpssfxy.www.campuslifeassistantclient.ui.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import java.lang.reflect.Field;
@@ -25,14 +22,12 @@ import java.lang.reflect.Field;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.OnClick;
-import work.lpssfxy.www.campuslifeassistantclient.MyApplication;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.MyFragmentPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.TextPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.FixedSpeedScroller;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.MyInterceptViewPager;
-import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
  * created by on 2021/8/13
@@ -74,6 +69,9 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
     public static boolean SHOW_TWO_ANIM = true;//第二个界面是否展示动画：3->2时 2没展示动画效果
     int pageIndex = 0;//ViewPager当前索引标识
     private float startX, endX, startY, endY;//计算手势滑动坐标
+
+    /** 防触碰使用的变量 */
+    private long firstTime;
 
 
     /**
@@ -150,7 +148,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
      */
     @Override
     protected void initView() {
-        MyApplication.AppContext = WelcomeActivity.this;
+        //App.AppContext = WelcomeActivity.this;
     }
 
     /**
@@ -319,7 +317,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
                         main_image_pager.setCurrentItem(2, true);//图片动画——跳转第三页
                         main_text_pager.setCurrentItem(2, true);//文字滑动——跳转第三页
                     } else if (pageIndex == 2) { //第三页时——最后一页ViewPager滑动之后，跳转到主页面
-                        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                        startActivityAnim(new Intent(WelcomeActivity.this, MainActivity.class));
                         finish();
                     }
                 } else if (endX - startX >= (width / 8)) { // endX - startX   大于0 且大于宽的1/8 往前翻页(往右滑)
@@ -336,6 +334,31 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
         return true;
     }
 
+    /**
+     * 防触碰处理
+     * 再按一次退出程序
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 3000) {
+                    BaseActivity.showToast("再按一次退出程序！");
+                    firstTime = secondTime;
+                    return true;
+                } else {
+                    System.exit(0);
+                }
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
 
     /**
      * 销毁 WelcomeActivity时，全局变量赋null值
@@ -343,9 +366,9 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (MyApplication.AppContext != null) {
-            MyApplication.AppContext = null;
-        }
+//        if (App.AppContext != null) {
+//            App.AppContext = null;
+//        }
     }
 
 }
