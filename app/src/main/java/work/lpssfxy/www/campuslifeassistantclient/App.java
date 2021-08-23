@@ -32,9 +32,7 @@ public class App extends Application {
                 .setSkinStatusBarColorEnable(false)                     // 关闭状态栏换肤，默认打开[可选]
                 .setSkinWindowBackgroundEnable(false)                   // 关闭windowBackground换肤，默认打开[可选]
                 .loadSkin();
-
         OkHttpUtil.init(this);
-
     }
 
     @Override

@@ -1,9 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -15,6 +13,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress;
 import work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView;
+import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 
 /**
  * created by on 2021/8/21
@@ -147,23 +146,16 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     public void countDownFinished() {
-        SharedPreferences preferences= getSharedPreferences("count", Context.MODE_PRIVATE); // 存在则打开它，否则创建新的Preferences
-        int count = preferences.getInt("count", 0); // 取出数据
-        /**
-         *如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
-         */
+        int count = SharePreferenceUtil.getInstance().getInt("first",0); // 取出数据
+        //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
             startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
         } else {
-            startActivityAnimActivity(new Intent(GuideActivity.this, MainActivity.class));
+            startActivityAnimActivity(new Intent(GuideActivity.this, IndexActivity.class));
         }
         finish();
-        //实例化Editor对象
-        SharedPreferences.Editor editor = preferences.edit();
         //存入数据
-        editor.putInt("count", 1); // 存入数据
-        //提交修改
-        editor.apply();
+        SharePreferenceUtil.getInstance().putInt("first", 1); // 存入数据
     }
 
     /**

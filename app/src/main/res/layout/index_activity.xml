@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/fullscreen"
-    tools:context=".view.activity.MainActivity">
+    tools:context=".view.activity.IndexActivity">
     <LinearLayout
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"

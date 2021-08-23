@@ -62,5 +62,8 @@ dependencies {
     implementation 'skin.support:skin-support-design:4.0.5'            // skin-support-design material design 控件支持[可选]
     implementation 'skin.support:skin-support-cardview:4.0.5'          // skin-support-cardview CardView 控件支持[可选]
     implementation 'skin.support:skin-support-constraint-layout:4.0.5' // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+
+    //底部导航依赖的动画库
+    implementation 'com.airbnb.android:lottie:4.0.0'
     
 }

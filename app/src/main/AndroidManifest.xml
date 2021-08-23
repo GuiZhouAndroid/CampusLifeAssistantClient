@@ -51,7 +51,7 @@
             android:exported="true" />
         <!--Activity基类-->
         <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".view.activity.IndexActivity"
             android:exported="true" />
         <activity
             android:name=".view.activity.BaseActivity"
