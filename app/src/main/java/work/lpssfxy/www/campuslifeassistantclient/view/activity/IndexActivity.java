@@ -1,64 +1,66 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.SwitchPreference;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import butterknife.BindArray;
-import butterknife.BindBitmap;
-import butterknife.BindColor;
-import butterknife.BindString;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
+import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
+import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionUtils;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomShopFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class IndexActivity extends BaseActivity{
-    @BindView(R2.id.tv)
-    TextView tv;//绑定TextView 控件
-    @BindView(R2.id.btn)
-    Button btn;//绑定Button 控件
-    @BindView(R2.id.btn1)
-    Button btn1;//绑定Button 控件
-    @BindView(R2.id.iv)
-    ImageView iv;//绑定ImageView 控件
-    @BindString(R2.string.app_name)
-    String str;//绑定资源文件中string字符串
-    @BindArray(R2.array.city)
-    String[] strArray;//绑定资源文件中string字符串数组
-    @BindBitmap(R.mipmap.ic_launcher)
-    Bitmap bitmap;//绑定资源文件中mipmap中的ic_launcher图片
-    @BindColor(R2.color.purple_200)
-    int BtnTextColor;
+    //@BindArray(R2.array.city)
+    //String[] strArray;//绑定资源文件中string字符串数组
+    //@BindBitmap(R.mipmap.ic_launcher)
+    //Bitmap bitmap;//绑定资源文件中mipmap中的ic_launcher图片
+    //@BindColor(R2.color.purple_200)
+    private static final String TAG = "IndexActivity";
+    /** 定制Toolbar */
+    @BindView(R2.id.toolbar_constant) Toolbar mToolbar_constant;
+    /** 侧滑主体 */
+    @BindView(R2.id.drawer_layout) DrawerLayout mDrawer_layout;
+    /** 抽屉抽屉 */
+    @BindView(R2.id.nav_view) NavigationView mNav_view;
+    /** 悬浮按钮 */
+    @BindView(R2.id.floating_action_btn) FloatingActionButton mFloating_action_btn;
+    /** 绑定ViewPager */
+    @BindView(R2.id.vp_content) ViewPager mVp_content;
     /** 防触碰使用的变量 */
     private long firstTime;
+    /** 底部导航 */
+    @BindView(R2.id.bbl) BottomBarLayout mBbl;
+    /** 四个主功能Fragment界面 */
+    private Fragment[] fragments = null;
+    /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
+    List<Fragment> fragmentList = new ArrayList<>();
 
-    private ListPreference mTheme;
-    private SwitchPreference mSpDayLight;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportFragmentManager().beginTransaction().replace(R.id.show, new Fragment()).commit();
-        tv.setText(str);
-        btn.setText(strArray[1]);
-        btn.setTextColor(BtnTextColor);
-        iv.setImageBitmap(bitmap);
-    }
 
     /**
      * 关闭滑动返回
@@ -134,6 +136,9 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initView() {
+        setSupportActionBar(mToolbar_constant); //设置自定义Toolbar
+        //是否打开标题
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 
     /**
@@ -143,80 +148,107 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-//        //自动夜间模式
-//        boolean isAutoDayLight = SharePreferenceUtil.getInstance().getBoolean(getString(R.string.pref_auto_day_light), false);
-//        if (isAutoDayLight) {
-//            mSpAutoDayLight.setChecked(true);
-//            mSpAutoDayLight.setSummaryOn(SharePreferenceUtil.getInstance().optString(getString(R.string.summary_auto_day_light)));
-//            mSpDayLight.setChecked(true);
-//        } else {
-//            mSpAutoDayLight.setChecked(false);
-//        }
-
-        //皮肤选择
-        String skin = (String) SharePreferenceUtil.getInstance().optString("skin_cn");
-        if (!TextUtils.isEmpty(skin)) {
-            mTheme.setSummary(skin);
-            mTheme.setValue(skin);
-        }
+        //创建Fragment类型的数组，适配ViewPager，添加四个功能页
+        fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
+        fragmentList.addAll(Arrays.asList(fragments));
     }
 
     /**
-     * 初始化事件
+     * 设置事件
      */
     @Override
     protected void initEvent() {
 
     }
 
-    @OnClick(R2.id.btn)
-    public void onViewOneClicked() {
-        Toast.makeText(this, "我是单个Btn点击事件", Toast.LENGTH_SHORT).show();
-        PermissionUtils.toAppSetting(this);
-    }
+    /**
+     * 开始监听
+     */
+    @Override
+    protected void initListener() {
+        //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
+        mVp_content.setAdapter(new MyAdapter(getSupportFragmentManager()));
+        //底部导航加载ViewPager
+        mBbl.setViewPager(mVp_content);
+        //position：底部导航索引，unreadNum：页签未读数
+        mBbl.setUnread(0, 20);//设置第一个页签的未读数为20,
+        mBbl.setUnread(1, 1001);//设置第二个页签的未读数
+        mBbl.showNotify(2);//设置第三个页签显示提示的小红点
+        mBbl.setMsg(3, "未登录");//设置第四个页签显示NEW提示文字
 
-    @OnClick({R2.id.btn, R2.id.tv})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btn:
-                Toast.makeText(this, "我是多个btn点击事件", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.tv:
-                Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
-                break;
+        mBbl.setOnItemSelectedListener(new BottomBarLayout.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final BottomBarItem bottomBarItem, int previousPosition, final int currentPosition) {
+                Log.i("MainActivity", "position: " + currentPosition);
+                if (currentPosition == 0) {
+                    //如果是第一个，即首页
+                    if (previousPosition == currentPosition) {
+                        bottomBarItem.setSelectedIcon(R.mipmap.tab_loading);//更换成加载图标
+                    }
+                }
+            }
+        });
+    }
+    class MyAdapter extends FragmentStatePagerAdapter {
+
+        public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
         }
     }
 
-    //多个控件对应公共事件
-    @OnClick({R2.id.btn, R2.id.btn1})
-    public void sayHi(Button btn) {
-        btn.setText("Success!");
+    @OnClick(R2.id.floating_action_btn)
+    public void onViewOneClicked() {
+        Snackbar.make(mFloating_action_btn, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
     }
+
+//    @OnClick({R2.id.btn, R2.id.tv})
+//    public void onViewClicked(View view) {
+//        switch (view.getId()) {
+////            case R.id.btn:
+////                Toast.makeText(this, "我是多个btn点击事件", Toast.LENGTH_SHORT).show();
+////                break;
+////            case R.id.tv:
+////                Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
+////                break;
+//        }
+//    }
+
+    //多个控件对应公共事件
+//    @OnClick({R2.id.btn, R2.id.btn1})
+//    public void sayHi(Button btn) {
+//        btn.setText("Success!");
+//    }
 
 //    @OnLongClick(R2.id.btn)
 //    public void onViewOneLongClicked(){
 //        Toast.makeText(this, "我是单个Btn长按事件", Toast.LENGTH_SHORT).show();
 //    }
 
-    @OnLongClick({R2.id.btn, R2.id.tv})
-    public void onViewLongClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btn:
-                Toast.makeText(this, "我是多个长按Btn事件", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.tv:
-                Toast.makeText(this, "我是多个长按tv事件", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
+//    @OnLongClick({R2.id.btn, R2.id.tv})
+//    public void onViewLongClicked(View view) {
+//        switch (view.getId()) {
+////            case R.id.btn:
+////                Toast.makeText(this, "我是多个长按Btn事件", Toast.LENGTH_SHORT).show();
+////                break;
+////            case R.id.tv:
+////                Toast.makeText(this, "我是多个长按tv事件", Toast.LENGTH_SHORT).show();
+////                break;
+//        }
+//    }
 
     /**
      * 防触碰处理
      * 再按一次退出程序
-     *
-     * @param keyCode
-     * @param event
-     * @return
      */
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {

@@ -63,8 +63,10 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         initView();
         /** 初始化数据 */
         initData(savedInstanceState);
-        /** 初始化监听事件 */
+        /** 初始化事件 */
         initEvent();
+        /** 初始化监听 */
+        initListener();
     }
     /**
      * @return 是否滑动返回
@@ -177,10 +179,14 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     protected abstract void initData(Bundle savedInstanceState);
 
     /**
-     * 初始化事件监听，setOnClickListener等等
+     * 初始化事件，setOnClickListener等等
      */
     protected abstract void initEvent();
 
+    /**
+     * 初始化监听
+     */
+    protected abstract void initListener();
 
     /**
      * Activity销毁时清理资源

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<work.lpssfxy.www.campuslifeassistantclient.base.scrollview.MyNestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <!--内部只能有一个子元素,即不能并列两个子元素-->
+        <include layout="@layout/custom_index_fragment_homepage_nestedscrollview"/>
+</work.lpssfxy.www.campuslifeassistantclient.base.scrollview.MyNestedScrollView>

@@ -163,7 +163,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
     }
 
     /**
-     * 设置监听
+     * 设置事件
      */
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -173,6 +173,14 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
         main_image_pager.addOnPageChangeListener(this);//设置Fragment适配器监听器
         main_text_pager.addOnPageChangeListener(this);//设置文字适配器监听器
         main_touch_layout.setOnTouchListener(this);//设置手势滑动联动监听
+    }
+
+    /**
+     * 开始监听
+     */
+    @Override
+    protected void initListener() {
+
     }
 
     @Override

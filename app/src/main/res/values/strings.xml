@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CampusLifeAssistantClient</string>
+    <string name="app_name">校园生活助手</string>
     <string-array name="city">
         <item>北京市</item>
         <item>天津市</item>
@@ -24,4 +24,68 @@
     <string name="welcome_guid_text_three_title">精&#8197;选&#8197;视&#8197;频</string>
     <string name="welcome_guid_text_three_info">音&#8197;乐&#8197;热&#8197;点，娱&#8197;乐&#8197;资&#8197;讯&#8197;尽&#8197;收&#8197;眼&#8197;底</string>
 
+<!--    首页-->
+    <string name="click_user_image">点击头像登录</string>
+    <string name="signature">您还没有设置个性签名，点击头像设置</string>
+    <string name="drawer_menu_info_school">进入官网</string>
+    <string name="drawer_menu_see_calendar">查看日历</string>
+    <string name="drawer_menu_night_mode">夜间模式</string>
+    <string name="drawer_menu_about_author">关于作者</string>
+    <string name="drawer_menu_logout_title">退出登录</string>
+    <string name="drawer_menu_setting_title">软件设置</string>
+    <string name="bottom_tab_home">首页</string>
+    <string name="bottom_tab_video">视频</string>
+    <string name="bottom_tab_micro">微头条</string>
+    <string name="bottom_tab_me">我的</string>
+    <string name="bottom_tab_category">分类</string>
+    <string name="bottom_tab_cart">购物车</string>
+<!--behavior-->
+    <string name="scale_down_show_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.FloatingActionButton.ScaleDownShowBehavior</string>
+    <string name="bottom_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.BottomNavigation.BottomNavigationBehavior</string>
+
+    <string name="content">要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+作者：朋朋彭哥
+链接：https://www.jianshu.com/p/bbc703a0015e
+來源：简书
+        要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+作者：朋朋彭哥
+        要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+作者：朋朋彭哥
+        要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+作者：朋朋彭哥
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+
+作者：朋朋彭哥
+链接：https://www.jianshu.com/p/bbc703a0015e
+來源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。要实现这样的效果, 需要用到:
+CoordinatorLayout和AppbarLayout的配合, 以及实现了NestedScrollView的布局或控件.
+AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbarLayout则是专门用来实现子布局内不同元素响应滚动细节的布局.
+与AppbarLayout组合的滚动布局(RecyclerView, NestedScrollView等),需要设置 app:layout_behavior = "@string/appbar_scrolling_view_behavior" .没有设置的话, AppbarLayout将不会响应滚动布局的滚动事件.
+我们回到再前面一章"Toolbar的使用", 将布局改动如下:
+作者：朋朋彭哥
+链接：https://www.jianshu.com/p/bbc703a0015e
+來源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</string>
 </resources>

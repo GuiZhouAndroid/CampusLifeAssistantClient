@@ -149,7 +149,7 @@
 
     <!-- sp -->
 
-
+    <dimen name="sp_10">10sp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_13">13sp</dimen>
     <dimen name="sp_14">14sp</dimen>
@@ -168,4 +168,6 @@
     <dimen name="welcome_fragment_margin_bottom">140dp</dimen>
     <dimen name="welcome_activity_textpager_margin_top">60dp</dimen>
     <dimen name="welcome_activity_textpager_height">70dp</dimen>
+<!--首页-->
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

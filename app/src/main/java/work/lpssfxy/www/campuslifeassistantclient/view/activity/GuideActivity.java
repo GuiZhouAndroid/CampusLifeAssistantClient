@@ -123,12 +123,20 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
-     * 设置监听事件
+     * 设置事件
      */
     @Override
     protected void initEvent() {
         videoView.setOnCompletionListener(this);//监听视频播放
         circleprogress.setAddCountDownListener(this);//监听倒计时
+    }
+
+    /**
+     * 开始监听
+     */
+    @Override
+    protected void initListener() {
+
     }
 
     /**

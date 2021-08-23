@@ -30,7 +30,7 @@
     <color name="setting_text">#5b5d5c</color>
     <color name="delete_text">#336699</color>
     <color name="drawer_item_bg_p">#e8e8e8</color>
-    <color name="drawer_item_bg_n">#fffff9</color>
+
     <color name="item_author">@color/Grey700</color>
     <color name="item_desc">@color/Grey600</color>
     <color name="item_time">@color/Grey600</color>
@@ -90,4 +90,16 @@
     <color name="welcome_colorTextWhite">#fff1f2f3</color>
 
 
+<!--    侧滑抽屉-->
+    <color name="drawer_item_bg_n">#fffff9</color>
+
+<!--    底部导航-->
+    <color name="bbl_999999">#999999</color>
+    <color name="bbl_ff0000">#ff0000</color>
+    <color name="selector_grey">#DDDDDD</color>
+    <color name="tab_gb">#F3F5F4</color>
+    <color name="tab_normal_color">#515051</color>
+    <color name="tab_selected_color">#D33D3C</color>
+    <color name="unreadTextColor">#00ff00</color>
+    <color name="msgTextColor">#00ff00</color>
 </resources>

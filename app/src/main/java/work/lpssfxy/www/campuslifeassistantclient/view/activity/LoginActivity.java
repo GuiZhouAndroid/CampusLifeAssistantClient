@@ -173,7 +173,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     }
 
     /**
-     * 初始化监听事件
+     * 设置事件
      */
     @Override
     protected void initEvent() {
@@ -181,6 +181,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //        mServerSideLoginBtn.setOnClickListener(this);
         mQrCk.setOnClickListener(this);
         mCheckForceQr.setOnCheckedChangeListener(this);
+    }
+
+    /**
+     * 开始监听
+     */
+    @Override
+    protected void initListener() {
+
     }
 
 
