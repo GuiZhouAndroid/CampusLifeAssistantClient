@@ -60,7 +60,7 @@
     <!--CollapsingToolbarLayout结束主题-->
     <style name="CollTitleTextStartTheme" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">#FFD500</item>
-        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textSize">@dimen/sp_30</item>
     </style>
 
     <!--Tooblar弹出菜单主题-->

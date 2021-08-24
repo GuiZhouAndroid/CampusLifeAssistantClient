@@ -5,11 +5,7 @@
         android:icon="@drawable/ic_arrow_back_white_24dp"
         android:title="Search"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_notifications"
-        android:icon="@drawable/ic_arrow_back_white_24dp"
-        android:title="notifications"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
         android:icon="@mipmap/ic_launcher"
