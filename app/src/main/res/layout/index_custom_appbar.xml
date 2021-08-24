@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--默认折叠：app:expanded="false"-->
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appbar"
@@ -36,13 +37,13 @@
 
         <!--标题栏-->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/appbar_constant"
+            android:id="@+id/appbar_constant_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_80"
             android:minHeight="@dimen/dp_80"
             app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ToolbarPopupTheme">
             <!--用户头像-->
             <ImageView
                 android:id="@+id/index_iv_user_head"

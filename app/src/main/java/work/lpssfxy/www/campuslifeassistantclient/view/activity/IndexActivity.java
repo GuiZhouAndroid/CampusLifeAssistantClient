@@ -1,6 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -51,7 +53,7 @@ public class IndexActivity extends BaseActivity{
     //@BindColor(R2.color.purple_200)
     private static final String TAG = "IndexActivity";
     /** 定制Toolbar */
-    @BindView(R2.id.appbar_constant) Toolbar mAppbar_constant;
+    @BindView(R2.id.appbar_constant_toolbar) Toolbar mAppbar_constant_toolbar;
     /** 侧滑主体 */
     @BindView(R2.id.drawer_layout) DrawerLayout mDrawer_layout;
     /** 抽屉抽屉 */
@@ -66,9 +68,9 @@ public class IndexActivity extends BaseActivity{
     @BindView(R2.id.bbl) BottomBarLayout mBbl;
     @BindView(R2.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsing_toolbar_layout;
     /** 四个主功能Fragment界面 */
-    private Fragment[] fragments =null;
+    public Fragment[] fragments =null;
     /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
-    List<Fragment> fragmentList = new ArrayList<>();
+    public List<Fragment> fragmentList = new ArrayList<>();
 
 
     /**
@@ -137,7 +139,6 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void prepareData() {
-
     }
 
     /**
@@ -145,6 +146,22 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initView() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle("主标题");
+        } else {
+            Log.i(TAG, "onCreate: actionBar is null");
+        }
+        mAppbar_constant_toolbar.inflateMenu(R.menu.menu);
+        //点击左边返回按钮监听事件
+        mAppbar_constant_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(IndexActivity.this, "123", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -206,7 +223,7 @@ public class IndexActivity extends BaseActivity{
 
         /** 推动DrawerLayout主布局+隐藏布局 */
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer_layout, mAppbar_constant, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+                this, mDrawer_layout, mAppbar_constant_toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 //获取mDrawerLayout中的第一个子布局，也就是布局中的RelativeLayout
@@ -242,6 +259,7 @@ public class IndexActivity extends BaseActivity{
                 switch (item.getItemId()){
                     case R.id.drawer_menu_school:
                         Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        startActivityAnim(new Intent(IndexActivity.this,waimai.class));
                         mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_see_calendar:
@@ -349,4 +367,12 @@ public class IndexActivity extends BaseActivity{
         return super.onKeyUp(keyCode, event);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Toast.makeText(getApplicationContext(), "点击Home", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
 }

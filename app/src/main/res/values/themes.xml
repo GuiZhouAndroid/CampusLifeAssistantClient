@@ -15,34 +15,20 @@
     </style>
 
     <!--自定义Dialog-->
-    <style parent="@android:style/Theme.Dialog" name="dialog">
+    <style name="dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <!-- APP全透明沉浸式主题样式，提供item空属性，使用StatusBarUtils工具类 -->
+    <style name="AppMainTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-    <!-- 半透明 沉浸式主题样式 -->
-    <style name="TranslucentTheme1" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--半透明状态栏-->
-        <item name="android:windowTranslucentStatus">true</item>
-        <!--半透明导航栏-->
-        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <!-- 全透明 沉浸式主题样式 -->
-    <style name="TranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
-<!--        &lt;!&ndash; 设置状态栏半透明——解除注释 &ndash;&gt;-->
-<!--        <item name="android:windowTranslucentStatus">false</item>-->
-<!--        &lt;!&ndash; 设置底部导航栏半透明，默认false黑色，设置true半透明 &ndash;&gt;-->
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
-
-<!--        &lt;!&ndash; Android 5.0+，设置状态栏全透明透明 &ndash;&gt;-->
-<!--        <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>-->
-    </style>
-
-<!--QQ-->
+    <!--QQ-->
     <style name="Assist_Style" parent="@android:style/Theme.Translucent.NoTitleBar">
         <item name="android:windowIsTranslucent">false</item>
     </style>
+
     <style name="DemoMainActivity_Button_Style">
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/sp_17</item>
@@ -58,8 +44,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <!--浮动按钮-->
+    <!--index主页浮动按钮-->
     <style name="style_float_btn">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -76,5 +61,15 @@
     <style name="CollTitleTextStartTheme" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">#FFD500</item>
         <item name="android:textSize">@dimen/sp_20</item>
+    </style>
+
+    <!--Tooblar弹出菜单主题-->
+    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:colorBackground">#C60C0C</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
+    </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
     </style>
 </resources>

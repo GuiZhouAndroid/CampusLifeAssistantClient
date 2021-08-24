@@ -79,7 +79,10 @@ dependencies {
     implementation  'com.scwang.smart:refresh-footer-ball:2.0.3'        //球脉冲加载
     implementation  'com.scwang.smart:refresh-footer-classics:2.0.3'    //经典加载
     implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
-
+    //字体type
     implementation 'com.elmargomez.typer:typerlib:1.0.0'
+    //    //图片加载框架
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
 }

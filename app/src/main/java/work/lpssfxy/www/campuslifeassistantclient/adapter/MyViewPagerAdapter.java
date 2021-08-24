@@ -23,9 +23,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomSho
  */
 public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
     /** 四个主功能Fragment界面 */
-    private Fragment[] fragments =null;
+    public Fragment[] fragments =null;
     /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
-    private List<Fragment> fragmentList =null;
+    public List<Fragment> fragmentList =null;
 
     public MyViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
         super(fm);
