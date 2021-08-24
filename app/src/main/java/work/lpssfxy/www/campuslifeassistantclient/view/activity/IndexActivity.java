@@ -155,7 +155,7 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-        String str = "张松同学";
+        String str = "张松";
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragmentList.addAll(Arrays.asList(fragments));

@@ -4,51 +4,61 @@
     android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:background="@drawable/status_gradient"
     android:fitsSystemWindows="true">
-    <!--    app:collapsedTitleGravity="center"-->
+    <!--折叠布局-->
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         app:collapsedTitleTextAppearance="@style/CollTitleTextStartTheme"
+        app:expandedTitleGravity="left|bottom"
         app:expandedTitleTextAppearance="@style/CollTitleTextEndTheme"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:statusBarScrim="@android:color/transparent"
-        app:expandedTitleGravity="left|bottom"
         app:titleEnabled="true">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/top_bg"
-            app:layout_collapseMode="parallax" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/my_status_gradient"
-            android:fitsSystemWindows="true"
-            app:layout_collapseMode="pin" />
+        <!--折叠背景图-->
+<!--        <ImageView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:fitsSystemWindows="true"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/top_bg"-->
+<!--            app:layout_collapseMode="parallax" />-->
+        <!--边框阴影-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@drawable/my_status_gradient"-->
+<!--            android:fitsSystemWindows="true"-->
+<!--            app:layout_collapseMode="pin" />-->
+
+        <!--标题栏-->
         <androidx.appcompat.widget.Toolbar
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:id="@+id/appbar_constant"
-            app:layout_collapseMode="pin"
-            android:minHeight="@dimen/dp_80"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_80">
+            android:layout_height="@dimen/dp_80"
+            android:minHeight="@dimen/dp_80"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            <!--用户头像-->
             <ImageView
-                android:src="@mipmap/ic_launcher"
+                android:id="@+id/index_iv_user_head"
                 android:layout_width="@dimen/dp_50"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher" />
+            <!--下午好-->
             <TextView
-                android:textSize="@dimen/sp_20"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="下午好，"
+                android:id="@+id/index_tv_user_hello"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_80"/>
+                android:layout_height="@dimen/dp_80"
+                android:gravity="center"
+                android:text="下午好,"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_20"
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.CollapsingToolbarLayout>
 </com.google.android.material.appbar.AppBarLayout>

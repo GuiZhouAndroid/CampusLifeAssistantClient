@@ -68,13 +68,13 @@
 
     <!--CollapsingToolbarLayout开始主题-->
     <style name="CollTitleTextEndTheme">
-        <item name="android:textColor">@color/bbl_ff0000</item>
+        <item name="android:textColor">#00F65A</item>
         <item name="android:textSize">@dimen/sp_30</item>
     </style>
 
     <!--CollapsingToolbarLayout结束主题-->
     <style name="CollTitleTextStartTheme" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@color/bg_status_bar</item>
+        <item name="android:textColor">#FFD500</item>
         <item name="android:textSize">@dimen/sp_20</item>
     </style>
 </resources>
