@@ -58,7 +58,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
     </style>
 
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <!--浮动按钮-->
     <style name="style_float_btn">
         <item name="android:layout_width">wrap_content</item>
@@ -66,4 +66,15 @@
         <item name="android:layout_gravity">bottom|end</item>
     </style>
 
+    <!--CollapsingToolbarLayout开始主题-->
+    <style name="CollTitleTextEndTheme">
+        <item name="android:textColor">@color/bbl_ff0000</item>
+        <item name="android:textSize">@dimen/sp_30</item>
+    </style>
+
+    <!--CollapsingToolbarLayout结束主题-->
+    <style name="CollTitleTextStartTheme" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/bg_status_bar</item>
+        <item name="android:textSize">@dimen/sp_20</item>
+    </style>
 </resources>

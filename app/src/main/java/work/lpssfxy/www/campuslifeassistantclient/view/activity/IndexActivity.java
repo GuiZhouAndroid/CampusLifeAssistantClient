@@ -1,12 +1,17 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -14,6 +19,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.elmargomez.typer.Font;
+import com.elmargomez.typer.Typer;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,9 +34,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
-import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
@@ -43,7 +51,7 @@ public class IndexActivity extends BaseActivity{
     //@BindColor(R2.color.purple_200)
     private static final String TAG = "IndexActivity";
     /** 定制Toolbar */
-    @BindView(R2.id.toolbar_constant) Toolbar mToolbar_constant;
+    @BindView(R2.id.appbar_constant) Toolbar mAppbar_constant;
     /** 侧滑主体 */
     @BindView(R2.id.drawer_layout) DrawerLayout mDrawer_layout;
     /** 抽屉抽屉 */
@@ -56,8 +64,9 @@ public class IndexActivity extends BaseActivity{
     private long firstTime;
     /** 底部导航 */
     @BindView(R2.id.bbl) BottomBarLayout mBbl;
+    @BindView(R2.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsing_toolbar_layout;
     /** 四个主功能Fragment界面 */
-    private Fragment[] fragments = null;
+    private Fragment[] fragments =null;
     /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
     List<Fragment> fragmentList = new ArrayList<>();
 
@@ -136,9 +145,7 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initView() {
-        setSupportActionBar(mToolbar_constant); //设置自定义Toolbar
-        //是否打开标题
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
     }
 
     /**
@@ -148,9 +155,17 @@ public class IndexActivity extends BaseActivity{
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
+        String str = "张松同学";
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragmentList.addAll(Arrays.asList(fragments));
+
+        //标题栏字体加粗
+        Typeface font = Typer.set(this).getFont(Font.ROBOTO_BOLD);
+        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+        mCollapsing_toolbar_layout.setTitle(str);
+
     }
 
     /**
@@ -167,7 +182,7 @@ public class IndexActivity extends BaseActivity{
     @Override
     protected void initListener() {
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
-        mVp_content.setAdapter(new MyAdapter(getSupportFragmentManager()));
+        mVp_content.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),fragments,fragmentList));
         //底部导航加载ViewPager
         mBbl.setViewPager(mVp_content);
         //position：底部导航索引，unreadNum：页签未读数
@@ -175,7 +190,6 @@ public class IndexActivity extends BaseActivity{
         mBbl.setUnread(1, 1001);//设置第二个页签的未读数
         mBbl.showNotify(2);//设置第三个页签显示提示的小红点
         mBbl.setMsg(3, "未登录");//设置第四个页签显示NEW提示文字
-
         mBbl.setOnItemSelectedListener(new BottomBarLayout.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final BottomBarItem bottomBarItem, int previousPosition, final int currentPosition) {
@@ -183,27 +197,72 @@ public class IndexActivity extends BaseActivity{
                 if (currentPosition == 0) {
                     //如果是第一个，即首页
                     if (previousPosition == currentPosition) {
-                        bottomBarItem.setSelectedIcon(R.mipmap.tab_loading);//更换成加载图标
+//                        bottomBarItem.setSelectedIcon(R.mipmap.tab_loading);//更换成加载图标
+                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-    }
-    class MyAdapter extends FragmentStatePagerAdapter {
 
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
-        }
+        /** 推动DrawerLayout主布局+隐藏布局 */
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer_layout, mAppbar_constant, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                //获取mDrawerLayout中的第一个子布局，也就是布局中的RelativeLayout
+                //获取抽屉的view
+                View mContent = mDrawer_layout.getChildAt(0);
+                float scale = 1 - slideOffset;
+                float endScale = 0.8f + scale * 0.2f;
+                float startScale = 1 - 0.3f * scale;
+                //设置左边菜单滑动后的占据屏幕大小
+                drawerView.setScaleX(startScale);
+                drawerView.setScaleY(startScale);
+                //设置菜单透明度
+                drawerView.setAlpha(0.6f + 0.4f * (1 - scale));
+                //设置内容界面水平和垂直方向偏转量
+                //在滑动时内容界面的宽度为 屏幕宽度减去菜单界面所占宽度
+                mContent.setTranslationX(drawerView.getMeasuredWidth() * (1 - scale));
+                //设置内容界面操作无效（比如有button就会点击无效）
+                mContent.invalidate();
+                //设置右边菜单滑动后的占据屏幕大小
+                mContent.setScaleX(endScale);
+                mContent.setScaleY(endScale);
+            }
+        };
+        toggle.syncState();
+        mDrawer_layout.addDrawerListener(toggle);
 
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
+        /**
+         * 给DrawerLayout侧滑的Navigation导航菜单添加点击事件
+         */
+        mNav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.drawer_menu_school:
+                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        return true;
+                    case R.id.drawer_menu_see_calendar:
+                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        return true;
+                    case R.id.drawer_menu_setting:
+                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        return true;
+                    case R.id.drawer_menu_about_author:
+                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        return true;
+                    case R.id.drawer_menu_logout:
+                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     @OnClick(R2.id.floating_action_btn)
@@ -246,6 +305,29 @@ public class IndexActivity extends BaseActivity{
 //        }
 //    }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_demo, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.action_clear_unread:
+//                mBottomBarLayout.setUnread(0, 0);
+//                mBottomBarLayout.setUnread(1, 0);
+//                break;
+//            case R.id.action_clear_notify:
+//                mBottomBarLayout.hideNotify(2);
+//                break;
+//            case R.id.action_clear_msg:
+//                mBottomBarLayout.hideMsg(3);
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
     /**
      * 防触碰处理
      * 再按一次退出程序

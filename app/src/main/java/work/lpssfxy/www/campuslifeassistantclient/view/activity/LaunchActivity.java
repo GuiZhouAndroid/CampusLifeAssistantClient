@@ -42,7 +42,7 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, GuideActivity.class));
+                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, IndexActivity.class));
                 finish();
             }
         }, 1000);

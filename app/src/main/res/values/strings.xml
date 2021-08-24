@@ -88,4 +88,8 @@ AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbar
 链接：https://www.jianshu.com/p/bbc703a0015e
 來源：简书
 简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</string>
+
+<!--    侧滑抽屉-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
