@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -46,6 +48,8 @@ import java.util.Map;
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
+import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
@@ -107,12 +111,12 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     protected Boolean isSetBottomNaviCationColor() {
-        return null;
+        return false;
     }
 
     @Override
     protected Boolean isSetImmersiveFullScreen() {
-        return null;
+        return true;
     }
 
     /**
@@ -295,12 +299,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
 
             if (mOEMLogin.isChecked()) {
-                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144", "10000144", "xxxx");
+                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144","10000144","xxxx");
             } else {
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                     params.put(KEY_RESTORE_LANDSCAPE, true);
                 }
+
+
 
                 params.put(KEY_SCOPE, "all");
                 params.put(KEY_QRCODE, mQrCk.isChecked());
@@ -319,17 +325,22 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             }
             mTencent.logout(this);
             // 第三方也可以选择注销的时候不去清除第三方的targetUin/targetMiniAppId
-//            saveTargetUin("");
-//            saveTargetMiniAppId("");
+            //saveTargetUin("");
+            //saveTargetMiniAppId("");
             updateUserInfo();
             updateLoginButton();
         }
-    }
+
+        updateUserInfo();
+        updateLoginButton();
+        }
+
 
     IUiListener loginListener = new BaseUiListener() {
         @Override
         protected void doComplete(JSONObject values) {
             Log.d("SDKQQAgentPref", "AuthorSwitch_SDK:" + SystemClock.elapsedRealtime());
+            Log.d(TAG, "doComplete: "+values.toString());
             initOpenidAndToken(values);
             updateUserInfo();
             updateLoginButton();
@@ -341,6 +352,18 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
         @Override
         public void onComplete(Object response) {
+//            if(arg0!=null){
+//                JSONObject jsonObject = (JSONObject) arg0;
+//                try {
+//                    String token = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_ACCESS_TOKEN);
+//                    String expires = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_EXPIRES_IN);
+//                    String openId = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_OPEN_ID);
+//
+//                } catch (JSONException e) {
+//                    Log.d(TAG, "onComplete: 失败");
+//                }
+//            }
+            Log.d(TAG, "onComplete:成功");
             if (null == response) {
                 FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
                 return;
@@ -362,12 +385,16 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
         @Override
         public void onError(UiError e) {
+            //toast("QQ授权出错："+arg0.errorCode+"--"+arg0.errorDetail);
+            Toast.makeText(LoginActivity.this, e.errorDetail, Toast.LENGTH_SHORT).show();
             FileCodeUtil.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
             FileCodeUtil.dismissDialog();
         }
 
         @Override
         public void onCancel() {
+            //toast("取消qq授权");
+            Toast.makeText(getApplicationContext(), "取消qq授权", Toast.LENGTH_SHORT).show();
             FileCodeUtil.toastMessage(LoginActivity.this, "onCancel: ");
             FileCodeUtil.dismissDialog();
             if (isServerSideLogin) {
@@ -393,29 +420,31 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     private void updateUserInfo() {
         if (mTencent != null && mTencent.isSessionValid()) {
             IUiListener listener = new DefaultUiListener() {
-
                 @Override
                 public void onError(UiError e) {
-
                 }
-
                 @Override
                 public void onComplete(final Object response) {
+                    Log.d(TAG, "onComplete: "+response.toString());
                     Message msg = new Message();
                     msg.obj = response;
                     msg.what = 0;
                     mHandler.sendMessage(msg);
-                    new Thread() {
-
+                    new Thread(){
                         @Override
                         public void run() {
-                            JSONObject json = (JSONObject) response;
-                            if (json.has("figureurl")) {
+//                            Gson gson = new Gson();
+//                            QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
+//                            Log.d(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
+//                            Log.d(TAG, "City: "+qqUser.getCity());
+//                            Log.d(TAG, "Level: "+qqUser.getLevel());
+                            JSONObject json = (JSONObject)response;
+                            if(json.has("figureurl")){
                                 Bitmap bitmap = null;
                                 try {
-                                    bitmap = FileCodeUtil.getbitmap(json.getString("figureurl_qq_2"));
+                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
                                 } catch (JSONException e) {
-                                    SLog.e(TAG, "FileCodeUtil.getBitmap() jsonException : " + e.getMessage());
+                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
                                 }
                                 Message msg = new Message();
                                 msg.obj = bitmap;
@@ -456,8 +485,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         e.printStackTrace();
                     }
                 }
-            } else if (msg.what == 1) {
-                Bitmap bitmap = (Bitmap) msg.obj;
+            } else if(msg.what == 1){
+                Bitmap bitmap = (Bitmap)msg.obj;
                 mUserLogo.setImageBitmap(bitmap);
                 mUserLogo.setVisibility(android.view.View.VISIBLE);
             }
@@ -468,10 +497,10 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
+        Log.d(TAG, "-->onActivityResult " + requestCode  + " resultCode=" + resultCode);
         if (requestCode == Constants.REQUEST_LOGIN ||
                 requestCode == Constants.REQUEST_APPBAR) {
-            Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
+            Tencent.onActivityResultData(requestCode,resultCode,data,loginListener);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

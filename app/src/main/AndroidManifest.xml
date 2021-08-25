@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="work.lpssfxy.www.campuslifeassistantclient">
+
+    <queries>
+        <package android:name="com.tencent.mobileqq" />
+    </queries>
+    <!-- qq登陆所需 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+
+
     <!-- 访问网络连接,可能产生GPRS流量 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取网络信息状态,如当前的网络连接是否有效 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 改变WiFi状态 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 获取当前WiFi接入的状态以及WLAN热点的信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序写入外部存储,如SD卡上写文件 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -26,9 +45,10 @@
             android:value="360" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="640" /> <!-- 程序主入口：你好同学 -->
+            android:value="640" />
+        <!-- 程序主入口：你好同学 -->
         <activity
-            android:name=".view.activity.LaunchActivity"
+            android:name=".view.activity.LoginActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/LaunchTheme">
@@ -37,50 +57,58 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- 欢迎页入口 -->
+        </activity>
+        <!-- 欢迎页入口 -->
         <activity
             android:name=".view.activity.GuideActivity"
-            android:exported="true" /> <!-- 主程序 -->
+            android:exported="true" />
+        <!-- 主程序 -->
         <activity
             android:name=".view.activity.WelcomeActivity"
-            android:exported="true" /> <!-- Activity基类 -->
+            android:exported="true" />
+        <!-- Activity基类 -->
         <activity
             android:name=".view.activity.IndexActivity"
             android:exported="true" />
         <activity
             android:name=".view.activity.BaseActivity"
-            android:exported="true" /> <!-- 注册登录Activity -->
+            android:exported="true" />
+        <!-- 注册登录Activity -->
         <activity
-            android:name=".view.activity.LoginActivity"
-            android:exported="true" /> <!-- 第三方QQ登录 -->
+            android:name=".view.activity.LaunchActivity"
+            android:exported="true" />
+
+        <!-- 第三方qq登录 -->
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:theme="@style/Assist_Style" />
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
-            android:exported="true"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- 注意：tencent+appid -->
                 <data android:scheme="tencent101965703" />
             </intent-filter>
-        </activity> <!-- 广播器 -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="work.lpssfxy.www.campuslifeassistantclient.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+        </activity>
+
+
+        <!-- 广播器 -->
+<!--        <provider-->
+<!--            android:name="androidx.core.content.FileProvider"-->
+<!--            android:authorities="work.lpssfxy.www.campuslifeassistantclient.fileprovider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/file_paths" />-->
+<!--        </provider>-->
     </application>
 
 </manifest>
