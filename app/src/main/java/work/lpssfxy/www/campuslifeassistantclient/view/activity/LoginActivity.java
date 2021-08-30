@@ -63,16 +63,26 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
 @SuppressLint("NonConstantResourceId")
 public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "LoginActivity";
-    @BindView(R2.id.iv_login_wx) ImageView iv_login_wx;//微信登录
-    @BindView(R2.id.iv_login_qq) ImageView iv_login_qq;//QQ登录
-    @BindView(R2.id.tv_go_register) TextView tv_go_register;//去注册
-    @BindView(R2.id.new_login_btn) Button mNewLoginButton;//按钮登录
-    @BindView(R2.id.ck_qr) CheckBox mQrCk; //二维码登录
-    @BindView(R2.id.check_oem_login) CheckBox mOEMLogin;//OEM登录
-    @BindView(R2.id.check_force_qr) CheckBox mCheckForceQr;//强制扫码登录
-    @BindView(R2.id.show_web_download_ui) CheckBox mShowWebDownloadUi;//显示扫码Web页下载链接
-    @BindView(R2.id.user_nickname) TextView mUserInfo;//用户姓名
-    @BindView(R2.id.user_logo) ImageView mUserLogo;//用户头像
+    @BindView(R2.id.iv_login_wx)
+    ImageView iv_login_wx;//微信登录
+    @BindView(R2.id.iv_login_qq)
+    ImageView iv_login_qq;//QQ登录
+    @BindView(R2.id.tv_go_register)
+    TextView tv_go_register;//去注册
+    @BindView(R2.id.new_login_btn)
+    Button mNewLoginButton;//按钮登录
+    @BindView(R2.id.ck_qr)
+    CheckBox mQrCk; //二维码登录
+    @BindView(R2.id.check_oem_login)
+    CheckBox mOEMLogin;//OEM登录
+    @BindView(R2.id.check_force_qr)
+    CheckBox mCheckForceQr;//强制扫码登录
+    @BindView(R2.id.show_web_download_ui)
+    CheckBox mShowWebDownloadUi;//显示扫码Web页下载链接
+    @BindView(R2.id.user_nickname)
+    TextView mUserInfo;//用户姓名
+    @BindView(R2.id.user_logo)
+    ImageView mUserLogo;//用户头像
 
     private Button mServerSideLoginBtn;
     public static Tencent mTencent;
@@ -141,6 +151,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             finish();
         }
     }
+
     /**
      * 初始化View
      */
@@ -202,6 +213,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             mQrCk.setChecked(b);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -299,13 +311,12 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
 
             if (mOEMLogin.isChecked()) {
-                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144","10000144","xxxx");
+                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144", "10000144", "xxxx");
             } else {
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                     params.put(KEY_RESTORE_LANDSCAPE, true);
                 }
-
 
 
                 params.put(KEY_SCOPE, "all");
@@ -330,17 +341,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             updateUserInfo();
             updateLoginButton();
         }
-
-        updateUserInfo();
-        updateLoginButton();
-        }
+    }
 
 
     IUiListener loginListener = new BaseUiListener() {
         @Override
         protected void doComplete(JSONObject values) {
             Log.d("SDKQQAgentPref", "AuthorSwitch_SDK:" + SystemClock.elapsedRealtime());
-            Log.d(TAG, "doComplete: "+values.toString());
+            Log.d(TAG, "doComplete: " + values.toString());
             initOpenidAndToken(values);
             updateUserInfo();
             updateLoginButton();
@@ -423,14 +431,15 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                 @Override
                 public void onError(UiError e) {
                 }
+
                 @Override
                 public void onComplete(final Object response) {
-                    Log.d(TAG, "onComplete: "+response.toString());
+                    Log.d(TAG, "onComplete: " + response.toString());
                     Message msg = new Message();
                     msg.obj = response;
                     msg.what = 0;
                     mHandler.sendMessage(msg);
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
 //                            Gson gson = new Gson();
@@ -438,8 +447,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                            Log.d(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
 //                            Log.d(TAG, "City: "+qqUser.getCity());
 //                            Log.d(TAG, "Level: "+qqUser.getLevel());
-                            JSONObject json = (JSONObject)response;
-                            if(json.has("figureurl")){
+                            JSONObject json = (JSONObject) response;
+                            if (json.has("figureurl")) {
                                 Bitmap bitmap = null;
                                 try {
                                     bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
@@ -471,6 +480,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         }
     }
 
+    /**
+     * 线程刷新UI数据
+     */
     Handler mHandler = new Handler() {
 
         @Override
@@ -485,8 +497,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         e.printStackTrace();
                     }
                 }
-            } else if(msg.what == 1){
-                Bitmap bitmap = (Bitmap)msg.obj;
+            } else if (msg.what == 1) {
+                Bitmap bitmap = (Bitmap) msg.obj;
                 mUserLogo.setImageBitmap(bitmap);
                 mUserLogo.setVisibility(android.view.View.VISIBLE);
             }
@@ -494,16 +506,30 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     };
 
-
+    /**
+     * 回调数据
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "-->onActivityResult " + requestCode  + " resultCode=" + resultCode);
+        Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
         if (requestCode == Constants.REQUEST_LOGIN ||
                 requestCode == Constants.REQUEST_APPBAR) {
-            Tencent.onActivityResultData(requestCode,resultCode,data,loginListener);
+            Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 按下返回键，销毁当前页面
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LoginActivity.this.finish();
+    }
 }

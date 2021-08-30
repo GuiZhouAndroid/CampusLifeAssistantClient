@@ -21,14 +21,12 @@
 
     <!-- APP全透明沉浸式主题样式，提供item空属性，使用StatusBarUtils工具类 -->
     <style name="AppMainTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
     </style>
 
     <!--QQ-->
     <style name="Assist_Style" parent="@android:style/Theme.Translucent.NoTitleBar">
         <item name="android:windowIsTranslucent">false</item>
     </style>
-
     <style name="DemoMainActivity_Button_Style">
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/sp_17</item>
@@ -68,8 +66,8 @@
         <item name="android:colorBackground">#C60C0C</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
     </style>
-
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
     </style>
+
 </resources>

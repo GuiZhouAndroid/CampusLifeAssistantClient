@@ -6,23 +6,27 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
+import com.example.zhouwei.library.CustomPopWindow;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -45,7 +49,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMin
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomShopFragment;
 
 @SuppressLint("NonConstantResourceId")
-public class IndexActivity extends BaseActivity{
+public class IndexActivity extends BaseActivity {
     //@BindArray(R2.array.city)
     //String[] strArray;//绑定资源文件中string字符串数组
     //@BindBitmap(R.mipmap.ic_launcher)
@@ -54,6 +58,12 @@ public class IndexActivity extends BaseActivity{
     private static final String TAG = "IndexActivity";
     /** 定制Toolbar */
     @BindView(R2.id.appbar_constant_toolbar) Toolbar mAppbar_constant_toolbar;
+    /** Toolbar折叠布局 */
+    @BindView(R2.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsing_toolbar_layout;
+    /** Toolbar头像图标 */
+    @BindView(R2.id.index_iv_user_head) ImageView mIndex_iv_user_head;
+    /** Toolbar名字标签 */
+    @BindView(R2.id.index_tv_user_hello) TextView mIndex_tv_user_hello;
     /** 侧滑主体 */
     @BindView(R2.id.drawer_layout) DrawerLayout mDrawer_layout;
     /** 抽屉抽屉 */
@@ -66,11 +76,12 @@ public class IndexActivity extends BaseActivity{
     private long firstTime;
     /** 底部导航 */
     @BindView(R2.id.bbl) BottomBarLayout mBbl;
-    @BindView(R2.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsing_toolbar_layout;
     /** 四个主功能Fragment界面 */
     public Fragment[] fragments =null;
     /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
     public List<Fragment> fragmentList = new ArrayList<>();
+    /** Toolbar弹窗 */
+    private CustomPopWindow mCustomPopWindow;
 
 
     /**
@@ -150,19 +161,12 @@ public class IndexActivity extends BaseActivity{
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle("主标题");
+
+            //actionBar.setTitle("主标题");
         } else {
             Log.i(TAG, "onCreate: actionBar is null");
         }
-        mAppbar_constant_toolbar.inflateMenu(R.menu.menu);
-        //点击左边返回按钮监听事件
-        mAppbar_constant_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(IndexActivity.this, "123", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        setSupportActionBar(mAppbar_constant_toolbar);
     }
 
     /**
@@ -267,11 +271,11 @@ public class IndexActivity extends BaseActivity{
                         mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_setting:
-                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mNav_view, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
                         mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_about_author:
-                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mNav_view, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
                         mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_logout:
@@ -283,23 +287,123 @@ public class IndexActivity extends BaseActivity{
         });
     }
 
-    @OnClick(R2.id.floating_action_btn)
+    /**
+     * 浮动按钮单击事件
+     */
+    @OnClick({R2.id.floating_action_btn})
     public void onViewOneClicked() {
         Snackbar.make(mFloating_action_btn, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
     }
 
-//    @OnClick({R2.id.btn, R2.id.tv})
-//    public void onViewClicked(View view) {
-//        switch (view.getId()) {
-////            case R.id.btn:
-////                Toast.makeText(this, "我是多个btn点击事件", Toast.LENGTH_SHORT).show();
-////                break;
-////            case R.id.tv:
-////                Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
-////                break;
-//        }
-//    }
+    /**
+     *  头像+名字单击事件
+     * @param view
+     */
+    @OnClick({R2.id.index_iv_user_head,R2.id.index_tv_user_hello})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.index_iv_user_head://头像
+                startActivityAnim(new Intent(IndexActivity.this, LoginActivity.class));
+                break;
+            case R.id.index_tv_user_hello://名字
+                Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 
+    /**
+     * 打开标题栏弹窗
+     */
+    private void OpenToolbarPopup() {
+        View contentView = LayoutInflater.from(this).inflate(R.layout.custom_toolbar_pop_menu,null);
+        //处理popWindow 显示内容
+        handleLogic(contentView);
+        //创建并显示popWindow
+        mCustomPopWindow= new CustomPopWindow.PopupWindowBuilder(this)
+                .setView(contentView)
+                .enableBackgroundDark(true) //弹出popWindow时，背景是否变暗
+                .setBgDarkAlpha(0.7f) // 控制亮度
+                .setOnDissmissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        Log.e("TAG","onDismiss");
+                    }
+                })
+                .create()
+                .showAsDropDown(findViewById(R.id.search),0,20);
+    }
+    /**
+     * 处理弹出显示内容、点击事件等逻辑
+     * @param contentView
+     */
+    private void handleLogic(View contentView){
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCustomPopWindow!=null){
+                    mCustomPopWindow.dissmiss();
+                }
+                switch (v.getId()){
+                    case R.id.item1:
+                        Toast.makeText(IndexActivity.this, "点击 Item菜单1", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item2:
+                        Toast.makeText(IndexActivity.this, "点击 Item菜单2", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item3:
+                        Toast.makeText(IndexActivity.this, "点击 Item菜单3", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item4:
+
+                        Toast.makeText(IndexActivity.this, "点击 Item菜单4", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item5:
+                        Toast.makeText(IndexActivity.this, "点击 Item菜单5", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        };
+        contentView.findViewById(R.id.item1).setOnClickListener(listener);
+        contentView.findViewById(R.id.item2).setOnClickListener(listener);
+        contentView.findViewById(R.id.item3).setOnClickListener(listener);
+        contentView.findViewById(R.id.item4).setOnClickListener(listener);
+        contentView.findViewById(R.id.item5).setOnClickListener(listener);
+    }
+
+    /**
+     * 初始化Toolbar菜单
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_search,menu);
+        return true;
+    }
+
+    /**
+     * 监听Toolbar菜单项item
+     * 添加点击事件,用于打开或关闭侧滑抽屉
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                mDrawer_layout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.search:
+                //new ToastUtil().ToastLocation(MainActivity.this,"搜索待实现", Toast.LENGTH_SHORT, Gravity.CENTER);
+                OpenToolbarPopup();//打开标题栏弹窗
+                break;
+            case R.id.qr:
+                Toast.makeText(this, "扫一扫待实现~", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
     //多个控件对应公共事件
 //    @OnClick({R2.id.btn, R2.id.btn1})
 //    public void sayHi(Button btn) {
@@ -365,14 +469,5 @@ public class IndexActivity extends BaseActivity{
                 break;
         }
         return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(getApplicationContext(), "点击Home", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
     }
 }

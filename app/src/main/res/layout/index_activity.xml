@@ -32,13 +32,18 @@
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         <!--浮动按钮-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_btn"
-            style="@style/style_float_btn"
+            android:id="@+id/floating_action_btn" style="@style/style_float_btn"
             android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_60"
             android:background="@drawable/fab"
             android:src="@mipmap/icon_up_arrow"
-            app:layout_behavior="@string/scale_down_show_behavior" />
+            app:layout_behavior="@string/scale_down_show_behavior"
+            app:backgroundTint="@color/colorAccent"
+            app:rippleColor="#03A9F4"
+            app:borderWidth="0dp"
+            app:elevation="8dp"
+            android:tooltipText="返回顶部"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--侧滑内容-->
     <!--去除状态栏：app:insetForeground="@android:color/transparent"  -->

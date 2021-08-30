@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--    banner_transitionEffect属性-->
+    <!--    cube:立方体-->
+    <!--    alpha:最初-->
+    <!--    accordion:手风琴-->
+    <!--    rotate:旋转-->
+    <!--    zoom:缩放-->
+    <!--    zoomCenter:从图片中心开始向外缩放-->
+    <!--    flip:蹦弹效果-->
+    <!--    depth:海洋效果-->
+    <!--    stack:堆叠效果-->
+    <!--    zoomStack:中心堆叠-->
+    <!--    fade:淡色-->
+    <!--    zoomFade:中心淡色-->
+    <cn.bingoogolapple.bgabanner.BGABanner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:scaleType="fitXY"
+        app:banner_indicatorGravity="bottom|right"
+        app:banner_pageChangeDuration="3000"
+        app:banner_placeholderDrawable="@mipmap/banner_placeholder"
+        app:banner_pointAutoPlayAble="true"
+        app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+        app:banner_pointTopBottomMargin="15dp"
+        app:banner_tipTextColor="@color/color_title_bg"
+        app:banner_tipTextSize="@dimen/textSize_titleSmall"
+        app:banner_transitionEffect="depth"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/colorAccent" />
 
     <TextView
         android:layout_width="match_parent"

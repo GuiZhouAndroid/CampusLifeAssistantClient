@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
@@ -54,7 +55,10 @@ dependencies {
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
     //今日头条适配库
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
-
+    //图片轮播
+    implementation 'cn.bingoogolapple:bga-banner:2.2.4@aar'
+    //Toolbar弹窗
+    implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     //换肤框架
     implementation 'skin.support:skin-support:4.0.5'                   // skin-support
     implementation 'skin.support:skin-support-appcompat:4.0.5'         // skin-support 基础控件支持

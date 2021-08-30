@@ -207,8 +207,12 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
 
                 break;
             case R.id.welcome_tv_go_login:
+                startActivityAnim(new Intent(WelcomeActivity.this, LoginActivity.class));
+                //finish(); 登录成功后销毁当前 WelcomeActivity ，否则暂时不销毁 WelcomeActivity
                 break;
             case R.id.welcome_tv_go_index:
+                startActivityAnim(new Intent(WelcomeActivity.this, IndexActivity.class));
+                finish(); //直接手动单击进入首页后，同时销毁当前 WelcomeActivity
                 break;
         }
     }

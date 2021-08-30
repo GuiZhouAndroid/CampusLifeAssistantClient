@@ -20,10 +20,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBar
  */
 
 public class LaunchActivity extends AppCompatActivity {
-    /**
-     * 防触碰使用的变量
-     */
-    private long firstTime;
+
     private final Handler handler = new Handler();
 
     @Override
@@ -36,16 +33,16 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
     /**
-     * 1秒倒计时，进入视频引导页
+     * 1.2秒倒计时，进入视频引导页
      */
     private void LaunchOneSecondCountDown() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, IndexActivity.class));
+                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, GuideActivity.class));
                 finish();
             }
-        }, 1000);
+        }, 1200);
     }
 
     /**

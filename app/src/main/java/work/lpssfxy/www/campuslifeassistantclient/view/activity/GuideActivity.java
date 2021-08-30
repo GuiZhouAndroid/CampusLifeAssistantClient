@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
@@ -87,7 +88,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     /**
      * 绑定布局
      *
-     * @return
+     * @return guide_activity.xml
      */
     @Override
     public int bindLayout() {
@@ -115,6 +116,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
+     * 开始播放
      * @param savedInstanceState 界面非正常销毁时保存的数据
      */
     @Override
@@ -150,7 +152,9 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
-     * 倒计时结束，跳转欢迎页
+     * 倒计时结束，欢迎页跳转判断
+     * 首次进入App跳转-滑动欢迎页(WelcomeActivity.xml)
+     * 非首次进入App跳转-应用首页(IndexActivity.xml)
      */
     @Override
     public void countDownFinished() {

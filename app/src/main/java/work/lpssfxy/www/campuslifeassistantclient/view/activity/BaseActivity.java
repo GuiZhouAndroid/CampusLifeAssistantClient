@@ -278,6 +278,10 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
     }
 
+    /**
+     * 初始化换肤框架
+     * @return
+     */
     @NonNull
     @Override
     public AppCompatDelegate getDelegate() {
