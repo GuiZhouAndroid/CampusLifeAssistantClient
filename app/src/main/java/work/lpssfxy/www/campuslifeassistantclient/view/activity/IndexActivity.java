@@ -290,7 +290,7 @@ public class IndexActivity extends BaseActivity {
     /**
      * 浮动按钮单击事件
      */
-    @OnClick({R2.id.floating_action_btn})
+    @OnClick(R2.id.floating_action_btn)
     public void onViewOneClicked() {
         Snackbar.make(mFloating_action_btn, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
     }

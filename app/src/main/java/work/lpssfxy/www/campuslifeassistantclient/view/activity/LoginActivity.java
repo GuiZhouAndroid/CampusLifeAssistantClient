@@ -27,8 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -48,7 +46,6 @@ import java.util.Map;
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
 import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;

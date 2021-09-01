@@ -7,9 +7,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Button;
 import android.widget.Toast;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress;
@@ -26,13 +28,12 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 @SuppressLint("NonConstantResourceId")
 public class GuideActivity extends BaseActivity implements MediaPlayer.OnCompletionListener, CircleProgress.OnCountDownFinishListener {
     /** Video播放器 */
-    @BindView(R2.id.Guide_Video_View)
-    GuideFullVideoView videoView;
+    @BindView(R2.id.Guide_Video_View) GuideFullVideoView videoView;
     /** 圆形倒计时 */
-    @BindView(R2.id.circleprogress)
-    CircleProgress circleprogress;
-    /** 防触碰使用的变量 */
-    private long firstTime;
+    @BindView(R2.id.circleprogress) CircleProgress circleprogress;
+    /** 跳过按钮 */
+    @BindView(R2.id.btn_guide_skip) Button mBtn_guide_skip;
+
 
     /**
      * 关闭滑动返回
@@ -100,7 +101,6 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     protected void prepareData() {
-
         videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.guide_video));
     }
 
@@ -142,6 +142,23 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
+     * 关闭自动监听倒计时，执行点击跳过
+     */
+    @OnClick(R2.id.btn_guide_skip)
+    public void onViewBtnSkipOnClick(){
+        circleprogress.setAddCountDownListener(null);//关闭自动监听倒计时
+        int count = SharePreferenceUtil.getInstance().getInt("first",0); // 取出数据
+        //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
+        if (count == 0) {
+            startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
+        } else {
+            startActivityAnimActivity(new Intent(GuideActivity.this, IndexActivity.class));
+        }
+        finish();
+        //存入数据
+        SharePreferenceUtil.getInstance().putInt("first", 1); // 存入数据
+    }
+    /**
      * 循环播放
      *
      * @param mediaPlayer
@@ -165,6 +182,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         } else {
             startActivityAnimActivity(new Intent(GuideActivity.this, IndexActivity.class));
         }
+
         finish();
         //存入数据
         SharePreferenceUtil.getInstance().putInt("first", 1); // 存入数据
@@ -209,28 +227,4 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         }
         return super.onKeyDown(keyCode, event);
     }
-//    /**
-//     * 防触碰处理
-//     * 再按一次退出程序
-//     *
-//     * @param keyCode
-//     * @param event
-//     * @return
-//     */
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent event) {
-//        switch (keyCode) {
-//            case KeyEvent.KEYCODE_BACK:
-//                long secondTime = System.currentTimeMillis();
-//                if (secondTime - firstTime > 3000) {
-//                    Toast.makeText(this, "再按一次退出程序！", Toast.LENGTH_SHORT).show();
-//                    firstTime = secondTime;
-//                    return true;
-//                } else {
-//                    System.exit(0);
-//                }
-//                break;
-//        }
-//        return super.onKeyUp(keyCode, event);
-//    }
 }

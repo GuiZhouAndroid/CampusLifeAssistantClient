@@ -42,7 +42,7 @@ public class LaunchActivity extends AppCompatActivity {
                 BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, GuideActivity.class));
                 finish();
             }
-        }, 1200);
+        }, 1000);
     }
 
     /**

@@ -275,6 +275,5 @@ public class CircleProgress extends View {
         super.onDetachedFromWindow();
         //释放资源
     }
-
 }
 

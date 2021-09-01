@@ -24,15 +24,17 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"/>
 
-    <TextView
+    <Button
+        android:id="@+id/btn_guide_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/dp_50"
-        android:gravity="center"
-        android:text="欢迎使用"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/dp_70"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:text="@string/btn_guide_skip"
         android:textColor="#fff"
-        android:textSize="@dimen/sp_50" />
+        android:textSize="@dimen/sp_20" />
+
 
 </RelativeLayout>

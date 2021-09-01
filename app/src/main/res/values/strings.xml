@@ -7,6 +7,8 @@
         <item>大连市</item>
         <item>香港市</item>
     </string-array>
+    <!--视频欢迎页-->
+    <string name="btn_guide_skip">跳过</string>
     <!--登录-->
     <string name="login_register_title">校园生活助手</string>
     <string name="username">用户名</string>

@@ -44,7 +44,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         mSwipeBackLayout = getSwipeBackLayout();
         /** 初始化ButterKnife实例 */
         mUnbinder = ButterKnife.bind(this);
-
         /** 初始化滑动返回 */
         initSwipeBackLayoutState(isSetSwipeBackLayout());
         /** 初始化沉浸式状态栏 */
