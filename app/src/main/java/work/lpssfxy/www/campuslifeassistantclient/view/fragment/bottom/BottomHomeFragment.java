@@ -22,17 +22,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
-import com.baidu.mapapi.navi.BaiduMapNavigation;
-import com.baidu.mapapi.navi.NaviParaOption;
 import com.example.library.AutoFlowLayout;
 import com.example.library.FlowAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +41,6 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
-import work.lpssfxy.www.campuslifeassistantclient.utils.MapUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -109,7 +103,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     protected void initData(Bundle savedInstanceState) {
         //3个地图id
-        openBottomView=LayoutInflater.from(getActivity()).inflate(R.layout.open_map_bottom_navagation,null);
+        openBottomView=LayoutInflater.from(getActivity()).inflate(R.layout.index_fragment_open_bottom_map_navagation,null);
         mBtn_baidu=openBottomView.findViewById(R.id.btn_baidu);//底部百度
         mBtn_gaoDe=openBottomView.findViewById(R.id.btn_gaode);//底部高德
         mBtn_tencent=openBottomView.findViewById(R.id.btn_tencent);//底部腾讯

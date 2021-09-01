@@ -62,12 +62,13 @@ public class App extends Application {
         super.onCreate();
         /** 初始化全局OkHttp3工具类 */
         OkHttpUtil.init(this);
+        /** 初始化百度地图加载so文件 */
+        SDKInitializer.initialize(this);
         /** 初始化全局适配AndroidAutoSize */
         initAutoSizeConfig();
         /** 初始化换肤框架 */
         initSkinCompatManager();
-        /** 加载百度地图so文件 */
-        SDKInitializer.initialize(this);
+
     }
 
     /**
