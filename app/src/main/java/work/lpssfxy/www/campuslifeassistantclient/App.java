@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.baidu.mapapi.SDKInitializer;
+
 import java.util.Locale;
 
 import me.jessyan.autosize.AutoSize;
@@ -64,6 +66,8 @@ public class App extends Application {
         initAutoSizeConfig();
         /** 初始化换肤框架 */
         initSkinCompatManager();
+        /** 加载百度地图so文件 */
+        SDKInitializer.initialize(this);
     }
 
     /**

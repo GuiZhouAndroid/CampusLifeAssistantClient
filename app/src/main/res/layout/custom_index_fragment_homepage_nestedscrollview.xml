@@ -37,6 +37,19 @@
         android:layout_marginTop="@dimen/dp_5"
         android:background="@color/colorAccent" />
 
+    <com.example.library.AutoFlowLayout
+        android:id="@+id/auto_grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_80"
+            android:background="@color/viewBackground"
+            app:columnNumbers="4"
+            app:cutLine="true"
+            app:cutLineColor="@color/colorAccent"
+            app:cutLineWidth="1px"
+            app:horizontalSpace="5dp"
+            app:rowNumbers="1"
+            app:verticalSpace="5dp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
