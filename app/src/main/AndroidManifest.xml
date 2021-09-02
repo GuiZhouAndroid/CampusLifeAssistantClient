@@ -82,7 +82,6 @@
         <activity
             android:name=".view.activity.LaunchActivity"
             android:exported="true"
-            android:launchMode="singleTask"
             android:theme="@style/LaunchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
