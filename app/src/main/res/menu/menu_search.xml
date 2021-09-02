@@ -4,12 +4,12 @@
     <group>
         <item
             android:id="@+id/qr"
-            android:icon="@mipmap/qr"
+            android:icon="@mipmap/index_toolbar_qr"
             android:title="Search"
             app:showAsAction="ifRoom" />
         <item
             android:id="@+id/search"
-            android:icon="@mipmap/more"
+            android:icon="@mipmap/index_toolbar_more"
             android:title="@string/menu_sousuo"
             app:showAsAction="always"/>
     </group>

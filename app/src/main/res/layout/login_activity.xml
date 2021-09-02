@@ -208,13 +208,13 @@
                 <ImageView
                     android:id="@+id/iv_login_wx"
                     android:layout_weight="1"
-                    android:src="@drawable/login_wx_logo"
+                    android:src="@mipmap/login_wx_logo"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
                 <ImageView
                     android:id="@+id/iv_login_qq"
                     android:layout_weight="1"
-                    android:src="@drawable/login_qq_logo"
+                    android:src="@mipmap/login_qq_logo"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
 

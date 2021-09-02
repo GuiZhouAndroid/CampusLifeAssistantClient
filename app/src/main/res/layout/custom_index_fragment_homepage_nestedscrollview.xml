@@ -40,17 +40,20 @@
     <com.example.library.AutoFlowLayout
         android:id="@+id/auto_grid_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="@dimen/dp_140"
             android:background="@color/viewBackground"
-            app:columnNumbers="4"
+            app:columnNumbers="5"
             app:cutLine="true"
             app:cutLineColor="@color/colorAccent"
             app:cutLineWidth="1px"
             app:horizontalSpace="5dp"
-            app:rowNumbers="1"
+            app:rowNumbers="2"
             app:verticalSpace="5dp"/>
-
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorAccent" />
+    <TextView android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/content" />

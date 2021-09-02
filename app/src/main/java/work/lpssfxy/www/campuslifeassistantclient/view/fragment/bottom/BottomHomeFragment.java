@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
+import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -68,12 +70,14 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     /** 自定义滑动控件NestedScrollView */
     private GoTopNestedScrollView goTopNestedScrollView;
     /** 网格布局适配数据源 */
-    private static final String[] Grid_Tv_Data = new String[]{"通知公告","进入官网", "报名查询", "位置服务"};
-    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.notice,R.mipmap.schoolnetwork,R.mipmap.signquery,R.mipmap.mani_map};
+    private static final String[] Grid_Tv_Data = new String[]{"食堂预定","食堂代取", "快递代取", "二手交易","失物招领","星座运势","笑话百科", "天气预报", "位置服务","进入官网"};
+    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_own_food,R.mipmap.index_other_people_server,
+            R.mipmap.index_express, R.mipmap.index_second_hand,R.mipmap.index_lost_and_found,R.mipmap.index_horoscope,
+            R.mipmap.index_joke_encyclopedia, R.mipmap.index_weather,R.mipmap.index_map,R.mipmap.index_into_school};
     /** 底部弹出——第三方地图 */
     private BottomSheetPop mBottomSheetPop;
     private View openBottomView;
-    private Button mBtn_baidu,mBtn_gaoDe,mBtn_tencent,mBtn_cancel;//百度+高德+腾讯+取消
+    private LinearLayout mLl_bottom_baidu,mLl_bottom_gaode,mLl_bottom_tencent,mLl_bottom_cancel;//百度+高德+腾讯+取消
     /** 设置导航经纬度 */
     AddressInfo mInfo = new AddressInfo();
 
@@ -104,10 +108,10 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     protected void initData(Bundle savedInstanceState) {
         //3个地图id
         openBottomView=LayoutInflater.from(getActivity()).inflate(R.layout.index_fragment_open_bottom_map_navagation,null);
-        mBtn_baidu=openBottomView.findViewById(R.id.btn_baidu);//底部百度
-        mBtn_gaoDe=openBottomView.findViewById(R.id.btn_gaode);//底部高德
-        mBtn_tencent=openBottomView.findViewById(R.id.btn_tencent);//底部腾讯
-        mBtn_cancel=openBottomView.findViewById(R.id.btn_cancel);//取消
+        mLl_bottom_baidu=openBottomView.findViewById(R.id.ll_bottom_baidu);//底部百度
+        mLl_bottom_gaode=openBottomView.findViewById(R.id.ll_bottom_gaode);//底部高德
+        mLl_bottom_tencent=openBottomView.findViewById(R.id.ll_bottom_tencent);//底部腾讯
+        mLl_bottom_cancel=openBottomView.findViewById(R.id.ll_bottom_cancel);//取消
     }
 
     @Override
@@ -115,10 +119,10 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         appBarLayout.addOnOffsetChangedListener(this);//监听Toolbar滑动渐变
         mAuto_grid_layout.setOnItemClickListener(this);//监听网格布局item
         /** 设置底部弹窗监听事件 */
-        mBtn_baidu.setOnClickListener(this);
-        mBtn_gaoDe.setOnClickListener(this);
-        mBtn_tencent.setOnClickListener(this);
-        mBtn_cancel.setOnClickListener(this);
+        mLl_bottom_baidu.setOnClickListener(this);
+        mLl_bottom_gaode.setOnClickListener(this);
+        mLl_bottom_tencent.setOnClickListener(this);
+        mLl_bottom_cancel.setOnClickListener(this);
     }
 
     /**
@@ -159,77 +163,23 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     public void onClick(View view) {
         mBottomSheetPop.dismiss();
         switch (view.getId()) {
-            case R.id.btn_baidu://百度
-                if (isAvilible(getActivity(), "com.baidu.BaiduMap")) {//传入指定应用包名
-                    try {
-                        Intent intent = Intent.getIntent("intent://map/direction?" +
-                                "destination=latlng:" + mInfo.getLat() + "," + mInfo.getLng() + "|name:六盘水师范学院" +        //终点
-                                "&mode=driving&" +          //导航路线方式
-                                "&src=appname#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                        startActivity(intent); //启动调用
-                    } catch (URISyntaxException e) {
-                        Log.e("intent", e.getMessage());
-                    }
-                } else {//未安装
-                    //market为路径，id为包名
-                    //显示手机上所有的market商店
-                    Toast.makeText(getActivity(), "您尚未安装百度地图", Toast.LENGTH_LONG).show();
-                    Uri uri = Uri.parse("market://details?id=com.baidu.BaiduMap");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null){
-                        startActivity(intent);
-                    }
-                }
+            case R.id.ll_bottom_baidu://打开百度地图
+                openMapBaidu();
                 break;
-            case R.id.btn_gaode:
-                if (isAvilible(getActivity(), "com.autonavi.minimap")) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                    //将功能Scheme以URI的方式传入data
-                    Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=" + mInfo.getLat() + "&lon=" + mInfo.getLng() + "&dev=1&style=2");
-                    intent.setData(uri);
-
-                    //启动该页面即可
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), "您尚未安装高德地图", Toast.LENGTH_LONG).show();
-                    Uri uri = Uri.parse("market://details?id=com.autonavi.minimap");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null){
-                        startActivity(intent);
-                    }
-                }
+            case R.id.ll_bottom_gaode://打开高德地图
+                openMapGaoDe();
                 break;
-            case R.id.btn_tencent:
-                if (isAvilible(getActivity(), "com.tencent.map")) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-
-                    //将功能Scheme以URI的方式传入data
-                    Uri uri = Uri.parse("qqmap://map/routeplan?type=drive&to=六盘水师范学院&tocoord=" + mInfo.getLat() + "," + mInfo.getLng());
-                    intent.setData(uri);
-
-                    //启动该页面即可
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), "您尚未安装腾讯地图", Toast.LENGTH_LONG).show();
-                    Uri uri = Uri.parse("market://details?id=com.tencent.map");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null){
-                        startActivity(intent);
-                    }
-                }
+            case R.id.ll_bottom_tencent://打开腾讯地图
+                openMapTencent();
                 break;
-            case R.id.btn_cancel:
+            case R.id.ll_bottom_cancel://取消打开地图
                 if (mBottomSheetPop != null) {
                     mBottomSheetPop.dismiss();
                 }
                 break;
         }
     }
+
     /**
      * 网格布局设置Item监听
      *
@@ -253,20 +203,6 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 break;
         }
     }
-    /**
-     * 打开第三方地图，并设置经纬度定位
-     */
-    private void openBottomMapNaviCation() {
-        mBottomSheetPop = new BottomSheetPop(getActivity());
-        mBottomSheetPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        mBottomSheetPop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        mBottomSheetPop.setContentView(openBottomView);
-        mBottomSheetPop.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mBottomSheetPop.setOutsideTouchable(true);
-        mBottomSheetPop.setFocusable(true);
-        mBottomSheetPop.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-    }
-
 
     /**
      * 首页图片轮播
@@ -274,9 +210,9 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     private void imagePlay() {
         BGALocalImageSize bgaLocalImageSize=new BGALocalImageSize(720,1280,320,640);
         mBanner.setData(bgaLocalImageSize, ImageView.ScaleType.CENTER_CROP,
-                R.drawable.uoko_guide_background_1,
-                R.drawable.uoko_guide_background_2,
-                R.drawable.uoko_guide_background_3);
+                R.drawable.index_banner_img1,
+                R.drawable.index_banner_img2,
+                R.drawable.index_banner_img3);
     }
 
     /**
@@ -298,6 +234,20 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     }
 
     /**
+     * 打开第三方地图，并设置经纬度定位
+     */
+    private void openBottomMapNaviCation() {
+        mBottomSheetPop = new BottomSheetPop(getActivity());
+        mBottomSheetPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        mBottomSheetPop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mBottomSheetPop.setContentView(openBottomView);
+        mBottomSheetPop.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mBottomSheetPop.setOutsideTouchable(true);
+        mBottomSheetPop.setFocusable(true);
+        mBottomSheetPop.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+    }
+
+    /**
      * 首页点击浮动按钮置顶
      */
     private void stickTop() {
@@ -308,7 +258,84 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
         goTopNestedScrollView.setScreenHeight(metric.heightPixels);//设置高度
     }
+    /**
+     * Intent打开百度地图导航：我的位置——六盘水师范学院
+     */
+    private void openMapBaidu() {
+        if (isAvilible(getActivity(), "com.baidu.BaiduMap")) {//传入指定应用包名
+            try {
+                Intent intent = Intent.getIntent("intent://map/direction?" +
+                        "destination=latlng:" + mInfo.getLat() + "," + mInfo.getLng() + "|name:六盘水师范学院" +        //终点
+                        "&mode=driving&" +          //导航路线方式
+                        "&src=appname#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+                startActivity(intent); //启动调用
+                ToastUtil.showToast("校园生活助手后台运行中！");
+            } catch (URISyntaxException e) {
+                Log.e("intent", e.getMessage());
+            }
+        } else {//未安装
+            //market为路径，id为包名
+            //显示手机上所有的market商店
+            Toast.makeText(getActivity(), "您尚未安装百度地图", Toast.LENGTH_LONG).show();
+            Uri uri = Uri.parse("market://details?id=com.baidu.BaiduMap");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+                startActivity(intent);
+            }
+        }
+    }
 
+    /**
+     * Intent打开高德地图导航：我的位置——六盘水师范学院
+     */
+    private void openMapGaoDe() {
+        if (isAvilible(getActivity(), "com.autonavi.minimap")) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+            //将功能Scheme以URI的方式传入data
+            Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=" + mInfo.getLat() + "&lon=" + mInfo.getLng() + "&dev=1&style=2");
+            intent.setData(uri);
+
+            //启动该页面即可
+            startActivity(intent);
+            ToastUtil.showToast("校园生活助手后台运行中！");
+        } else {
+            Toast.makeText(getActivity(), "您尚未安装高德地图", Toast.LENGTH_LONG).show();
+            Uri uri = Uri.parse("market://details?id=com.autonavi.minimap");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+                startActivity(intent);
+            }
+        }
+    }
+
+    /**
+     * Intent打开腾讯地图导航：我的位置——六盘水师范学院
+     */
+    private void openMapTencent() {
+        if (isAvilible(getActivity(), "com.tencent.map")) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+            //将功能Scheme以URI的方式传入data
+            Uri uri = Uri.parse("qqmap://map/routeplan?type=drive&to=六盘水师范学院&tocoord=" + mInfo.getLat() + "," + mInfo.getLng());
+            intent.setData(uri);
+
+            //启动该页面即可
+            startActivity(intent);
+            ToastUtil.showToast("校园生活助手后台运行中！");
+        } else {
+            Toast.makeText(getActivity(), "您尚未安装腾讯地图", Toast.LENGTH_LONG).show();
+            Uri uri = Uri.parse("market://details?id=com.tencent.map");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+                startActivity(intent);
+            }
+        }
+    }
     /**
      * 检查手机上是否安装了指定的软件
      *
