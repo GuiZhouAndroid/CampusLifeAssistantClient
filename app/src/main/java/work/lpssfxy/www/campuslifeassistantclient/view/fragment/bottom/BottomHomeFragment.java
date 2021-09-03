@@ -238,7 +238,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 openBottomMapNaviCation();
                 break;
             case 9://进入官网
-                BaseActivity.startActivityAnim(getActivity(),new Intent(getActivity(), LoginActivity.class));
+                BaseActivity.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }

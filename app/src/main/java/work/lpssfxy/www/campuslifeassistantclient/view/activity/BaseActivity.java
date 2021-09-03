@@ -38,6 +38,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     /** 滑动返回 */
     private SwipeBackLayout mSwipeBackLayout;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,21 +252,23 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         activity.overridePendingTransition(R.anim.launch_anim_fade_in, R.anim.launch_anim_fade_out);
     }
     /**
+     * 子类Activity调用
      * 左————>右：启动动画
      *
      * @param intent
      */
-    public void startActivityAnim(Intent intent) {
+    public void startActivityAnimLeftToRight(Intent intent) {
         startActivity(intent);
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
     /**
+     * 子类Fragment调用
      * 左————>右：启动动画
      * @param activity
      * @param intent
      */
-    public static void startActivityAnim(Activity activity,Intent intent) {
+    public static void startActivityAnimLeftToRight(Activity activity, Intent intent) {
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
@@ -275,11 +278,29 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
      * @param intent
      * @param code
      */
-    public void startActivityForResultAnim(Intent intent, int code) {
+    public void startActivityForResultAnimLeftToRight(Intent intent, int code) {
         startActivityForResult(intent, code);
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
+    /**
+     * 右————>左：启动动画
+     * 不传值
+     * @param intent
+     */
+    public void startActivityAnimRightToLeft(Intent intent) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+    }
+    /**
+     * 右————>左：启动动画
+     * 传值
+     * @param intent
+     */
+    public void startActivityForResultAnimRightToLeft(Intent intent, int code) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+    }
     /**
      *
      * 物理键返回键执行上一页

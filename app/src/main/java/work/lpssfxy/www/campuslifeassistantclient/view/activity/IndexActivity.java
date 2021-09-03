@@ -2,10 +2,15 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,18 +41,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
@@ -164,11 +174,12 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initView() {
+        /** IndexActivity赋值单例静态全局变量，此处用于LoginActivity指定销毁当前IndexActivity*/
+        App.appActivity = IndexActivity.this;
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
-
             //actionBar.setTitle("主标题");
         } else {
             Log.i(TAG, "onCreate: actionBar is null");
@@ -183,6 +194,12 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
+        Bitmap bitmap = SharePreferenceUtil.getBitmapFromSharedPreferences(IndexActivity.this,"QQIconFile","QQIcon","");
+        Message msg = new Message();
+        msg.obj = bitmap;
+        msg.what = 1;
+        QQHandler.sendMessage(msg);
+
         String str = "张松";
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
@@ -270,7 +287,7 @@ public class IndexActivity extends BaseActivity {
                 switch (item.getItemId()){
                     case R.id.drawer_menu_school:
                         Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        startActivityAnim(new Intent(IndexActivity.this,waimai.class));
+                        startActivityAnimLeftToRight(new Intent(IndexActivity.this,waimai.class));
                         mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_see_calendar:
@@ -334,7 +351,7 @@ public class IndexActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.index_iv_user_head://头像
-                startActivityAnim(new Intent(IndexActivity.this, LoginActivity.class));
+                startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
                 break;
             case R.id.index_tv_user_hello://名字
                 Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
@@ -435,6 +452,18 @@ public class IndexActivity extends BaseActivity {
         }
         return true;
     }
+
+    Handler QQHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+             if(msg.what == 1){
+                Bitmap bitmap = (Bitmap)msg.obj;
+                 mIndex_iv_user_head.setImageBitmap(bitmap);
+            }
+        }
+
+    };
     //多个控件对应公共事件
 //    @OnClick({R2.id.btn, R2.id.btn1})
 //    public void sayHi(Button btn) {

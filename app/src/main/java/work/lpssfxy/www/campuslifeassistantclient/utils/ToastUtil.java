@@ -6,7 +6,7 @@ import work.lpssfxy.www.campuslifeassistantclient.App;
 
 /**
  * created by on 2021/8/23
- * 描述：
+ * 描述：Toast提示工具类
  *
  * @author ZSAndroid
  * @create 2021-08-23-14:30
@@ -19,7 +19,7 @@ public class ToastUtil {
             sToast.setText(text);
             sToast.setDuration(Toast.LENGTH_SHORT);
         } else {
-            sToast = Toast.makeText(App.getApplication(), text, Toast.LENGTH_SHORT);
+            sToast = Toast.makeText(App.getInstance(), text, Toast.LENGTH_SHORT);
         }
         sToast.show();
     }

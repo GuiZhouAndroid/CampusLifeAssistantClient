@@ -1,5 +1,6 @@
 package work.lpssfxy.www.campuslifeassistantclient;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -33,18 +34,28 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
  * @author ZSAndroid
  * @create 2021-08-18-15:52
  */
+@SuppressLint("StaticFieldLeak")
 public class App extends Application {
     private static final String TAG = "App";
-    /**
-     * 应用程序单例模式App全局变量
-     */
-    private static App sTinkerApp;
+    /** 应用程序单例模式App全局变量 */
+    private static App myApp;
+    public static Activity appActivity =null;
 
     /**
      * 生命周期组成部分A
      * Application无参构造，生命周期的开始
      */
     public App() {
+    }
+
+    /**
+     * 外部调用APP全局变量实例方法
+     *
+     * @return
+     */
+
+    public static App getInstance() {
+        return myApp;
     }
 
     /**
@@ -56,7 +67,6 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        sTinkerApp = this;
     }
 
     /**
@@ -66,6 +76,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        /** Application全局静态实例 */
+        myApp = this;
         /** 初始化全局OkHttp3工具类 */
         OkHttpUtil.init(this);
         /** 初始化百度地图加载so文件 */
@@ -78,17 +90,6 @@ public class App extends Application {
         initQQTencent();
     }
 
-    /**
-     * 外部调用APP全局变量实例方法
-     *
-     * @return
-     */
-    public static Application getApplication() {
-        if (sTinkerApp == null) {
-            throw new NullPointerException("appcontext not create or destroy");
-        }
-        return sTinkerApp;
-    }
 
     /**
      * 初始化全局适配AndroidAutoSize

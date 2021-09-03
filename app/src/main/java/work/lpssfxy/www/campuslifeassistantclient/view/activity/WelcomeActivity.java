@@ -207,11 +207,11 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
 
                 break;
             case R.id.welcome_tv_go_login:
-                startActivityAnim(new Intent(WelcomeActivity.this, loginAc.class));
+                startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, loginAc.class));
                 //finish(); 登录成功后销毁当前 WelcomeActivity ，否则暂时不销毁 WelcomeActivity
                 break;
             case R.id.welcome_tv_go_index:
-                startActivityAnim(new Intent(WelcomeActivity.this, IndexActivity.class));
+                startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, IndexActivity.class));
                 finish(); //直接手动单击进入首页后，同时销毁当前 WelcomeActivity
                 break;
         }
@@ -329,7 +329,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
                         main_image_pager.setCurrentItem(2, true);//图片动画——跳转第三页
                         main_text_pager.setCurrentItem(2, true);//文字滑动——跳转第三页
                     } else if (pageIndex == 2) { //第三页时——最后一页ViewPager滑动之后，跳转到主页面
-                        startActivityAnim(new Intent(WelcomeActivity.this, IndexActivity.class));
+                        startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, IndexActivity.class));
                         finish();
                     }
                 } else if (endX - startX >= (width / 8)) { // endX - startX   大于0 且大于宽的1/8 往前翻页(往右滑)

@@ -46,12 +46,14 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
@@ -322,7 +324,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onComplete(Object response) {
-            Log.d(TAG, "onComplete:成功");
+            Log.d(TAG, "onComplete:QQ登录回调成功");
             if (null == response) {
                 FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
                 return;
@@ -332,28 +334,39 @@ public class LoginActivity extends BaseActivity {
                 FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
                 return;
             }
-            FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
+            //FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
             doComplete((JSONObject) response);
+            /**登录成功跳转之前构思：
+             * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
+             * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
+             */
+            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
+            finish();//并销毁登录界面
         }
-
         protected void doComplete(JSONObject values) {
 
         }
 
         @Override
         public void onError(UiError e) {
-            Toast.makeText(LoginActivity.this, e.errorDetail, Toast.LENGTH_SHORT).show();
-            FileCodeUtil.toastMessage(LoginActivity.this, "QQ授权出错:" + e.errorDetail);
-            FileCodeUtil.dismissDialog();
+            Toast.makeText(LoginActivity.this,"QQ授权登录出错！" + e.errorDetail, Toast.LENGTH_SHORT).show();
+            //FileCodeUtil.toastMessage(LoginActivity.this, "QQ授权出错:" + e.errorDetail);
+            //FileCodeUtil.dismissDialog();
         }
 
         @Override
         public void onCancel() {
-            FileCodeUtil.toastMessage(LoginActivity.this, "取消qq授权 ");
-            FileCodeUtil.dismissDialog();
+            Toast.makeText(LoginActivity.this,"取消QQ授权登录！", Toast.LENGTH_SHORT).show();
+            //FileCodeUtil.toastMessage(LoginActivity.this, "取消qq授权");
+            //FileCodeUtil.dismissDialog();
         }
     }
 
+    /**
+     * 初始化OPENID和TOKEN值（为了得到用户的信息）
+     * @param jsonObject
+     */
     public static void initOpenidAndToken(JSONObject jsonObject) {
         try {
             String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
@@ -387,6 +400,7 @@ public class LoginActivity extends BaseActivity {
                         public void run() {
                             Gson gson = new Gson();
                             QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
+
                             Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
                             Log.i(TAG, "City: "+qqUser.getCity());
                             Log.i(TAG, "Level: "+qqUser.getLevel());
@@ -396,6 +410,7 @@ public class LoginActivity extends BaseActivity {
                                 Bitmap bitmap = null;
                                 try {
                                     bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+                                    SharePreferenceUtil.saveBitmapToSharedPreferences(LoginActivity.this,"QQIconFile","QQIcon",bitmap);
                                     Log.i(TAG, "bitmap: "+bitmap);
                                 } catch (JSONException e) {
                                     SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
@@ -428,7 +443,7 @@ public class LoginActivity extends BaseActivity {
     /**
      * 线程刷新UI数据
      */
-    Handler QQHandler = new Handler() {
+    public Handler QQHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
