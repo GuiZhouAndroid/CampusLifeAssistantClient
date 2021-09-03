@@ -89,6 +89,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- 欢迎页入口 -->
         <activity
             android:name=".view.activity.GuideActivity"
@@ -105,10 +106,12 @@
             android:name=".view.activity.BaseActivity"
             android:exported="true" />
         <!-- 注册登录Activity -->
+<!--        <activity-->
+<!--            android:name=".view.activity.loginAc"-->
+<!--            android:exported="true" />-->
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true" />
-
         <!-- 第三方qq登录 -->
         <activity
             android:name="com.tencent.connect.common.AssistActivity"

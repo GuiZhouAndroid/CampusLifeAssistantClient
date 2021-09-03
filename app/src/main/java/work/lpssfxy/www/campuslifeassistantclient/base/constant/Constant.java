@@ -29,7 +29,7 @@ public class Constant {
           post
        */
     public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
-    public static final String URL_LOGIN = "/user/login";
+    public static final String URL_LOGIN = "/user/LoginActivity";
     public static final String URL_REGISTER = "/user/register/";
     public static final String URL_CHANGE_PWD = "/user/lg/password";
 

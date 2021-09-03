@@ -1,6 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
-import static com.tencent.connect.common.Constants.KEY_ENABLE_SHOW_DOWNLOAD_URL;
 import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
@@ -15,18 +14,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -36,81 +39,67 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
+import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
+import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
 /**
- * created by on 2021/8/12
- * 描述：登录
+ * created by on 2021/9/2
+ * 描述：
  *
  * @author ZSAndroid
- * @create 2021-08-12-2:07
+ * @create 2021-09-02-18:21
  */
 @SuppressLint("NonConstantResourceId")
-public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
-    @BindView(R2.id.iv_login_wx)
-    ImageView iv_login_wx;//微信登录
-    @BindView(R2.id.iv_login_qq)
-    ImageView iv_login_qq;//QQ登录
-    @BindView(R2.id.tv_go_register)
-    TextView tv_go_register;//去注册
-    @BindView(R2.id.new_login_btn)
-    Button mNewLoginButton;//按钮登录
-    @BindView(R2.id.ck_qr)
-    CheckBox mQrCk; //二维码登录
-    @BindView(R2.id.check_oem_login)
-    CheckBox mOEMLogin;//OEM登录
-    @BindView(R2.id.check_force_qr)
-    CheckBox mCheckForceQr;//强制扫码登录
-    @BindView(R2.id.show_web_download_ui)
-    CheckBox mShowWebDownloadUi;//显示扫码Web页下载链接
-    @BindView(R2.id.user_nickname)
-    TextView mUserInfo;//用户姓名
-    @BindView(R2.id.user_logo)
-    ImageView mUserLogo;//用户头像
-
-    private Button mServerSideLoginBtn;
+    /** 父布局 */
+    @BindView(R2.id.login_rl_show) RelativeLayout mLogin_rl_show;
+    /** 用户名输入控件 */
+    @BindView(R2.id.til_login_username) TextInputLayout mTil_login_username;
+    /** 密码输入控件 */
+    @BindView(R2.id.til_login_password) TextInputLayout mTil_login_password;
+    /** 用户名 */
+    @BindView(R2.id.login_edit_username) EditText mLogin_edit_username;
+    /** 密码 */
+    @BindView(R2.id.login_edit_password) EditText mLogin_edit_password;
+    /** 忘记密码 */
+    @BindView(R2.id.login_tv_forget_pwd) TextView mLogin_tv_forget_pwd;
+    /** 登录动画 */
+    @BindView(R2.id.login_ptn_anim) ProgressButton mLogin_ptn_anim;
+    /** 去注册 */
+    @BindView(R2.id.login_tv_go_register) TextView mLogin_tv_go_register;
+    /** 微信登录 */
+    @BindView(R2.id.login_iv_wx) ImageView mLogin_iv_wx;
+    /** QQ登录 */
+    @BindView(R2.id.login_iv_qq) ImageView mLogin_iv_qq;
+    /** 强制扫码登录 */
+    @BindView(R2.id.check_force_qr) CheckBox mCheckForceQr;
+    /** 输入的用户名密码 */
+    private String strUserName,strPassword;
+    /** QQ互联SDK实例 */
     public static Tencent mTencent;
-    private static boolean isServerSideLogin = false;
-    private static Intent mPrizeIntent = null;
-
-    /**
-     * 开启滑动返回
-     *
-     * @return
-     */
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
     }
 
-    /**
-     * 开启沉浸状态栏
-     *
-     * @return
-     */
     @Override
     protected Boolean isSetStatusBarState() {
-        return false;
+        return true;
     }
 
-    /**
-     * 开启自动隐藏底部导航栏
-     *
-     * @return
-     */
     @Override
     protected Boolean isSetBottomNaviCationState() {
         return false;
@@ -123,22 +112,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     protected Boolean isSetImmersiveFullScreen() {
-        return true;
+        return false;
     }
 
-    /**
-     * 绑定布局文件
-     *
-     * @return
-     */
     @Override
     public int bindLayout() {
         return R.layout.login_activity;
     }
 
-    /**
-     * 初始化SDK——QQ
-     */
     @Override
     protected void prepareData() {
         Log.i(TAG, "-->onCreate结束+腾讯实例创建成功 ");
@@ -147,36 +128,20 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             SLog.e(TAG, "腾讯实例创建失败");
             finish();
         }
+        /** QQ登录权限申请*/
+        PermissionMgr.getInstance().requestPermissions(this);
     }
 
     /**
-     * 初始化View
+     * 初始化控件
      */
     @Override
     protected void initView() {
-        // 获取有奖分享的intent信息
-        if (null != getIntent()) {
-            mPrizeIntent = getIntent();
-        }
-        // 有奖分享处理
-        handlePrizeShare();
-
-        Map<String, String> params = Tencent.parseMiniParameters(getIntent());
-        if (!params.isEmpty()) {
-            Iterator<Map.Entry<String, String>> iter = params.entrySet().iterator();
-
-            StringBuffer sBuf = new StringBuffer();
-            while (iter.hasNext()) {
-                Map.Entry<String, String> entry = iter.next();
-                sBuf.append(entry.getKey() + "=" + entry.getValue()).append(" ");
-            }
-
-            Toast.makeText(this, sBuf.toString(), Toast.LENGTH_LONG).show();
-        }
-
-        PermissionMgr.getInstance().requestPermissions(this);
-
-        updateLoginButton();
+        /** 初始化动画登录按钮属性 */
+        mLogin_ptn_anim.setBgColor(Color.RED);
+        mLogin_ptn_anim.setTextColor(Color.WHITE);
+        mLogin_ptn_anim.setProColor(Color.WHITE);
+        mLogin_ptn_anim.setButtonText("登  录");
     }
 
     @Override
@@ -184,162 +149,167 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     }
 
-    /**
-     * 设置事件
-     */
     @Override
     protected void initEvent() {
-        mNewLoginButton.setOnClickListener(this);
-//        mServerSideLoginBtn.setOnClickListener(this);
-        mQrCk.setOnClickListener(this);
-        mCheckForceQr.setOnCheckedChangeListener(this);
+
+    }
+
+    @Override
+    protected void initListener() {
+        mLogin_edit_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!RegexUtils.checkMobile(String.valueOf(charSequence))){
+                    mTil_login_username.setError("手机号码格式不正确！");
+                    mTil_login_username.setErrorEnabled(true);
+                }else {
+                    mTil_login_username.setErrorEnabled(false);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mLogin_edit_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!RegexUtils.checkMobile(String.valueOf(charSequence))){
+                    mTil_login_password.setError("手机号码格式不正确！");
+                    mTil_login_password.setErrorEnabled(true);
+                }else {
+                    mTil_login_password.setErrorEnabled(false);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     /**
-     * 开始监听
+     * 请求权限结果
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
      */
-    @Override
-    protected void initListener() {
-
-    }
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (compoundButton.getId() == R.id.check_force_qr) {
-            mQrCk.setChecked(b);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionMgr.getInstance().onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    /**
-     * 有奖分享处理，未接入有奖分享可以不考虑
-     */
-    private void handlePrizeShare() {
 
-    }
-
-    @Override
-    protected void onStart() {
-        Log.d(TAG, "-->onStart");
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "-->onResume");
-        // 有奖分享处理
-        handlePrizeShare();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "-->onPause");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "-->onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "-->onDestroy");
-        super.onDestroy();
-    }
-
-
-    private void updateLoginButton() {
-        if (mTencent != null && mTencent.isSessionValid()) {
-            if (isServerSideLogin) {
-                mNewLoginButton.setTextColor(Color.BLUE);
-                mNewLoginButton.setText("登录");
-//                mServerSideLoginBtn.setTextColor(Color.RED);
-//                mServerSideLoginBtn.setText("退出Server-Side账号");
-            } else {
-                mNewLoginButton.setTextColor(Color.RED);
-                mNewLoginButton.setText("退出帐号");
-//                mServerSideLoginBtn.setTextColor(Color.BLUE);
-//                mServerSideLoginBtn.setText("Server-Side登录");
-            }
-        } else {
-            mNewLoginButton.setTextColor(Color.BLUE);
-            mNewLoginButton.setText("登录");
-//            mServerSideLoginBtn.setTextColor(Color.BLUE);
-//            mServerSideLoginBtn.setText("Server-Side登录");
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        Context context = view.getContext();
-        Animation shake = AnimationUtils.loadAnimation(context, R.anim.login_qq_shake);
-        Class<?> cls = null;
-        boolean isAppbar = false;
-        switch (view.getId()) {
-            case R.id.new_login_btn:
-                onClickLogin();
-                view.startAnimation(shake);
+    @OnClick({R2.id.login_ptn_anim,R2.id.login_tv_forget_pwd,R2.id.login_tv_go_register,R2.id.login_iv_wx,R2.id.login_iv_qq})
+    public void onLoginViewClick(View view){
+        switch (view.getId()){
+            case R.id.login_ptn_anim://动画登录
+                strUserName = mLogin_edit_username.getText().toString();
+                strPassword = mLogin_edit_password.getText().toString();
+                closeKeyboard();//隐藏软键盘
+                userLogin(strUserName, strPassword);//用户名密码登录
                 break;
-
-        }
-        view.startAnimation(shake);
-        if (cls != null) {
-            Intent intent = new Intent(context, cls);
-            if (isAppbar) { //APP内应用吧登录需接收登录结果
-                startActivityForResult(intent, Constants.REQUEST_APPBAR);
-            } else {
-                context.startActivity(intent);
-            }
+            case R.id.login_tv_forget_pwd://忘记密码
+                userFindPassword();//找回密码
+                break;
+            case R.id.login_tv_go_register://去注册
+                userGoRegisterAccount();//跳转注册
+                break;
+            case R.id.login_iv_wx://微信登录
+                weChatLogin();//调用微信的SDK
+                break;
+            case R.id.login_iv_qq://QQ登录
+                QQLogin();//调用QQ的SDK
+                break;
         }
     }
 
-    private void onClickLogin() {
+    /**
+     * 用户名密码判断登录
+     */
+    private void userLogin(String strUserName, String strPassword) {
+        if(strUserName.isEmpty()&&strPassword.isEmpty()){
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show,  R.string.please_input_user_name_password, Snackbar.LENGTH_LONG);
+            //设置Snackbar上提示的字体颜色
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        if (strUserName.isEmpty()) {
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show,  R.string.please_input_user_name, Snackbar.LENGTH_LONG);
+            //设置Snackbar上提示的字体颜色
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        if (strPassword.isEmpty()) {
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show,   R.string.please_input_password, Snackbar.LENGTH_LONG);
+            //设置Snackbar上提示的字体颜色
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        mLogin_ptn_anim.startAnim();
+        Message m=mHandler.obtainMessage();
+        mHandler.sendMessageDelayed(m,1500);
+    }
+
+    /**
+     * 找回密码
+     */
+    private void userFindPassword() {
+        ToastUtil.showToast("找回密码");
+    }
+
+    /**
+     * 跳转注册
+     */
+    private void userGoRegisterAccount() {
+        ToastUtil.showToast("跳转注册");
+    }
+    /**
+     * 微信登录
+     */
+    private void weChatLogin() {
+        ToastUtil.showToast("微信登录");
+    }
+    /**
+     * QQ登录
+     */
+    private void QQLogin() {
         if (!mTencent.isSessionValid()) {
             // 强制扫码登录
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
-
-            if (mOEMLogin.isChecked()) {
-                mTencent.loginWithOEM(this, "all", loginListener, mQrCk.isChecked(), "10000144", "10000144", "xxxx");
-            } else {
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-                    params.put(KEY_RESTORE_LANDSCAPE, true);
-                }
-
-
-                params.put(KEY_SCOPE, "all");
-                params.put(KEY_QRCODE, mQrCk.isChecked());
-                params.put(KEY_ENABLE_SHOW_DOWNLOAD_URL, mShowWebDownloadUi.isChecked());
-                mTencent.login(this, loginListener, params);
+            HashMap<String, Object> params = new HashMap<>();
+            if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+                params.put(KEY_RESTORE_LANDSCAPE, true);
             }
-            isServerSideLogin = false;
-            Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
+            params.put(KEY_SCOPE, "all");
+            params.put(KEY_QRCODE, mCheckForceQr.isChecked());
+            mTencent.login(this, loginListener, params);
+
         } else {
-            if (isServerSideLogin) { // Server-Side 模式的登录, 先退出，再进行SSO登录
-                mTencent.logout(this);
-                mTencent.login(this, "all", loginListener);
-                isServerSideLogin = false;
-                Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
-                return;
-            }
             mTencent.logout(this);
+            mTencent.login(this, "all", loginListener);
+
             // 第三方也可以选择注销的时候不去清除第三方的targetUin/targetMiniAppId
             //saveTargetUin("");
             //saveTargetMiniAppId("");
-            updateUserInfo();
-            updateLoginButton();
+//            updateUserInfo();
+//            updateLoginButton();
         }
+        Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
     }
-
 
     IUiListener loginListener = new BaseUiListener() {
         @Override
@@ -348,10 +318,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             Log.d(TAG, "doComplete: " + values.toString());
             initOpenidAndToken(values);
             updateUserInfo();
-            updateLoginButton();
+//            updateLoginButton();
         }
     };
-
 
     private class BaseUiListener extends DefaultUiListener {
 
@@ -379,8 +348,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                 return;
             }
             FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
-            // 有奖分享处理
-            handlePrizeShare();
+
             doComplete((JSONObject) response);
         }
 
@@ -402,9 +370,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             Toast.makeText(getApplicationContext(), "取消qq授权", Toast.LENGTH_SHORT).show();
             FileCodeUtil.toastMessage(LoginActivity.this, "onCancel: ");
             FileCodeUtil.dismissDialog();
-            if (isServerSideLogin) {
-                isServerSideLogin = false;
-            }
         }
     }
 
@@ -435,28 +400,28 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     Message msg = new Message();
                     msg.obj = response;
                     msg.what = 0;
-                    mHandler.sendMessage(msg);
+                    QQHandler.sendMessage(msg);
                     new Thread() {
                         @Override
                         public void run() {
-//                            Gson gson = new Gson();
-//                            QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
-//                            Log.d(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
-//                            Log.d(TAG, "City: "+qqUser.getCity());
-//                            Log.d(TAG, "Level: "+qqUser.getLevel());
-                            JSONObject json = (JSONObject) response;
-                            if (json.has("figureurl")) {
-                                Bitmap bitmap = null;
-                                try {
-                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-                                } catch (JSONException e) {
-                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
-                                }
-                                Message msg = new Message();
-                                msg.obj = bitmap;
-                                msg.what = 1;
-                                mHandler.sendMessage(msg);
-                            }
+                            Gson gson = new Gson();
+                            QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
+                            Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
+                            Log.i(TAG, "City: "+qqUser.getCity());
+                            Log.i(TAG, "Level: "+qqUser.getLevel());
+//                            JSONObject json = (JSONObject) response;
+//                            if (json.has("figureurl")) {
+//                                Bitmap bitmap = null;
+//                                try {
+//                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+//                                } catch (JSONException e) {
+//                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
+//                                }
+//                                Message msg = new Message();
+//                                msg.obj = bitmap;
+//                                msg.what = 1;
+//                                QQHandler.sendMessage(msg);
+//                            }
                         }
 
                     }.start();
@@ -471,36 +436,35 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             info.getUserInfo(listener);
 
         } else {
-            mUserInfo.setText("");
-            mUserInfo.setVisibility(android.view.View.GONE);
-            mUserLogo.setVisibility(android.view.View.GONE);
+//            mUserInfo.setText("");
+//            mUserInfo.setVisibility(android.view.View.GONE);
+//            mUserLogo.setVisibility(android.view.View.GONE);
         }
     }
 
     /**
      * 线程刷新UI数据
      */
-    Handler mHandler = new Handler() {
+    Handler QQHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 JSONObject response = (JSONObject) msg.obj;
                 if (response.has("nickname")) {
-                    try {
-                        mUserInfo.setVisibility(android.view.View.VISIBLE);
-                        mUserInfo.setText(response.getString("nickname"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        mUserInfo.setVisibility(android.view.View.VISIBLE);
+//                        mUserInfo.setText(response.getString("nickname"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
                 }
             } else if (msg.what == 1) {
                 Bitmap bitmap = (Bitmap) msg.obj;
-                mUserLogo.setImageBitmap(bitmap);
-                mUserLogo.setVisibility(android.view.View.VISIBLE);
+//                mUserLogo.setImageBitmap(bitmap);
+//                mUserLogo.setVisibility(android.view.View.VISIBLE);
             }
         }
-
     };
 
     /**
@@ -522,11 +486,44 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     }
 
     /**
-     * 按下返回键，销毁当前页面
+     * 软键盘的自动弹出
+     * @param editText
      */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        LoginActivity.this.finish();
+    private void showKeyboard(EditText editText){
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(editText, 0);
     }
+
+    /**
+     * 软键盘的关闭
+     */
+    private void closeKeyboard() {
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+    /**
+     * 登录转场
+     */
+    private Handler mHandler=new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            mLogin_ptn_anim.stopAnim(new ProgressButton.OnStopAnim() {
+                @Override
+                public void Stop() {
+//                    UiTools.showSimpleLD(loginAc.this,getString(R.string.loading_login));
+//                    userNameOrPhone = edit_login_usernameOrPhone.getText().toString();
+//                    password = edit_login_password.getText().toString();
+//                    //  用户名/手机号和密码登录
+//                    StartUsernameOrPhonePassword(userNameOrPhone ,password);
+                }
+            });
+
+        }
+    };
+
 }

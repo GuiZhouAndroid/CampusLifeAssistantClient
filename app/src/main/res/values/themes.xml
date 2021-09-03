@@ -21,6 +21,12 @@
 
     <!-- APP全透明沉浸式主题样式，提供item空属性，使用StatusBarUtils工具类 -->
     <style name="AppMainTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--TextInputLayout的hint提示文字颜色-->
+        <item name="android:textColorHint">@color/LoginInputBackground</item>
+        <!--TextInputLayout的未选中状态颜色-->
+        <item name="colorControlNormal">@color/LoginInputBackground</item>
+        <!--TextInputLayout的已选中状态颜色-->
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <!--QQ-->
@@ -61,13 +67,23 @@
         <item name="android:textSize">@dimen/sp_30</item>
     </style>
 
+    <!--设置超出字符数后提示文字的颜色-->
+    <style name="HintError" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/bbl_ff0000</item>
+    </style>
+    <style name="LoginTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/LoginInputBackground</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+
+
     <!--Tooblar弹出菜单主题-->
-    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
-        <item name="android:colorBackground">#C60C0C</item>
-        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
-    </style>
-    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
-    </style>
+<!--    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">-->
+<!--        <item name="android:colorBackground">#C60C0C</item>-->
+<!--        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> &lt;!&ndash;新增一个item，用于控制menu&ndash;&gt;-->
+<!--    </style>-->
+<!--    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">-->
+<!--        <item name="overlapAnchor">false</item>  &lt;!&ndash;把该属性改为false即可使menu位置位于toolbar之下&ndash;&gt;-->
+<!--    </style>-->
 
 </resources>

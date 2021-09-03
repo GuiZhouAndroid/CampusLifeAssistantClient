@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     /** Video播放器 */
     @BindView(R2.id.Guide_Video_View) GuideFullVideoView videoView;
     /** 圆形倒计时 */
-    @BindView(R2.id.circleprogress) CircleProgress circleprogress;
+    @BindView(R2.id.circleprogress) CircleProgress mCircleProgress;
     /** 跳过按钮 */
     @BindView(R2.id.btn_guide_skip) Button mBtn_guide_skip;
 
@@ -109,8 +110,8 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     protected void initView() {
-        circleprogress.startCountDown();//开始倒计时
-        circleprogress.bringToFront();//：设置CircleProgress 优先级> GuideFullVideoView
+        mCircleProgress.startCountDown();//开始倒计时
+        mCircleProgress.bringToFront();//：设置CircleProgress 优先级> GuideFullVideoView
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
     }
@@ -130,7 +131,9 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void initEvent() {
         videoView.setOnCompletionListener(this);//监听视频播放
-        circleprogress.setAddCountDownListener(this);//监听倒计时
+        mCircleProgress.setAddCountDownListener(this);//监听倒计时
+        mCircleProgress.setOnClickListener(this);//圆环跳过
+        mBtn_guide_skip.setOnClickListener(this);//按钮跳过
     }
 
     /**
@@ -144,9 +147,9 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     /**
      * 关闭自动监听倒计时，执行点击跳过
      */
-    @OnClick(R2.id.btn_guide_skip)
     public void onViewBtnSkipOnClick(){
-        circleprogress.setAddCountDownListener(null);//关闭自动监听倒计时
+        //videoView.stopPlayback();//停止播放视频
+        mCircleProgress.setAddCountDownListener(null);//关闭自动监听倒计时
         int count = SharePreferenceUtil.getInstance().getInt("first",0); // 取出数据
         //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
@@ -226,5 +229,19 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 点击跳过
+     * @param view
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.circleprogress://圆环跳过
+            case R.id.btn_guide_skip://按钮跳过
+                onViewBtnSkipOnClick();
+                break;
+        }
     }
 }

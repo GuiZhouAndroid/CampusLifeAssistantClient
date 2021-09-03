@@ -15,8 +15,9 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/dp_40"
         android:layout_marginEnd="@dimen/dp_25"
-        app:hintSize="@dimen/text_size_10"
-        app:unitSize="@dimen/sp_15" />
+        app:hintSize="@dimen/sp_10"
+        app:unitSize="@dimen/sp_10"
+        app:unit="跳过" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView
         android:id="@+id/Guide_Video_View"
@@ -25,16 +26,16 @@
         android:background="@android:color/transparent"/>
 
     <Button
+        android:background="@drawable/hint_superscript_red"
         android:id="@+id/btn_guide_skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_65"
+        android:layout_height="@dimen/dp_35"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/dp_70"
+        android:layout_marginBottom="@dimen/dp_130"
         android:layout_marginEnd="@dimen/dp_30"
         android:text="@string/btn_guide_skip"
-        android:textColor="#fff"
-        android:textSize="@dimen/sp_20" />
-
+        android:textColor="@color/Pink"
+        android:textSize="@dimen/sp_18" />
 
 </RelativeLayout>

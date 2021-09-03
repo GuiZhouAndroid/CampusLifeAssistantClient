@@ -102,4 +102,7 @@
     <color name="tab_selected_color">#D33D3C</color>
     <color name="unreadTextColor">#00ff00</color>
     <color name="msgTextColor">#00ff00</color>
+
+    <!--登录-->
+    <color name="LoginInputBackground">#FFFACD</color>
 </resources>

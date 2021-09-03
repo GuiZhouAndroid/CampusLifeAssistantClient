@@ -1,17 +1,23 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
+import static android.view.KeyEvent.KEYCODE_BACK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.SkinAppCompatDelegateImpl;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -257,6 +263,15 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     }
 
     /**
+     * 左————>右：启动动画
+     * @param activity
+     * @param intent
+     */
+    public static void startActivityAnim(Activity activity,Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+    /**
      * 传值
      * 左————>右：启动动画
      * @param intent
@@ -268,13 +283,16 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     }
 
     /**
-     * 物理键返回上一页
+     *
+     * 物理键返回键执行上一页
      * 右————>左：，启动动画
      */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+        //finish();
+        //overridePendingTransition(R.anim.anim_left, R.anim.anim_right);
     }
 
     /**
@@ -299,5 +317,15 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         }
         lastClick = System.currentTimeMillis();
         return true;
+    }
+
+    /**
+     * 设置Snackbar上提示的字体颜色
+     * @param snackbar
+     * @param color
+     */
+    public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
+        View view = snackbar.getView();
+        ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 }

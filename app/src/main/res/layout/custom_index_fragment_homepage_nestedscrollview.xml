@@ -30,7 +30,38 @@
         app:banner_pointTopBottomMargin="15dp"
         app:banner_tipTextColor="@color/color_title_bg"
         app:banner_tipTextSize="@dimen/textSize_titleSmall"
-        app:banner_transitionEffect="depth"/>
+        app:banner_transitionEffect="depth" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/colorAccent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginStart="@dimen/dp_2"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/dp_2"
+        android:background="@drawable/index_tv_bg_radian"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="match_parent"
+            android:src="@mipmap/index_hand_click" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/index_tv_assistant"
+            android:textColor="@color/bg_status_bar"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -39,22 +70,83 @@
 
     <com.example.library.AutoFlowLayout
         android:id="@+id/auto_grid_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_140"
-            android:background="@color/viewBackground"
-            app:columnNumbers="5"
-            app:cutLine="true"
-            app:cutLineColor="@color/colorAccent"
-            app:cutLineWidth="1px"
-            app:horizontalSpace="5dp"
-            app:rowNumbers="2"
-            app:verticalSpace="5dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_140"
+        android:background="@color/viewBackground"
+        app:columnNumbers="5"
+        app:cutLine="true"
+        app:cutLineColor="@color/colorAccent"
+        app:cutLineWidth="1px"
+        app:horizontalSpace="5dp"
+        app:rowNumbers="2"
+        app:verticalSpace="5dp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/colorAccent" />
-    <TextView android:layout_marginTop="@dimen/dp_10"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginStart="@dimen/dp_2"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/dp_2"
+        android:background="@drawable/index_tv_bg_radian"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="match_parent"
+            android:src="@mipmap/index_hand_click" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/index_tv_information"
+            android:textColor="@color/bg_status_bar"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/colorAccent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_2"
+        android:background="@color/viewBackground" />
+
+    <LinearLayout
+        android:background="@color/Grey100"
+        android:paddingTop="@dimen/dp_30"
+        android:paddingBottom="@dimen/dp_30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/content" />
+        android:orientation="horizontal">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@color/Grey" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Pink"
+            android:text="我是有底线的"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@color/Grey" />
+    </LinearLayout>
 </LinearLayout>
