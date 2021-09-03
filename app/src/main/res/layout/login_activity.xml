@@ -5,7 +5,7 @@
     android:id="@+id/login_rl_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login">
+    android:background="@drawable/login_bg">
     <!--内容布局-->
     <ImageView
         android:id="@+id/iv_touxiang"
