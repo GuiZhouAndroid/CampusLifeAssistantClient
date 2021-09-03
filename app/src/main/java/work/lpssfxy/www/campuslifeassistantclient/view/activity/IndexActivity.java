@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -351,7 +352,19 @@ public class IndexActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.index_iv_user_head://头像
-                startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+                if (Constant.qqUser== null){
+                    startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+                }else{
+                    if(mIndex_iv_user_head !=null) {
+                        Snackbar snackbar = Snackbar.make(mAppbar_constant_toolbar, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
+                        //设置Snackbar上提示的字体颜色
+                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                        snackbar.show();
+                    }else {
+                        startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+                    }
+                }
+//                startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
                 break;
             case R.id.index_tv_user_hello://名字
                 Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();

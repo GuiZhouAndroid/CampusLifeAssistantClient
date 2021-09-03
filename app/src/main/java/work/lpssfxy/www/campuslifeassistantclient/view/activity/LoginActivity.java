@@ -4,6 +4,8 @@ import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
 
+import static work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant.qqUser;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -399,8 +401,7 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Gson gson = new Gson();
-                            QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
-
+                            qqUser =gson.fromJson(response.toString(), QQUser.class);
                             Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
                             Log.i(TAG, "City: "+qqUser.getCity());
                             Log.i(TAG, "Level: "+qqUser.getLevel());
