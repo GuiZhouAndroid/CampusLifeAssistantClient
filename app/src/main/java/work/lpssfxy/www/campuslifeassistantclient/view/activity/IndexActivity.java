@@ -47,6 +47,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
+import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
@@ -155,6 +156,7 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void prepareData() {
         initPermission();
+        Log.i(TAG, "首页的TencentQQ: "+ Constant.mTencent);
     }
 
     /**

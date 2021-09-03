@@ -39,6 +39,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -47,10 +48,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
@@ -88,8 +91,6 @@ public class LoginActivity extends BaseActivity {
     @BindView(R2.id.check_force_qr) CheckBox mCheckForceQr;
     /** 输入的用户名密码 */
     private String strUserName,strPassword;
-    /** QQ互联SDK实例 */
-    public static Tencent mTencent;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -123,12 +124,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-        Log.i(TAG, "-->onCreate结束+腾讯实例创建成功 ");
-        mTencent = Tencent.createInstance("101965703", LoginActivity.this, "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
-        if (mTencent == null) {
-            SLog.e(TAG, "腾讯实例创建失败");
-            finish();
-        }
         /** QQ登录权限申请*/
         PermissionMgr.getInstance().requestPermissions(this);
     }
@@ -287,7 +282,7 @@ public class LoginActivity extends BaseActivity {
      * QQ登录
      */
     private void QQLogin() {
-        if (!mTencent.isSessionValid()) {
+        if (!Constant.mTencent.isSessionValid()) {
             // 强制扫码登录
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
 
@@ -297,16 +292,17 @@ public class LoginActivity extends BaseActivity {
             }
             params.put(KEY_SCOPE, "all");
             params.put(KEY_QRCODE, mCheckForceQr.isChecked());
-            mTencent.login(this, loginListener, params);
+            Constant.mTencent.login(this, loginListener, params);
+            //返回系统启动到现在的毫秒数，包含休眠时间
             Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
         } else {
-            mTencent.logout(this);
+            Constant.mTencent.logout(this);
             // mTencent.login(this, "all", loginListener);
             // 第三方也可以选择注销的时候不去清除第三方的targetUin/targetMiniAppId
             //saveTargetUin("");
             //saveTargetMiniAppId("");
-//            updateUserInfo();
-//            updateLoginButton();
+            //updateUserInfo();
+            //updateLoginButton();
         }
     }
 
@@ -315,9 +311,10 @@ public class LoginActivity extends BaseActivity {
         protected void doComplete(JSONObject values) {
             Log.d("SDKQQAgentPref", "AuthorSwitch_SDK:" + SystemClock.elapsedRealtime());
             Log.d(TAG, "doComplete: " + values.toString());
+            /** 初始化OPENID和TOKEN值（为了得到用户的信息） */
             initOpenidAndToken(values);
             updateUserInfo();
-//            updateLoginButton();
+            //updateLoginButton();
         }
     };
 
@@ -325,17 +322,6 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onComplete(Object response) {
-//            if(arg0!=null){
-//                JSONObject jsonObject = (JSONObject) arg0;
-//                try {
-//                    String token = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_ACCESS_TOKEN);
-//                    String expires = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_EXPIRES_IN);
-//                    String openId = jsonObject.getString(com.tencent.connect.common.Constants.PARAM_OPEN_ID);
-//
-//                } catch (JSONException e) {
-//                    Log.d(TAG, "onComplete: 失败");
-//                }
-//            }
             Log.d(TAG, "onComplete:成功");
             if (null == response) {
                 FileCodeUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
@@ -375,15 +361,15 @@ public class LoginActivity extends BaseActivity {
             String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);
             if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires)
                     && !TextUtils.isEmpty(openId)) {
-                mTencent.setAccessToken(token, expires);
-                mTencent.setOpenId(openId);
+                Constant.mTencent.setAccessToken(token, expires);
+                Constant.mTencent.setOpenId(openId);
             }
         } catch (Exception e) {
         }
     }
 
     private void updateUserInfo() {
-        if (mTencent != null && mTencent.isSessionValid()) {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
             IUiListener listener = new DefaultUiListener() {
                 @Override
                 public void onError(UiError e) {
@@ -404,19 +390,21 @@ public class LoginActivity extends BaseActivity {
                             Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
                             Log.i(TAG, "City: "+qqUser.getCity());
                             Log.i(TAG, "Level: "+qqUser.getLevel());
-//                            JSONObject json = (JSONObject) response;
-//                            if (json.has("figureurl")) {
-//                                Bitmap bitmap = null;
-//                                try {
-//                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-//                                } catch (JSONException e) {
-//                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
-//                                }
-//                                Message msg = new Message();
-//                                msg.obj = bitmap;
-//                                msg.what = 1;
-//                                QQHandler.sendMessage(msg);
-//                            }
+                            Log.i(TAG, "qqUser全部数据: "+qqUser);
+                            JSONObject json = (JSONObject) response;
+                            if (json.has("figureurl")) {
+                                Bitmap bitmap = null;
+                                try {
+                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+                                    Log.i(TAG, "bitmap: "+bitmap);
+                                } catch (JSONException e) {
+                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
+                                }
+                                Message msg = new Message();
+                                msg.obj = bitmap;
+                                msg.what = 1;
+                                QQHandler.sendMessage(msg);
+                            }
                         }
 
                     }.start();
@@ -427,7 +415,7 @@ public class LoginActivity extends BaseActivity {
 
                 }
             };
-            UserInfo info = new UserInfo(this, mTencent.getQQToken());
+            UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
             info.getUserInfo(listener);
 
         } else {

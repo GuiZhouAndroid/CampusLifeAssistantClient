@@ -1,5 +1,9 @@
 package work.lpssfxy.www.campuslifeassistantclient.base.constant;
 
+import com.tencent.tauth.Tencent;
+
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
+
 /**
  * created by on 2021/8/23
  * 描述：
@@ -8,6 +12,11 @@ package work.lpssfxy.www.campuslifeassistantclient.base.constant;
  * @create 2021-08-23-14:20
  */
 public class Constant {
+
+
+    public static QQUser qqUser;
+
+    public static Tencent mTencent;
 
     /*wanandroid*/
     public static final String URL_BASE = "http://www.wanandroid.com/";

@@ -3,8 +3,11 @@ package work.lpssfxy.www.campuslifeassistantclient;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.tencent.open.log.SLog;
+import com.tencent.tauth.Tencent;
 
 import java.util.Locale;
 
@@ -17,7 +20,9 @@ import skin.support.app.SkinAppCompatViewInflater;
 import skin.support.app.SkinCardViewInflater;
 import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
+import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkHttpUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 
 /**
  * created by on 2021/8/18
@@ -29,6 +34,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkHttpUtil;
  * @create 2021-08-18-15:52
  */
 public class App extends Application {
+    private static final String TAG = "App";
     /**
      * 应用程序单例模式App全局变量
      */
@@ -68,7 +74,8 @@ public class App extends Application {
         initAutoSizeConfig();
         /** 初始化换肤框架 */
         initSkinCompatManager();
-
+        /** 初始化QQ互联SDK实例 */
+        initQQTencent();
     }
 
     /**
@@ -139,6 +146,18 @@ public class App extends Application {
                 .setSkinStatusBarColorEnable(false)// 关闭状态栏换肤，默认打开[可选]
                 .setSkinWindowBackgroundEnable(false)// 关闭windowBackground换肤，默认打开[可选]
                 .loadSkin();
+    }
+
+    /**
+     * 创建TencentSDK实例
+     */
+    private void initQQTencent() {
+        Constant.mTencent = Tencent.createInstance("101965703", getApplicationContext(), "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
+        if (Constant.mTencent != null) {
+            SLog.i(TAG, "腾讯实例创建成功=="+Constant.mTencent);
+        }else {
+            SLog.e(TAG, "腾讯实例创建失败=="+ Constant.mTencent);
+        }
     }
 }
 

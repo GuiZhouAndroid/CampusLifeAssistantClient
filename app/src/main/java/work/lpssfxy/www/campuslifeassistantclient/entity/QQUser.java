@@ -1,5 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.entity;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -10,7 +12,7 @@ import lombok.Data;
  * @create 2021-08-26-3:30
  */
 @Data
-public class QQUser {
+public class QQUser implements Serializable {
 
     private int ret;
     private String msg;
@@ -34,4 +36,5 @@ public class QQUser {
     private String yellow_vip_level;
     private String level;
     private String is_yellow_year_vip;
+
 }
