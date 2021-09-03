@@ -399,7 +399,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             intent.addCategory(Intent.CATEGORY_DEFAULT);
 
             //将功能Scheme以URI的方式传入data
-            Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=" + mInfo.getLat() + "&lon=" + mInfo.getLng() + "&dev=1&style=2");
+            Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&poiname=六盘水师范学院&lat=" + mInfo.getLat() + "&lon=" + mInfo.getLng() + "&dev=1&style=2");
             intent.setData(uri);
 
             //启动该页面即可

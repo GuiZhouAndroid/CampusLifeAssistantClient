@@ -2,6 +2,7 @@
 <!--默认折叠：app:expanded="false"-->
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="150dp"
@@ -47,14 +48,14 @@
             <!--用户头像-->
             <ImageView
                 android:id="@+id/index_iv_user_head"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:src="@mipmap/ic_launcher"/>
             <!--下午好-->
             <TextView
                 android:id="@+id/index_tv_user_hello"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_80"
+                android:layout_height="@dimen/dp_50"
                 android:gravity="center"
                 android:text="下午好,"
                 android:textColor="@color/white"

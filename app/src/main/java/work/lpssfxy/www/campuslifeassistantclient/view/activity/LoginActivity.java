@@ -443,8 +443,8 @@ public class LoginActivity extends BaseActivity {
     /**
      * 线程刷新UI数据
      */
+    @SuppressLint("HandlerLeak")
     public Handler QQHandler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
