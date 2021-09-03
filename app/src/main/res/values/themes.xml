@@ -64,7 +64,7 @@
     <!--CollapsingToolbarLayout结束主题-->
     <style name="CollTitleTextStartTheme" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textSize">@dimen/sp_16</item>
     </style>
 
     <!--设置超出字符数后提示文字的颜色-->

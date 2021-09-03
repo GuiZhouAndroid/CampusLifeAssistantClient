@@ -4,8 +4,6 @@ import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
 
-import static work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant.qqUser;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -31,17 +29,14 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
-import com.tencent.open.log.SLog;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -53,12 +48,12 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
 /**
@@ -71,6 +66,8 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
 @SuppressLint("NonConstantResourceId")
 public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
+    /**登录界面中Gson数据解析发送广播消息，首页通过对象序列号设置的键“QQUserBean”接受广播消息内容 */
+    public static final String action = "QQUserLogin.BroadCast.Action";
     /** 父布局 */
     @BindView(R2.id.login_rl_show) RelativeLayout mLogin_rl_show;
     /** 用户名输入控件 */
@@ -345,6 +342,8 @@ public class LoginActivity extends BaseActivity {
             App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
             startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
             finish();//并销毁登录界面
+//            LoginActivity.this.setResult(RESULT_OK);
+//            LoginActivity.this.finish();
         }
         protected void doComplete(JSONObject values) {
 
@@ -393,37 +392,53 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onComplete(final Object response) {
                     Log.d(TAG, "onComplete: " + response.toString());
-                    Message msg = new Message();
-                    msg.obj = response;
-                    msg.what = 0;
-                    QQHandler.sendMessage(msg);
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            Gson gson = new Gson();
-                            qqUser =gson.fromJson(response.toString(), QQUser.class);
-                            Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
-                            Log.i(TAG, "City: "+qqUser.getCity());
-                            Log.i(TAG, "Level: "+qqUser.getLevel());
-                            Log.i(TAG, "qqUser全部数据: "+qqUser);
-                            JSONObject json = (JSONObject) response;
-                            if (json.has("figureurl")) {
-                                Bitmap bitmap = null;
-                                try {
-                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-                                    SharePreferenceUtil.saveBitmapToSharedPreferences(LoginActivity.this,"QQIconFile","QQIcon",bitmap);
-                                    Log.i(TAG, "bitmap: "+bitmap);
-                                } catch (JSONException e) {
-                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
-                                }
-                                Message msg = new Message();
-                                msg.obj = bitmap;
-                                msg.what = 1;
-                                QQHandler.sendMessage(msg);
-                            }
-                        }
-
-                    }.start();
+                    /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
+                    QQUserBean qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
+                    /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
+                    SharePreferenceUtil.putObject(LoginActivity.this,qqUser);
+                    Log.i(TAG, "qqUser全部数据: "+qqUser);
+                    /** 通过Intent发送广播消息，*/
+                    Intent intent = new Intent(action);
+                    /**创建捆绑实例，Intent传递Java对象*/
+                    Bundle bundle=new Bundle();
+                    /** Java对象序列化存入Intent */
+                    bundle.putSerializable("QQUserBean", qqUser);
+                    /** 发送Intent序列化数据至Bundle捆绑对象*/
+                    intent.putExtras(bundle);
+                    /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */
+                    sendBroadcast(intent);
+//                    Log.d(TAG, "onComplete: " + response.toString());
+//                    Message msg = new Message();
+//                    msg.obj = response;
+//                    msg.what = 0;
+//                    QQHandler.sendMessage(msg);
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+//                            Gson gson = new Gson();
+//                            qqUser =gson.fromJson(response.toString(), QQUserBean.class);
+//                            Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
+//                            Log.i(TAG, "City: "+qqUser.getCity());
+//                            Log.i(TAG, "Level: "+qqUser.getLevel());
+//                            Log.i(TAG, "qqUser全部数据: "+qqUser);
+//                            JSONObject json = (JSONObject) response;
+//                            if (json.has("figureurl")) {
+//                                Bitmap bitmap = null;
+//                                try {
+//                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
+//                                    SharePreferenceUtil.saveBitmapToSharedPreferences(LoginActivity.this,"QQIconFile","QQIcon",bitmap);
+//                                    Log.i(TAG, "bitmap: "+bitmap);
+//                                } catch (JSONException e) {
+//                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
+//                                }
+//                                Message msg = new Message();
+//                                msg.obj = bitmap;
+//                                msg.what = 1;
+//                                QQHandler.sendMessage(msg);
+//                            }
+//                        }
+//
+//                    }.start();
                 }
 
                 @Override
@@ -435,9 +450,7 @@ public class LoginActivity extends BaseActivity {
             info.getUserInfo(listener);
 
         } else {
-//            mUserInfo.setText("");
-//            mUserInfo.setVisibility(android.view.View.GONE);
-//            mUserLogo.setVisibility(android.view.View.GONE);
+
         }
     }
 

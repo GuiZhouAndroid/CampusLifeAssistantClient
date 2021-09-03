@@ -59,7 +59,7 @@
                 android:gravity="center"
                 android:text="下午好,"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_16"
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.CollapsingToolbarLayout>

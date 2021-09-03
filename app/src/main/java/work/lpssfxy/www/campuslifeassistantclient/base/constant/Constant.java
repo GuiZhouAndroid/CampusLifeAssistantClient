@@ -2,7 +2,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base.constant;
 
 import com.tencent.tauth.Tencent;
 
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 
 /**
  * created by on 2021/8/23
@@ -14,7 +14,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUser;
 public class Constant {
 
 
-    public static QQUser qqUser;
+    public static QQUserBean qqUser;
 
     public static Tencent mTencent;
 

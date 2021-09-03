@@ -439,7 +439,7 @@ public class loginAc extends BaseActivity implements CompoundButton.OnCheckedCha
                         @Override
                         public void run() {
 //                            Gson gson = new Gson();
-//                            QQUser qqUser =gson.fromJson(response.toString(), QQUser.class);
+//                            QQUserBean qqUser =gson.fromJson(response.toString(), QQUserBean.class);
 //                            Log.d(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
 //                            Log.d(TAG, "City: "+qqUser.getCity());
 //                            Log.d(TAG, "Level: "+qqUser.getLevel());

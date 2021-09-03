@@ -2,16 +2,14 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,6 +32,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
 import com.example.zhouwei.library.CustomPopWindow;
@@ -42,11 +42,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,6 +56,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
 import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
@@ -166,6 +165,9 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void prepareData() {
+        /** 注册广播——接收者 */
+        IntentFilter filter = new IntentFilter(LoginActivity.action);
+        registerReceiver(broadcastReceiver, filter);
         initPermission();
         Log.i(TAG, "首页的TencentQQ: "+ Constant.mTencent);
     }
@@ -175,8 +177,10 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initView() {
+
         /** IndexActivity赋值单例静态全局变量，此处用于LoginActivity指定销毁当前IndexActivity*/
         App.appActivity = IndexActivity.this;
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -195,22 +199,10 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-        Bitmap bitmap = SharePreferenceUtil.getBitmapFromSharedPreferences(IndexActivity.this,"QQIconFile","QQIcon","");
-        Message msg = new Message();
-        msg.obj = bitmap;
-        msg.what = 1;
-        QQHandler.sendMessage(msg);
-
-        String str = "张松";
+        initLoginUserData();//初始化QQ登录持久化数据
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragmentList.addAll(Arrays.asList(fragments));
-
-        //标题栏字体加粗
-        Typeface font = Typer.set(this).getFont(Font.ROBOTO_BOLD);
-        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
-        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-        mCollapsing_toolbar_layout.setTitle(str);
 
     }
 
@@ -312,6 +304,108 @@ public class IndexActivity extends BaseActivity {
         });
     }
 
+    /**
+     * QQ登录持久化数据
+     */
+    @SuppressLint("CheckResult")
+    private void initLoginUserData(){
+        /** 调用SharePreference工具类获取Gson转化后的Java对象，持久化文件名“ZSAndroid”的本地数据 */
+        QQUserBean qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
+        /** 创建Glide圆形图像实例*/
+        RequestOptions options = new RequestOptions();
+        options.circleCrop();
+        /** 标题栏字体加粗 */
+        Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+
+        if (qqUser != null) {
+            Glide.with(IndexActivity.this)
+                    .load(qqUser.getFigureurl_2())
+                    .apply(options)
+                    .into(mIndex_iv_user_head);
+
+            mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+            mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+            mCollapsing_toolbar_layout.setTitle(qqUser.getNickname());
+            getDate(mIndex_tv_user_hello);
+        }else {
+            Glide.with(IndexActivity.this)
+                    .load(R.mipmap.index_not_login)
+                    .apply(options)
+                    .into(mIndex_iv_user_head);
+            mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+            mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+            mCollapsing_toolbar_layout.setTitle("点击头像登录");
+            mIndex_tv_user_hello.setVisibility(View.GONE);
+        }
+    }
+
+
+    /**
+     * 接受QQ登录广播
+     */
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @SuppressLint("CheckResult")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
+            QQUserBean qqUser = (QQUserBean) intent.getSerializableExtra("QQUserBean");
+            /** 创建Glide圆形图像实例*/
+            RequestOptions options = new RequestOptions();
+            options.circleCrop();
+            /** 标题栏字体加粗 */
+            Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+
+            if (qqUser != null) {
+                Glide.with(IndexActivity.this)
+                        .load(qqUser.getFigureurl_2())
+                        .apply(options)
+                        .into(mIndex_iv_user_head);
+
+                mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+                mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+                mCollapsing_toolbar_layout.setTitle(qqUser.getNickname());
+                getDate(mIndex_tv_user_hello);
+            }else {
+                Glide.with(IndexActivity.this)
+                        .load(R.mipmap.index_not_login)
+                        .apply(options)
+                        .into(mIndex_iv_user_head);
+
+                mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+                mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+                mCollapsing_toolbar_layout.setTitle("点击头像登录");
+                mIndex_tv_user_hello.setVisibility(View.GONE);
+            }
+        }
+    };
+    /**
+     * 判断当前时间处于那个时间
+     * @param tv
+     */
+    private void getDate(TextView tv){
+        Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+        tv.setTypeface(font);
+        Date d = new Date();
+        if(d.getHours()<11){
+            //标题栏字体加粗
+            tv.setText("早上好,");
+        }else if(d.getHours()<13){
+            tv.setText("中午好,");
+        }else if(d.getHours()<18){
+            tv.setText("下午好,");
+        }else if(d.getHours()<24){
+            tv.setText("晚上好,");
+        }
+    }
+    /**
+     * 未登录状态默认设置
+     */
+    private void setNotLoginQQUserInfo(){
+//        setDefaultIcon();//使用默认头像
+//        tv_username.setText(R.string.click_user_image);//使用默认用户名
+//        tv_signature.setText(R.string.signature);//使用默认个性签名
+//        mani_title.setText(getString(R.string.app_name));//标题
+    }
     /**
      * 权限申请
      * 百度定位检查权限/获取文件位置+写入外部存储器+读取手机状态
@@ -459,24 +553,14 @@ public class IndexActivity extends BaseActivity {
                 //new ToastUtil().ToastLocation(MainActivity.this,"搜索待实现", Toast.LENGTH_SHORT, Gravity.CENTER);
                 OpenToolbarPopup();//打开标题栏弹窗
                 break;
-            case R.id.qr:
-                Toast.makeText(this, "扫一扫待实现~", Toast.LENGTH_SHORT).show();
-                break;
+//            case R.id.qr:
+//                Toast.makeText(this, "扫一扫待实现~", Toast.LENGTH_SHORT).show();
+//                break;
         }
         return true;
     }
 
-    Handler QQHandler = new Handler() {
 
-        @Override
-        public void handleMessage(Message msg) {
-             if(msg.what == 1){
-                Bitmap bitmap = (Bitmap)msg.obj;
-                 mIndex_iv_user_head.setImageBitmap(bitmap);
-            }
-        }
-
-    };
     //多个控件对应公共事件
 //    @OnClick({R2.id.btn, R2.id.btn1})
 //    public void sayHi(Button btn) {
@@ -523,6 +607,16 @@ public class IndexActivity extends BaseActivity {
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
+    /**
+     * 注销广播
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
+
     /**
      * 防触碰处理
      * 再按一次退出程序

@@ -41,10 +41,6 @@ public class App extends Application {
     private static App myApp;
     public static Activity appActivity =null;
 
-    /**
-     * 生命周期组成部分A
-     * Application无参构造，生命周期的开始
-     */
     public App() {
     }
 

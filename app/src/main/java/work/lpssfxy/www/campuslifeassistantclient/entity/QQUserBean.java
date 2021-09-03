@@ -12,7 +12,7 @@ import lombok.Data;
  * @create 2021-08-26-3:30
  */
 @Data
-public class QQUser implements Serializable {
+public class QQUserBean implements Serializable {
 
     private int ret;
     private String msg;
