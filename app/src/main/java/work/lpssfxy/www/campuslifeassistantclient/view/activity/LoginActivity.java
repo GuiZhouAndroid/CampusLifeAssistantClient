@@ -56,7 +56,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
 
 /**
  * created by on 2021/9/2
- * 描述：
+ * 描述：登录界面
  *
  * @author ZSAndroid
  * @create 2021-09-02-18:21
@@ -90,6 +90,7 @@ public class LoginActivity extends BaseActivity {
     private String strUserName,strPassword;
     /** QQ互联SDK实例 */
     public static Tencent mTencent;
+
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -209,13 +210,12 @@ public class LoginActivity extends BaseActivity {
         PermissionMgr.getInstance().onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-
     @OnClick({R2.id.login_ptn_anim,R2.id.login_tv_forget_pwd,R2.id.login_tv_go_register,R2.id.login_iv_wx,R2.id.login_iv_qq})
     public void onLoginViewClick(View view){
         switch (view.getId()){
             case R.id.login_ptn_anim://动画登录
-                strUserName = mLogin_edit_username.getText().toString();
-                strPassword = mLogin_edit_password.getText().toString();
+                strUserName = mLogin_edit_username.getText().toString();//获取用户输入信息
+                strPassword = mLogin_edit_password.getText().toString();//获取用户输入密码
                 closeKeyboard();//隐藏软键盘
                 userLogin(strUserName, strPassword);//用户名密码登录
                 break;
@@ -290,6 +290,7 @@ public class LoginActivity extends BaseActivity {
         if (!mTencent.isSessionValid()) {
             // 强制扫码登录
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
+
             HashMap<String, Object> params = new HashMap<>();
             if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                 params.put(KEY_RESTORE_LANDSCAPE, true);
@@ -297,18 +298,16 @@ public class LoginActivity extends BaseActivity {
             params.put(KEY_SCOPE, "all");
             params.put(KEY_QRCODE, mCheckForceQr.isChecked());
             mTencent.login(this, loginListener, params);
-
+            Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
         } else {
             mTencent.logout(this);
-            mTencent.login(this, "all", loginListener);
-
+            // mTencent.login(this, "all", loginListener);
             // 第三方也可以选择注销的时候不去清除第三方的targetUin/targetMiniAppId
             //saveTargetUin("");
             //saveTargetMiniAppId("");
 //            updateUserInfo();
 //            updateLoginButton();
         }
-        Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
     }
 
     IUiListener loginListener = new BaseUiListener() {
@@ -348,7 +347,6 @@ public class LoginActivity extends BaseActivity {
                 return;
             }
             FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
-
             doComplete((JSONObject) response);
         }
 
@@ -358,17 +356,14 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onError(UiError e) {
-            //toast("QQ授权出错："+arg0.errorCode+"--"+arg0.errorDetail);
             Toast.makeText(LoginActivity.this, e.errorDetail, Toast.LENGTH_SHORT).show();
-            FileCodeUtil.toastMessage(LoginActivity.this, "onError: " + e.errorDetail);
+            FileCodeUtil.toastMessage(LoginActivity.this, "QQ授权出错:" + e.errorDetail);
             FileCodeUtil.dismissDialog();
         }
 
         @Override
         public void onCancel() {
-            //toast("取消qq授权");
-            Toast.makeText(getApplicationContext(), "取消qq授权", Toast.LENGTH_SHORT).show();
-            FileCodeUtil.toastMessage(LoginActivity.this, "onCancel: ");
+            FileCodeUtil.toastMessage(LoginActivity.this, "取消qq授权 ");
             FileCodeUtil.dismissDialog();
         }
     }
@@ -481,7 +476,6 @@ public class LoginActivity extends BaseActivity {
                 requestCode == Constants.REQUEST_APPBAR) {
             Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -526,4 +520,12 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 按下返回键，销毁当前页面
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LoginActivity.this.finish();
+    }
 }

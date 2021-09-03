@@ -1,13 +1,10 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
-import static android.view.KeyEvent.KEYCODE_BACK;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -73,6 +70,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         /** 初始化监听 */
         initListener();
     }
+
     /**
      * @return 是否滑动返回
      */
@@ -304,7 +302,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     public AppCompatDelegate getDelegate() {
         return SkinAppCompatDelegateImpl.get(this, this);
     }
-
 
     /**
      * 防止快速点击

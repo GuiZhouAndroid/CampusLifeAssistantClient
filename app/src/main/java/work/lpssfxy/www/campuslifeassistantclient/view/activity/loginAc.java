@@ -315,7 +315,6 @@ public class loginAc extends BaseActivity implements CompoundButton.OnCheckedCha
                     params.put(KEY_RESTORE_LANDSCAPE, true);
                 }
 
-
                 params.put(KEY_SCOPE, "all");
                 params.put(KEY_QRCODE, mQrCk.isChecked());
                 params.put(KEY_ENABLE_SHOW_DOWNLOAD_URL, mShowWebDownloadUi.isChecked());
@@ -517,7 +516,6 @@ public class loginAc extends BaseActivity implements CompoundButton.OnCheckedCha
                 requestCode == Constants.REQUEST_APPBAR) {
             Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
