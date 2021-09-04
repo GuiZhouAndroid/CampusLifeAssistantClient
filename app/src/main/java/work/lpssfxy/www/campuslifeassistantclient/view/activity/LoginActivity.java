@@ -49,6 +49,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -139,11 +140,12 @@ public class LoginActivity extends BaseActivity {
         mLogin_ptn_anim.setTextColor(Color.WHITE);
         mLogin_ptn_anim.setProColor(Color.WHITE);
         mLogin_ptn_anim.setButtonText("登  录");
+
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        Log.i(TAG, "点击QQ登录图标前Session是否有效: "+Constant.mTencent.isSessionValid());
     }
 
     @Override
@@ -283,44 +285,58 @@ public class LoginActivity extends BaseActivity {
      * QQ登录
      */
     private void QQLogin() {
-        if (!Constant.mTencent.isSessionValid()) {
-            // 强制扫码登录
+        Log.i(TAG, "点击QQ登录图标后会话是否有效"+Constant.mTencent.isSessionValid());
+        if (!Constant.mTencent.isSessionValid()) { //会话无效false时
+            /** 强制扫码登录 */
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
-
             HashMap<String, Object> params = new HashMap<>();
             if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                 params.put(KEY_RESTORE_LANDSCAPE, true);
             }
-            params.put(KEY_SCOPE, "all");
-            params.put(KEY_QRCODE, mCheckForceQr.isChecked());
-            Constant.mTencent.login(this, loginListener, params);
-            //返回系统启动到现在的毫秒数，包含休眠时间
-            Log.d("SDKQQAgentPref", "FirstLaunch_SDK:" + SystemClock.elapsedRealtime());
-        } else {
+            params.put(KEY_SCOPE, "all");//授权全部权限
+            params.put(KEY_QRCODE, mCheckForceQr.isChecked());//传入二维码单选框选中参数
+            Log.i(TAG, "强制二维码登录是否勾选: "+mCheckForceQr.isChecked());
+            Constant.mTencent.login(this, loginListener, params);//传入登录参数集合，拉起二维码登录扫码页，如果没有选中，则进行普通方式QQ登录
+            Log.d(TAG, "返回系统启动到现在的毫秒数，包含休眠时间" + SystemClock.elapsedRealtime());
+        } else { //会话有效false时
+            /** 退出登录+清除旧会话Session */
             Constant.mTencent.logout(this);
-            // mTencent.login(this, "all", loginListener);
-            // 第三方也可以选择注销的时候不去清除第三方的targetUin/targetMiniAppId
-            //saveTargetUin("");
-            //saveTargetMiniAppId("");
-            //updateUserInfo();
-            //updateLoginButton();
+            /** 重新授权登录，拉起新会话Session */
+            Constant.mTencent.login(this, "all", loginListener);
+            Log.i(TAG, "重新授权登录，拉起新会话Session是否有效"+Constant.mTencent.isSessionValid());
         }
     }
 
     IUiListener loginListener = new BaseUiListener() {
         @Override
         protected void doComplete(JSONObject values) {
-            Log.d("SDKQQAgentPref", "AuthorSwitch_SDK:" + SystemClock.elapsedRealtime());
-            Log.d(TAG, "doComplete: " + values.toString());
-            /** 初始化OPENID和TOKEN值（为了得到用户的信息） */
-            initOpenidAndToken(values);
-            updateUserInfo();
-            //updateLoginButton();
+            Log.i(TAG, "回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
+            Log.i(TAG, "回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
+            /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
+            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
+            /** 保存Session信息存入SharePreference本地数据 */
+            initSaveSessionDataToLocalFile(values);
+            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
+             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
+            Constant.mTencent.saveSession(values);
+
         }
     };
 
-    private class BaseUiListener extends DefaultUiListener {
+    /**
+     * 登录回调成功后保存Session信息本地XML数据文件中
+     * @param jsonObject
+     */
+    private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
+        Log.i(TAG, "回调成功Gson解析Json前会话Session数据: "+jsonObject.toString());
+        //Gson解析并序列号至Java对象中
+        QQUserSessionBean qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
+        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): "+qqUserSessionBean);
+        /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
+        SharePreferenceUtil.putObject(LoginActivity.this,qqUserSessionBean);
+    }
 
+    private class BaseUiListener extends DefaultUiListener {
         @Override
         public void onComplete(Object response) {
             Log.d(TAG, "onComplete:QQ登录回调成功");
@@ -342,8 +358,6 @@ public class LoginActivity extends BaseActivity {
             App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
             startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
             finish();//并销毁登录界面
-//            LoginActivity.this.setResult(RESULT_OK);
-//            LoginActivity.this.finish();
         }
         protected void doComplete(JSONObject values) {
 
@@ -368,30 +382,40 @@ public class LoginActivity extends BaseActivity {
      * 初始化OPENID和TOKEN值（为了得到用户的信息）
      * @param jsonObject
      */
-    public static void initOpenidAndToken(JSONObject jsonObject) {
+    public void initOpenidAndTokenAndGsonGetParseQQUserInfo(JSONObject jsonObject) {
         try {
-            String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
-            String expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);
-            String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);
+            /**获取Constant.mTencent.login(监听器loginListener) 回调成功有效Session中的 openid值、access_token值、expires_in值*/
+            String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);//用户授权令牌
+            String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);//用户应用唯一标识
+            String expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);//有效时间
             if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires)
                     && !TextUtils.isEmpty(openId)) {
-                Constant.mTencent.setAccessToken(token, expires);
-                Constant.mTencent.setOpenId(openId);
+                Log.i(TAG, "回调后设置会话前是否有效2"+Constant.mTencent.isSessionValid());//false
+                /** 下面两行set设置方法非常关键重要，若没有设置，导致Constant.mTencent的Session无效，将不能对QQ授权用户的信息列表执行请求与回调 */
+                Constant.mTencent.setAccessToken(token, expires);//授权令牌设置至Tencent实例
+                Constant.mTencent.setOpenId(openId);//应用唯一标识设置至Tencent实例
+                Log.i(TAG, "回调后设置会话后是否有效"+Constant.mTencent.isSessionValid());//true
+
+                /** 会话Session有效时进行QQ授权用户的信息列表请求与回调 */
+                GsonParseJsonDataToLocalAndToBroadcast();
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void updateUserInfo() {
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
+    /**
+     * Constant.mTencent的Session有效为true时进行QQ授权用户的信息列表请求与回调
+     * Gson解析Json数据存入SharePreference+通过广播消息发送解析后Json数据
+     */
+    private void GsonParseJsonDataToLocalAndToBroadcast() {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) { //
             IUiListener listener = new DefaultUiListener() {
-                @Override
-                public void onError(UiError e) {
-                }
 
+                /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
                 @Override
                 public void onComplete(final Object response) {
-                    Log.d(TAG, "onComplete: " + response.toString());
+                    Log.d(TAG, "请求回调用户信息列表= " + response.toString());
                     /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
                     QQUserBean qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
                     /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
@@ -407,77 +431,27 @@ public class LoginActivity extends BaseActivity {
                     intent.putExtras(bundle);
                     /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */
                     sendBroadcast(intent);
-//                    Log.d(TAG, "onComplete: " + response.toString());
-//                    Message msg = new Message();
-//                    msg.obj = response;
-//                    msg.what = 0;
-//                    QQHandler.sendMessage(msg);
-//                    new Thread() {
-//                        @Override
-//                        public void run() {
-//                            Gson gson = new Gson();
-//                            qqUser =gson.fromJson(response.toString(), QQUserBean.class);
-//                            Log.i(TAG, "Figureurl_qq: "+qqUser.getFigureurl_qq());
-//                            Log.i(TAG, "City: "+qqUser.getCity());
-//                            Log.i(TAG, "Level: "+qqUser.getLevel());
-//                            Log.i(TAG, "qqUser全部数据: "+qqUser);
-//                            JSONObject json = (JSONObject) response;
-//                            if (json.has("figureurl")) {
-//                                Bitmap bitmap = null;
-//                                try {
-//                                    bitmap = Util.getbitmap(json.getString("figureurl_qq_2"));
-//                                    SharePreferenceUtil.saveBitmapToSharedPreferences(LoginActivity.this,"QQIconFile","QQIcon",bitmap);
-//                                    Log.i(TAG, "bitmap: "+bitmap);
-//                                } catch (JSONException e) {
-//                                    SLog.e(TAG, "Util.getBitmap() jsonException : " + e.getMessage());
-//                                }
-//                                Message msg = new Message();
-//                                msg.obj = bitmap;
-//                                msg.what = 1;
-//                                QQHandler.sendMessage(msg);
-//                            }
-//                        }
-//
-//                    }.start();
                 }
 
                 @Override
                 public void onCancel() {
+                    Toast.makeText(LoginActivity.this, "取消获取授权用户信息", Toast.LENGTH_SHORT).show();
+                }
 
+                @Override
+                public void onError(UiError e) {
+                    Toast.makeText(LoginActivity.this, "获取授权用户信息出错："+e.errorDetail, Toast.LENGTH_SHORT).show();
                 }
             };
+            /** 根据Constant.mTencent会话中TOKEN值，请求回调授权用户信息列表*/
             UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
+            /** 开始监听请求回调操作*/
             info.getUserInfo(listener);
 
         } else {
-
+            Toast.makeText(this, "QQ无效Session", Toast.LENGTH_SHORT).show();
         }
     }
-
-    /**
-     * 线程刷新UI数据
-     */
-    @SuppressLint("HandlerLeak")
-    public Handler QQHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                JSONObject response = (JSONObject) msg.obj;
-                if (response.has("nickname")) {
-//                    try {
-//                        mUserInfo.setVisibility(android.view.View.VISIBLE);
-//                        mUserInfo.setText(response.getString("nickname"));
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-                }
-            } else if (msg.what == 1) {
-                Bitmap bitmap = (Bitmap) msg.obj;
-//                mUserLogo.setImageBitmap(bitmap);
-//                mUserLogo.setVisibility(android.view.View.VISIBLE);
-            }
-        }
-    };
 
     /**
      * 回调数据

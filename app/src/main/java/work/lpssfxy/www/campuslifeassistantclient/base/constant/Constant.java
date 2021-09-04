@@ -3,6 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base.constant;
 import com.tencent.tauth.Tencent;
 
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 
 /**
  * created by on 2021/8/23
@@ -14,9 +15,12 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 public class Constant {
 
 
+    public static QQUserSessionBean qqUserSessionBean;
     public static QQUserBean qqUser;
 
     public static Tencent mTencent;
+
+    public static String APP_ID ="101965703";
 
     /*wanandroid*/
     public static final String URL_BASE = "http://www.wanandroid.com/";

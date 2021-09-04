@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import work.lpssfxy.www.campuslifeassistantclient.adapter.QQUserTypeAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+
 /**
  * created by on 2021/8/23
  * 描述：Json解析工具类
@@ -30,7 +33,9 @@ import java.util.Set;
 public class GsonUtil {
     private static Gson sGson;
     private static GsonBuilder sBuilder = null;
-
+    public Gson gson = new GsonBuilder().registerTypeAdapter(QQUserSessionBean.class, new QQUserTypeAdapter())
+            //registerTypeAdapter可以重复使用
+            .create();
     static {
         if (sGson == null) {
             synchronized (GsonUtil.class) {
@@ -204,6 +209,7 @@ public class GsonUtil {
                 }).create();
         return gson;
     }
+
 
 }
 

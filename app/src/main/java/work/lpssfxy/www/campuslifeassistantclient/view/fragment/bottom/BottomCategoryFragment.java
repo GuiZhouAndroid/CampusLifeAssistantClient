@@ -63,7 +63,7 @@ public class BottomCategoryFragment extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        showImg();//显示网络图片
+        //showImg();//显示网络图片
     }
 
     /**

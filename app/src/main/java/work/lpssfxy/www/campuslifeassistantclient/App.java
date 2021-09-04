@@ -149,7 +149,7 @@ public class App extends Application {
      * 创建TencentSDK实例
      */
     private void initQQTencent() {
-        Constant.mTencent = Tencent.createInstance("101965703", getApplicationContext(), "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
+        Constant.mTencent = Tencent.createInstance(Constant.APP_ID, getApplicationContext(), "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
         if (Constant.mTencent != null) {
             SLog.i(TAG, "腾讯实例创建成功=="+Constant.mTencent);
         }else {
