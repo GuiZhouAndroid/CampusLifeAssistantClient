@@ -88,7 +88,7 @@ public class IndexActivity extends BaseActivity {
     @BindView(R2.id.appbar_constant_toolbar) Toolbar mAppbar_constant_toolbar;
     /** Toolbar折叠布局 */
     @BindView(R2.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsing_toolbar_layout;
-    /** Toolbar头像图标 */
+    /** ToolbarQQ头像图标 */
     @BindView(R2.id.index_iv_user_head) ImageView mIndex_iv_user_head;
     /** Toolbar名字标签 */
     @BindView(R2.id.index_tv_user_hello) TextView mIndex_tv_user_hello;
@@ -110,6 +110,10 @@ public class IndexActivity extends BaseActivity {
     public List<Fragment> fragmentList = new ArrayList<>();
     /** Toolbar弹窗 */
     private CustomPopWindow mCustomPopWindow;
+    /** 侧滑顶部头像 */
+    private ImageView ivNavHeaderIcon;
+    /** 侧滑顶部昵称 */
+    private TextView tvNavHeaderName;
 
 
     /**
@@ -178,6 +182,8 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void prepareData() {
+        /** 针对登录界面LoginActivity QQ回调数据处理时，没有关闭进度框，解决生效一次的问题。目的：仿真登录加载。 */
+        LoadingDialog.closeSimpleLD();
         /** 初始化DrawerLayout侧滑抽屉 */
         initDrawerLayout();
         /** 初始化底部导航 */
@@ -227,7 +233,10 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initEvent() {
-
+        /** 设置侧滑顶部头像单击事件 */
+        ivNavHeaderIcon.setOnClickListener(this);
+        /** 设置侧滑顶部昵称单击事件 */
+        tvNavHeaderName.setOnClickListener(this);
     }
 
     /**
@@ -243,6 +252,22 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void doBusiness() {
 
+    }
+
+    /**
+     * 单击事件
+     * @param view
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.index_iv_nav_header_icon://侧滑顶部头像
+                /** 判断检查QQ登录是否有效 */
+                checkQQLoginIfValid();
+                break;
+            case R.id.index_tv_nav_header_name://侧滑顶部昵称
+                break;
+        }
     }
 
     /**
@@ -280,27 +305,24 @@ public class IndexActivity extends BaseActivity {
         /** 给DrawerLayout侧滑的Navigation导航菜单添加点击事件 */
         mNav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
+
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                mDrawer_layout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()){
                     case R.id.drawer_menu_school:
-                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
                         startActivityAnimLeftToRight(new Intent(IndexActivity.this,waimai.class));
-                        mDrawer_layout.closeDrawers();//关闭侧滑
                         return true;
                     case R.id.drawer_menu_see_calendar:
-                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_setting:
-                        Snackbar.make(mNav_view, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
-                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_about_author:
-                        Snackbar.make(mNav_view, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
-                        mDrawer_layout.closeDrawers();//关闭侧滑
+                        Snackbar.make(mDrawer_layout, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_logout://退出QQ登录
-                        mDrawer_layout.closeDrawers();//关闭侧滑
                         Snackbar snackbar= Snackbar.make(mDrawer_layout,"已退出QQ登录~",Snackbar.LENGTH_SHORT)
                                 .setActionTextColor(getResources().getColor(R.color.colorAccent));
                         //设置Snackbar上提示的字体颜色
@@ -320,6 +342,12 @@ public class IndexActivity extends BaseActivity {
                 return false;
             }
         });
+
+        /** 获取侧滑头部用户名或QQ昵称、QQ头像、个性签名控件，并分别设置监听单击事件*/
+        //侧滑顶部头像
+        ivNavHeaderIcon = mNav_view.getHeaderView(0).findViewById(R.id.index_iv_nav_header_icon);
+        //侧滑顶部昵称
+        tvNavHeaderName = mNav_view.getHeaderView(0).findViewById(R.id.index_tv_nav_header_name);
     }
 
     /**
@@ -390,36 +418,24 @@ public class IndexActivity extends BaseActivity {
             Log.i(TAG, "BroadcastReceiver的QQUserBean: "+Constant.qqUser);
             if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
                 if (Constant.qqUser != null) { //QQUserBean有数据时
+                    /** 仿真效果，打开侧滑菜单 */
+                    mDrawer_layout.openDrawer(GravityCompat.START);
+                    //Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this,QQUserBean.class);
                     /** 标题栏字体加粗 */
                     Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-                    Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this,QQUserBean.class);
                     /** 创建Glide圆形图像实例*/
                     RequestOptions options = new RequestOptions();
                     options.circleCrop();
-
-                    /** 设置昵称动态开始——动态结束的字体样式 */
-                    mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
-                    mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-                    /** 设置QQ昵称 */
-                    mCollapsing_toolbar_layout.setTitle(Constant.qqUser.getNickname());
-                    /** 设置友好时间状态可见*/
-                    mIndex_tv_user_hello.setVisibility(View.VISIBLE);
-                    /** 设置友好时间提示*/
-                    getDate(mIndex_tv_user_hello);
-                    /** 设置圆形QQ头像 */
-                    Glide.with(IndexActivity.this)
-                            .load(Constant.qqUser.getFigureurl_qq_2())
-                            .apply(options)
-                            .into(mIndex_iv_user_head);
+                    /** 设置QQ登录成功需要设置加载信息的控件 */
+                    setQQAlreadyLoginState(font,options,Constant.qqUser);
 
                     Snackbar snackbar= Snackbar.make(mDrawer_layout,"登录成功~",Snackbar.LENGTH_SHORT)
                             .setActionTextColor(getResources().getColor(R.color.colorAccent));
                     //设置Snackbar上提示的字体颜色
                     setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                     snackbar.show();
-
                 } else { //QQUserBean无数据时
-                    //设置未登录默认头像和点击头像登录
+                    /** 设置未登录默认头像和点击头像登录 */
                     setNotLoginQQUserInfo();
                 }
             }else {
@@ -503,22 +519,14 @@ public class IndexActivity extends BaseActivity {
         /** 调用SharePreference工具类获取Gson转化后的Java对象，持久化文件名“ZSAndroid”的本地数据 */
         Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
         Log.i(TAG, "initLoginUserData: "+Constant.qqUser);
-        /** 创建Glide圆形图像实例*/
-        RequestOptions options = new RequestOptions();
-        options.circleCrop();
-        /** 标题栏字体加粗 */
-        Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-
         if (Constant.qqUser != null) {
-            Glide.with(IndexActivity.this)
-                    .load(Constant.qqUser.getFigureurl_2())
-                    .apply(options)
-                    .into(mIndex_iv_user_head);
-            mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
-            mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-            mCollapsing_toolbar_layout.setTitle(Constant.qqUser.getNickname());
-            getDate(mIndex_tv_user_hello);
-
+            /** 标题栏字体加粗 */
+            Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+            /** 创建Glide圆形图像实例*/
+            RequestOptions options = new RequestOptions();
+            options.circleCrop();
+            /** 设置QQ登录成功需要设置加载信息的控件 */
+            setQQAlreadyLoginState(font,options,Constant.qqUser);
             Snackbar snackbar= Snackbar.make(mDrawer_layout,"已为您自动登录~",Snackbar.LENGTH_SHORT)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent));
             //设置Snackbar上提示的字体颜色
@@ -600,7 +608,6 @@ public class IndexActivity extends BaseActivity {
                 Constant.mTencent.setAccessToken(token, expires);//授权令牌设置至Tencent实例
                 Constant.mTencent.setOpenId(openId);//应用唯一标识设置至Tencent实例
                 Log.i(TAG, "回调后设置会话后是否有效:"+Constant.mTencent.isSessionValid());//true
-
                 /** 会话Session有效时进行QQ授权用户的信息列表请求与回调 */
                 GsonParseJsonDataToLocalAndToHandlerOrThread();
             }
@@ -678,7 +685,7 @@ public class IndexActivity extends BaseActivity {
                 case 0:
                     /** 判断本地取出的QQUser对象是否有数据*/
                     if (Constant.qqUser != null) { //QQUserBean有数据时
-                        //设置本地持久化或广播消息接收的QQ昵称和QQ头像
+                        //设置本地持久化接收的QQ昵称和QQ头像
                         QQUserBeanIsValidSetTextAndGlideUserHead();
                         /** 获取首页界面拉起QQ登录授权存入持久化文件的会话信息，用于判断当前首页登录，避免导致跳转LoginActivity*/
                         Constant.qqUserSessionBean = SharePreferenceUtil.getObject(IndexActivity.this,QQUserSessionBean.class);
@@ -714,8 +721,10 @@ public class IndexActivity extends BaseActivity {
         /** 设置昵称动态开始——动态结束的字体样式 */
         mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
         mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-        /** 设置QQ昵称 */
+        /** 设置ToolbarQQ昵称 */
         mCollapsing_toolbar_layout.setTitle(Constant.qqUser.getNickname());
+        /** 设置侧滑的QQ昵称 */
+        tvNavHeaderName.setText(Constant.qqUser.getNickname());
         /** 设置友好时间状态可见*/
         mIndex_tv_user_hello.setVisibility(View.VISIBLE);
         /** 设置友好时间提示*/
@@ -725,6 +734,12 @@ public class IndexActivity extends BaseActivity {
                 .load(Constant.qqUser.getFigureurl_qq_2())
                 .apply(options)
                 .into(mIndex_iv_user_head);
+
+        /** 设置侧滑的圆形QQ头像 */
+        Glide.with(IndexActivity.this)
+                .load(Constant.qqUser.getFigureurl_qq_2())
+                .apply(options)
+                .into(ivNavHeaderIcon);
 
         Snackbar snackbar= Snackbar.make(mDrawer_layout,"登录成功~",Snackbar.LENGTH_SHORT)
                 .setActionTextColor(getResources().getColor(R.color.colorAccent));
@@ -743,19 +758,25 @@ public class IndexActivity extends BaseActivity {
         /** 创建Glide圆形图像实例*/
         RequestOptions options = new RequestOptions();
         options.circleCrop();
-
+        /** 设置动态开始——结束的字体 */
+        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+        /** 设置Toolbar开始——结束文本标签 */
+        mCollapsing_toolbar_layout.setTitle("点击头像登录");
+        /** 设置侧滑默认文本标签 */
+        tvNavHeaderName.setText("点击头像登录");
+        /** 友好时间提示状态失效*/
+        mIndex_tv_user_hello.setVisibility(View.GONE);
         /** 设置默认的圆形头像 */
         Glide.with(IndexActivity.this)
                 .load(mIndex_not_login)
                 .apply(options)
                 .into(mIndex_iv_user_head);
-        /** 设置动态开始——结束的字体 */
-        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
-        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-        /** 动态开始——结束的文本标题 */
-        mCollapsing_toolbar_layout.setTitle("点击头像登录");
-        /** 友好时间提示状态失效*/
-        mIndex_tv_user_hello.setVisibility(View.GONE);
+        /** 设置侧滑菜单默认的圆形头像 */
+        Glide.with(IndexActivity.this)
+                .load(mIndex_not_login)
+                .apply(options)
+                .into(ivNavHeaderIcon);
     }
 
     /**
@@ -778,6 +799,36 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
+     * 设置QQ登录成功需要设置加载信息的控件
+     * @param font 加粗字体
+     * @param options Glide
+     * @param qqUser 用户
+     */
+    private void setQQAlreadyLoginState(Typeface font, RequestOptions options, QQUserBean qqUser){
+        /** 设置昵称动态开始——动态结束的字体样式 */
+        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
+        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
+        /** 设置Toolbar的QQ昵称 */
+        mCollapsing_toolbar_layout.setTitle(qqUser.getNickname());
+        /** 设置侧滑的QQ昵称 */
+        tvNavHeaderName.setText(qqUser.getNickname());
+        /** 设置友好时间状态可见*/
+        mIndex_tv_user_hello.setVisibility(View.VISIBLE);
+        /** 设置Toolbar的圆形QQ头像 */
+        Glide.with(IndexActivity.this)
+                .load(qqUser.getFigureurl_qq_2())
+                .apply(options)
+                .into(mIndex_iv_user_head);
+        /** 设置侧滑的圆形QQ头像 */
+        Glide.with(IndexActivity.this)
+                .load(qqUser.getFigureurl_qq_2())
+                .apply(options)
+                .into(ivNavHeaderIcon);
+        /** 设置友好时间提示*/
+        getDate(mIndex_tv_user_hello);
+    }
+
+    /**
      * 判断当前时间处于那个时间
      * @param tv
      */
@@ -785,10 +836,11 @@ public class IndexActivity extends BaseActivity {
         Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
         tv.setTypeface(font);
         Date d = new Date();
-        if(d.getHours()<11){
-            //标题栏字体加粗
+        if(d.getHours()<4){
+            tv.setText("早点休息哟~,");
+        }else if(d.getHours()<11){
             tv.setText("早上好,");
-        }else if(d.getHours()<13){
+        }else if(d.getHours()<14){
             tv.setText("中午好,");
         }else if(d.getHours()<18){
             tv.setText("下午好,");
@@ -798,39 +850,40 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
-     * 浮动按钮单击事件
+     * 判断检查QQ登录是否有效
      */
-    @OnClick(R2.id.floating_action_btn)
-    public void onViewOneClicked() {
-        Snackbar snackbar= Snackbar.make(mDrawer_layout,"点宝宝干啥",Snackbar.LENGTH_SHORT)
-                .setActionTextColor(getResources().getColor(R.color.colorAccent));
-        //设置Snackbar上提示的字体颜色
-        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-        snackbar.show();
+    private void checkQQLoginIfValid() {
+        if (Constant.qqUser== null){
+            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+            return;
+        }
+        if (Constant.mTencent !=null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
+            Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
+            //设置Snackbar上提示的字体颜色
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
     }
 
+
     /**
-     *  头像+名字单击事件
+     *  Toolbar头像单击事件+浮动按钮单击事件
      * @param view
      */
-    @OnClick({R2.id.index_iv_user_head,R2.id.index_tv_user_hello})
+    @OnClick({R2.id.index_iv_user_head,R2.id.floating_action_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.index_iv_user_head://头像
-                if (Constant.qqUser== null){
-                    startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
-                    return;
-                }
-                if (Constant.mTencent !=null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
-                    Snackbar snackbar = Snackbar.make(mAppbar_constant_toolbar, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
-                    //设置Snackbar上提示的字体颜色
-                    setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                    snackbar.show();
-                    return;
-                }
+            case R.id.index_iv_user_head://Toolbar头像
+                /** 判断检查QQ登录是否有效 */
+                checkQQLoginIfValid();
                 break;
-            case R.id.index_tv_user_hello://名字
-                Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
+            case R.id.floating_action_btn:
+                Snackbar snackbar= Snackbar.make(mDrawer_layout,"点宝宝干啥",Snackbar.LENGTH_SHORT)
+                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                //设置Snackbar上提示的字体颜色
+                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                snackbar.show();
                 break;
         }
     }

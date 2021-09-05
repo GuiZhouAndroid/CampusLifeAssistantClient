@@ -17,16 +17,16 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/nav_header_icon"
+            android:id="@+id/index_iv_nav_header_icon"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="24dp" />
 
         <TextView
-            android:id="@+id/tv_username"
+            android:id="@+id/index_tv_nav_header_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/nav_header_icon"
+            android:layout_below="@id/index_iv_nav_header_icon"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="@string/click_user_image"

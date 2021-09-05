@@ -41,8 +41,7 @@
             app:backgroundTint="@color/colorAccent"
             app:rippleColor="#03A9F4"
             app:borderWidth="0dp"
-            app:elevation="8dp"
-            android:tooltipText="返回顶部"/>
+            app:elevation="8dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--侧滑内容-->
