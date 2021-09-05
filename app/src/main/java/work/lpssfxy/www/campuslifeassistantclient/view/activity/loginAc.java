@@ -203,6 +203,14 @@ public class loginAc extends BaseActivity implements CompoundButton.OnCheckedCha
 
     }
 
+    /**
+     * 业务操作
+     */
+    @Override
+    protected void doBusiness() {
+
+    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

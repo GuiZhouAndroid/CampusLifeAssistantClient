@@ -197,6 +197,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
+     * 业务操作
+     */
+    @Override
+    protected void doBusiness() {
+
+    }
+
+    /**
      * 请求权限结果
      * @param requestCode
      * @param permissions
@@ -417,16 +425,16 @@ public class LoginActivity extends BaseActivity {
                 public void onComplete(final Object response) {
                     Log.d(TAG, "请求回调用户信息列表= " + response.toString());
                     /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-                    QQUserBean qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
+                    Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
                     /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-                    SharePreferenceUtil.putObject(LoginActivity.this,qqUser);
-                    Log.i(TAG, "qqUser全部数据: "+qqUser);
+                    SharePreferenceUtil.putObject(LoginActivity.this,Constant.qqUser);
+                    Log.i(TAG, "qqUser全部数据: "+Constant.qqUser);
                     /** 通过Intent发送广播消息，*/
                     Intent intent = new Intent(action);
                     /**创建捆绑实例，Intent传递Java对象*/
                     Bundle bundle=new Bundle();
                     /** Java对象序列化存入Intent */
-                    bundle.putSerializable("QQUserBean", qqUser);
+                    bundle.putSerializable("QQUserBean", Constant.qqUser);
                     /** 发送Intent序列化数据至Bundle捆绑对象*/
                     intent.putExtras(bundle);
                     /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */

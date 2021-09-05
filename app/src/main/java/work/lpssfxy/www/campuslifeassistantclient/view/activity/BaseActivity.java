@@ -70,6 +70,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         initEvent();
         /** 初始化监听 */
         initListener();
+        /** 业务操作 */
+        doBusiness();
     }
 
     /**
@@ -191,6 +193,12 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
      * 初始化监听
      */
     protected abstract void initListener();
+
+    /**
+     * 业务操作
+     *
+     */
+    protected abstract void doBusiness();
 
     /**
      * Activity销毁时清理资源

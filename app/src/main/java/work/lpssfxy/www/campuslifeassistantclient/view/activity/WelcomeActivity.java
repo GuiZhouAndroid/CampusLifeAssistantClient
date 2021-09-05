@@ -183,6 +183,14 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
 
     }
 
+    /**
+     * 业务操作
+     */
+    @Override
+    protected void doBusiness() {
+
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }

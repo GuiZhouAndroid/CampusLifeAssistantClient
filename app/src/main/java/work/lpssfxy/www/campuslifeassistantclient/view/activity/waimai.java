@@ -65,6 +65,14 @@ public class waimai extends BaseActivity {
     }
 
     /**
+     * 业务操作
+     */
+    @Override
+    protected void doBusiness() {
+
+    }
+
+    /**
      * 使用Glide加载显示网络图片 记得加网络权限和http地址url访问许可
      */
     private void showImg() {

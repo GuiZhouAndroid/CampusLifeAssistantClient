@@ -145,6 +145,14 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     /**
+     * 业务操作
+     */
+    @Override
+    protected void doBusiness() {
+
+    }
+
+    /**
      * 关闭自动监听倒计时，执行点击跳过
      */
     public void onViewBtnSkipOnClick(){
