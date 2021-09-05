@@ -610,13 +610,13 @@ public class IndexActivity extends BaseActivity {
     }
     /**
      * Constant.mTencent的Session有效为true时进行QQ授权用户的信息列表请求与回调
-     * Gson解析Json数据存入SharePreference+通过handler的new子线程消息发送解析后Json数据
+     * Gson解析Json数据存入SharePreference+通过Handler发送消息+子线程并更新IndexActivity首页UI
      */
     private void GsonParseJsonDataToLocalAndToHandlerOrThread() {
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
             IUiListener listener = new DefaultUiListener() {
 
-                /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
+                /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及通过Handler发送消息+子线程并更新IndexActivity首页UI */
                 @Override
                 public void onComplete(final Object response) {
                     Log.d(TAG, "请求回调用户信息列表= " + response.toString());
