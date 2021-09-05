@@ -301,6 +301,12 @@ public class IndexActivity extends BaseActivity {
                         return true;
                     case R.id.drawer_menu_logout://退出QQ登录
                         mDrawer_layout.closeDrawers();//关闭侧滑
+                        Snackbar snackbar= Snackbar.make(mDrawer_layout,"已退出QQ登录~",Snackbar.LENGTH_SHORT)
+                                .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        //设置Snackbar上提示的字体颜色
+                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                        snackbar.show();
+
                         /** 开启一个子线程 */
                         new Thread(new Runnable() {
                             @Override
@@ -309,7 +315,6 @@ public class IndexActivity extends BaseActivity {
                                 QQHandler.sendEmptyMessage(1);
                             }
                         }).start();
-                        Toast.makeText(IndexActivity.this, "QQ登录退出成功", Toast.LENGTH_SHORT).show();
                         return true;
                 }
                 return false;
@@ -407,12 +412,22 @@ public class IndexActivity extends BaseActivity {
                             .apply(options)
                             .into(mIndex_iv_user_head);
 
+                    Snackbar snackbar= Snackbar.make(mDrawer_layout,"登录成功~",Snackbar.LENGTH_SHORT)
+                            .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                    //设置Snackbar上提示的字体颜色
+                    setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                    snackbar.show();
+
                 } else { //QQUserBean无数据时
                     //设置未登录默认头像和点击头像登录
                     setNotLoginQQUserInfo();
                 }
             }else {
-                Toast.makeText(IndexActivity.this, "登录失效", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar= Snackbar.make(mDrawer_layout,"登录失效",Snackbar.LENGTH_SHORT)
+                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                //设置Snackbar上提示的字体颜色
+                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                snackbar.show();
             }
         }
     };
@@ -512,7 +527,6 @@ public class IndexActivity extends BaseActivity {
         } else {
             /** 设置未登录默认头像和点击头像登录 */
             setNotLoginQQUserInfo();
-            Toast.makeText(IndexActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -562,6 +576,10 @@ public class IndexActivity extends BaseActivity {
             initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
             /** 回掉的会话Session信息持久化保存，用于自动登录使用 */
             initSaveSessionDataToLocalFile(values);
+            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
+             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
+            Constant.mTencent.saveSession(values);
+
         }
     };
 
@@ -606,6 +624,7 @@ public class IndexActivity extends BaseActivity {
                     Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
                     /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
                     SharePreferenceUtil.putObject(IndexActivity.this,Constant.qqUser);
+                    /** 获取本地Session会话Java对象持久化数据*/
                     Log.i(TAG, "qqUser全部数据: "+Constant.qqUser);
                     Message msg = new Message();
                     msg.obj = Constant.qqUser;
@@ -661,6 +680,9 @@ public class IndexActivity extends BaseActivity {
                     if (Constant.qqUser != null) { //QQUserBean有数据时
                         //设置本地持久化或广播消息接收的QQ昵称和QQ头像
                         QQUserBeanIsValidSetTextAndGlideUserHead();
+                        /** 获取首页界面拉起QQ登录授权存入持久化文件的会话信息，用于判断当前首页登录，避免导致跳转LoginActivity*/
+                        Constant.qqUserSessionBean = SharePreferenceUtil.getObject(IndexActivity.this,QQUserSessionBean.class);
+                        Log.i(TAG, "QQ回调的首页Constant.qqUserSessionBean: "+Constant.qqUserSessionBean);
                     } else { //QQUserBean无数据时
                         //设置未登录默认头像和点击头像登录
                         setNotLoginQQUserInfo();
@@ -703,6 +725,12 @@ public class IndexActivity extends BaseActivity {
                 .load(Constant.qqUser.getFigureurl_qq_2())
                 .apply(options)
                 .into(mIndex_iv_user_head);
+
+        Snackbar snackbar= Snackbar.make(mDrawer_layout,"登录成功~",Snackbar.LENGTH_SHORT)
+                .setActionTextColor(getResources().getColor(R.color.colorAccent));
+        //设置Snackbar上提示的字体颜色
+        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+        snackbar.show();
     }
 
     /**
@@ -791,17 +819,15 @@ public class IndexActivity extends BaseActivity {
             case R.id.index_iv_user_head://头像
                 if (Constant.qqUser== null){
                     startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
-                }else{
-                    if(mIndex_iv_user_head !=null) {
-                        Snackbar snackbar = Snackbar.make(mAppbar_constant_toolbar, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
-                        //设置Snackbar上提示的字体颜色
-                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                        snackbar.show();
-                    }else {
-                        startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
-                    }
+                    return;
                 }
-                //startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+                if (Constant.mTencent !=null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
+                    Snackbar snackbar = Snackbar.make(mAppbar_constant_toolbar, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
+                    //设置Snackbar上提示的字体颜色
+                    setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                    snackbar.show();
+                    return;
+                }
                 break;
             case R.id.index_tv_user_hello://名字
                 Toast.makeText(this, "我是多个tv点击事件", Toast.LENGTH_SHORT).show();
@@ -852,7 +878,6 @@ public class IndexActivity extends BaseActivity {
                         Toast.makeText(IndexActivity.this, "点击 Item菜单3", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.item4:
-
                         Toast.makeText(IndexActivity.this, "点击 Item菜单4", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.item5:

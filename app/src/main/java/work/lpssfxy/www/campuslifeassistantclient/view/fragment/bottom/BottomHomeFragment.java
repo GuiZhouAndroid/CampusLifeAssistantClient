@@ -31,6 +31,7 @@ import com.example.library.FlowAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,10 +44,12 @@ import cn.bingoogolapple.bgabanner.BGALocalImageSize;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyRecyclerViewAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.BaseActivity;
@@ -238,7 +241,14 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 openBottomMapNaviCation();
                 break;
             case 9://进入官网
-                BaseActivity.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), LoginActivity.class));
+                if (Constant.qqUser== null){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
+                if (Constant.mTencent !=null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
+                    Toast.makeText(getActivity(), "QQ登录已经啦", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 break;
         }
     }
