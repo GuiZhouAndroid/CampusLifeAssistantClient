@@ -602,7 +602,7 @@ public class IndexActivity extends BaseActivity {
                 Log.i(TAG, "回调后设置会话后是否有效:"+Constant.mTencent.isSessionValid());//true
 
                 /** 会话Session有效时进行QQ授权用户的信息列表请求与回调 */
-                GsonParseJsonDataToLocalAndToBroadcast();
+                GsonParseJsonDataToLocalAndToHandlerOrThread();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -610,9 +610,9 @@ public class IndexActivity extends BaseActivity {
     }
     /**
      * Constant.mTencent的Session有效为true时进行QQ授权用户的信息列表请求与回调
-     * Gson解析Json数据存入SharePreference+通过广播消息发送解析后Json数据
+     * Gson解析Json数据存入SharePreference+通过handler的new子线程消息发送解析后Json数据
      */
-    private void GsonParseJsonDataToLocalAndToBroadcast() {
+    private void GsonParseJsonDataToLocalAndToHandlerOrThread() {
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
             IUiListener listener = new DefaultUiListener() {
 
