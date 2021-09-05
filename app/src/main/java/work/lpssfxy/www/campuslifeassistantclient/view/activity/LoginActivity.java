@@ -54,6 +54,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
@@ -318,6 +319,7 @@ public class LoginActivity extends BaseActivity {
     IUiListener loginListener = new BaseUiListener() {
         @Override
         protected void doComplete(JSONObject values) {
+            LoadingDialog.showSimpleLD(LoginActivity.this,getString(R.string.indexLoadLoginInfo));
             Log.i(TAG, "回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
             Log.i(TAG, "回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
             /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
@@ -327,6 +329,14 @@ public class LoginActivity extends BaseActivity {
             /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
              * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
             Constant.mTencent.saveSession(values);
+
+            /**登录成功跳转之前构思：
+             * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
+             * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
+             */
+            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
+            finish();//并销毁登录界面
 
         }
     };
@@ -338,10 +348,10 @@ public class LoginActivity extends BaseActivity {
     private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
         Log.i(TAG, "回调成功Gson解析Json前会话Session数据: "+jsonObject.toString());
         //Gson解析并序列号至Java对象中
-        QQUserSessionBean qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): "+qqUserSessionBean);
+        Constant.qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
+        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): "+Constant.qqUserSessionBean);
         /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
-        SharePreferenceUtil.putObject(LoginActivity.this,qqUserSessionBean);
+        SharePreferenceUtil.putObject(LoginActivity.this,Constant.qqUserSessionBean);
     }
 
     private class BaseUiListener extends DefaultUiListener {
@@ -359,13 +369,6 @@ public class LoginActivity extends BaseActivity {
             }
             //FileCodeUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
             doComplete((JSONObject) response);
-            /**登录成功跳转之前构思：
-             * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
-             * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
-             */
-            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
-            finish();//并销毁登录界面
         }
         protected void doComplete(JSONObject values) {
 
@@ -398,11 +401,11 @@ public class LoginActivity extends BaseActivity {
             String expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);//有效时间
             if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires)
                     && !TextUtils.isEmpty(openId)) {
-                Log.i(TAG, "回调后设置会话前是否有效2"+Constant.mTencent.isSessionValid());//false
+                Log.i(TAG, "回调后设置会话前是否有效:"+Constant.mTencent.isSessionValid());//false
                 /** 下面两行set设置方法非常关键重要，若没有设置，导致Constant.mTencent的Session无效，将不能对QQ授权用户的信息列表执行请求与回调 */
                 Constant.mTencent.setAccessToken(token, expires);//授权令牌设置至Tencent实例
                 Constant.mTencent.setOpenId(openId);//应用唯一标识设置至Tencent实例
-                Log.i(TAG, "回调后设置会话后是否有效"+Constant.mTencent.isSessionValid());//true
+                Log.i(TAG, "回调后设置会话后是否有效:"+Constant.mTencent.isSessionValid());//true
 
                 /** 会话Session有效时进行QQ授权用户的信息列表请求与回调 */
                 GsonParseJsonDataToLocalAndToBroadcast();
@@ -419,7 +422,6 @@ public class LoginActivity extends BaseActivity {
     private void GsonParseJsonDataToLocalAndToBroadcast() {
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) { //
             IUiListener listener = new DefaultUiListener() {
-
                 /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
                 @Override
                 public void onComplete(final Object response) {
@@ -437,6 +439,7 @@ public class LoginActivity extends BaseActivity {
                     bundle.putSerializable("QQUserBean", Constant.qqUser);
                     /** 发送Intent序列化数据至Bundle捆绑对象*/
                     intent.putExtras(bundle);
+                    Log.i(TAG, "bundle: "+bundle.toString());
                     /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */
                     sendBroadcast(intent);
                 }
@@ -459,6 +462,7 @@ public class LoginActivity extends BaseActivity {
         } else {
             Toast.makeText(this, "QQ无效Session", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**
