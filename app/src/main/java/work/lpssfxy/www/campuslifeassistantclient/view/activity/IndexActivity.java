@@ -497,6 +497,7 @@ public class IndexActivity extends BaseActivity {
                         public void onClick(View v) {
                             Constant.mTencent.logout(IndexActivity.this);
                             Constant.mTencent.login(IndexActivity.this, "all", loginListener);
+
                         }
                     });
             //设置Snackbar上提示的字体颜色
@@ -508,6 +509,7 @@ public class IndexActivity extends BaseActivity {
         Log.i(TAG, "(String)QQUserSessionBean重组Adapter排序前== "+ SharePreferenceUtil.getObject(IndexActivity.this, QQUserSessionBean.class));
         Log.i(TAG, "(JSONObject)QQUserSessionBean重组排序后== "+jsonObject.toString());
         Log.i(TAG, "mTencent会话: "+Constant.mTencent.isSessionValid());
+
     }
 
     /**
@@ -560,6 +562,7 @@ public class IndexActivity extends BaseActivity {
         protected void doComplete(JSONObject values) {
 
         }
+
 
         @Override
         public void onError(UiError e) {

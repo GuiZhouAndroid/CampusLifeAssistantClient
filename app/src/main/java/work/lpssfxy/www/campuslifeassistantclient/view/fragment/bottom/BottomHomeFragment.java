@@ -32,6 +32,12 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.tencent.connect.UnionInfo;
+import com.tencent.tauth.DefaultUiListener;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,6 +55,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -65,6 +72,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 @SuppressLint("NonConstantResourceId")
 public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, AutoFlowLayout.OnItemClickListener {
+    private static final String TAG = "BottomHomeFragment";
     /** 图片轮播 */
     @BindView(R2.id.banner) BGABanner mBanner;
     /** 网格布局 */
@@ -204,6 +212,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         }
     }
 
+
     /**
      * 网格布局设置Item监听
      *
@@ -214,13 +223,40 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     public void onItemClick(int position, View view) {
         switch (position){
             case 0://食堂预定
-                Toast.makeText(getActivity(), "食堂预定", Toast.LENGTH_SHORT).show();
+                getUnionId();
                 break;
             case 1://食堂代取
-                Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
+                Constant.mTencent.reportDAU();
                 break;
             case 2://快递代取
-                Toast.makeText(getActivity(), "快递代取", Toast.LENGTH_SHORT).show();
+                Constant.mTencent.checkLogin(new DefaultUiListener() {
+                    @Override
+                    public void onComplete(Object response) {
+                        JSONObject jsonResp = (JSONObject)response;
+                        if (jsonResp.optInt("ret", -1) == 0) {
+                            JSONObject jsonObject = Constant.mTencent.loadSession(Constant.APP_ID);
+                            Constant.mTencent.initSessionCache(jsonObject);
+                            if (jsonObject == null) {
+                                Util.showResultDialog(getActivity(), "jsonObject is null", "登录失败");
+                            } else {
+                                Util.showResultDialog(getActivity(), jsonObject.toString(), "登录成功");
+                            }
+
+                        } else {
+                            Util.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(UiError e) {
+                        Util.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Util.toastMessage(getActivity(), "onCancel");
+                    }
+                });
                 break;
             case 3://二手交易
                 Toast.makeText(getActivity(), "二手交易", Toast.LENGTH_SHORT).show();
@@ -473,5 +509,41 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         }
         //判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
         return packageNames.contains(packageName);
+    }
+    private void getUnionId() {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
+            IUiListener listener = new DefaultUiListener() {
+                @Override
+                public void onError(UiError e) {
+                    Toast.makeText(getActivity(),"onError",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onComplete(final Object response) {
+                    if(response != null){
+                        JSONObject jsonObject = (JSONObject)response;
+                        try {
+                            String unionid = jsonObject.getString("unionid");
+                            Util.showResultDialog(getActivity(), "unionid:\n"+unionid, "onComplete");
+                            Util.dismissDialog();
+                            Log.i(TAG, "getUnionId: ==="+unionid);
+                        }catch (Exception e){
+                            Toast.makeText(getActivity(),"no unionid",Toast.LENGTH_LONG).show();
+                        }
+                    }else {
+                        Toast.makeText(getActivity(),"no unionid",Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(getActivity(),"onCancel",Toast.LENGTH_LONG).show();
+                }
+            };
+            UnionInfo unionInfo = new UnionInfo(getActivity(), Constant.mTencent.getQQToken());
+            unionInfo.getUnionId(listener);
+        } else {
+            Toast.makeText(getActivity(),"please login frist!",Toast.LENGTH_LONG).show();
+        }
     }
 }
