@@ -20,7 +20,7 @@ public class Constant {
 
     public static Tencent mTencent;
 
-    public static String APP_ID ="101965703";
+    public static String APP_ID = "101965703";
 
     /*wanandroid*/
     public static final String URL_BASE = "http://www.wanandroid.com/";
@@ -47,7 +47,6 @@ public class Constant {
     public static final String URL_CHANGE_PWD = "/user/lg/password";
 
 
-
     /*url_ more*/
     public static final String URL_TOUTIAO = "https://toutiao.io/";
     public static final String URL_TOUTIAO_PREV = "https://toutiao.io/prev/";
@@ -66,7 +65,6 @@ public class Constant {
     public static final int MODE_MORE_WANGYI = 1332;
     public static final int MODE_MORE_BUS = 1333;
     public static final int MODE_MORE_GITYUAN = 1334;
-
 
 
     /*

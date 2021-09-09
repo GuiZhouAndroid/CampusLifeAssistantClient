@@ -21,10 +21,11 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
  */
 public class BottomShopFragment extends Fragment {
     View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.index_fragment_bottom_shop,container,false);
+        view = inflater.inflate(R.layout.index_fragment_bottom_shop, container, false);
         return view;
     }
 }
