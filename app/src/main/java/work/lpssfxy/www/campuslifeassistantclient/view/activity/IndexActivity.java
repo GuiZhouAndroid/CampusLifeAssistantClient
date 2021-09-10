@@ -673,6 +673,7 @@ public class IndexActivity extends BaseActivity {
         //Gson解析并序列号至Java对象中
         QQUserSessionBean qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
         Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): "+qqUserSessionBean);
+        Log.i(TAG, "Access_token: "+ qqUserSessionBean.getAccess_token());
         /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
         SharePreferenceUtil.putObject(IndexActivity.this,qqUserSessionBean);
     }
