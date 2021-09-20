@@ -160,17 +160,7 @@ public class OkHttpUtil {
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                switch (response.code()) {
-                    case 302:
-                        okHttpResultCallback.onResponse(Constant.URL_LOGIN.getBytes());
-                        break;
-                    case 200:
-                        okHttpResultCallback.onResponse(Constant.URL_LOGIN.getBytes());
-                        break;
-                    default:
-                        break;
-                }
-                okHttpResultCallback.onResponse(Constant.ERROR.getBytes());
+
             }
 
         });

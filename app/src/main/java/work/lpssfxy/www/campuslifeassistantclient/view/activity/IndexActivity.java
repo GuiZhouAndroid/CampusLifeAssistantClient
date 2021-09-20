@@ -734,13 +734,13 @@ public class IndexActivity extends BaseActivity {
         getDate(mIndex_tv_user_hello);
         /** 设置圆形QQ头像 */
         Glide.with(IndexActivity.this)
-                .load(Constant.qqUser.getFigureurl_qq_2())
+                .load(Constant.qqUser.getFigureurl_qq_1())
                 .apply(options)
                 .into(mIndex_iv_user_head);
 
         /** 设置侧滑的圆形QQ头像 */
         Glide.with(IndexActivity.this)
-                .load(Constant.qqUser.getFigureurl_qq_2())
+                .load(Constant.qqUser.getFigureurl_qq_1())
                 .apply(options)
                 .into(ivNavHeaderIcon);
 
@@ -819,12 +819,12 @@ public class IndexActivity extends BaseActivity {
         mIndex_tv_user_hello.setVisibility(View.VISIBLE);
         /** 设置Toolbar的圆形QQ头像 */
         Glide.with(IndexActivity.this)
-                .load(qqUser.getFigureurl_qq_2())
+                .load(qqUser.getFigureurl_qq_1())
                 .apply(options)
                 .into(mIndex_iv_user_head);
         /** 设置侧滑的圆形QQ头像 */
         Glide.with(IndexActivity.this)
-                .load(qqUser.getFigureurl_qq_2())
+                .load(qqUser.getFigureurl_qq_1())
                 .apply(options)
                 .into(ivNavHeaderIcon);
         /** 设置友好时间提示*/

@@ -22,8 +22,8 @@ public class Constant {
 
     public static String APP_ID ="101965703";
 
-    /*wanandroid*/
-    public static final String URL_BASE = "http://www.wanandroid.com/";
+
+    public static final String URL_BASE = "https://www.lpssfxy.work/";
 
     public static final String URL_COLLECT = "lg/collect/";
     public static final String URL_UNCOLLECT = "lg/uncollect_originId/";
@@ -38,14 +38,13 @@ public class Constant {
     public static final String URL_WECHAT = "wxarticle/chapters/json";
     public static final String URL_WECHAT_LIST = "wxarticle/list/";
 
-    /*
-          post
-       */
+    /**
+     *  post
+     */
     public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
-    public static final String URL_LOGIN = "/user/LoginActivity";
+    public static final String URL_LOGIN = "api/user/doLogin"; //登录
     public static final String URL_REGISTER = "/user/register/";
     public static final String URL_CHANGE_PWD = "/user/lg/password";
-
 
 
     /*url_ more*/
