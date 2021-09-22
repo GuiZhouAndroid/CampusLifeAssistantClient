@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.tencent.open.log.SLog;
@@ -22,8 +21,6 @@ import skin.support.app.SkinCardViewInflater;
 import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkHttpUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 
 /**
  * created by on 2021/8/18
@@ -75,7 +72,7 @@ public class App extends Application {
         /** Application全局静态实例 */
         myApp = this;
         /** 初始化全局OkHttp3工具类 */
-        OkHttpUtil.init(this);
+
         /** 初始化百度地图加载so文件 */
         SDKInitializer.initialize(this);
         /** 初始化全局适配AndroidAutoSize */

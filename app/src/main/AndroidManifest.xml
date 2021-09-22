@@ -104,9 +104,6 @@
             android:name=".view.activity.BaseActivity"
             android:exported="true" />
         <!-- 注册登录Activity -->
-<!--        <activity-->
-<!--            android:name=".view.activity.loginAc"-->
-<!--            android:exported="true" />-->
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true" />
