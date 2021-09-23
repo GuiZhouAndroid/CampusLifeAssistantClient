@@ -164,7 +164,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         imagePlay();//图片轮播
         gridLayout();//网格布局
         stickTop();//置顶
-        setRecyclerView();//校园资讯列表
+        //setRecyclerView();//校园资讯列表
     }
 
 
@@ -347,66 +347,66 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     /**
      * 校园资讯列表适配数据源
      */
-    private void setRecyclerView() {
-        /** 循环遍历添加数组索引数据 */
-        for (int i = 0; i < campusInformationTitles.length; i++) {
-            CampusInformationBean informationBean = new CampusInformationBean();
-            informationBean.setInfoTitle(campusInformationTitles[i]);//遍历添加资讯标题
-            informationBean.setInfoSource(campusInformationSources[i]);//遍历添加资讯来源
-            informationBean.setInfoIssueTime(campusInformationIssueTimes[i]);//遍历添加资讯发布时间
-            informationBean.setInfoContent(campusInformationIssueContents[i]);//遍历添加资讯内容
-            campusInformationBeanArrayList.add(informationBean);//遍历的数据全部添加到ArrayList集合中，提供RecyclerView适配器使用
-        }
-        //当我们确定Item的改变不会影响RecyclerView的宽高的时候可以设置setHasFixedSize(true)，
-        // 并通过Adapter的增删改插方法去刷新RecyclerView，而不是通过notifyDataSetChanged()。
-        // （当需要改变宽高的时候就用notifyDataSetChanged()去整体刷新一下）
-        //获取LinearLayoutManager实例
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        ////限制recyclerview自身滑动特性,滑动全部靠scrollview完成
-        mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setFocusable(false);
-        //当平滑滚动条被禁用时，滚动条拇指的位置和大小是基于
-        //只关注适配器中项目的数量以及内部可见项的位置
-        //适配器。这提供了一个稳定的滚动条，用户可以通过一个项目列表进行导航
-        //有不同的宽度/高度。
-        mRecyclerView.setLayoutManager(layoutManager);
-        layoutManager.setSmoothScrollbarEnabled(true);
-        layoutManager.setAutoMeasureEnabled(true);
-        //创建adapter
-        recyclerViewAdapter = new MyRecyclerViewAdapter(getActivity(), campusInformationBeanArrayList);
-        //给RecyclerView设置adapter
-        mRecyclerView.setAdapter(recyclerViewAdapter);
-        recyclerViewAdapter.notifyDataSetChanged();
-        //设置layoutManager,可以设置显示效果，是线性布局、grid布局，还是瀑布流布局
-        //参数是：上下文、列表方向（横向还是纵向）、是否倒叙
-       mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        //设置item的分割线
-        //添加自定义分割线
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.index_recyclerview_shape));
-        mRecyclerView.addItemDecoration(divider);
-        //RecyclerView中没有item的监听事件，需要自己在适配器中写一个监听事件的接口。参数根据自定义
-        recyclerViewAdapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(View view, CampusInformationBean data) {
-                switch (data.infoTitle){
-                    case "庆祝中国共产党建党 100 周年“守初":
-                        ToastUtil.showToast(campusInformationTitles[0]);
-                        break;
-                    case "六盘水师范学院2021年度普法责任清单":
-                        ToastUtil.showToast(campusInformationTitles[1]);
-                        break;
-                    case "六盘水师范学院2022年高层次人才招聘":
-                        ToastUtil.showToast(campusInformationTitles[2]);
-                        break;
-                    case "六盘水师范学院微格（录播）教室":
-                        ToastUtil.showToast(campusInformationTitles[3]);
-                        break;
-                }
-            }
-        });
-    }
+//    private void setRecyclerView() {
+//        /** 循环遍历添加数组索引数据 */
+//        for (int i = 0; i < campusInformationTitles.length; i++) {
+//            CampusInformationBean informationBean = new CampusInformationBean();
+//            informationBean.setInfoTitle(campusInformationTitles[i]);//遍历添加资讯标题
+//            informationBean.setInfoSource(campusInformationSources[i]);//遍历添加资讯来源
+//            informationBean.setInfoIssueTime(campusInformationIssueTimes[i]);//遍历添加资讯发布时间
+//            informationBean.setInfoContent(campusInformationIssueContents[i]);//遍历添加资讯内容
+//            campusInformationBeanArrayList.add(informationBean);//遍历的数据全部添加到ArrayList集合中，提供RecyclerView适配器使用
+//        }
+//        //当我们确定Item的改变不会影响RecyclerView的宽高的时候可以设置setHasFixedSize(true)，
+//        // 并通过Adapter的增删改插方法去刷新RecyclerView，而不是通过notifyDataSetChanged()。
+//        // （当需要改变宽高的时候就用notifyDataSetChanged()去整体刷新一下）
+//        //获取LinearLayoutManager实例
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+//        ////限制recyclerview自身滑动特性,滑动全部靠scrollview完成
+//        mRecyclerView.setNestedScrollingEnabled(false);
+//        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setFocusable(false);
+//        //当平滑滚动条被禁用时，滚动条拇指的位置和大小是基于
+//        //只关注适配器中项目的数量以及内部可见项的位置
+//        //适配器。这提供了一个稳定的滚动条，用户可以通过一个项目列表进行导航
+//        //有不同的宽度/高度。
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        layoutManager.setSmoothScrollbarEnabled(true);
+//        layoutManager.setAutoMeasureEnabled(true);
+//        //创建adapter
+//        recyclerViewAdapter = new MyRecyclerViewAdapter(getActivity(), campusInformationBeanArrayList);
+//        //给RecyclerView设置adapter
+//        mRecyclerView.setAdapter(recyclerViewAdapter);
+//        recyclerViewAdapter.notifyDataSetChanged();
+//        //设置layoutManager,可以设置显示效果，是线性布局、grid布局，还是瀑布流布局
+//        //参数是：上下文、列表方向（横向还是纵向）、是否倒叙
+//       mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+//        //设置item的分割线
+//        //添加自定义分割线
+//        DividerItemDecoration divider = new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
+//        divider.setDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.index_recyclerview_shape));
+//        mRecyclerView.addItemDecoration(divider);
+//        //RecyclerView中没有item的监听事件，需要自己在适配器中写一个监听事件的接口。参数根据自定义
+//        recyclerViewAdapter.setOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
+//            @Override
+//            public void OnItemClick(View view, CampusInformationBean data) {
+//                switch (data.infoTitle){
+//                    case "庆祝中国共产党建党 100 周年“守初":
+//                        ToastUtil.showToast(campusInformationTitles[0]);
+//                        break;
+//                    case "六盘水师范学院2021年度普法责任清单":
+//                        ToastUtil.showToast(campusInformationTitles[1]);
+//                        break;
+//                    case "六盘水师范学院2022年高层次人才招聘":
+//                        ToastUtil.showToast(campusInformationTitles[2]);
+//                        break;
+//                    case "六盘水师范学院微格（录播）教室":
+//                        ToastUtil.showToast(campusInformationTitles[3]);
+//                        break;
+//                }
+//            }
+//        });
+//    }
 
     /**
      * Intent打开百度地图导航：我的位置——六盘水师范学院

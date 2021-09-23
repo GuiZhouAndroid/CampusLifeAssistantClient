@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,6 +36,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.elmargomez.typer.Font;
@@ -43,6 +46,9 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.DefaultUiListener;
@@ -55,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import butterknife.BindBitmap;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -63,8 +68,6 @@ import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarItem;
-import work.lpssfxy.www.campuslifeassistantclient.base.bottom.BottomBarLayout;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
@@ -103,11 +106,11 @@ public class IndexActivity extends BaseActivity {
     /** 防触碰使用的变量 */
     private long firstTime;
     /** 底部导航 */
-    @BindView(R2.id.bbl) BottomBarLayout mBbl;
+    @BindView(R2.id.bottomBar) BottomBar mBottomBar;
     /** 四个主功能Fragment界面 */
     public Fragment[] fragments =null;
-    /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
-    public List<Fragment> fragmentList = new ArrayList<>();
+    /** 声明Fragment集合，ViewPager适配器遍历绑定数组fragments*/
+    private List<Fragment> fragmentList;
     /** Toolbar弹窗 */
     private CustomPopWindow mCustomPopWindow;
     /** 侧滑顶部头像 */
@@ -186,6 +189,7 @@ public class IndexActivity extends BaseActivity {
         LoadingDialog.closeSimpleLD();
         /** 初始化DrawerLayout侧滑抽屉 */
         initDrawerLayout();
+        initViewPager();
         /** 初始化底部导航 */
         initBottomNaviCation();
         /** 初始化获取权限 */
@@ -351,31 +355,92 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
-     * 初始化底部导航
+     * 初始化ViewPage+适配器填充4个Fragment+左右滑动ViewPager根据当前的item与底部导航BottomBar的item实现动画联动切换
      */
-    private void initBottomNaviCation() {
+    private void initViewPager() {
+        fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragmentList.addAll(Arrays.asList(fragments));
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mVp_content.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),fragments,fragmentList));
-        //底部导航加载ViewPager
-        mBbl.setViewPager(mVp_content);
-        //position：底部导航索引，unreadNum：页签未读数
-        mBbl.setUnread(0, 20);//设置第一个页签的未读数为20,
-        mBbl.setUnread(1, 1001);//设置第二个页签的未读数
-        mBbl.showNotify(2);//设置第三个页签显示提示的小红点
-        mBbl.setMsg(3, "未登录");//设置第四个页签显示NEW提示文字
-        mBbl.setOnItemSelectedListener(new BottomBarLayout.OnItemSelectedListener() {
+        //        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mVp_content.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onItemSelected(final BottomBarItem bottomBarItem, int previousPosition, final int currentPosition) {
-                Log.i(TAG, "position: " + currentPosition);
-                if (currentPosition == 0) {
-                    //如果是第一个，即首页
-                    if (previousPosition == currentPosition) {
-                        //bottomBarItem.setSelectedIcon(R.mipmap.tab_loading);//更换成加载图标
-                        Snackbar.make(mNav_view, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                    }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            //选择新页面时调用
+            @Override
+            public void onPageSelected(int position) {
+                mBottomBar.selectTabAtPosition(position, true);
+            }
+
+            //当滚动状态改变时调用，用于发现用户何时开始拖动
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+    /**
+     * 初始化底部导加载+根据当前item值，在点击对应图标时，与ViewPager联动切换
+     * 设置底部导航切换点击事件和再次点击事件
+     */
+    private void initBottomNaviCation() {
+        //在tab3上，添加红色角标数字5
+        mBottomBar.getTabWithId(R.id.tab3).setBadgeCount(5);
+        //选定的BottomBarTab更改时被触发——当前处于Item时点击其它Item
+        mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.tab1:
+                        mVp_content.setCurrentItem(0);
+                        Toast.makeText(IndexActivity.this, "tab1", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tab2:
+                        mVp_content.setCurrentItem(1);
+                        Toast.makeText(IndexActivity.this, "tab2", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tab3:
+                        mVp_content.setCurrentItem(2);
+                        Toast.makeText(IndexActivity.this, "tab3", Toast.LENGTH_SHORT).show();
+                        mBottomBar.getTabWithId(R.id.tab3).removeBadge();
+                        break;
+                    case R.id.tab4:
+                        mVp_content.setCurrentItem(3);
+                        Toast.makeText(IndexActivity.this, "tab4", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+
+        // 当前选择的BottomBarTab被单击时触发——当前处于Item时再次点击当前Item
+        mBottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.tab1:
+                        //           viewPager.setCurrentItem(0);
+                        Toast.makeText(IndexActivity.this, "再次点击了tab1", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tab2:
+                        //           viewPager.setCurrentItem(1);
+                        Toast.makeText(IndexActivity.this, "再次点击了tab2", Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case R.id.tab3:
+                        //       viewPager.setCurrentItem(2);
+                        Toast.makeText(IndexActivity.this, "再次点击了tab3", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tab4:
+                        //        viewPager.setCurrentItem(3);
+                        Toast.makeText(IndexActivity.this, "再次点击了tab4", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         });

@@ -27,15 +27,14 @@ public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
     /** 创建Fragment集合，ViewPager适配器遍历绑定数组fragments*/
     public List<Fragment> fragmentList =null;
 
+    public MyViewPagerAdapter(FragmentManager fm) {
+        super(fm);
+
+    }
     public MyViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
         super(fm);
         this.fragments = fragments;
         this.fragmentList = fragmentList;
-    }
-
-    public MyViewPagerAdapter(FragmentManager fm) {
-        super(fm);
-
     }
 
     @Override
