@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'
     //图片轮播
     implementation 'cn.bingoogolapple:bga-banner:2.2.4@aar'
+    //转转动画图片轮播
+    implementation 'com.github.tokiii:RevealBanner:v1.0.4'
     //Toolbar弹窗
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     //换肤框架

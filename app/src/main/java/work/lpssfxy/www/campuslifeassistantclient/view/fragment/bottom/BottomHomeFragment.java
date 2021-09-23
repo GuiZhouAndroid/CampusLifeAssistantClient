@@ -21,21 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.library.AutoFlowLayout;
 import com.example.library.FlowAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.tencent.connect.UnionInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
+import com.wikikii.bannerlib.banner.IndicatorLocation;
+import com.wikikii.bannerlib.banner.LoopLayout;
+import com.wikikii.bannerlib.banner.LoopStyle;
+import com.wikikii.bannerlib.banner.OnDefaultImageViewLoader;
+import com.wikikii.bannerlib.banner.bean.BannerInfo;
+import com.wikikii.bannerlib.banner.listener.OnBannerItemClickListener;
+import com.wikikii.bannerlib.banner.view.BannerBgContainer;
 
 import org.json.JSONObject;
 
@@ -55,11 +59,9 @@ import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.BaseActivity;
+import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -71,10 +73,12 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  * @create 2021-08-20-15:01
  */
 @SuppressLint("NonConstantResourceId")
-public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, AutoFlowLayout.OnItemClickListener {
+public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, AutoFlowLayout.OnItemClickListener, OnBannerItemClickListener {
     private static final String TAG = "BottomHomeFragment";
     /** 图片轮播 */
-    @BindView(R2.id.banner) BGABanner mBanner;
+//    @BindView(R2.id.banner) BGABanner mBanner;
+    @BindView(R2.id.banner_bg_container) BannerBgContainer mBanner_bg_container;
+    @BindView(R2.id.loop_layout) LoopLayout mLoop_layout;
     /** 网格布局 */
     @BindView(R2.id.auto_grid_layout) AutoFlowLayout mAuto_grid_layout;
     /** 列表-校园资讯 */
@@ -212,7 +216,6 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         }
     }
 
-
     /**
      * 网格布局设置Item监听
      *
@@ -293,11 +296,54 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
      * 首页图片轮播
      */
     private void imagePlay() {
-        BGALocalImageSize bgaLocalImageSize=new BGALocalImageSize(720,1280,320,640);
-        mBanner.setData(bgaLocalImageSize, ImageView.ScaleType.CENTER_CROP,
-                R.drawable.index_banner_img1,
-                R.drawable.index_banner_img2,
-                R.drawable.index_banner_img3);
+//        BGALocalImageSize bgaLocalImageSize=new BGALocalImageSize(720,1280,320,640);
+//        mBanner.setData(bgaLocalImageSize, ImageView.ScaleType.CENTER_CROP,
+//                R.drawable.index_banner_img1,
+//                R.drawable.index_banner_img2,
+//                R.drawable.index_banner_img3);
+        mLoop_layout.setLoop_ms(3000);//轮播的速度(毫秒)
+        mLoop_layout.setLoop_duration(500);//滑动的速率(毫秒)
+        mLoop_layout.setScaleAnimation(true);// 设置是否需要动画
+        mLoop_layout.setLoop_style(LoopStyle.Empty);//轮播的样式-默认empty
+        mLoop_layout.setIndicatorLocation(IndicatorLocation.Center);//指示器位置-中Center
+        mLoop_layout.initializeData(getActivity());
+        // 准备数据
+        ArrayList<BannerInfo> bannerInfos = new ArrayList<>();
+        List<Object> bgList = new ArrayList<>();
+        bannerInfos.add(new BannerInfo(R.mipmap.banner_1, "first"));
+        bannerInfos.add(new BannerInfo(R.mipmap.banner_2, "second"));
+        bgList.add(R.mipmap.banner_bg1);
+        bgList.add(R.mipmap.banner_bg2);
+        // 设置监听
+        mLoop_layout.setOnLoadImageViewListener(new OnDefaultImageViewLoader() {
+            @Override
+            public void onLoadImageView(ImageView view, Object object) {
+                Glide.with(view.getContext())
+                        .load(object)
+                        .into(view);
+            }
+        });
+        mLoop_layout.setOnBannerItemClickListener(this);
+        if (bannerInfos.size() == 0) {
+            return;
+        }
+        mLoop_layout.setLoopData(bannerInfos);
+        mBanner_bg_container.setBannerBackBg(getActivity(), bgList);
+        mLoop_layout.setBannerBgContainer(mBanner_bg_container);
+        mLoop_layout.startLoop();
+    }
+
+    @Override
+    public void onBannerClick(int index, ArrayList<BannerInfo> banner) {
+        switch (index){
+            case 0:
+                Toast.makeText(getActivity(), "第一张图", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                Toast.makeText(getActivity(), "第二张图", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
     }
 
     /**

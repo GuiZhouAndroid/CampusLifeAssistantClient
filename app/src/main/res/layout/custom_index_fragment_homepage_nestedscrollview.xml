@@ -17,20 +17,35 @@
     <!--    zoomStack:中心堆叠-->
     <!--    fade:淡色-->
     <!--    zoomFade:中心淡色-->
-    <cn.bingoogolapple.bgabanner.BGABanner
-        android:id="@+id/banner"
+    <!--    <cn.bingoogolapple.bgabanner.BGABanner-->
+    <!--        android:id="@+id/banner"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="230dp"-->
+    <!--        android:scaleType="fitXY"-->
+    <!--        app:banner_indicatorGravity="bottom|right"-->
+    <!--        app:banner_pageChangeDuration="3000"-->
+    <!--        app:banner_placeholderDrawable="@mipmap/banner_placeholder"-->
+    <!--        app:banner_pointAutoPlayAble="true"-->
+    <!--        app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"-->
+    <!--        app:banner_pointTopBottomMargin="15dp"-->
+    <!--        app:banner_tipTextColor="@color/color_title_bg"-->
+    <!--        app:banner_tipTextSize="@dimen/textSize_titleSmall"-->
+    <!--        app:banner_transitionEffect="depth" />-->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:scaleType="fitXY"
-        app:banner_indicatorGravity="bottom|right"
-        app:banner_pageChangeDuration="3000"
-        app:banner_placeholderDrawable="@mipmap/banner_placeholder"
-        app:banner_pointAutoPlayAble="true"
-        app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
-        app:banner_pointTopBottomMargin="15dp"
-        app:banner_tipTextColor="@color/color_title_bg"
-        app:banner_tipTextSize="@dimen/textSize_titleSmall"
-        app:banner_transitionEffect="depth" />
+        android:layout_height="240dp">
+
+        <com.wikikii.bannerlib.banner.view.BannerBgContainer
+            android:id="@+id/banner_bg_container"
+            android:layout_width="match_parent"
+            android:layout_height="240dp" />
+
+        <com.wikikii.bannerlib.banner.LoopLayout
+            android:id="@+id/loop_layout"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
@@ -124,24 +139,27 @@
         android:background="@color/viewBackground" />
 
     <LinearLayout
-        android:background="@color/Grey100"
-        android:paddingTop="@dimen/dp_30"
-        android:paddingBottom="@dimen/dp_30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/Grey100"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dp_30"
+        android:paddingBottom="@dimen/dp_30">
+
         <View
             android:layout_width="0dp"
             android:layout_height="0.5dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:background="@color/Grey" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/Pink"
             android:text="我是有底线的"
+            android:textColor="@color/Pink"
             android:textSize="15sp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0.5dp"
