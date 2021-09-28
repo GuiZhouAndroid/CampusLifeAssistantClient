@@ -112,8 +112,8 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     protected void initView() {
         mCircleProgress.startCountDown();//开始倒计时
         mCircleProgress.bringToFront();//：设置CircleProgress 优先级> GuideFullVideoView
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);横屏
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);竖屏
     }
 
     /**
