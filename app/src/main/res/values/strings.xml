@@ -14,6 +14,7 @@
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="forgetpassword">忘记密码?</string>
+    <string name="telNumberLogin">手机号快捷登录</string>
     <string name="login">登\t\t\t\t\t录</string>
     <string name="no_account">没有账号？去注册</string>
     <string name="QQ">QQ快捷登录</string>

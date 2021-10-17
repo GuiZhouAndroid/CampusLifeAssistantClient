@@ -33,7 +33,7 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
     /**
-     * 1.2秒倒计时，进入视频引导页
+     * 1秒倒计时，进入视频引导页
      */
     private void LaunchOneSecondCountDown() {
         handler.postDelayed(new Runnable() {
@@ -58,6 +58,7 @@ public class LaunchActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
     /**
      * 销毁线程
      * 清除Message和Runnable资源

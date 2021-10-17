@@ -93,6 +93,19 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/tv_login_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/til_login_password"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/dp_5"
+        android:paddingStart="@dimen/dp_30"
+        android:text="@string/telNumberLogin"
+        android:textColor="@color/viewBackground"
+        android:textSize="@dimen/text_size_15"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
         android:id="@+id/login_tv_forget_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,6 +150,7 @@
             android:layout_height="wrap_content"
             android:text="QQ扫码登录「无论是否安装qq」"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -194,7 +208,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dp_50">
+        android:paddingBottom="@dimen/dp_70">
 
         <TextView
             android:layout_width="@dimen/dp_40"
@@ -211,6 +225,27 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/QQ"
+            android:textColor="@color/viewBackground"
+            android:textSize="@dimen/text_size_13" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10">
+        <CheckBox
+            android:textColor="@color/white"
+            android:id="@+id/check_if_authorize"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:text="我已阅读并同意用户协议和隐私政策"
             android:textColor="@color/viewBackground"
             android:textSize="@dimen/text_size_13" />
     </LinearLayout>

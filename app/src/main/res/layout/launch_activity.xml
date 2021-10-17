@@ -5,8 +5,4 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".view.activity.LaunchActivity">
-    <FrameLayout
-        android:id="@+id/fl_launch"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 </LinearLayout>

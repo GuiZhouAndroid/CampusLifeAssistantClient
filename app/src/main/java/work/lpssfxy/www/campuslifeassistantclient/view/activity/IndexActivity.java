@@ -721,6 +721,7 @@ public class IndexActivity extends BaseActivity {
             };
             /** 根据Constant.mTencent会话中TOKEN值，请求回调授权用户信息列表*/
             UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
+            Log.i(TAG, "QQToken====: "+Constant.mTencent.getQQToken().toString());
             /** 开始监听请求回调操作*/
             info.getUserInfo(listener);
 

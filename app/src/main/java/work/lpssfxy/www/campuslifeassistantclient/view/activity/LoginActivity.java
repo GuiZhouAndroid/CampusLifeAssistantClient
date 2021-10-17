@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -66,7 +67,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr
  * @create 2021-09-02-18:21
  */
 @SuppressLint("NonConstantResourceId")
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "LoginActivity";
     /**登录界面中Gson数据解析发送广播消息，首页通过对象序列号设置的键“QQUserBean”接受广播消息内容 */
     public static final String action = "QQUserLogin.BroadCast.Action";
@@ -84,6 +85,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R2.id.login_tv_forget_pwd) TextView mLogin_tv_forget_pwd;
     /** 登录动画 */
     @BindView(R2.id.login_ptn_anim) ProgressButton mLogin_ptn_anim;
+    /** 手机号登录 */
+    @BindView(R2.id.tv_login_tel) TextView mTv_login_tel;
     /** 去注册 */
     @BindView(R2.id.login_tv_go_register) TextView mLogin_tv_go_register;
     /** 微信登录 */
@@ -92,6 +95,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R2.id.login_iv_qq) ImageView mLogin_iv_qq;
     /** 强制扫码登录 */
     @BindView(R2.id.check_force_qr) CheckBox mCheckForceQr;
+    /** 勾选授权同意 */
+    @BindView(R2.id.check_if_authorize) CheckBox mCheck_if_authorizer;
     /** 输入的用户名密码 */
     private String strUserName,strPassword;
 
@@ -136,12 +141,12 @@ public class LoginActivity extends BaseActivity {
      */
     @Override
     protected void initView() {
+        /** 默认不勾选✓授权同意 */
+        mCheck_if_authorizer.setChecked(false);
+        /** 默认不勾选✓扫码登录 */
+        mCheckForceQr.setChecked(false);
         /** 初始化动画登录按钮属性 */
-        mLogin_ptn_anim.setBgColor(Color.RED);
-        mLogin_ptn_anim.setTextColor(Color.WHITE);
-        mLogin_ptn_anim.setProColor(Color.WHITE);
-        mLogin_ptn_anim.setButtonText("登  录");
-
+        initCheckAuthorizeState();
     }
 
     @Override
@@ -151,7 +156,10 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initEvent() {
-
+        //授权同意开关监听
+        mCheck_if_authorizer.setOnCheckedChangeListener(this);
+        //扫码登录开关监听
+        mCheckForceQr.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -217,7 +225,7 @@ public class LoginActivity extends BaseActivity {
         PermissionMgr.getInstance().onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    @OnClick({R2.id.login_ptn_anim,R2.id.login_tv_forget_pwd,R2.id.login_tv_go_register,R2.id.login_iv_wx,R2.id.login_iv_qq})
+    @OnClick({R2.id.login_ptn_anim,R2.id.login_tv_forget_pwd,R2.id.login_tv_go_register,R2.id.login_iv_wx,R2.id.login_iv_qq,R2.id.tv_login_tel})
     public void onLoginViewClick(View view){
         switch (view.getId()){
             case R.id.login_ptn_anim://动画登录
@@ -236,7 +244,14 @@ public class LoginActivity extends BaseActivity {
                 weChatLogin();//调用微信的SDK
                 break;
             case R.id.login_iv_qq://QQ登录
-                QQLogin();//调用QQ的SDK
+                if (mCheck_if_authorizer.isChecked()){
+                    QQLogin(false);//传入false，即拉起手Q登录，无须扫码
+                }else {
+                    ToastUtil.showToast("请先勾选授权同意");
+                }
+                break;
+            case R.id.tv_login_tel://手机号快捷登录
+                userGoTelNumberLogin();
                 break;
         }
     }
@@ -272,12 +287,18 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
+     * 手机号快捷登录
+     */
+    private void userGoTelNumberLogin() {
+        ToastUtil.showToast("手机号快捷登录");
+    }
+
+    /**
      * 找回密码
      */
     private void userFindPassword() {
         ToastUtil.showToast("找回密码");
     }
-
     /**
      * 跳转注册
      */
@@ -293,21 +314,21 @@ public class LoginActivity extends BaseActivity {
     /**
      * QQ登录
      */
-    private void QQLogin() {
+    private void QQLogin(boolean isChooseQRLogin) {
         Log.i(TAG, "点击QQ登录图标后会话是否有效"+Constant.mTencent.isSessionValid());
         if (!Constant.mTencent.isSessionValid()) { //会话无效false时
             /** 强制扫码登录 */
             this.getIntent().putExtra(AuthAgent.KEY_FORCE_QR_LOGIN, mCheckForceQr.isChecked());
             HashMap<String, Object> params = new HashMap<>();
             if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-                params.put(KEY_RESTORE_LANDSCAPE, true);
+                params.put(KEY_RESTORE_LANDSCAPE, isChooseQRLogin);
             }
             params.put(KEY_SCOPE, "all");//授权全部权限
             params.put(KEY_QRCODE, mCheckForceQr.isChecked());//传入二维码单选框选中参数
             Log.i(TAG, "强制二维码登录是否勾选: "+mCheckForceQr.isChecked());
             Constant.mTencent.login(this, loginListener, params);//传入登录参数集合，拉起二维码登录扫码页，如果没有选中，则进行普通方式QQ登录
             Log.d(TAG, "返回系统启动到现在的毫秒数，包含休眠时间" + SystemClock.elapsedRealtime());
-        } else { //会话有效false时
+        } else { //会话有效true时
             /** 退出登录+清除旧会话Session */
             Constant.mTencent.logout(this);
             /** 重新授权登录，拉起新会话Session */
@@ -323,20 +344,21 @@ public class LoginActivity extends BaseActivity {
             Log.i(TAG, "回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
             Log.i(TAG, "回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
             /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
-            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-            /** 保存Session信息存入SharePreference本地数据 */
-            initSaveSessionDataToLocalFile(values);
-            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
-             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
-            Constant.mTencent.saveSession(values);
+//            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
+//            /** 保存Session信息存入SharePreference本地数据 */
+//            initSaveSessionDataToLocalFile(values);
+//            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
+//             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
+//            Constant.mTencent.saveSession(values);
 
             /**登录成功跳转之前构思：
              * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
              * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
              */
-            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
-            finish();//并销毁登录界面
+//            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+//            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
+//            finish();//并销毁登录界面
+            LoadingDialog.closeSimpleLD();
 
         }
     };
@@ -353,6 +375,7 @@ public class LoginActivity extends BaseActivity {
         /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
         SharePreferenceUtil.putObject(LoginActivity.this,Constant.qqUserSessionBean);
     }
+
 
     private class BaseUiListener extends DefaultUiListener {
         @Override
@@ -456,6 +479,7 @@ public class LoginActivity extends BaseActivity {
             };
             /** 根据Constant.mTencent会话中TOKEN值，请求回调授权用户信息列表*/
             UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
+            Log.i(TAG, "QQToken====: "+Constant.mTencent.getQQToken().toString());
             /** 开始监听请求回调操作*/
             info.getUserInfo(listener);
 
@@ -523,6 +547,59 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 初始化Check状态+登录按钮状态动画
+     */
+    public void initCheckAuthorizeState(){
+        if (mCheck_if_authorizer.isChecked()){
+            mLogin_ptn_anim.setEnabled(true);
+            mLogin_ptn_anim.setBgColor(Color.RED);
+            mLogin_ptn_anim.setTextColor(Color.WHITE);
+            mLogin_ptn_anim.setProColor(Color.WHITE);
+            mLogin_ptn_anim.setButtonText("登  录");
+        }else {
+            mLogin_ptn_anim.setEnabled(false);
+            mLogin_ptn_anim.setBgColor(Color.GRAY);
+            mLogin_ptn_anim.setTextColor(Color.WHITE);
+            mLogin_ptn_anim.setProColor(Color.WHITE);
+            mLogin_ptn_anim.setButtonText("请先勾选授权同意");
+            ToastUtil.showToast("请先勾选授权同意");
+        }
+    }
+
+    /**
+     * Check开关监听状态触发
+     * @param compoundButton Check控件id
+     * @param state 开关状态
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean state) {
+
+        switch (compoundButton.getId()){
+            case R.id.check_if_authorize: //勾选同意开关事件
+                if (state){
+                    mLogin_ptn_anim.setEnabled(true);
+                    mLogin_ptn_anim.setBgColor(Color.RED);
+                    mLogin_ptn_anim.setTextColor(Color.WHITE);
+                    mLogin_ptn_anim.setProColor(Color.WHITE);
+                    mLogin_ptn_anim.setButtonText("登  录");
+                }else {
+                    mLogin_ptn_anim.setEnabled(false);
+                    mLogin_ptn_anim.setBgColor(Color.GRAY);
+                    mLogin_ptn_anim.setTextColor(Color.WHITE);
+                    mLogin_ptn_anim.setProColor(Color.WHITE);
+                    mLogin_ptn_anim.setButtonText("请先勾选授权同意");
+                    ToastUtil.showToast("请先勾选授权同意");
+                }
+                break;
+            case R.id.check_force_qr: //QQ扫码登录开关事件
+                if (state){
+                    QQLogin(true);//调用扫码登录
+                    mCheckForceQr.setChecked(false);//点击一次，恢复未选状态，人性化操作
+                }
+                break;
+        }
+    }
     /**
      * 按下返回键，销毁当前页面
      */

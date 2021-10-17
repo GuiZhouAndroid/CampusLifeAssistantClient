@@ -7,91 +7,117 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 
 /**
  * created by on 2021/8/23
- * 描述：
+ * 描述：校园帮后端开发的API接口
  *
  * @author ZSAndroid
  * @create 2021-08-23-14:20
  */
 public class Constant {
 
-
     public static QQUserSessionBean qqUserSessionBean;
     public static QQUserBean qqUser;
-
+    /**
+     * 腾讯QQ全局实例对象
+     */
     public static Tencent mTencent;
-
+    /**
+     * 腾讯QQ APP_ID
+     */
     public static String APP_ID = "101965703";
 
-
-    public static final String URL_BASE = "https://www.lpssfxy.work/";
-
-    public static final String URL_COLLECT = "lg/collect/";
-    public static final String URL_UNCOLLECT = "lg/uncollect_originId/";
-    public static final String URL_ARTICLE = "article/list/";
-    public static final String URL_PROJECT = "project/tree/json";
-    public static final String URL_PROJECT_LIST = "project/list/";
-    public static final String URL_ARTICLE_COLLECT = "lg/collect/list/";
-    public static final String URL_COLLECT_UNCOLLECT = "lg/uncollect/";
-    public static final String URL_TREE = "tree/json";
-    public static final String URL_HOT_SEARCH = "hotkey/json";
-    public static final String URL_BANNER = "banner/json";
-    public static final String URL_WECHAT = "wxarticle/chapters/json";
-    public static final String URL_WECHAT_LIST = "wxarticle/list/";
+    /**
+     * 服务器+协议+端口号+域名
+     */
+    public static final String BASE_URL = "https://www.lpssfxy.work";
 
     /**
-     *  post
+     * 用户注册
      */
-    public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
-    public static final String URL_LOGIN = "api/user/doLogin"; //登录
-    public static final String URL_REGISTER = "/user/register/";
-    public static final String URL_CHANGE_PWD = "/user/lg/password";
+    //用户名密码登录
+    public static final String REGISTER_USER_INFO = BASE_URL + "/api/user/registerUserInfo";
 
-
-    /*url_ more*/
-    public static final String URL_TOUTIAO = "https://toutiao.io/";
-    public static final String URL_TOUTIAO_PREV = "https://toutiao.io/prev/";
-    public static final String URL_MEITUAN = "https://tech.meituan.com/";
-    public static final String URL_MEITUAN_TAG = "https://tech.meituan.com/tag/Android/";
-    public static final String URL_WANGYI = "https://blog.klmobile.app/";
-    public static final String URL_BUS_BLOG = "http://www.apkbus.com/blog/";
-    public static final String URL_BUS = "http://www.apkbus.com/";
-
-    public static final String URL_GITYUAN = "http://gityuan.com/";
-
-
-    /*mode_more*/
-    public static final int MODE_MORE_TOUTIAO = 1330;
-    public static final int MODE_MORE_MEITUAN = 1331;
-    public static final int MODE_MORE_WANGYI = 1332;
-    public static final int MODE_MORE_BUS = 1333;
-    public static final int MODE_MORE_GITYUAN = 1334;
-
-
-    /*
-        activity requestcode
+    /**
+     * 用户登录接口
      */
-    public static final int REQUEST_LOGIN = 19;
+    //用户名密码登录
+    public static final String LOGIN_USERNAME_PASSWORD = BASE_URL + "/api/user/userDoLoginByNameAndPwd";
 
+    //用户名密码登录，参数一：ulTel手机号码，参数二：ulPassword登录密码
+    public static final String LOGIN_TEL_PASSWORD = BASE_URL + "/api/user/userDoLoginByTelAndPwd";
 
-    /*
-        EventBus post
+    /**
+     * 检测用户登录状态+注销接口
      */
-    public static final String REFRESH = "refresh";
-    public static final String REFRESH_NEWS = "refresh_news";
-    public static final String REFRESH_COLLECT = "refresh_collect";
-    public static final String TOP_NEWS = "scroll_top_news";
-    public static final String TOP_CLASSIFY = "scroll_top_classify";
-    public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
-    public static final String MORE_REFRESH_NEWS = "refresh_more";
-    public static final String MORE_TOP_NEWS = "scroll_top_more";
+    //查询当前已登录会话状态
+    public static final String SA_TOKEN_IS_LOGIN = BASE_URL + "/api/login/state/saTokenIsLogin";
 
-    public static final String ERROR = "error";
-    public static final int CODE_SUCCESS = 0;
-    public static final int CODE_ERROR = -1;
+    //检查当前是否登录
+    public static final String SA_TOKEN_CHECK_LOGIN = BASE_URL + "/api/login/state/saTokenCheckLogin";
 
+    //注销当前已登录账号
+    public static final String SA_TOKEN_DO_LOGOUT = BASE_URL + "/api/login/state/saTokenDoLogout";
 
-    public static final String STRING_ERROR = "服务器出现错误!";
+    /**
+     * 用户登录会话查询
+     */
+    //查询当前已登录账户Token值
+    public static final String SA_TOKEN_GET_TOKEN_VALUE = BASE_URL + "/api/login/state/saTokenGetTokenValue";
 
-    public static final String URL_GITHUB = "https://github.com/thatnight";
+    //查询Sa-Token名称
+    public static final String SA_TOKEN_GET_TOKEN_NAME = BASE_URL + "/api/login/state/saTokenGetTokenName";
+
+    //查询当前已登录账户Token参数信息
+    public static final String SA_TOKEN_GET_TOKEN_PARAM_INFO= BASE_URL + "/api/login/state/saTokenGetTokenParamInfo";
+
+    //查询当前已登录会话ID值
+    public static final String SA_TOKEN_GET_LOGIN_ID_VALUES= BASE_URL + "/api/login/state/saTokenGetLoginIdValues";
+
+    /**
+     * User-Session
+     */
+    //查询当前已登录账号ID的Session信息
+    public static final String SA_TOKEN_GET_SESSION_INFO= BASE_URL + "/api/login/state/saTokenGetSessionInfo";
+
+    //查询当前已登录账号ID的Session尚未创建时是否新建并返回
+    public static final String SA_TOKEN_GET_SESSION_INFO_TRUE= BASE_URL + "/api/login/state/saTokenGetSessionInfoTrue";
+
+    // 此接口待处理
+    public static final String SA_TOKEN_GET_SESSION_LOGIN_ID= BASE_URL + "/api/login/state/getSessionByLoginId";
+
+    /**
+     * Token-Session----->自定义Session(本系统暂不考虑)
+     */
+    // 查询当前Token值的专属Session
+    public static final String SA_TOKEN_GET_TOKEN_SESSION = BASE_URL + "/api/login/state/saTokenGetTokenSession";
+
+    // 查询指定Token值的专属Session
+    public static final String SA_TOKEN_GET_TOKEN_SESSION_BY_TOKEN = BASE_URL + "/api/login/state/saTokenGetTokenSessionByToken";
+
+    /**
+     * 管理员权利的账户封禁+踢人下线
+     */
+    // 管理员通过已登录账户用户名踢人下线
+    public static final String ADMIN_KICK_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginUsername";
+
+    // 管理员通过已登录账户Token令牌值踢人下线
+    public static final String ADMIN_KICK_BY_TOKEN_VALUES = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginTokenValues";
+
+    // 管理员通过已登录账户用户名封禁账户
+    public static final String ADMIN_BANNED_ACCOUNT_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToBannedAccountByUsername";
+
+    // 管理员通过已登录账户用户名查询封禁状态
+    public static final String ADMIN_SELECT_BANNED_ACCOUNT_STATE_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountStateByUsername";
+
+    // 管理员通过已登录账户用户名查询剩余封禁时间
+    public static final String ADMIN_SELECT_BANNED_ACCOUNT_RESIDUE_TIME_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountResidueTimeByUsername";
+
+    // 管理员通过已登录账户用户名解除封禁
+    public static final String ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToUntieBannedAccountByUsername";
+
+    /**
+     * 普通用户信息关联QQ登录信息
+     */
+    // 查询某普通用户与QQ登录会话信息
+    public static final String FIND_USER_AND_QQ_INFO_BY_USERID = BASE_URL + "/api/user/findUserAndQQInfoByUserId";
 }
 
