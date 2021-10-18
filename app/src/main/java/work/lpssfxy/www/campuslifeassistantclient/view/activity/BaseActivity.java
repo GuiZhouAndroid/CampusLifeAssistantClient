@@ -15,6 +15,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -44,6 +49,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         super.onCreate(savedInstanceState);
         /** 初始化绑定布局 */
         setContentView(bindLayout());
+        /** 初始化运行时动态权限 */
+        initPermissionState();
         /** 初始化滑动返回实例 */
         mSwipeBackLayout = getSwipeBackLayout();
         /** 初始化ButterKnife实例 */
@@ -72,12 +79,70 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         initListener();
         /** 业务操作 */
         doBusiness();
+
+
     }
 
+    /**
+     * 初始化运行时动态权限
+     *
+     */
+    public void initPermissionState() {
+//        XXPermissions.with(this)
+//                // 申请安装包权限
+//                .permission(Permission.REQUEST_INSTALL_PACKAGES)
+//                // 申请悬浮窗权限
+//                .permission(Permission.SYSTEM_ALERT_WINDOW)
+//                // 申请通知栏权限
+//                .permission(Permission.NOTIFICATION_SERVICE)
+//                // 申请系统设置权限
+//                .permission(Permission.WRITE_SETTINGS)
+//                // 申请单个权限
+//                .permission(Permission.RECORD_AUDIO)
+//                // 申请多个权限
+//                .permission(Permission.Group.CALENDAR)
+//                .request(new OnPermissionCallback() {
+//                    @Override
+//                    public void onGranted(List<String> permissions, boolean all) {
+//                        if (all) {
+//                            ToastUtil.showToast("获取录音和日历权限成功");
+//                        } else {
+//                            ToastUtil.showToast("获取部分权限成功，但部分权限未正常授予");
+//                        }
+//                    }
+//                    @Override
+//                    public void onDenied(List<String> permissions, boolean never) {
+//                        if (never) {
+//                            ToastUtil.showToast("被永久拒绝授权，请手动授予录音和日历权限");
+//                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+//                            XXPermissions.startPermissionActivity(BaseActivity.this, permissions);
+//                        } else {
+//                            ToastUtil.showToast("获取录音和日历权限失败");
+//                        }
+//                    }
+//                });
+//        // 判断一个或多个权限是否全部授予了
+//        XXPermissions.isGranted(Context context, String... permissions);
+//
+//// 获取没有授予的权限
+//        XXPermissions.getDenied(Context context, String... permissions);
+//
+//// 判断某个权限是否为特殊权限
+//        XXPermissions.isSpecial(String permission);
+//
+//// 判断一个或多个权限是否被永久拒绝了
+//        XXPermissions.isPermanentDenied(Activity activity, String... permissions);
+//
+//// 跳转到应用权限设置页
+//        XXPermissions.startPermissionActivity(Context context, String... permissions);
+//        XXPermissions.startPermissionActivity(Activity activity, String... permissions);
+//        XXPermissions.startPermissionActivity(Fragment fragment, String... permissions);
+    }
     /**
      * @return 是否滑动返回
      */
     protected abstract Boolean isSetSwipeBackLayout();
+
     /**
      * 初始化滑动返回
      *
@@ -103,8 +168,10 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     public void initImmersiveStatusBar(Boolean state) {
         if (state) {
             StatusBarUtils.setStatusTransparent(this);
+            //StatusBarUtil.setTransparent(this);
         }else {
             StatusBarUtils.setStatusTranslucent(this);
+            //StatusBarUtil.setTranslucent(this);
         }
     }
 

@@ -30,6 +30,9 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.hjq.http.EasyHttp;
+import com.hjq.http.listener.OnHttpListener;
+import com.hjq.toast.ToastUtils;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -48,7 +51,10 @@ import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.api.LoginApi;
+import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.model.HttpData;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
+import work.lpssfxy.www.campuslifeassistantclient.entity.LoginBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
@@ -309,6 +315,21 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 微信登录
      */
     private void weChatLogin() {
+        EasyHttp.post(this)
+                .api(new LoginApi()
+                        .setUserName("ZSAndroid")
+                        .setPassword("ZSAndroid1998"))
+                .request(new OnHttpListener<HttpData<LoginBean>>() {
+
+                    @Override
+                    public void onSucceed(HttpData<LoginBean> data) {
+                        ToastUtils.show(data);
+                    }
+
+                    @Override
+                    public void onFail(Exception e) {}
+                });
+
         ToastUtil.showToast("微信登录");
     }
     /**

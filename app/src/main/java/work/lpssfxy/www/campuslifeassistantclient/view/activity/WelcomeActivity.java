@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
 
+import com.hjq.http.EasyHttp;
+
 import java.lang.reflect.Field;
 
 import butterknife.BindDrawable;
@@ -264,6 +266,16 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
                 main_indicator_one.setImageDrawable(welcome_circle_main);
                 break;
             case 1://第二页
+//                EasyHttp.post(this)
+//                        .api(new XxxApi())
+//                        .delay(3000)
+//                        .request(new HttpCallback<HttpData<XxxBean>>(this) {
+//
+//                            @Override
+//                            public void onSucceed(HttpData<XxxBean> result) {
+//
+//                            }
+//                        });
                 // 第三页切换至第二页，文本属性+可见状态——相反
                 if (mWelcome_tv_go_right.getText().toString().isEmpty() //右滑进入文本内容为空
                         || !mWlcome_tv_go_login.getText().toString().isEmpty() //登录+注册文本内容非空

@@ -52,7 +52,7 @@ dependencies {
     //butterKnife注解
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    //okhttp
+    //OkHttp 框架：https://github.com/square/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.okio:okio:2.8.0'
     //鸿洋okhttp工具类
@@ -60,7 +60,7 @@ dependencies {
     //基于SharedPreferences的OkHttp3的持久CookieJar实现
     //https://github.com/franmontiel/PersistentCookieJar
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    //Json解析
+    // Json 解析框架：https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.8.8'
     //拦截器.
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
@@ -74,6 +74,8 @@ dependencies {
     implementation 'com.github.tokiii:RevealBanner:v1.0.4'
     //Toolbar弹窗
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
+    //沉浸式工具类
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
     //换肤框架
     implementation 'skin.support:skin-support:4.0.5'                   // skin-support
     implementation 'skin.support:skin-support-appcompat:4.0.5'         // skin-support 基础控件支持
@@ -122,4 +124,18 @@ dependencies {
     //XPage页面框架
     implementation 'com.github.xuexiangjys.XPage:xpage-lib:3.3.0'
     annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:3.3.0'
+    // 轮子哥权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:12.3'
+    // 轮子哥吐司框架：https://github.com/getActivity/ToastUtils
+    implementation 'com.github.getActivity:ToastUtils:9.5'
+    // 轮子哥标题栏框架：https://github.com/getActivity/TitleBar
+    implementation 'com.github.getActivity:TitleBar:9.2'
+    // 轮子哥悬浮窗框架：https://github.com/getActivity/XToast
+    implementation 'com.github.getActivity:XToast:8.3'
+    // 轮子哥网络请求框架：https://github.com/getActivity/EasyHttp
+    implementation 'com.github.getActivity:EasyHttp:10.2'
+    // 轮子哥Gson 解析容错：https://github.com/getActivity/GsonFactory
+    implementation 'com.github.getActivity:GsonFactory:5.2'
+    // 腾讯 MMKV：https://github.com/Tencent/MMKV
+    implementation 'com.tencent:mmkv-static:1.2.10'
 }

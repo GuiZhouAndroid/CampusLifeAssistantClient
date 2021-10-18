@@ -8,13 +8,19 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.hjq.http.EasyConfig;
+import com.hjq.http.config.IRequestApi;
+import com.hjq.http.config.IRequestInterceptor;
+import com.hjq.http.config.IRequestServer;
+import com.hjq.http.model.HttpHeaders;
+import com.hjq.http.model.HttpParams;
+import com.tencent.mmkv.MMKV;
 import com.tencent.open.log.SLog;
 import com.tencent.tauth.Tencent;
 import com.xuexiang.xpage.PageConfig;
 import com.xuexiang.xpage.base.XPageActivity;
 import com.xuexiang.xui.XUI;
 import com.xuexiang.xutil.XUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Locale;
 
@@ -29,7 +35,11 @@ import skin.support.app.SkinCardViewInflater;
 import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
 import work.lpssfxy.www.campuslifeassistantclient.App;
+import work.lpssfxy.www.campuslifeassistantclient.BuildConfig;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.RequestHandler;
+import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.ReleaseServer;
+import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.TestServer;
 
 
 /**
@@ -68,6 +78,9 @@ public class BasicLibInit {
         initUtils(application);
         /** 初始化Okhttp3网络请求框架 */
         initOkHttpSDK(application);
+
+        MMKV.initialize(application);
+
 
     }
 
@@ -173,11 +186,44 @@ public class BasicLibInit {
      * @param application APP全局上下文
      */
     private static void initOkHttpSDK(Application application) {
+        // 网络请求框架初始化
+        IRequestServer server;
+        if (BuildConfig.DEBUG) {
+            server = new TestServer();
+        } else {
+            server = new ReleaseServer();
+        }
+
         cookie = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(application));
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookie)
                 //其他配置
                 .build();
-        OkHttpUtils.initClient(okHttpClient);
+
+        EasyConfig.with(okHttpClient)
+                // 是否打印日志
+//                .setLogEnabled(BuildConfig.DEBUG)
+                // 设置服务器配置
+                .setServer(server)
+                // 设置请求处理策略
+                .setHandler(new RequestHandler(application))
+                // 设置请求参数拦截器
+                .setInterceptor(new IRequestInterceptor() {
+                    @Override
+                    public void interceptArguments(IRequestApi api, HttpParams params, HttpHeaders headers) {
+                        headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                    }
+                })
+                // 设置请求重试次数
+                .setRetryCount(1)
+                // 设置请求重试时间
+                .setRetryTime(2000)
+                // 添加全局请求参数
+                .addParam("token", "6666666")
+                // 添加全局请求头
+                //.addHeader("date", "20191030")
+                .into();
+
+//        OkHttpUtils.initClient(okHttpClient);
     }
 }

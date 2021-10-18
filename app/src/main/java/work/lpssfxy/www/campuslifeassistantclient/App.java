@@ -5,6 +5,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.hjq.http.EasyConfig;
+import com.hjq.http.config.IRequestApi;
+import com.hjq.http.config.IRequestInterceptor;
+import com.hjq.http.config.IRequestServer;
+import com.hjq.http.model.HttpHeaders;
+import com.hjq.http.model.HttpParams;
+import com.tencent.mmkv.MMKV;
+
+import okhttp3.OkHttpClient;
 import work.lpssfxy.www.campuslifeassistantclient.base.BasicLibInit;
 
 /**
@@ -57,6 +66,7 @@ public class App extends Application {
         /** Application全局静态单例模式 */
         myApp = this;
         /** 初始化第三方资源SDK包 */
+
         BasicLibInit.init(myApp);
     }
 
