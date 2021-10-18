@@ -40,7 +40,7 @@ public class Constant {
      * 用户登录接口
      */
     //用户名密码登录
-    public static final String LOGIN_USERNAME_PASSWORD = "/api/user/userDoLoginByNameAndPwd";
+    public static final String LOGIN_USERNAME_PASSWORD = BASE_URL + "/api/user/userDoLoginByNameAndPwd";
 
     //用户名密码登录，参数一：ulTel手机号码，参数二：ulPassword登录密码
     public static final String LOGIN_TEL_PASSWORD = BASE_URL + "/api/user/userDoLoginByTelAndPwd";

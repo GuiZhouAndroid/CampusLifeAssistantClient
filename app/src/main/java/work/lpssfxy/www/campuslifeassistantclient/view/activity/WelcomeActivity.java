@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.hjq.http.EasyHttp;
 
 import java.lang.reflect.Field;
 
@@ -72,7 +71,9 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
     int pageIndex = 0;//ViewPager当前索引标识
     private float startX, endX, startY, endY;//计算手势滑动坐标
 
-    /** 防触碰使用的变量 */
+    /**
+     * 防触碰使用的变量
+     */
     private long firstTime;
 
 

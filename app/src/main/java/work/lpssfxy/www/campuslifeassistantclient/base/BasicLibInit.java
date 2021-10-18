@@ -8,13 +8,6 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-import com.hjq.http.EasyConfig;
-import com.hjq.http.config.IRequestApi;
-import com.hjq.http.config.IRequestInterceptor;
-import com.hjq.http.config.IRequestServer;
-import com.hjq.http.model.HttpHeaders;
-import com.hjq.http.model.HttpParams;
-import com.tencent.mmkv.MMKV;
 import com.tencent.open.log.SLog;
 import com.tencent.tauth.Tencent;
 import com.xuexiang.xpage.PageConfig;
@@ -35,11 +28,7 @@ import skin.support.app.SkinCardViewInflater;
 import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
 import work.lpssfxy.www.campuslifeassistantclient.App;
-import work.lpssfxy.www.campuslifeassistantclient.BuildConfig;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.RequestHandler;
-import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.ReleaseServer;
-import work.lpssfxy.www.campuslifeassistantclient.base.easyhttp.TestServer;
 
 
 /**
@@ -78,27 +67,25 @@ public class BasicLibInit {
         initUtils(application);
         /** 初始化Okhttp3网络请求框架 */
         initOkHttpSDK(application);
-
-        MMKV.initialize(application);
-
-
     }
 
     /**
      * 创建TencentSDK实例
+     *
      * @param application APP全局上下文
      */
     private static void initQQTencent(Application application) {
         Constant.mTencent = Tencent.createInstance(Constant.APP_ID, application, "work.lpssfxy.www.campuslifeassistantclient.fileprovider");
         if (Constant.mTencent != null) {
-            SLog.i(App.TAG, "腾讯实例创建成功=="+Constant.mTencent);
-        }else {
-            SLog.e(App.TAG, "腾讯实例创建失败=="+ Constant.mTencent);
+            SLog.i(App.TAG, "腾讯实例创建成功==" + Constant.mTencent);
+        } else {
+            SLog.e(App.TAG, "腾讯实例创建失败==" + Constant.mTencent);
         }
     }
 
     /**
      * 初始化全局适配AndroidAutoSize
+     *
      * @param application APP全局上下文
      */
     private static void initAutoSizeConfig(Application application) {
@@ -144,6 +131,7 @@ public class BasicLibInit {
 
     /**
      * 初始化换肤框架
+     *
      * @param application APP全局上下文
      */
     private static void initSkinCompatManager(Application application) {
@@ -164,8 +152,8 @@ public class BasicLibInit {
      */
     private static void initPage(Application application) {
         PageConfig.getInstance()
-      //页面注册,默认不设置的话使用的就是自动注册
-      //.setPageConfiguration(new AutoPageConfiguration())
+                //页面注册,默认不设置的话使用的就是自动注册
+                //.setPageConfiguration(new AutoPageConfiguration())
                 .debug("PageLog") //开启XPage构建配置文件DEBUG调试信息
                 .setContainActivityClazz(XPageActivity.class) //设置默认的容器Activity
                 .init(application);//初始化页面配置
@@ -183,47 +171,17 @@ public class BasicLibInit {
 
     /**
      * 初始化Okhttp3网络请求框架
+     *
      * @param application APP全局上下文
      */
     private static void initOkHttpSDK(Application application) {
         // 网络请求框架初始化
-        IRequestServer server;
-        if (BuildConfig.DEBUG) {
-            server = new TestServer();
-        } else {
-            server = new ReleaseServer();
-        }
 
         cookie = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(application));
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookie)
                 //其他配置
                 .build();
-
-        EasyConfig.with(okHttpClient)
-                // 是否打印日志
-//                .setLogEnabled(BuildConfig.DEBUG)
-                // 设置服务器配置
-                .setServer(server)
-                // 设置请求处理策略
-                .setHandler(new RequestHandler(application))
-                // 设置请求参数拦截器
-                .setInterceptor(new IRequestInterceptor() {
-                    @Override
-                    public void interceptArguments(IRequestApi api, HttpParams params, HttpHeaders headers) {
-                        headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-                    }
-                })
-                // 设置请求重试次数
-                .setRetryCount(1)
-                // 设置请求重试时间
-                .setRetryTime(2000)
-                // 添加全局请求参数
-                .addParam("token", "6666666")
-                // 添加全局请求头
-                //.addHeader("date", "20191030")
-                .into();
-
 //        OkHttpUtils.initClient(okHttpClient);
     }
 }
