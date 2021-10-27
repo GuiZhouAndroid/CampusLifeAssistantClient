@@ -55,8 +55,12 @@ dependencies {
     //OkHttp 框架：https://github.com/square/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.okio:okio:2.8.0'
-    //鸿洋okhttp工具类
+    //鸿洋okhttp工具类 https://github.com/hongyangAndroid/okhttputils
     implementation 'com.zhy:okhttputils:2.6.2'
+    //OkGo网络请求框架 https://github.com/jeasonlzy/okhttp-OkGo
+    implementation 'com.lzy.net:okgo:3.0.4'
+    implementation 'com.lzy.net:okrx2:2.0.2'
+    implementation 'com.lzy.net:okserver:2.0.5'
     //基于SharedPreferences的OkHttp3的持久CookieJar实现
     //https://github.com/franmontiel/PersistentCookieJar
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'

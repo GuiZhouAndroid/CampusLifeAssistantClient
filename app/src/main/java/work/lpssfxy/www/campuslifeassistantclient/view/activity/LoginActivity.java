@@ -29,6 +29,9 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.convert.StringConvert;
+import com.lzy.okgo.model.Response;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -43,11 +46,13 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
-import work.lpssfxy.www.campuslifeassistantclient.entity.LoginBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
@@ -308,8 +313,30 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 微信登录
      */
     private void weChatLogin() {
+//        Observable<String> call = OkGo.post(Constant.LOGIN_USERNAME_PASSWORD)//
+//                .headers("aaa", "111")//
+//                .params("bbb", "222")//
+//                .getCall(StringConvert.create(), RxAdapter.<String>create());
+        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
+                .tag(this)
+                .params("UlUsername","ZSAndroid").params("UlPassword","ZSAndroid1998")
+                .execute(new StringDialogCallback(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //注意这里已经是在主线程了
+                        String data = response.body();//这个就是返回来的结果
+                        Log.i(TAG, "onSuccess: "+data);
+                    }
 
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                    }
+                });
         ToastUtil.showToast("微信登录");
+
+//        //取消此次请求
+//        OkGo.cancelTag(OkGo.getInstance().getOkHttpClient(),this);
     }
     /**
      * QQ登录
@@ -344,21 +371,21 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             Log.i(TAG, "回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
             Log.i(TAG, "回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
             /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
-//            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-//            /** 保存Session信息存入SharePreference本地数据 */
-//            initSaveSessionDataToLocalFile(values);
-//            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
-//             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
-//            Constant.mTencent.saveSession(values);
+            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
+            /** 保存Session信息存入SharePreference本地数据 */
+            initSaveSessionDataToLocalFile(values);
+            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
+             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
+            Constant.mTencent.saveSession(values);
 
             /**登录成功跳转之前构思：
              * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
              * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
              */
-//            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-//            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
-//            finish();//并销毁登录界面
-            LoadingDialog.closeSimpleLD();
+            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
+            finish();//并销毁登录界面
+//            LoadingDialog.closeSimpleLD();
 
         }
     };
