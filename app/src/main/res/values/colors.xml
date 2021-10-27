@@ -30,7 +30,7 @@
     <color name="setting_text">#5b5d5c</color>
     <color name="delete_text">#336699</color>
     <color name="drawer_item_bg_p">#e8e8e8</color>
-
+    <color name="line">#C8C8CB</color>
     <color name="item_author">@color/Grey700</color>
     <color name="item_desc">@color/Grey600</color>
     <color name="item_time">@color/Grey600</color>

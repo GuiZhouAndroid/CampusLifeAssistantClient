@@ -15,11 +15,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.hjq.permissions.OnPermissionCallback;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

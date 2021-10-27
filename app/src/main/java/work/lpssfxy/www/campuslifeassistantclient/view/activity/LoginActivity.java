@@ -30,7 +30,6 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okgo.model.Response;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
@@ -46,8 +45,6 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
@@ -55,10 +52,12 @@ import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
@@ -319,7 +318,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                .getCall(StringConvert.create(), RxAdapter.<String>create());
         OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
                 .tag(this)
-                .params("UlUsername","ZSAndroid").params("UlPassword","ZSAndroid1998")
+                .params("ulUsername","ZSAndroid").params("ulPassword","ZSAndroid1998")
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -368,24 +367,82 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         @Override
         protected void doComplete(JSONObject values) {
             LoadingDialog.showSimpleLD(LoginActivity.this,getString(R.string.indexLoadLoginInfo));
-            Log.i(TAG, "回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
-            Log.i(TAG, "回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
-            /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
-            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-            /** 保存Session信息存入SharePreference本地数据 */
-            initSaveSessionDataToLocalFile(values);
-            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
-             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
-            Constant.mTencent.saveSession(values);
+            Log.i(TAG, "QQ回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
+            Log.i(TAG, "QQ回调后设置会话前是否有效1"+Constant.mTencent.isSessionValid());//false
+            String strOpenId = values.optString("openid");
+            String strAccessToken = values.optString("access_token");
+            //QQ会话回调同时，执行post请求——RESTFul风格，调用MySQL数据
+            OkGo.<String>post(Constant.LOGIN_QQ_SESSION+"/"+strOpenId+"/"+strAccessToken)
+                    .tag(this)
+                    .execute(new StringDialogCallback(LoginActivity.this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                           //Json字符串解析转为实体类对象
+                           ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                           Log.i(TAG, "网络请求响应成功数据onSuccess=== "+responseBean);
+                           //当前QQ账号无授权登录APP应用——未绑定过登录账户
+                           if (400 == responseBean.getCode() && "error".equals(responseBean.getMsg())){
+                               DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, responseBean.getData()+getString(R.string.please_qq_login));
+                               dialogPrompt.show();
+                               Snackbar snackbar = Snackbar.make(mLogin_rl_show,"没有绑定QQ账户？",Snackbar.LENGTH_INDEFINITE)
+                                       .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
+                                       .setDuration(10000)
+                                       .setAction("点击绑定", new View.OnClickListener() {  //设置点击按钮
+                                           @Override
+                                           public void onClick(View v) {
+                                               //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
+                                               Intent thisIntentToBindUser = new Intent();
+                                               thisIntentToBindUser.setClass(LoginActivity.this,LoginBindActivity.class);
+                                               //Gson解析Json，通过Activity传递数据
+                                               thisIntentToBindUser.putExtra("QQJsonData", GsonUtil.gsonToJson(values));
+                                               startActivityAnimLeftToRight(thisIntentToBindUser);//执行动画跳转
+                                           }
+                                       });
+                               //设置Snackbar上提示的字体颜色
+                               setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                               snackbar.show();
+                               return;
+                           }
+                            //当前QQ账号已授权登录APP应用——已绑定过登录账户
+                           if (200 == responseBean.getCode() && "此QQ账号已授权".equals(responseBean.getMsg())){
+                               //开始查询MySQL用户表+QQ授权登录并集信息
+                               Toast.makeText(LoginActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
 
-            /**登录成功跳转之前构思：
-             * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
-             * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
-             */
-            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
-            finish();//并销毁登录界面
-//            LoadingDialog.closeSimpleLD();
+                               return;
+                           }
+                        }
+
+                        @Override
+                        public void onError(Response<String> response) {
+                            //未绑定温馨提示
+                            Snackbar snackbar= Snackbar.make(mLogin_rl_show,"登录失败，未知错误："+response.body(),Snackbar.LENGTH_SHORT)
+                                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            super.onError(response);
+                        }
+                    });
+            //Activity传递数据到Activity
+//            Intent intent = new Intent();
+//            intent.setClass(LoginActivity.this,LoginBindActivity.class);
+//            intent.putExtra("QQJsonDate", values.toString());
+//            startActivityAnimLeftToRight(intent);
+//            /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
+//            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
+//            /** 保存Session信息存入SharePreference本地数据 */
+//            initSaveSessionDataToLocalFile(values);
+//            /** 回调成功会话信息，保存到Constant.mTencent中，不做持久化操作时，仅当前APP启动--有效时间--结束
+//             * 调用Constant.mTencent.logout(上下文) 可以使得当前会话在APP结束之前失效——即注销当前授权登录QQ的Session信息*/
+//            Constant.mTencent.saveSession(values);
+//
+//            /**登录成功跳转之前构思：
+//             * 从IndexActivity跳转至LoginActivity时考虑用户不登录返回首页的情况，因此没有finish，为避免成功登录后新跳转IndexActivity与之前的IndexActivity重叠多个页面
+//             * 解决方式：先finish掉之前的IndexActivity，然后登录成功后再跳转IndexActivity，并finish掉LoginActivity
+//             */
+//            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+//            startActivityAnimRightToLeft(new Intent(LoginActivity.this,IndexActivity.class));//登录成功后跳转主页
+//            finish();//并销毁登录界面
+            LoadingDialog.closeSimpleLD();
 
         }
     };

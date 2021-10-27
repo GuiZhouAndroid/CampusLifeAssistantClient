@@ -7,6 +7,9 @@ import android.view.Window;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.base.Request;
 
+import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.UiTools;
+
 /**
  * created by on 2021/10/18
  * 描述：
@@ -23,7 +26,7 @@ public abstract class StringDialogCallback extends StringCallback {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("请求网络中...");
+        dialog.setMessage("正在请求服务器...");
     }
 
     @Override

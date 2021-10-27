@@ -116,6 +116,11 @@
             android:screenOrientation="portrait"
             android:name=".view.activity.LoginActivity"
             android:exported="true" />
+        <!-- QQ信息绑定用户信息 -->
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.LoginBindActivity"
+            android:exported="true" />
         <!-- 第三方qq登录 -->
         <activity
             android:name="com.tencent.connect.common.AssistActivity"

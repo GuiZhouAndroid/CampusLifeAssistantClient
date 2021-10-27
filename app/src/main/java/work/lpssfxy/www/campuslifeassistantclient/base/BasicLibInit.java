@@ -5,14 +5,10 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.CookieJarImpl;
-import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
@@ -20,8 +16,6 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.tencent.open.log.SLog;
 import com.tencent.tauth.Tencent;
-import com.xuexiang.xpage.PageConfig;
-import com.xuexiang.xpage.base.XPageActivity;
 import com.xuexiang.xui.XUI;
 import com.xuexiang.xutil.XUtil;
 
@@ -79,8 +73,6 @@ public class BasicLibInit {
         /** 初始化UI框架 */
         XUI.init(application);
         XUI.debug(true);
-        /** 初始化XPage页面框架 */
-        initPage(application);
         /** 初始化工具类 */
         initUtils(application);
         /** 初始化Okhttp3网络请求框架 */
@@ -161,20 +153,6 @@ public class BasicLibInit {
                 .setSkinStatusBarColorEnable(false)// 关闭状态栏换肤，默认打开[可选]
                 .setSkinWindowBackgroundEnable(false)// 关闭windowBackground换肤，默认打开[可选]
                 .loadSkin();
-    }
-
-    /**
-     * 初始化XPage页面框架
-     *
-     * @param application APP全局上下文
-     */
-    private static void initPage(Application application) {
-        PageConfig.getInstance()
-                //页面注册,默认不设置的话使用的就是自动注册
-                //.setPageConfiguration(new AutoPageConfiguration())
-                .debug("PageLog") //开启XPage构建配置文件DEBUG调试信息
-                .setContainActivityClazz(XPageActivity.class) //设置默认的容器Activity
-                .init(application);//初始化页面配置
     }
 
     /**

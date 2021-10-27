@@ -12,12 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        //每个module下都需要增加XPage的依赖
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [ moduleName : project.getName() ]
-            }
-        }
     }
 
     buildTypes {
@@ -125,9 +119,6 @@ dependencies {
     //工具类
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:2.0.0'
     implementation 'com.github.xuexiangjys.XUtil:xutil-sub:2.0.0'
-    //XPage页面框架
-    implementation 'com.github.xuexiangjys.XPage:xpage-lib:3.3.0'
-    annotationProcessor 'com.github.xuexiangjys.XPage:xpage-compiler:3.3.0'
     // 轮子哥权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:12.3'
     // 轮子哥吐司框架：https://github.com/getActivity/ToastUtils
