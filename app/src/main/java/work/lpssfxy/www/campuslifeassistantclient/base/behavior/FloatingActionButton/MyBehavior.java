@@ -18,11 +18,12 @@ public class MyBehavior extends FloatingActionButton.Behavior {
     public MyBehavior(Context context, AttributeSet attrs) {
         super();
     }
+
     //只有当返回值为true才会执行下面的方法,例如onNestedScroll
     @Override
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull FloatingActionButton child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
         return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type)
-                ||axes== ViewCompat.SCROLL_AXIS_VERTICAL;
+                || axes == ViewCompat.SCROLL_AXIS_VERTICAL;
     }
 
     //滑动时调用该方法
@@ -43,29 +44,30 @@ public class MyBehavior extends FloatingActionButton.Behavior {
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull FloatingActionButton child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         //界面向下滑动,fab动画结束,且正在显示
         //隐藏Fab
-        if ((dyConsumed>0||dyUnconsumed>0)&&!isAnimateIng&&isShow){
-            AnimatorUtil.hideFab(child,new AnimateListener());
+        if ((dyConsumed > 0 || dyUnconsumed > 0) && !isAnimateIng && isShow) {
+            AnimatorUtil.hideFab(child, new AnimateListener());
         }
         //界面向上滑动,fab动画结束,且隐藏
         //显示Fab
-        else if ((dyConsumed<0||dyUnconsumed<0)&&!isAnimateIng&&!isShow){
-            AnimatorUtil.showFab(child,new AnimateListener());
+        else if ((dyConsumed < 0 || dyUnconsumed < 0) && !isAnimateIng && !isShow) {
+            AnimatorUtil.showFab(child, new AnimateListener());
 
         }
 
     }
-    public class AnimateListener implements  Animator.AnimatorListener {
+
+    public class AnimateListener implements Animator.AnimatorListener {
 
 
         @Override
         public void onAnimationStart(Animator animation) {
-            isAnimateIng=true;
-            isShow=!isShow;
+            isAnimateIng = true;
+            isShow = !isShow;
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            isAnimateIng=false;
+            isAnimateIng = false;
 
         }
 

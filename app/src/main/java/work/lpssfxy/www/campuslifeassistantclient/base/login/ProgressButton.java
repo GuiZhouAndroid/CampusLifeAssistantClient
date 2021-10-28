@@ -52,19 +52,21 @@ public class ProgressButton extends View {
     private String text = "";
 
     private int bgColor = Color.RED;
-    public void setBgColor(int color)
-    {
-        this.bgColor=color;
+
+    public void setBgColor(int color) {
+        this.bgColor = color;
     }
+
     private int textColor = Color.WHITE;
-    public void setTextColor(int color)
-    {
-        this.textColor=color;
+
+    public void setTextColor(int color) {
+        this.textColor = color;
     }
+
     private int proColor = Color.WHITE;
-    public void setProColor(int color)
-    {
-        this.proColor=color;
+
+    public void setProColor(int color) {
+        this.proColor = color;
     }
 
     public void setButtonText(String s) {

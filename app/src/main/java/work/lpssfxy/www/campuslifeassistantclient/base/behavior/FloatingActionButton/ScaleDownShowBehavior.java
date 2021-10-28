@@ -35,7 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * FAB 行为控制器
-  */
+ */
 
 public class ScaleDownShowBehavior extends FloatingActionButton.Behavior {
 

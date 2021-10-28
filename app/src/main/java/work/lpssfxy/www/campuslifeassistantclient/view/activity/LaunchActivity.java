@@ -39,7 +39,7 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this,new Intent(LaunchActivity.this, GuideActivity.class));
+                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this, new Intent(LaunchActivity.this, GuideActivity.class));
                 finish();
             }
         }, 1000);
@@ -47,13 +47,14 @@ public class LaunchActivity extends AppCompatActivity {
 
     /**
      * 屏蔽物理返回按钮
+     *
      * @param keyCode
      * @param event
      * @return
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             return true;
         }
         return super.onKeyDown(keyCode, event);

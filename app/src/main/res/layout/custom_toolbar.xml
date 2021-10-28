@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:id="@+id/constant_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
+    app:layout_scrollFlags="scroll|enterAlways"
     app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
-    app:layout_scrollFlags="scroll|enterAlways">
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
 </androidx.appcompat.widget.Toolbar>

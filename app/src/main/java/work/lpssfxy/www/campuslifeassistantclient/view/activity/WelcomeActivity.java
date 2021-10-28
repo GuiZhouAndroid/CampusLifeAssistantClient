@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
 
-
 import java.lang.reflect.Field;
 
 import butterknife.BindDrawable;

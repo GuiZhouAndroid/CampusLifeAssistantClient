@@ -7,9 +7,6 @@ import android.view.Window;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.base.Request;
 
-import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.UiTools;
-
 /**
  * created by on 2021/10/18
  * 描述：

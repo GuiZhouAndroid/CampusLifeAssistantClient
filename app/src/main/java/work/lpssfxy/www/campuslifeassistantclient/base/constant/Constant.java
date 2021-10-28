@@ -68,22 +68,22 @@ public class Constant {
     public static final String SA_TOKEN_GET_TOKEN_NAME = BASE_URL + "/api/login/state/saTokenGetTokenName";
 
     //查询当前已登录账户Token参数信息
-    public static final String SA_TOKEN_GET_TOKEN_PARAM_INFO= BASE_URL + "/api/login/state/saTokenGetTokenParamInfo";
+    public static final String SA_TOKEN_GET_TOKEN_PARAM_INFO = BASE_URL + "/api/login/state/saTokenGetTokenParamInfo";
 
     //查询当前已登录会话ID值
-    public static final String SA_TOKEN_GET_LOGIN_ID_VALUES= BASE_URL + "/api/login/state/saTokenGetLoginIdValues";
+    public static final String SA_TOKEN_GET_LOGIN_ID_VALUES = BASE_URL + "/api/login/state/saTokenGetLoginIdValues";
 
     /**
      * User-Session
      */
     //查询当前已登录账号ID的Session信息
-    public static final String SA_TOKEN_GET_SESSION_INFO= BASE_URL + "/api/login/state/saTokenGetSessionInfo";
+    public static final String SA_TOKEN_GET_SESSION_INFO = BASE_URL + "/api/login/state/saTokenGetSessionInfo";
 
     //查询当前已登录账号ID的Session尚未创建时是否新建并返回
-    public static final String SA_TOKEN_GET_SESSION_INFO_TRUE= BASE_URL + "/api/login/state/saTokenGetSessionInfoTrue";
+    public static final String SA_TOKEN_GET_SESSION_INFO_TRUE = BASE_URL + "/api/login/state/saTokenGetSessionInfoTrue";
 
     // 此接口待处理
-    public static final String SA_TOKEN_GET_SESSION_LOGIN_ID= BASE_URL + "/api/login/state/getSessionByLoginId";
+    public static final String SA_TOKEN_GET_SESSION_LOGIN_ID = BASE_URL + "/api/login/state/getSessionByLoginId";
 
     /**
      * Token-Session----->自定义Session(本系统暂不考虑)

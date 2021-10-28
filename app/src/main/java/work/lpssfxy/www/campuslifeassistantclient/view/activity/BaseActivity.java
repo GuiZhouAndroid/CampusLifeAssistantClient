@@ -38,7 +38,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     /** 滑动返回 */
     private SwipeBackLayout mSwipeBackLayout;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+
 import work.lpssfxy.www.campuslifeassistantclient.base.BasicLibInit;
 
 /**
@@ -18,9 +19,11 @@ import work.lpssfxy.www.campuslifeassistantclient.base.BasicLibInit;
 @SuppressLint("StaticFieldLeak")
 public class App extends Application {
     public static final String TAG = "Application";
-    /** 应用程序单例模式App全局变量 */
+    /**
+     * 应用程序单例模式App全局变量
+     */
     private static App myApp;
-    public static Activity appActivity =null;
+    public static Activity appActivity = null;
 
     public App() {
     }
@@ -56,16 +59,7 @@ public class App extends Application {
         /** Application全局静态单例模式 */
         myApp = this;
         /** 初始化第三方资源SDK包 */
-
         BasicLibInit.init(myApp);
-    }
-
-    /**
-     * XPage 开启DEBUG调试信息
-     * @return
-     */
-    public static boolean isDebug() {
-        return BuildConfig.DEBUG;
     }
 }
 

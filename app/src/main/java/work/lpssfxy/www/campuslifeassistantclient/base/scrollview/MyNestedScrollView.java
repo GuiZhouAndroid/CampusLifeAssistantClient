@@ -10,7 +10,7 @@ import androidx.core.widget.NestedScrollView;
 
 /**
  * created by on 2021/8/23
- * 描述：
+ * 描述：自定义滑动布局
  *
  * @author ZSAndroid
  * @create 2021-08-23-19:54

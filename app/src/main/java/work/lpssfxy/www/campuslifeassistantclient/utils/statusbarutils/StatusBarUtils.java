@@ -19,12 +19,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
-import work.lpssfxy.www.campuslifeassistantclient.R;
-
 /**
  * created by on 2021/8/22
  * 描述：沉浸式工具类
  * Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? 0.2f : 0.3f;
+ *
  * @author ZSAndroid
  * @create 2021-08-22-00:26
  */
@@ -37,6 +36,7 @@ public class StatusBarUtils {
 
     /**
      * 颜色混合
+     *
      * @param color 透明化颜色
      * @param alpha 透明度
      * @return
@@ -65,19 +65,31 @@ public class StatusBarUtils {
             window.getDecorView().setSystemUiVisibility(systemUiVisibility);
         }
     }
-    /** 依赖沉浸式主方法 */
+
+    /**
+     * 依赖沉浸式主方法
+     */
     public static void immersive(Activity activity, int color, @FloatRange(from = 0.0, to = 1.0) float alpha) {
         immersive(activity.getWindow(), color, alpha);
     }
-    /** 依赖沉浸式主方法 */
+
+    /**
+     * 依赖沉浸式主方法
+     */
     public static void immersive(Activity activity, int color) {
         immersive(activity.getWindow(), color, 1f);
     }
-    /** 依赖沉浸式主方法 */
+
+    /**
+     * 依赖沉浸式主方法
+     */
     public static void immersive(Window window) {
         immersive(window, DEFAULT_COLOR, DEFAULT_ALPHA);
     }
-    /** 依赖沉浸式主方法 */
+
+    /**
+     * 依赖沉浸式主方法
+     */
     public static void immersive(Window window, int color) {
         immersive(window, color, 1f);
     }
@@ -256,7 +268,7 @@ public class StatusBarUtils {
      * API 21-Android 5.0
      * 设置底部导航栏单一纯色
      */
-    public static void setBottomNavigationSingleColor(Activity activity,int color){
+    public static void setBottomNavigationSingleColor(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().setNavigationBarColor(activity.getResources().getColor(color));
         }

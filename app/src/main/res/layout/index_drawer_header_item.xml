@@ -6,10 +6,10 @@
     android:background="@mipmap/index_drawer_top_background"
     android:gravity="bottom"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".view.activity.IndexActivity">
 
     <RelativeLayout
@@ -40,6 +40,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="32dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_signature"
             android:layout_width="wrap_content"

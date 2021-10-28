@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
 /**
  * created by on 2021/8/12
- * 描述：
+ * 描述：沉浸式工具类
  *
  * @author ZSAndroid
  * @create 2021-08-12-23:46

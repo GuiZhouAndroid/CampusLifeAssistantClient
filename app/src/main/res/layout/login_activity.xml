@@ -138,17 +138,18 @@
         android:textSize="@dimen/sp_15" />
 
     <LinearLayout
-        android:gravity="center"
-        android:layout_below="@+id/login_tv_go_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/login_tv_go_register"
+        android:gravity="center"
         android:orientation="horizontal">
+
         <CheckBox
-            android:textColor="@color/white"
             android:id="@+id/check_force_qr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QQ扫码登录「无论是否安装qq」"/>
+            android:text="QQ扫码登录「无论是否安装qq」"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -230,18 +231,20 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:paddingTop="@dimen/dp_10"
         android:paddingBottom="@dimen/dp_10">
+
         <CheckBox
-            android:textColor="@color/white"
             android:id="@+id/check_if_authorize"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_40"/>
+            android:layout_height="@dimen/dp_40"
+            android:textColor="@color/white" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"

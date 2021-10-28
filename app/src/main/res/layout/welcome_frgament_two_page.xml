@@ -4,45 +4,47 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:background="@mipmap/welcome_6"
-        android:padding="@dimen/dp_1"
         android:layout_marginLeft="@dimen/dp_40"
         android:layout_marginRight="@dimen/dp_40"
-        android:layout_height="wrap_content">
+        android:background="@mipmap/welcome_6"
+        android:padding="@dimen/dp_1">
+
         <FrameLayout
             android:layout_width="wrap_content"
-            android:background="@color/welcome_colorWhite"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/welcome_colorWhite">
+
             <ImageView
                 android:id="@+id/image_two_bg"
                 android:layout_width="wrap_content"
-                android:src="@mipmap/welcome_3"
-                android:animateLayoutChanges="true"
+                android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:layout_height="wrap_content" />
+                android:animateLayoutChanges="true"
+                android:src="@mipmap/welcome_3" />
+
             <ImageView
                 android:id="@+id/image_two_show"
                 android:layout_width="wrap_content"
-                android:src="@mipmap/welcome_7"
-                android:layout_marginStart="@dimen/dp_15"
-                android:adjustViewBounds="true"
-                android:layout_marginTop="@dimen/dp_15"
-                android:animateLayoutChanges="true"
                 android:layout_height="wrap_content"
-                />
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_15"
+                android:adjustViewBounds="true"
+                android:animateLayoutChanges="true"
+                android:src="@mipmap/welcome_7" />
+
             <ImageView
                 android:id="@+id/image_two_head"
                 android:layout_width="@dimen/dp_35"
-                android:src="@mipmap/welcome_1"
+                android:layout_height="@dimen/dp_35"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_13"
-                android:animateLayoutChanges="true"
                 android:layout_marginBottom="@dimen/dp_70"
-                android:layout_height="@dimen/dp_35"
-                />
+                android:animateLayoutChanges="true"
+                android:src="@mipmap/welcome_1" />
         </FrameLayout>
     </RelativeLayout>
 </RelativeLayout>

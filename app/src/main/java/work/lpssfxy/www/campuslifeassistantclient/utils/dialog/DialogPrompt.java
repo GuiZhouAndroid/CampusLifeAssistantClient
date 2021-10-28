@@ -131,11 +131,12 @@ public class DialogPrompt extends Dialog {
             }
         });
     }
-    public void GoMain(final Context context){
+
+    public void GoMain(final Context context) {
         tvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context,getClass()));
+                context.startActivity(new Intent(context, getClass()));
 
             }
         });

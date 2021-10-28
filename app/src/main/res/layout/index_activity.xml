@@ -22,12 +22,12 @@
             app:srlAccentColor="@android:color/white"
             app:srlEnableLoadMore="false"
             app:srlPrimaryColor="@color/colorPrimary">
-        <!--刷新头部 header.TaurusHeader-->
-        <com.scwang.smartrefresh.header.BezierCircleHeader
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <!--底部导航-->
-<!--        <include layout="@layout/index_bottom_navication_lottie_item" />-->
+            <!--刷新头部 header.TaurusHeader-->
+            <com.scwang.smartrefresh.header.BezierCircleHeader
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <!--底部导航-->
+            <!--        <include layout="@layout/index_bottom_navication_lottie_item" />-->
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp_content"
                 android:layout_width="match_parent"

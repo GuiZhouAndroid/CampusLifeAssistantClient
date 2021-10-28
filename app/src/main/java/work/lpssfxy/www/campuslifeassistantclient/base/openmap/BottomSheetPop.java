@@ -34,8 +34,8 @@ public class BottomSheetPop extends PopupWindow {
     @Override
     public void setOutsideTouchable(boolean touchable) {
         super.setOutsideTouchable(touchable);
-        if(touchable) {
-            if(mBackgroundDrawable == null) {
+        if (touchable) {
+            if (mBackgroundDrawable == null) {
                 mBackgroundDrawable = new ColorDrawable(0x00000000);
             }
             super.setBackgroundDrawable(mBackgroundDrawable);
@@ -60,7 +60,7 @@ public class BottomSheetPop extends PopupWindow {
 
     @Override
     public void setContentView(View contentView) {
-        if(contentView != null) {
+        if (contentView != null) {
             contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             super.setContentView(contentView);
             addKeyListener(contentView);
@@ -103,7 +103,7 @@ public class BottomSheetPop extends PopupWindow {
 
     /**
      * 窗口显示，窗口背景透明度渐变动画
-     * */
+     */
     private ValueAnimator showAnimator() {
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f, mShowAlpha);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -120,7 +120,7 @@ public class BottomSheetPop extends PopupWindow {
 
     /**
      * 窗口隐藏，窗口背景透明度渐变动画
-     * */
+     */
     private ValueAnimator dismissAnimator() {
         ValueAnimator animator = ValueAnimator.ofFloat(mShowAlpha, 1.0f);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -137,9 +137,9 @@ public class BottomSheetPop extends PopupWindow {
 
     /**
      * 为窗体添加outside点击事件
-     * */
+     */
     private void addKeyListener(View contentView) {
-        if(contentView != null) {
+        if (contentView != null) {
             contentView.setFocusable(true);
             contentView.setFocusableInTouchMode(true);
             contentView.setOnKeyListener(new View.OnKeyListener() {
@@ -161,9 +161,9 @@ public class BottomSheetPop extends PopupWindow {
 
     /**
      * 控制窗口背景的不透明度
-     * */
+     */
     private void setWindowBackgroundAlpha(float alpha) {
-        Window window = ((Activity)getContext()).getWindow();
+        Window window = ((Activity) getContext()).getWindow();
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.alpha = alpha;
         window.setAttributes(layoutParams);

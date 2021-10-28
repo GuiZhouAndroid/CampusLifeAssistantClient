@@ -39,7 +39,6 @@ public class SharePreferenceUtil {
     }
 
 
-
     static class InstanceHolder {
         private static final SharePreferenceUtil sInstance = new SharePreferenceUtil();
     }
@@ -147,6 +146,7 @@ public class SharePreferenceUtil {
 
     /**
      * 将图片保存到SharedPreferences
+     *
      * @param context
      * @param preference
      * @param key
@@ -169,6 +169,7 @@ public class SharePreferenceUtil {
 
     /**
      * 从SharedPreferences取出图片
+     *
      * @param context
      * @param preference
      * @param key

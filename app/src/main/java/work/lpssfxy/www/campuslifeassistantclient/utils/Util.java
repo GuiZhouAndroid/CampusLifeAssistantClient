@@ -48,17 +48,17 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Util {
-	
-	private static final String TAG = "SDK_Sample.Util";
-	
-	private static Dialog mProgressDialog;
-	private static Toast mToast;
+
+    private static final String TAG = "SDK_Sample.Util";
+
+    private static Dialog mProgressDialog;
+    private static Toast mToast;
 
     /* Convert byte[] to hex string.这里我们可以将byte转换成int，然后利用Integer.toHexString(int)来转换成16进制字符串。
-            * @param src byte[] data
-    * @return hex string
-    */
-    public static String bytesToHexString(byte[] src){
+     * @param src byte[] data
+     * @return hex string
+     */
+    public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {
             return null;
@@ -73,8 +73,10 @@ public class Util {
         }
         return stringBuilder.toString();
     }
+
     /**
      * Convert hex string to byte[]
+     *
      * @param hexString the hex string
      * @return byte[]
      */
@@ -92,8 +94,10 @@ public class Util {
         }
         return d;
     }
+
     /**
      * Convert char to byte
+     *
      * @param c char
      * @return byte
      */
@@ -104,160 +108,150 @@ public class Util {
     /*
      * 16进制数字字符集
      */
-    private static String hexString="0123456789ABCDEF";
+    private static String hexString = "0123456789ABCDEF";
+
     /*
      * 将字符串编码成16进制数字,适用于所有字符（包括中文）
      */
-    public static String toHexString(String str)
-    {
+    public static String toHexString(String str) {
 //根据默认编码获取字节数组
         byte[] bytes = null;
-		try {
-			bytes = str.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		if (bytes == null) return null;
-        StringBuilder sb=new StringBuilder(bytes.length*2);
+        try {
+            bytes = str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (bytes == null) return null;
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
 //将字节数组中每个字节拆解成2位16进制整数
-        for(int i=0;i<bytes.length;i++)
-        {
-            sb.append(hexString.charAt((bytes[i]&0xf0)>>4));
-            sb.append(hexString.charAt((bytes[i]&0x0f)>>0));
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(hexString.charAt((bytes[i] & 0xf0) >> 4));
+            sb.append(hexString.charAt((bytes[i] & 0x0f) >> 0));
         }
         return sb.toString();
     }
 
     //转换十六进制编码为字符串
-    public static String hexToString(String s)
-    {
-        if("0x".equals(s.substring(0, 2)))
-        {
-            s =s.substring(2);
+    public static String hexToString(String s) {
+        if ("0x".equals(s.substring(0, 2))) {
+            s = s.substring(2);
         }
-        byte[] baKeyword = new byte[s.length()/2];
-        for(int i = 0; i < baKeyword.length; i++)
-        {
-            try
-            {
-                baKeyword[i] = (byte)(0xff & Integer.parseInt(s.substring(i*2, i*2+2),16));
-            }
-            catch(Exception e)
-            {
+        byte[] baKeyword = new byte[s.length() / 2];
+        for (int i = 0; i < baKeyword.length; i++) {
+            try {
+                baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        try
-        {
+        try {
             s = new String(baKeyword, "utf-8");//UTF-16le:Not
-        }
-        catch (Exception e1)
-        {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
         return s;
     }
 
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		bmp.compress(CompressFormat.PNG, 100, output);
-		if (needRecycle) {
-			bmp.recycle();
-		}
-		
-		byte[] result = output.toByteArray();
-		try {
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	public static byte[] getHtmlByteArray(final String url) {
-		 URL htmlUrl = null;     
-		 InputStream inStream = null;     
-		 try {         
-			 htmlUrl = new URL(url);         
-			 URLConnection connection = htmlUrl.openConnection();         
-			 HttpURLConnection httpConnection = (HttpURLConnection)connection;         
-			 int responseCode = httpConnection.getResponseCode();         
-			 if(responseCode == HttpURLConnection.HTTP_OK){             
-				 inStream = httpConnection.getInputStream();         
-			  }     
-			 } catch (MalformedURLException e) {               
-				 e.printStackTrace();     
-			 } catch (IOException e) {              
-				e.printStackTrace();    
-		  } 
-		byte[] data = inputStreamToByte(inStream);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bmp.recycle();
+        }
 
-		return data;
-	}
-	
-	public static byte[] inputStreamToByte(InputStream is) {
-		try{
-			ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
-			int ch;
-			while ((ch = is.read()) != -1) {
-				bytestream.write(ch);
-			}
-			byte imgdata[] = bytestream.toByteArray();
-			bytestream.close();
-			return imgdata;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	public static byte[] readFromFile(String fileName, int offset, int len) {
-		if (fileName == null) {
-			return null;
-		}
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		File file = new File(fileName);
-		if (!file.exists()) {
-			Log.i(TAG, "readFromFile: file not found");
-			return null;
-		}
+        return result;
+    }
 
-		if (len == -1) {
-			len = (int) file.length();
-		}
+    public static byte[] getHtmlByteArray(final String url) {
+        URL htmlUrl = null;
+        InputStream inStream = null;
+        try {
+            htmlUrl = new URL(url);
+            URLConnection connection = htmlUrl.openConnection();
+            HttpURLConnection httpConnection = (HttpURLConnection) connection;
+            int responseCode = httpConnection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                inStream = httpConnection.getInputStream();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] data = inputStreamToByte(inStream);
 
-		Log.d(TAG, "readFromFile : offset = " + offset + " len = " + len + " offset + len = " + (offset + len));
+        return data;
+    }
 
-		if(offset <0){
-			Log.e(TAG, "readFromFile invalid offset:" + offset);
-			return null;
-		}
-		if(len <=0 ){
-			Log.e(TAG, "readFromFile invalid len:" + len);
-			return null;
-		}
-		if(offset + len > (int) file.length()){
-			Log.e(TAG, "readFromFile invalid file len:" + file.length());
-			return null;
-		}
+    public static byte[] inputStreamToByte(InputStream is) {
+        try {
+            ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
+            int ch;
+            while ((ch = is.read()) != -1) {
+                bytestream.write(ch);
+            }
+            byte imgdata[] = bytestream.toByteArray();
+            bytestream.close();
+            return imgdata;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		byte[] b = null;
-		try {
-			RandomAccessFile in = new RandomAccessFile(fileName, "r");
-			b = new byte[len];
-			in.seek(offset);
-			in.readFully(b);
-			in.close();
+        return null;
+    }
 
-		} catch (Exception e) {
-			Log.e(TAG, "readFromFile : errMsg = " + e.getMessage());
-			e.printStackTrace();
-		}
-		return b;
-	}
+    public static byte[] readFromFile(String fileName, int offset, int len) {
+        if (fileName == null) {
+            return null;
+        }
+
+        File file = new File(fileName);
+        if (!file.exists()) {
+            Log.i(TAG, "readFromFile: file not found");
+            return null;
+        }
+
+        if (len == -1) {
+            len = (int) file.length();
+        }
+
+        Log.d(TAG, "readFromFile : offset = " + offset + " len = " + len + " offset + len = " + (offset + len));
+
+        if (offset < 0) {
+            Log.e(TAG, "readFromFile invalid offset:" + offset);
+            return null;
+        }
+        if (len <= 0) {
+            Log.e(TAG, "readFromFile invalid len:" + len);
+            return null;
+        }
+        if (offset + len > (int) file.length()) {
+            Log.e(TAG, "readFromFile invalid file len:" + file.length());
+            return null;
+        }
+
+        byte[] b = null;
+        try {
+            RandomAccessFile in = new RandomAccessFile(fileName, "r");
+            b = new byte[len];
+            in.seek(offset);
+            in.readFully(b);
+            in.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, "readFromFile : errMsg = " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
 
     public static int computeSampleSize(BitmapFactory.Options options,
 
@@ -334,14 +328,14 @@ public class Util {
     /**
      * 以最省内存的方式读取图片
      */
-    public static Bitmap readBitmap(final String path){
-        try{
-            FileInputStream stream = new FileInputStream(new File(path+"test.jpg"));
+    public static Bitmap readBitmap(final String path) {
+        try {
+            FileInputStream stream = new FileInputStream(new File(path + "test.jpg"));
             BitmapFactory.Options opts = new BitmapFactory.Options();
             opts.inSampleSize = 8;
-            opts.inPurgeable=true;
-            opts.inInputShareable=true;
-            Bitmap bitmap = BitmapFactory.decodeStream(stream , null, opts);
+            opts.inPurgeable = true;
+            opts.inInputShareable = true;
+            Bitmap bitmap = BitmapFactory.decodeStream(stream, null, opts);
             return bitmap;
         } catch (OutOfMemoryError e) {
             return null;
@@ -351,207 +345,206 @@ public class Util {
     }
 
     private static final int MAX_DECODE_PICTURE_SIZE = 1920 * 1440;
-	public static Bitmap extractThumbNail(final String path, final int height, final int width, final boolean crop) {
-		if (TextUtils.isEmpty(path) || height <= 0 || width <= 0){
-			Log.d(TAG, "extractThumbNail: param is not valid return null");
-			return null;
-		}
 
-		BitmapFactory.Options options = new BitmapFactory.Options();
+    public static Bitmap extractThumbNail(final String path, final int height, final int width, final boolean crop) {
+        if (TextUtils.isEmpty(path) || height <= 0 || width <= 0) {
+            Log.d(TAG, "extractThumbNail: param is not valid return null");
+            return null;
+        }
 
-		try {
-			options.inJustDecodeBounds = true;
-			Bitmap tmp = BitmapFactory.decodeFile(path, options);
-			if (tmp != null) {
-				tmp.recycle();
-				tmp = null;
-			}
+        BitmapFactory.Options options = new BitmapFactory.Options();
 
-			Log.d(TAG, "extractThumbNail: round=" + width + "x" + height + ", crop=" + crop);
-			final double beY = options.outHeight * 1.0 / height;
-			final double beX = options.outWidth * 1.0 / width;
-			Log.d(TAG, "extractThumbNail: extract beX = " + beX + ", beY = " + beY);
-			options.inSampleSize = (int) (crop ? (beY > beX ? beX : beY) : (beY < beX ? beX : beY));
-			if (options.inSampleSize <= 1) {
-				options.inSampleSize = 1;
-			}
+        try {
+            options.inJustDecodeBounds = true;
+            Bitmap tmp = BitmapFactory.decodeFile(path, options);
+            if (tmp != null) {
+                tmp.recycle();
+                tmp = null;
+            }
 
-			// NOTE: out of memory error
-			while (options.outHeight * options.outWidth / options.inSampleSize > MAX_DECODE_PICTURE_SIZE) {
-				options.inSampleSize++;
-			}
+            Log.d(TAG, "extractThumbNail: round=" + width + "x" + height + ", crop=" + crop);
+            final double beY = options.outHeight * 1.0 / height;
+            final double beX = options.outWidth * 1.0 / width;
+            Log.d(TAG, "extractThumbNail: extract beX = " + beX + ", beY = " + beY);
+            options.inSampleSize = (int) (crop ? (beY > beX ? beX : beY) : (beY < beX ? beX : beY));
+            if (options.inSampleSize <= 1) {
+                options.inSampleSize = 1;
+            }
 
-			int newHeight = height;
-			int newWidth = width;
-			if (crop) {
-				if (beY > beX) {
-					newHeight = (int) (newWidth * 1.0 * options.outHeight / options.outWidth);
-				} else {
-					newWidth = (int) (newHeight * 1.0 * options.outWidth / options.outHeight);
-				}
-			} else {
-				if (beY < beX) {
-					newHeight = (int) (newWidth * 1.0 * options.outHeight / options.outWidth);
-				} else {
-					newWidth = (int) (newHeight * 1.0 * options.outWidth / options.outHeight);
-				}
-			}
+            // NOTE: out of memory error
+            while (options.outHeight * options.outWidth / options.inSampleSize > MAX_DECODE_PICTURE_SIZE) {
+                options.inSampleSize++;
+            }
 
-			options.inJustDecodeBounds = false;
+            int newHeight = height;
+            int newWidth = width;
+            if (crop) {
+                if (beY > beX) {
+                    newHeight = (int) (newWidth * 1.0 * options.outHeight / options.outWidth);
+                } else {
+                    newWidth = (int) (newHeight * 1.0 * options.outWidth / options.outHeight);
+                }
+            } else {
+                if (beY < beX) {
+                    newHeight = (int) (newWidth * 1.0 * options.outHeight / options.outWidth);
+                } else {
+                    newWidth = (int) (newHeight * 1.0 * options.outWidth / options.outHeight);
+                }
+            }
 
-			Log.i(TAG, "bitmap required size=" + newWidth + "x" + newHeight + ", orig=" + options.outWidth + "x" + options.outHeight + ", sample=" + options.inSampleSize);
-			Bitmap bm = BitmapFactory.decodeFile(path, options);
-			if (bm == null) {
-				Log.e(TAG, "bitmap decode failed");
-				return null;
-			}
+            options.inJustDecodeBounds = false;
 
-			Log.i(TAG, "bitmap decoded size=" + bm.getWidth() + "x" + bm.getHeight());
-			final Bitmap scale = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
-			if (scale != null) {
-				bm.recycle();
-				bm = scale;
-			}
+            Log.i(TAG, "bitmap required size=" + newWidth + "x" + newHeight + ", orig=" + options.outWidth + "x" + options.outHeight + ", sample=" + options.inSampleSize);
+            Bitmap bm = BitmapFactory.decodeFile(path, options);
+            if (bm == null) {
+                Log.e(TAG, "bitmap decode failed");
+                return null;
+            }
 
-			if (crop) {
-				final Bitmap cropped = Bitmap.createBitmap(bm, (bm.getWidth() - width) >> 1, (bm.getHeight() - height) >> 1, width, height);
-				if (cropped == null) {
-					return bm;
-				}
+            Log.i(TAG, "bitmap decoded size=" + bm.getWidth() + "x" + bm.getHeight());
+            final Bitmap scale = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
+            if (scale != null) {
+                bm.recycle();
+                bm = scale;
+            }
 
-				bm.recycle();
-				bm = cropped;
-				Log.i(TAG, "bitmap croped size=" + bm.getWidth() + "x" + bm.getHeight());
-			}
-			return bm;
+            if (crop) {
+                final Bitmap cropped = Bitmap.createBitmap(bm, (bm.getWidth() - width) >> 1, (bm.getHeight() - height) >> 1, width, height);
+                if (cropped == null) {
+                    return bm;
+                }
 
-		} catch (final OutOfMemoryError e) {
-			Log.e(TAG, "decode bitmap failed: " + e.getMessage());
-			options = null;
-		}
+                bm.recycle();
+                bm = cropped;
+                Log.i(TAG, "bitmap croped size=" + bm.getWidth() + "x" + bm.getHeight());
+            }
+            return bm;
 
-		return null;
-	}
-	
-	public static final void showResultDialog(Context context, String msg,
-			String title) {
-		if(msg == null) return;
-		String rmsg = msg.replace(",", "\n");
-		Log.d("Util", rmsg);
-		new AlertDialog.Builder(context).setTitle(title).setMessage(rmsg)
-				.setNegativeButton("知道了", null).create().show();
-	}
+        } catch (final OutOfMemoryError e) {
+            Log.e(TAG, "decode bitmap failed: " + e.getMessage());
+            options = null;
+        }
 
-	public static final void showProgressDialog(Context context, String title,
-			String message) {
-		dismissDialog();
-		if (TextUtils.isEmpty(title)) {
-			title = "请稍候";
-		}
-		if (TextUtils.isEmpty(message)) {
-			message = "正在加载...";
-		}
-		mProgressDialog = ProgressDialog.show(context, title, message);
-	}
-	
-	public static AlertDialog showConfirmCancelDialog(Context context,
-			String title, String message,
-			DialogInterface.OnClickListener posListener) {
-		AlertDialog dlg = new AlertDialog.Builder(context).setMessage(message)
-				.setPositiveButton("确认", posListener)
-				.setNegativeButton("取消", null).create();
-		dlg.setCanceledOnTouchOutside(false);
-		dlg.show();
-		return dlg;
-	}
+        return null;
+    }
 
-	public static final void dismissDialog() {
-		if (mProgressDialog != null) {
-			mProgressDialog.dismiss();
-			mProgressDialog = null;
-		}
-	}
+    public static final void showResultDialog(Context context, String msg,
+                                              String title) {
+        if (msg == null) return;
+        String rmsg = msg.replace(",", "\n");
+        Log.d("Util", rmsg);
+        new AlertDialog.Builder(context).setTitle(title).setMessage(rmsg)
+                .setNegativeButton("知道了", null).create().show();
+    }
 
-	/**
-	 * 打印消息并且用Toast显示消息
-	 * 
-	 * @param activity
-	 * @param message
-	 * @param logLevel
-	 *            填d, w, e分别代表debug, warn, error; 默认是debug
-	 */
-	public static final void toastMessage(final Activity activity,
-			final String message, String logLevel) {
-		if ("w".equals(logLevel)) {
-			Log.w("sdkDemo", message);
-		} else if ("e".equals(logLevel)) {
-			Log.e("sdkDemo", message);
-		} else {
-			Log.d("sdkDemo", message);
-		}
-		activity.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				if (mToast != null) {
-					mToast.cancel();
-					mToast = null;
-				}
-				mToast = Toast.makeText(activity, message, Toast.LENGTH_SHORT);
-				mToast.show();
-			}
-		});
-	}
+    public static final void showProgressDialog(Context context, String title,
+                                                String message) {
+        dismissDialog();
+        if (TextUtils.isEmpty(title)) {
+            title = "请稍候";
+        }
+        if (TextUtils.isEmpty(message)) {
+            message = "正在加载...";
+        }
+        mProgressDialog = ProgressDialog.show(context, title, message);
+    }
 
-	/**
-	 * 打印消息并且用Toast显示消息
-	 * 
-	 * @param activity
-	 * @param message
-	 * @param logLevel
-	 *            填d, w, e分别代表debug, warn, error; 默认是debug
-	 */
-	public static final void toastMessage(final Activity activity,
-			final String message) {
-		toastMessage(activity, message, null);
-	}
+    public static AlertDialog showConfirmCancelDialog(Context context,
+                                                      String title, String message,
+                                                      DialogInterface.OnClickListener posListener) {
+        AlertDialog dlg = new AlertDialog.Builder(context).setMessage(message)
+                .setPositiveButton("确认", posListener)
+                .setNegativeButton("取消", null).create();
+        dlg.setCanceledOnTouchOutside(false);
+        dlg.show();
+        return dlg;
+    }
 
-	/**
-	 * 根据一个网络连接(String)获取bitmap图像
-	 * 
-	 * @param imageUri
-	 * @return
-	 * @throws MalformedURLException
-	 */
-	public static Bitmap getbitmap(String imageUri) {
-		SLog.i(TAG, "getbitmap:" + imageUri);
-		// 显示网络上的图片
-		Bitmap bitmap = null;
-		try {
-			URL myFileUrl = new URL(imageUri);
-			HttpURLConnection conn = (HttpURLConnection) myFileUrl
-					.openConnection();
-			conn.setDoInput(true);
-			conn.connect();
-			InputStream is = conn.getInputStream();
-			bitmap = BitmapFactory.decodeStream(is);
-			is.close();
+    public static final void dismissDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
 
-			SLog.i(TAG, "image download finished." + imageUri);
+    /**
+     * 打印消息并且用Toast显示消息
+     *
+     * @param activity
+     * @param message
+     * @param logLevel 填d, w, e分别代表debug, warn, error; 默认是debug
+     */
+    public static final void toastMessage(final Activity activity,
+                                          final String message, String logLevel) {
+        if ("w".equals(logLevel)) {
+            Log.w("sdkDemo", message);
+        } else if ("e".equals(logLevel)) {
+            Log.e("sdkDemo", message);
+        } else {
+            Log.d("sdkDemo", message);
+        }
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                if (mToast != null) {
+                    mToast.cancel();
+                    mToast = null;
+                }
+                mToast = Toast.makeText(activity, message, Toast.LENGTH_SHORT);
+                mToast.show();
+            }
+        });
+    }
+
+    /**
+     * 打印消息并且用Toast显示消息
+     *
+     * @param activity
+     * @param message
+     * @param logLevel 填d, w, e分别代表debug, warn, error; 默认是debug
+     */
+    public static final void toastMessage(final Activity activity,
+                                          final String message) {
+        toastMessage(activity, message, null);
+    }
+
+    /**
+     * 根据一个网络连接(String)获取bitmap图像
+     *
+     * @param imageUri
+     * @return
+     * @throws MalformedURLException
+     */
+    public static Bitmap getbitmap(String imageUri) {
+        SLog.i(TAG, "getbitmap:" + imageUri);
+        // 显示网络上的图片
+        Bitmap bitmap = null;
+        try {
+            URL myFileUrl = new URL(imageUri);
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl
+                    .openConnection();
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+
+            SLog.i(TAG, "image download finished." + imageUri);
         } catch (OutOfMemoryError e) {
-			SLog.e(TAG, "getBitmap outOfMemoryError : " + e.getMessage());
+            SLog.e(TAG, "getBitmap outOfMemoryError : " + e.getMessage());
             bitmap = null;
-		} catch (IOException e) {
-			SLog.e(TAG, "getbitmap IOException : " + e.getMessage());
+        } catch (IOException e) {
+            SLog.e(TAG, "getbitmap IOException : " + e.getMessage());
             bitmap = null;
-		}
-		return bitmap;
-	}
-	
-	public static void release() {
-	    mProgressDialog = null;
-	    mToast = null;
-	}
+        }
+        return bitmap;
+    }
+
+    public static void release() {
+        mProgressDialog = null;
+        mToast = null;
+    }
 
     // =========
     // =通过URI获取本地图片的path
@@ -560,73 +553,74 @@ public class Util {
 
     public static String ACTION_OPEN_DOCUMENT = "android.intent.action.OPEN_DOCUMENT";
     public static int Build_VERSION_KITKAT = 19;
+
     public static String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= 19;
         final boolean isQ = Build.VERSION.SDK_INT >= 29;
 
-        if (isQ && isDocumentUri(context, uri)){
-			FileOutputStream fos = null;
-			InputStream inputStream = null;
-			try {
-				inputStream = context.getContentResolver().openInputStream(uri);
-				DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
-				String name = "";
-				if (documentFile != null) {
-					name = documentFile.getName();
-				}
+        if (isQ && isDocumentUri(context, uri)) {
+            FileOutputStream fos = null;
+            InputStream inputStream = null;
+            try {
+                inputStream = context.getContentResolver().openInputStream(uri);
+                DocumentFile documentFile = DocumentFile.fromSingleUri(context, uri);
+                String name = "";
+                if (documentFile != null) {
+                    name = documentFile.getName();
+                }
 
-				if (TextUtils.isEmpty(name)) {
-					name = ".jpg";
-				}
+                if (TextUtils.isEmpty(name)) {
+                    name = ".jpg";
+                }
 
-				File file = new File(context.getExternalFilesDir("Images"), "/tmp/shareImage" + System.currentTimeMillis() + "_" + name);
-				if (!file.getParentFile().exists()){
-				    if (!file.getParentFile().mkdirs()){
-				        Log.e(TAG, "android q create dirs fail");
+                File file = new File(context.getExternalFilesDir("Images"), "/tmp/shareImage" + System.currentTimeMillis() + "_" + name);
+                if (!file.getParentFile().exists()) {
+                    if (!file.getParentFile().mkdirs()) {
+                        Log.e(TAG, "android q create dirs fail");
                     }
                 }
-				if (!file.createNewFile()){
+                if (!file.createNewFile()) {
                     Log.e(TAG, "android q create new file fail");
                 }
-				fos = new FileOutputStream(file);
-				if (inputStream == null){
-					Log.e(TAG, "getInputStream from uri is null");
-					return null;
-				}
-				byte[] buf = new byte[4096];
-				int len = -1;
-				while ((len = inputStream.read(buf)) != -1){
-					fos.write(buf, 0, len);
-				}
-				return file.getAbsolutePath();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+                fos = new FileOutputStream(file);
+                if (inputStream == null) {
+                    Log.e(TAG, "getInputStream from uri is null");
+                    return null;
+                }
+                byte[] buf = new byte[4096];
+                int len = -1;
+                while ((len = inputStream.read(buf)) != -1) {
+                    fos.write(buf, 0, len);
+                }
+                return file.getAbsolutePath();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
                 Log.e(TAG, "getInputStream from uri FileNotFoundException : " + e.getMessage());
-			    return null;
-			} catch (Exception e) {
-				e.printStackTrace();
-				Log.e(TAG, "getInputStream from uri IOException : " + e.getMessage());
-				return null;
-			} finally {
-				if (fos != null){
-					try {
-						fos.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "getInputStream from uri IOException : " + e.getMessage());
+                return null;
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                         Log.e(TAG, "fileOutputStream close exception : " + e.getMessage());
-					}
-				}
-				if (inputStream != null){
-					try {
-						inputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+                    }
+                }
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                         Log.e(TAG, "inputStream close exception : " + e.getMessage());
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
         // DocumentProvider
         if (isKitKat && isDocumentUri(context, uri)) {
             // ExternalStorageProvider
@@ -644,13 +638,13 @@ public class Util {
             else if (isDownloadsDocument(uri)) {
                 final String id = getDocumentId(uri);
                 try {
-                	Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
-							Long.parseLong(id));
-					return getDataColumn(context, contentUri, null, null);
-				} catch (NumberFormatException e) {
-                	SLog.e(TAG, "getPath: exception", e);
-					return getDataColumn(context, uri, null, null);
-				}
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
+                            Long.parseLong(id));
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    SLog.e(TAG, "getPath: exception", e);
+                    return getDataColumn(context, uri, null, null);
+                }
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -668,7 +662,7 @@ public class Util {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] { split[1] };
+                final String[] selectionArgs = new String[]{split[1]};
 
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
@@ -723,22 +717,18 @@ public class Util {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context
-     *            The context.
-     * @param uri
-     *            The Uri to query.
-     * @param selection
-     *            (Optional) Filter used in the query.
-     * @param selectionArgs
-     *            (Optional) Selection arguments used in the query.
-     *            [url=home.php?mod=space&uid=7300]@return[/url] The value of
-     *            the _data column, which is typically a file path.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     *                      [url=home.php?mod=space&uid=7300]@return[/url] The value of
+     *                      the _data column, which is typically a file path.
      */
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
-        final String[] projection = { column };
+        final String[] projection = {column};
 
         try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
@@ -748,7 +738,7 @@ public class Util {
             }
         } catch (Exception e) {
             SLog.e(SLog.TAG, "getDataColumn excption:", e);
-        } finally{
+        } finally {
             if (cursor != null) {
                 cursor.close();
             }
@@ -757,8 +747,7 @@ public class Util {
     }
 
     /**
-     * @param uri
-     *            The Uri to check.
+     * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
     public static boolean isExternalStorageDocument(Uri uri) {
@@ -766,8 +755,7 @@ public class Util {
     }
 
     /**
-     * @param uri
-     *            The Uri to check.
+     * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
     public static boolean isDownloadsDocument(Uri uri) {
@@ -775,8 +763,7 @@ public class Util {
     }
 
     /**
-     * @param uri
-     *            The Uri to check.
+     * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
     public static boolean isMediaDocument(Uri uri) {
@@ -784,79 +771,78 @@ public class Util {
     }
 
     /**
-     * @param uri
-     *            The Uri to check.
+     * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
-	
-	public static boolean isTargetApiAboveQ(Context context){
-		if (context == null){
-			return false;
-		}
-		int targetSdkVersion = context.getApplicationInfo().targetSdkVersion;
-		return targetSdkVersion >= 29 && Build.VERSION.SDK_INT >= 29 && !isExternalStorageLegacy();
-	}
-	
-	//Android q加入方法，通过反射调用
-	private static boolean isExternalStorageLegacy(){
-		try {
-			Method method = Environment.class.getMethod("isExternalStorageLegacy");
-			return (Boolean) method.invoke(Environment.class);
-		} catch (NoSuchMethodException e) {
-			return false;
-		} catch (IllegalAccessException e) {
-			return false;
-		} catch (InvocationTargetException e) {
-			return false;
-		}
-	}
 
-	/**
-	 * 获取 hmacSha1
-	 *
-	 * @param base
-	 * @param key
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 */
-	public static String hmacSha1(String base, String key) throws NoSuchAlgorithmException, InvalidKeyException {
-		if (TextUtils.isEmpty(base) || TextUtils.isEmpty(key)) {
-			return "";
-		}
-		String type = "HmacSHA1";
-		SecretKeySpec secret = new SecretKeySpec(key.getBytes(), type);
-		Mac mac = Mac.getInstance(type);
-		mac.init(secret);
-		byte[] digest = mac.doFinal(base.getBytes());
-		return Base64.encodeToString(digest, Base64.DEFAULT);
-	}
+    public static boolean isTargetApiAboveQ(Context context) {
+        if (context == null) {
+            return false;
+        }
+        int targetSdkVersion = context.getApplicationInfo().targetSdkVersion;
+        return targetSdkVersion >= 29 && Build.VERSION.SDK_INT >= 29 && !isExternalStorageLegacy();
+    }
 
-	public static String addParameter(String url, String name, String value) {
-		int qpos = url.indexOf('?');
-		int hpos = url.indexOf('#');
-		char sep = qpos == -1 ? '?' : '&';
-		String seg = sep + encodeUrl(name) + '=' + encodeUrl(value);
-		return hpos == -1 ? url + seg : url.substring(0, hpos) + seg + url.substring(hpos);
-	}
+    //Android q加入方法，通过反射调用
+    private static boolean isExternalStorageLegacy() {
+        try {
+            Method method = Environment.class.getMethod("isExternalStorageLegacy");
+            return (Boolean) method.invoke(Environment.class);
+        } catch (NoSuchMethodException e) {
+            return false;
+        } catch (IllegalAccessException e) {
+            return false;
+        } catch (InvocationTargetException e) {
+            return false;
+        }
+    }
 
-	public static String encodeUrl(String url) {
-		try {
-			return URLEncoder.encode(url, "UTF-8");
-		} catch (UnsupportedEncodingException uee) {
-			throw new IllegalArgumentException(uee);
-		}
-	}
+    /**
+     * 获取 hmacSha1
+     *
+     * @param base
+     * @param key
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
+    public static String hmacSha1(String base, String key) throws NoSuchAlgorithmException, InvalidKeyException {
+        if (TextUtils.isEmpty(base) || TextUtils.isEmpty(key)) {
+            return "";
+        }
+        String type = "HmacSHA1";
+        SecretKeySpec secret = new SecretKeySpec(key.getBytes(), type);
+        Mac mac = Mac.getInstance(type);
+        mac.init(secret);
+        byte[] digest = mac.doFinal(base.getBytes());
+        return Base64.encodeToString(digest, Base64.DEFAULT);
+    }
 
-	public static int parseIntValue(String string, int defaultVal) {
-		try {
-			return Integer.parseInt(string);
-		} catch (Exception ex) {
-			SLog.e(TAG, "Exception", ex);
-		}
-		return defaultVal;
-	}
+    public static String addParameter(String url, String name, String value) {
+        int qpos = url.indexOf('?');
+        int hpos = url.indexOf('#');
+        char sep = qpos == -1 ? '?' : '&';
+        String seg = sep + encodeUrl(name) + '=' + encodeUrl(value);
+        return hpos == -1 ? url + seg : url.substring(0, hpos) + seg + url.substring(hpos);
+    }
+
+    public static String encodeUrl(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException uee) {
+            throw new IllegalArgumentException(uee);
+        }
+    }
+
+    public static int parseIntValue(String string, int defaultVal) {
+        try {
+            return Integer.parseInt(string);
+        } catch (Exception ex) {
+            SLog.e(TAG, "Exception", ex);
+        }
+        return defaultVal;
+    }
 }

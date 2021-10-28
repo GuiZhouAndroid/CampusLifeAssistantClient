@@ -36,6 +36,7 @@ public class GsonUtil {
     public Gson gson = new GsonBuilder().registerTypeAdapter(QQUserSessionBean.class, new QQUserTypeAdapter())
             //registerTypeAdapter可以重复使用
             .create();
+
     static {
         if (sGson == null) {
             synchronized (GsonUtil.class) {

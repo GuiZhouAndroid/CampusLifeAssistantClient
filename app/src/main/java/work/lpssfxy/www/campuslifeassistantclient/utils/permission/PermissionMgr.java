@@ -19,7 +19,7 @@ public class PermissionMgr {
     private static final PermissionMgr sInstance = new PermissionMgr();
 
     private static final int PERMISSION_REQUEST_CODE = 1;
-    private static final String[] PERMISSIONS = new String[] {
+    private static final String[] PERMISSIONS = new String[]{
             android.Manifest.permission.INTERNET,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.CHANGE_WIFI_STATE,
@@ -28,7 +28,8 @@ public class PermissionMgr {
 
     private List<String> mPermissionList = new ArrayList<String>();
 
-    private PermissionMgr() {}
+    private PermissionMgr() {
+    }
 
     public static PermissionMgr getInstance() {
         return sInstance;

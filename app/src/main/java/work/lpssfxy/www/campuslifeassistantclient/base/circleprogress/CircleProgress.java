@@ -70,19 +70,22 @@ public class CircleProgress extends View {
     private int mCountdownTime;
     private float mCurrentProgress;
     private OnCountDownFinishListener mListener;
+
     public CircleProgress(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
+
     private void init(Context context, AttributeSet attrs) {
         mContext = context;
-        mDefaultSize = MiscUtil.dipToPx(mContext,150);
+        mDefaultSize = MiscUtil.dipToPx(mContext, 150);
         mAnimator = new ValueAnimator();
         mRectF = new RectF();
         mCenterPoint = new Point();
         initAttrs(attrs);
         initPaint();
     }
+
     private void initAttrs(AttributeSet attrs) {
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar);
         //开启抗锯齿
@@ -105,12 +108,15 @@ public class CircleProgress extends View {
         //开始运行倒计时
         mCountdownTime = typedArray.getInteger(R.styleable.CircleProgressBar_countdownTime, 3);
     }
+
     public void setAddCountDownListener(OnCountDownFinishListener mListener) {
         this.mListener = mListener;
     }
+
     public interface OnCountDownFinishListener {
         void countDownFinished();
     }
+
     private ValueAnimator getValA(long countdownTime) {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100);
         valueAnimator.setDuration(countdownTime);
@@ -119,6 +125,7 @@ public class CircleProgress extends View {
         return valueAnimator;
 
     }
+
     /**
      * 开始倒计时
      */
@@ -146,6 +153,7 @@ public class CircleProgress extends View {
             }
         });
     }
+
     private void initPaint() {
         mHintPaint = new TextPaint();
         // 设置抗锯齿,会消耗较大资源，绘制图形速度会变慢。
@@ -183,6 +191,7 @@ public class CircleProgress extends View {
         mBgArcPaint.setStrokeWidth(mBgArcWidth);
         mBgArcPaint.setStrokeCap(Paint.Cap.ROUND);
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -215,9 +224,11 @@ public class CircleProgress extends View {
         mUnitOffset = mCenterPoint.y + mRadius * mTextOffsetPercentInRadius + getBaselineOffsetFromY(mUnitPaint);
         updateArcPaint();
     }
+
     private float getBaselineOffsetFromY(Paint paint) {
         return MiscUtil.measureTextHeight(paint) / 2;
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -246,6 +257,7 @@ public class CircleProgress extends View {
         int baseline = (int) ((mRectF.bottom + mRectF.top - fontMetrics.bottom - fontMetrics.top) / 2);
         canvas.drawText(text, mRectF.centerX(), baseline, textPaint);
     }
+
     /**
      * 绘制内容文字
      *
@@ -262,6 +274,7 @@ public class CircleProgress extends View {
             canvas.drawText(mUnit.toString(), mCenterPoint.x, mUnitOffset, mUnitPaint);
         }
     }
+
     /**
      * 更新圆弧画笔
      */
@@ -270,6 +283,7 @@ public class CircleProgress extends View {
         mSweepGradient = new SweepGradient(mCenterPoint.x, mCenterPoint.y, mGradientColors, null);
         mArcPaint.setShader(mSweepGradient);
     }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();

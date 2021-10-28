@@ -10,9 +10,10 @@ import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 public class AnimatorUtil {
-    private static AccelerateDecelerateInterpolator LINEAR_INTERRPLATOR =new AccelerateDecelerateInterpolator();
-    public static void showFab(View view, MyBehavior.AnimateListener ...listener){
-        if (listener.length!=0){
+    private static AccelerateDecelerateInterpolator LINEAR_INTERRPLATOR = new AccelerateDecelerateInterpolator();
+
+    public static void showFab(View view, MyBehavior.AnimateListener... listener) {
+        if (listener.length != 0) {
             view.animate()
                     .scaleX(1f)
                     .scaleY(1f)
@@ -21,7 +22,7 @@ public class AnimatorUtil {
                     .setInterpolator(LINEAR_INTERRPLATOR)
                     .setListener(listener[0])
                     .start();
-        }else {
+        } else {
             view.animate()
                     .scaleX(1f)
                     .scaleY(1f)
@@ -32,7 +33,8 @@ public class AnimatorUtil {
         }
 
     }
-    public static void hideFab(View view, MyBehavior.AnimateListener listener){
+
+    public static void hideFab(View view, MyBehavior.AnimateListener listener) {
         view.animate()
                 .scaleX(0f)
                 .scaleY(0f)
@@ -42,6 +44,7 @@ public class AnimatorUtil {
                 .setListener(listener)
                 .start();
     }
+
     private static LinearOutSlowInInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new LinearOutSlowInInterpolator();
 
     private static AccelerateInterpolator LINER_INTERPOLATOR = new AccelerateInterpolator();
@@ -50,7 +53,7 @@ public class AnimatorUtil {
     /**
      * 显示view
      *
-     * @param view View
+     * @param view                         View
      * @param viewPropertyAnimatorListener ViewPropertyAnimatorListener
      */
     public static void scaleShow(View view, ViewPropertyAnimatorListener viewPropertyAnimatorListener) {
@@ -68,7 +71,7 @@ public class AnimatorUtil {
     /**
      * 隐藏view
      *
-     * @param view View
+     * @param view                         View
      * @param viewPropertyAnimatorListener ViewPropertyAnimatorListener
      */
     public static void scaleHide(View view, ViewPropertyAnimatorListener viewPropertyAnimatorListener) {
@@ -84,7 +87,8 @@ public class AnimatorUtil {
 
     /**
      * 显示view
-     *  @param view View
+     *
+     * @param view                         View
      * @param viewPropertyAnimatorListener ViewPropertyAnimatorListener
      */
     public static void translateShow(View view, ScaleDownShowBehavior.StateListener viewPropertyAnimatorListener) {
@@ -99,7 +103,8 @@ public class AnimatorUtil {
 
     /**
      * 隐藏view
-     *  @param view View
+     *
+     * @param view                         View
      * @param viewPropertyAnimatorListener ViewPropertyAnimatorListener
      */
     public static void translateHide(View view, ScaleDownShowBehavior.StateListener viewPropertyAnimatorListener) {

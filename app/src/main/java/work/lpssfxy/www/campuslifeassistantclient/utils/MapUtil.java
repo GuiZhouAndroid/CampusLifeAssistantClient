@@ -24,17 +24,18 @@ public class MapUtil {
 
     /**
      * 检查地图应用是否安装
+     *
      * @return
      */
-    public static boolean isGdMapInstalled(){
+    public static boolean isGdMapInstalled() {
         return isInstallPackage(PN_GAODE_MAP);
     }
 
-    public static boolean isBaiduMapInstalled(){
+    public static boolean isBaiduMapInstalled() {
         return isInstallPackage(PN_BAIDU_MAP);
     }
 
-    public static boolean isTencentMapInstalled(){
+    public static boolean isTencentMapInstalled() {
         return isInstallPackage(PN_TENCENT_MAP);
     }
 
@@ -44,6 +45,7 @@ public class MapUtil {
 
     /**
      * 百度转高德
+     *
      * @param bd_lat
      * @param bd_lon
      * @return
@@ -61,6 +63,7 @@ public class MapUtil {
 
     /**
      * 高德、腾讯转百度
+     *
      * @param gd_lon
      * @param gd_lat
      * @return
@@ -81,9 +84,7 @@ public class MapUtil {
      * 即 百度 转 谷歌、高德
      *
      * @param latLng
-     * @returns
-     *
-     * 使用此方法需要下载导入百度地图的BaiduLBS_Android.jar包
+     * @returns 使用此方法需要下载导入百度地图的BaiduLBS_Android.jar包
      */
     public static LatLng BD09ToGCJ02(LatLng latLng) {
         double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
@@ -101,9 +102,7 @@ public class MapUtil {
      * 即谷歌、高德 转 百度
      *
      * @param latLng
-     * @returns
-     *
-     * 需要百度地图的BaiduLBS_Android.jar包
+     * @returns 需要百度地图的BaiduLBS_Android.jar包
      */
     public static LatLng GCJ02ToBD09(LatLng latLng) {
         double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
@@ -116,15 +115,16 @@ public class MapUtil {
 
     /**
      * 打开高德地图导航功能
+     *
      * @param context
-     * @param slat 起点纬度
-     * @param slon 起点经度
-     * @param sname 起点名称 可不填（0,0，null）
-     * @param dlat 终点纬度
-     * @param dlon 终点经度
-     * @param dname 终点名称 必填
+     * @param slat    起点纬度
+     * @param slon    起点经度
+     * @param sname   起点名称 可不填（0,0，null）
+     * @param dlat    终点纬度
+     * @param dlon    终点经度
+     * @param dname   终点名称 必填
      */
-    public static void openGaoDeNavi(Context context, double slat, double slon, String sname, double dlat, double dlon, String dname){
+    public static void openGaoDeNavi(Context context, double slat, double slon, String sname, double dlat, double dlon, String dname) {
         String uriString = null;
         StringBuilder builder = new StringBuilder("amapuri://route/plan?sourceApplication=maxuslife");
         if (slat != 0) {
@@ -149,18 +149,18 @@ public class MapUtil {
      * params 参考http://lbs.qq.com/uri_v1/guide-route.html
      *
      * @param context
-     * @param slat 起点纬度
-     * @param slon 起点经度
-     * @param sname 起点名称 可不填（0,0，null）
-     * @param dlat 终点纬度
-     * @param dlon 终点经度
-     * @param dname 终点名称 必填
-     * 驾车：type=drive，policy有以下取值
-    0：较快捷
-    1：无高速
-    2：距离
-    policy的取值缺省为0
-     * &from=" + dqAddress + "&fromcoord=" + dqLatitude + "," + dqLongitude + "
+     * @param slat    起点纬度
+     * @param slon    起点经度
+     * @param sname   起点名称 可不填（0,0，null）
+     * @param dlat    终点纬度
+     * @param dlon    终点经度
+     * @param dname   终点名称 必填
+     *                驾车：type=drive，policy有以下取值
+     *                0：较快捷
+     *                1：无高速
+     *                2：距离
+     *                policy的取值缺省为0
+     *                &from=" + dqAddress + "&fromcoord=" + dqLatitude + "," + dqLongitude + "
      */
     public static void openTencentMap(Context context, double slat, double slon, String sname, double dlat, double dlon, String dname) {
         String uriString = null;
@@ -184,15 +184,16 @@ public class MapUtil {
 
     /**
      * 打开百度地图导航功能(默认坐标点是高德地图，需要转换)
+     *
      * @param context
-     * @param slat 起点纬度
-     * @param slon 起点经度
-     * @param sname 起点名称 可不填（0,0，null）
-     * @param dlat 终点纬度
-     * @param dlon 终点经度
-     * @param dname 终点名称 必填
+     * @param slat    起点纬度
+     * @param slon    起点经度
+     * @param sname   起点名称 可不填（0,0，null）
+     * @param dlat    终点纬度
+     * @param dlon    终点经度
+     * @param dname   终点名称 必填
      */
-    public static void openBaiDuNavi(Context context,double slat, double slon, String sname, double dlat, double dlon, String dname){
+    public static void openBaiDuNavi(Context context, double slat, double slon, String sname, double dlat, double dlon, String dname) {
         String uriString = null;
         //终点坐标转换
 //        此方法需要百度地图的BaiduLBS_Android.jar包
@@ -206,7 +207,7 @@ public class MapUtil {
         dlon = destination[1];
 
         StringBuilder builder = new StringBuilder("baidumap://map/direction?mode=driving&");
-        if (slat != 0){
+        if (slat != 0) {
             //起点坐标转换
 
 //            LatLng origin = new LatLng(slat,slon);

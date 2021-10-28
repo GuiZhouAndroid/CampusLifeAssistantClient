@@ -49,8 +49,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.bingoogolapple.bgabanner.BGABanner;
-import cn.bingoogolapple.bgabanner.BGALocalImageSize;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyRecyclerViewAdapter;
@@ -116,6 +114,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     private ArrayList<CampusInformationBean> campusInformationBeanArrayList = new ArrayList<>();
     /** 自定义recyclerveiw的适配器 */
     private MyRecyclerViewAdapter recyclerViewAdapter;
+
     @Override
     protected int bindLayout() {
         return R.layout.index_fragment_bottom_home;
@@ -141,11 +140,11 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     protected void initData(Bundle savedInstanceState) {
         //3个地图id
-        openBottomView=LayoutInflater.from(getActivity()).inflate(R.layout.index_fragment_open_bottom_map_navagation,null);
-        mLl_bottom_baidu=openBottomView.findViewById(R.id.ll_bottom_baidu);//底部百度
-        mLl_bottom_gaode=openBottomView.findViewById(R.id.ll_bottom_gaode);//底部高德
-        mLl_bottom_tencent=openBottomView.findViewById(R.id.ll_bottom_tencent);//底部腾讯
-        mLl_bottom_cancel=openBottomView.findViewById(R.id.ll_bottom_cancel);//取消
+        openBottomView = LayoutInflater.from(getActivity()).inflate(R.layout.index_fragment_open_bottom_map_navagation, null);
+        mLl_bottom_baidu = openBottomView.findViewById(R.id.ll_bottom_baidu);//底部百度
+        mLl_bottom_gaode = openBottomView.findViewById(R.id.ll_bottom_gaode);//底部高德
+        mLl_bottom_tencent = openBottomView.findViewById(R.id.ll_bottom_tencent);//底部腾讯
+        mLl_bottom_cancel = openBottomView.findViewById(R.id.ll_bottom_cancel);//取消
     }
 
     @Override
@@ -161,6 +160,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
 
     /**
      * 业务操作
+     *
      * @param context
      */
     @Override
@@ -175,6 +175,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     /**
      * 标题栏渐变
      * 滑动监听透明度及颜色设置Toolbar
+     *
      * @param appBarLayout
      * @param verticalOffset
      */
@@ -224,7 +225,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
      */
     @Override
     public void onItemClick(int position, View view) {
-        switch (position){
+        switch (position) {
             case 0://食堂预定
                 getUnionId();
                 break;
@@ -235,7 +236,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Constant.mTencent.checkLogin(new DefaultUiListener() {
                     @Override
                     public void onComplete(Object response) {
-                        JSONObject jsonResp = (JSONObject)response;
+                        JSONObject jsonResp = (JSONObject) response;
                         if (jsonResp.optInt("ret", -1) == 0) {
                             JSONObject jsonObject = Constant.mTencent.loadSession(Constant.APP_ID);
                             Constant.mTencent.initSessionCache(jsonObject);
@@ -280,11 +281,11 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 openBottomMapNaviCation();
                 break;
             case 9://进入官网
-                if (Constant.qqUser== null){
+                if (Constant.qqUser == null) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                if (Constant.mTencent !=null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
+                if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
                     Toast.makeText(getActivity(), "QQ登录已经啦", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -335,7 +336,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
 
     @Override
     public void onBannerClick(int index, ArrayList<BannerInfo> banner) {
-        switch (index){
+        switch (index) {
             case 0:
                 Toast.makeText(getActivity(), "第一张图", Toast.LENGTH_SHORT).show();
                 break;
@@ -357,7 +358,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 View item = mLayoutInflater.inflate(R.layout.index_fragment_homepage_grid_item, null);
                 TextView tv_gird_tab = item.findViewById(R.id.tv_gird_tab);
                 tv_gird_tab.setText(Grid_Tv_Data[position]);
-                ImageView iv_grid_show=item.findViewById(R.id.iv_grid_show);
+                ImageView iv_grid_show = item.findViewById(R.id.iv_grid_show);
                 iv_grid_show.setImageResource(Grid_Iv_Data[position]);
                 return item;
             }
@@ -475,7 +476,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             Toast.makeText(getActivity(), "您尚未安装百度地图", Toast.LENGTH_LONG).show();
             Uri uri = Uri.parse("market://details?id=com.baidu.BaiduMap");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivity(intent);
             }
         }
@@ -501,7 +502,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             Toast.makeText(getActivity(), "您尚未安装高德地图", Toast.LENGTH_LONG).show();
             Uri uri = Uri.parse("market://details?id=com.autonavi.minimap");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivity(intent);
             }
         }
@@ -527,11 +528,12 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             Toast.makeText(getActivity(), "您尚未安装腾讯地图", Toast.LENGTH_LONG).show();
             Uri uri = Uri.parse("market://details?id=com.tencent.map");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivity(intent);
             }
         }
     }
+
     /**
      * 检查手机上是否安装了指定的软件
      *
@@ -556,40 +558,41 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         //判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
         return packageNames.contains(packageName);
     }
+
     private void getUnionId() {
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
             IUiListener listener = new DefaultUiListener() {
                 @Override
                 public void onError(UiError e) {
-                    Toast.makeText(getActivity(),"onError",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "onError", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onComplete(final Object response) {
-                    if(response != null){
-                        JSONObject jsonObject = (JSONObject)response;
+                    if (response != null) {
+                        JSONObject jsonObject = (JSONObject) response;
                         try {
                             String unionid = jsonObject.getString("unionid");
-                            Util.showResultDialog(getActivity(), "unionid:\n"+unionid, "onComplete");
+                            Util.showResultDialog(getActivity(), "unionid:\n" + unionid, "onComplete");
                             Util.dismissDialog();
-                            Log.i(TAG, "getUnionId: ==="+unionid);
-                        }catch (Exception e){
-                            Toast.makeText(getActivity(),"no unionid",Toast.LENGTH_LONG).show();
+                            Log.i(TAG, "getUnionId: ===" + unionid);
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "no unionid", Toast.LENGTH_LONG).show();
                         }
-                    }else {
-                        Toast.makeText(getActivity(),"no unionid",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), "no unionid", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onCancel() {
-                    Toast.makeText(getActivity(),"onCancel",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "onCancel", Toast.LENGTH_LONG).show();
                 }
             };
             UnionInfo unionInfo = new UnionInfo(getActivity(), Constant.mTencent.getQQToken());
             unionInfo.getUnionId(listener);
         } else {
-            Toast.makeText(getActivity(),"please login frist!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "please login frist!", Toast.LENGTH_LONG).show();
         }
     }
 }

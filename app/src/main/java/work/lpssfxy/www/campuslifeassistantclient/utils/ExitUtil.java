@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class ExitUtil {
     private static long mFirstTime = 0;
+
     @SuppressLint("WrongConstant")
     public static void exitCheck(Activity activity, View view) {
         if (System.currentTimeMillis() - mFirstTime > 2000) {

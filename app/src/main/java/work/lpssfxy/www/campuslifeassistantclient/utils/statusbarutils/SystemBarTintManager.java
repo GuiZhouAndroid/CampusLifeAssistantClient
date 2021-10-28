@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 
 /**
  * created by on 2021/8/12
- * 描述：
+ * 描述：沉浸式工具类
  *
  * @author ZSAndroid
  * @create 2021-08-12-23:41
@@ -116,7 +116,7 @@ public class SystemBarTintManager {
 
     /**
      * Enable tinting of the system status bar.
-     *
+     * <p>
      * If the platform is running Jelly Bean or earlier, or translucent system
      * UI modes have not been enabled in either the theme or via window flags,
      * then this method does nothing.
@@ -132,7 +132,7 @@ public class SystemBarTintManager {
 
     /**
      * Enable tinting of the system navigation bar.
-     *
+     * <p>
      * If the platform does not have soft navigation keys, is running Jelly Bean
      * or earlier, or translucent system UI modes have not been enabled in either
      * the theme or via window flags, then this method does nothing.
@@ -337,7 +337,6 @@ public class SystemBarTintManager {
     /**
      * Class which describes system bar sizing and other characteristics for the current
      * device configuration.
-     *
      */
     public static class SystemBarConfig {
 

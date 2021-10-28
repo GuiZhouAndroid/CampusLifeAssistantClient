@@ -2,17 +2,14 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress;
@@ -70,6 +67,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     /**
      * 开启设置底部导航栏黑色半透明
      * 此页面为视频全屏沉浸，已设置开启全屏沉浸FullScreen，因此此处设置true或false没有影响
+     *
      * @return true:底部导航栏白色 false:底部导航栏黑色半透明
      */
     @Override
@@ -118,6 +116,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     /**
      * 开始播放
+     *
      * @param savedInstanceState 界面非正常销毁时保存的数据
      */
     @Override
@@ -155,10 +154,10 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
     /**
      * 关闭自动监听倒计时，执行点击跳过
      */
-    public void onViewBtnSkipOnClick(){
+    public void onViewBtnSkipOnClick() {
         //videoView.stopPlayback();//停止播放视频
         mCircleProgress.setAddCountDownListener(null);//关闭自动监听倒计时
-        int count = SharePreferenceUtil.getInstance().getInt("first",0); // 取出数据
+        int count = SharePreferenceUtil.getInstance().getInt("first", 0); // 取出数据
         //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
             startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
@@ -169,6 +168,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         //存入数据
         SharePreferenceUtil.getInstance().putInt("first", 1); // 存入数据
     }
+
     /**
      * 循环播放
      *
@@ -186,7 +186,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     public void countDownFinished() {
-        int count = SharePreferenceUtil.getInstance().getInt("first",0); // 取出数据
+        int count = SharePreferenceUtil.getInstance().getInt("first", 0); // 取出数据
         //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
             startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
@@ -227,13 +227,14 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     /**
      * 屏蔽物理返回按钮
+     *
      * @param keyCode
      * @param event
      * @return
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -241,11 +242,12 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     /**
      * 点击跳过
+     *
      * @param view
      */
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.circleprogress://圆环跳过
             case R.id.btn_guide_skip://按钮跳过
                 onViewBtnSkipOnClick();
