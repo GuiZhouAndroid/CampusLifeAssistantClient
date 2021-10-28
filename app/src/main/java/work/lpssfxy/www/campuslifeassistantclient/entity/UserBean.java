@@ -13,7 +13,7 @@ import lombok.Data;
  */
 
 @Data
-public class QQSessionBean implements Serializable {
+public class UserBean implements Serializable {
     /**
      * 请求状态信息
      */

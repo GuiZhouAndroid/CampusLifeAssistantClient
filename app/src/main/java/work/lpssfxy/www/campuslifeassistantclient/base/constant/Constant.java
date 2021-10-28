@@ -14,6 +14,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
  */
 public class Constant {
 
+    public static final int REQUEST_CODE_VALUE = 100;//Activity请求码---> startActivityForResult(new Intent(this,xxx.class),REQUEST_CODE_UPDATE);
     public static QQUserSessionBean qqUserSessionBean;
     public static QQUserBean qqUser;
     /**
