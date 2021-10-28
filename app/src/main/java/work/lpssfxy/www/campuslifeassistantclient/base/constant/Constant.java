@@ -51,6 +51,9 @@ public class Constant {
 
     //通过用户自增ID添加会话
     public static final String LOGIN_ADD_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/addQQSessionInfoByUserId";
+
+    //通过用户自增ID查询QQ会话和用户全部信息
+    public static final String LOGIN_SELECT_QQ_AND_USER_INFO = BASE_URL + "/api/qq/oauth/session/selectUserAndQQInfoByUserId";
     /**
      * 检测用户登录状态+注销接口
      */

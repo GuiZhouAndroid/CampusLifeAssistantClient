@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * created by on 2021/10/17
- * 描述：标准网络请求响应实体类
+ * 描述：标准网络请求响应实体
  *
  * @author ZSAndroid
  * @create 2021-10-17-23:38

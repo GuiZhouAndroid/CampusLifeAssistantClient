@@ -52,7 +52,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.UserAndSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserAndSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -430,6 +430,22 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             if (200 == userAndSessionBean.getCode() && null != userAndSessionBean.getData() && "此QQ账号已授权".equals(userAndSessionBean.getMsg())) {
                                 //开始查询MySQL用户表+QQ授权登录并集信息
                                 Toast.makeText(LoginActivity.this, userAndSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
+                                int userId = userAndSessionBean.getData().getUlId();
+                                OkGo.<String>post(Constant.LOGIN_SELECT_QQ_AND_USER_INFO + "/" + userId)
+                                        .tag(this)
+                                        .execute(new StringDialogCallback(LoginActivity.this) {
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                //注意这里已经是在主线程了
+                                                String data = response.body();//这个就是返回来的结果
+                                                Log.i(TAG, "onSuccess: " + data);
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                            }
+                                        });
                                 return;
                             }
                         }
@@ -614,8 +630,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == RESULT_OK ){
             Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindDataToBackName")+"同学，您已成功绑定QQ账号，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))
-                    .setDuration(5000);//设置点击按钮的字体颜色
-            //设置Snackbar上提示的字体颜色
+                    .setDuration(5000);
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }

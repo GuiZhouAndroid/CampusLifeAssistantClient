@@ -1,10 +1,10 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
 import lombok.Data;
 
 /**
  * created by on 2021/10/28
- * 描述：用户信息+QQ会话实体类
+ * 描述：用户信息+QQ会话实体
  *
  * @author ZSAndroid
  * @create 2021-10-28-20:28

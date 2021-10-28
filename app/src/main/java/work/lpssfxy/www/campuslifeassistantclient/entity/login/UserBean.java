@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * created by on 2021/10/28
- * 描述：QQ会话实体
+ * 描述：用户实体
  *
  * @author ZSAndroid
  * @create 2021-10-28-6:06
