@@ -51,9 +51,11 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.UserAndSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -388,8 +390,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         public void onStart(Request<String, ? extends Request> request) {
                             Log.i(TAG, "onStart请求URL地址: " + request.getBaseUrl());//获取请求URL地址
                             Log.i(TAG, "onStart请求URL地址: " + request.getUrl());//获取请求URL地址
-                            Log.i(TAG, "onStart请求参数: " + request.getUrlParam("openid"));//请求参数，这里直接放在URL，因此返回为Null
-                            Log.i(TAG, "onStart请求参数: " + request.getParams());//请求参数
+                            Log.i(TAG, "onStart请求参数: " + request.getUrlParam("openid"));//获取key对应的请求参数，这里直接放在URL，因此返回为Null
+                            Log.i(TAG, "onStart请求参数: " + request.getParams());//获取全部的请求参数
                             Log.i(TAG, "onStart请求缓存模式: " + request.getCacheMode());//获取请求缓存模式
                             Log.i(TAG, "onStart请求请求头: " + request.getHeaders());//获取请求头
                             Log.i(TAG, "onStart请求请求方法: " + request.getMethod());//获取请求方法->post
@@ -400,11 +402,11 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         @Override
                         public void onSuccess(Response<String> response) {
                             //Json字符串解析转为实体类对象
-                            ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                            Log.i(TAG, "网络请求响应成功数据onSuccess=== " + responseBean.toString());
+                            UserAndSessionBean userAndSessionBean = GsonUtil.gsonToBean(response.body(), UserAndSessionBean.class);
+                            Log.i(TAG, "userAndSessionBean=== " + userAndSessionBean);
                             //当前QQ账号无授权登录APP应用——未绑定过登录账户
-                            if (400 == responseBean.getCode() && "error".equals(responseBean.getMsg())) {
-                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, responseBean.getData() + getString(R.string.please_qq_login));
+                            if (200 == userAndSessionBean.getCode() && null == userAndSessionBean.getData() && "此QQ账号未授权".equals(userAndSessionBean.getMsg())) {
+                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userAndSessionBean.getData() + getString(R.string.please_qq_login));
                                 dialogPrompt.show();
                                 Snackbar snackbar = Snackbar.make(mLogin_rl_show, "没有绑定QQ账户？", Snackbar.LENGTH_INDEFINITE)
                                         .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
@@ -415,8 +417,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
                                                 Intent thisIntentToBindUser = new Intent();
                                                 thisIntentToBindUser.setClass(LoginActivity.this, LoginBindActivity.class);
-                                                //Gson解析Json，通过Activity传递数据
-                                                thisIntentToBindUser.putExtra("QQJsonData", GsonUtil.gsonToJson(values));
+                                                //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
+                                                thisIntentToBindUser.putExtra("QQJsonData", values.toString());
                                                 startActivityAnimLeftToRight(thisIntentToBindUser);//执行动画跳转
                                             }
                                         });
@@ -426,9 +428,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 return;
                             }
                             //当前QQ账号已授权登录APP应用——已绑定过登录账户
-                            if (200 == responseBean.getCode() && "此QQ账号已授权".equals(responseBean.getMsg())) {
+                            if (200 == userAndSessionBean.getCode() && null != userAndSessionBean.getData() && "此QQ账号已授权".equals(userAndSessionBean.getMsg())) {
                                 //开始查询MySQL用户表+QQ授权登录并集信息
-                                Toast.makeText(LoginActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, userAndSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
 
                                 return;
                             }
@@ -468,19 +470,20 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         }
     };
 
-    /**
-     * 登录回调成功后保存Session信息本地XML数据文件中
-     *
-     * @param jsonObject
-     */
-    private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
-        Log.i(TAG, "回调成功Gson解析Json前会话Session数据: " + jsonObject.toString());
-        //Gson解析并序列号至Java对象中
-        Constant.qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + Constant.qqUserSessionBean);
-        /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
-        SharePreferenceUtil.putObject(LoginActivity.this, Constant.qqUserSessionBean);
-    }
+//    /**
+//     * 登录回调成功后保存Session信息本地XML数据文件中
+//     *
+//     * @param jsonObject QQ回调Session的JSON数据
+//     */
+//    private QQUserSessionBean initSaveSessionDataToLocalFile(JSONObject jsonObject) {
+//        Log.i(TAG, "回调成功Gson解析Json前会话Session数据: " + jsonObject.toString());
+//        //Gson解析并序列号至Java对象中
+//        Constant.qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
+//        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + Constant.qqUserSessionBean);
+//        //Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例)
+////        SharePreferenceUtil.putObject(LoginActivity.this, Constant.qqUserSessionBean);
+//        return Constant.qqUserSessionBean;
+//    }
 
 
     private class BaseUiListener extends DefaultUiListener {

@@ -9,11 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -21,7 +20,8 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.UserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
 /**
@@ -42,7 +42,8 @@ public class LoginBindActivity extends BaseActivity {
     @BindView(R2.id.btn_start_bind) Button mBtn_start_bind;
 
     private static final String TAG = "LoginBindActivity";
-    private String strQQJsonData, strEditUsername, strEditPassword;//QQ会话数据、用户名数据、密码数据
+    private String strEditUsername, strEditPassword;//QQ会话数据、用户名数据、密码数据
+    private QQUserSessionBean userSessionData;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -66,22 +67,25 @@ public class LoginBindActivity extends BaseActivity {
 
     @Override
     protected Boolean isSetImmersiveFullScreen() {
-        return false;
+        return true;
     }
 
+    /**
+     * 加载布局XML
+     * @return 布局文件
+     */
     @Override
     public int bindLayout() {
         return R.layout.login_activity_bind;
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    /**
+     * 准备数据
+     */
     @Override
     protected void prepareData() {
-        strQQJsonData = getIntent().getStringExtra("QQJsonData");//登录页拉起QQ授权传递QQ会话的Json数据
+        //登录页拉起QQ授权传递QQ会话的Json数据，转为实体类对象，提供QQ信息绑定用户信息使用
+        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"),QQUserSessionBean.class);
     }
 
     @Override
@@ -91,7 +95,7 @@ public class LoginBindActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        textView.setText(getIntent().getStringExtra("QQJsonData"));
+        textView.setText(userSessionData.toString());
     }
 
     @Override
@@ -161,26 +165,62 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<String> response) {
                         //Json字符串解析转为实体类对象
-                        UserBean userBeanData = GsonUtil.gsonToBean(response.body(), UserBean.class);
-                        Log.i(TAG, "userBeanData=== " + userBeanData);
+                        QQSessionBean qqSessionBean = GsonUtil.gsonToBean(response.body(), QQSessionBean.class);
+                        Log.i(TAG, "userBeanData=== " + qqSessionBean);
 
-                        if (200 == userBeanData.getCode() && userBeanData.getData() != null && "登录成功".equals(userBeanData.getMsg())) {
-                            int userBindUserId = userBeanData.getData().getUlId();
-                            UserBean.Data userData = userBeanData.getData();
+                        if (200 == qqSessionBean.getCode() && null != qqSessionBean.getData() && "登录成功".equals(qqSessionBean.getMsg())) {
+                            int userBindUserId = qqSessionBean.getData().getUlId();
+                            QQSessionBean.Data userData = qqSessionBean.getData();
                             Log.i(TAG, "绑定的用户ID=== " + userBindUserId);
                             Log.i(TAG, "绑定的用户信息=== " + userData);
-                            Log.i(TAG, "绑定的QQ会话数据=== " + strQQJsonData);
-                            //未绑定温馨提示
-                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, userBeanData.getMsg(), Snackbar.LENGTH_SHORT)
+                            Log.i(TAG, "绑定的QQ会话数据=== " + userSessionData);
+                            //以上3份数据准备就绪，调用绑定接口，执行授权业务
+
+                            OkGo.<String>post(Constant.LOGIN_ADD_QQ_SESSION)
+                                    .tag(this)
+                                    .params("ret", userSessionData.getRet())
+                                    .params("openid", userSessionData.getOpenid())
+                                    .params("accessToken", userSessionData.getAccess_token())
+                                    .params("payToken", userSessionData.getPay_token())
+                                    .params("expiresIn", userSessionData.getExpires_in())
+                                    .params("pf", userSessionData.getPf())
+                                    .params("pfkey", userSessionData.getPfkey())
+                                    .params("msg", userSessionData.getMsg())
+                                    .params("loginCost", userSessionData.getLogin_cost())
+                                    .params("queryAuthorityCost", userSessionData.getQuery_authority_cost())
+                                    .params("authorityCost", userSessionData.getAuthority_cost())
+                                    .params("expiresTime", userSessionData.getExpires_time())
+                                    .params("ulId", userBindUserId) //此条是授权的用户自增ID，以上是拉起授权QQ会话数据
+                                    .execute(new StringDialogCallback(LoginBindActivity.this) {
+                                        @Override
+                                        public void onStart(Request<String, ? extends Request> request) {
+                                            Log.i(TAG, "onStart参数: "+request.getParams());
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Response<String> response) {
+                                            //注意这里已经是在主线程了
+                                            String data = response.body();//这个就是返回来的结果
+                                            Log.i(TAG, "onSuccess: " + data);
+                                        }
+
+                                        @Override
+                                        public void onFinish() {
+                                            super.onFinish();
+                                        }
+                                    });
+
+                            //QQ授权绑定用户成功
+                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, qqSessionBean.getMsg(), Snackbar.LENGTH_SHORT)
                                     .setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
 
-                        if (200 == userBeanData.getCode() && userBeanData.getData() == null && "登录失败，用户名和密码不匹配".equals(userBeanData.getMsg())) {
-                            //未绑定温馨提示
-                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, userBeanData.getMsg(), Snackbar.LENGTH_SHORT)
+                        if (200 == qqSessionBean.getCode() && null == qqSessionBean.getData() && "登录失败，用户名和密码不匹配".equals(qqSessionBean.getMsg())) {
+                            //QQ授权绑定用户失败
+                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, qqSessionBean.getMsg(), Snackbar.LENGTH_SHORT)
                                     .setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();

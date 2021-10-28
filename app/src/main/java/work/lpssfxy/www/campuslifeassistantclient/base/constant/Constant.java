@@ -45,7 +45,11 @@ public class Constant {
     //用户名密码登录，参数一：ulTel手机号码，参数二：ulPassword登录密码
     public static final String LOGIN_TEL_PASSWORD = BASE_URL + "/api/user/userDoLoginByTelAndPwd";
 
+    //查询QQ是否授权登录过校园帮APP
     public static final String LOGIN_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/selectIfBindQQSession";
+
+    //通过用户自增ID添加会话
+    public static final String LOGIN_ADD_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/addQQSessionInfoByUserId";
     /**
      * 检测用户登录状态+注销接口
      */

@@ -61,5 +61,13 @@ public class App extends Application {
         /** 初始化第三方资源SDK包 */
         BasicLibInit.init(myApp);
     }
+
+    /**
+     * XUtil 开启DEBUG调试信息
+     * @return
+     */
+    public static boolean isDebug() {
+        return BuildConfig.DEBUG;
+    }
 }
 

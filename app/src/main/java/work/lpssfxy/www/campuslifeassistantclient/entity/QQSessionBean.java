@@ -6,14 +6,14 @@ import lombok.Data;
 
 /**
  * created by on 2021/10/28
- * 描述：登录用户对象实体信息
+ * 描述：QQ会话实体
  *
  * @author ZSAndroid
  * @create 2021-10-28-6:06
  */
 
 @Data
-public class UserBean implements Serializable {
+public class QQSessionBean implements Serializable {
     /**
      * 请求状态信息
      */
@@ -23,7 +23,7 @@ public class UserBean implements Serializable {
     private String nowTime;
 
     /**
-     * 用户实体信息
+     * QQ会话实体信息
      */
     @lombok.Data
     public static class Data {
