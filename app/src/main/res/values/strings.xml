@@ -37,7 +37,7 @@
     <string name="please_input_bind_password">请输入密码</string>
     <string name="index_already_login_qq">QQ登录已经啦~</string>
     <string name="i_kown">我知道了</string>
-    <string name="please_qq_login">，请您绑定账户后再登录</string>
+    <string name="please_qq_login">，请您绑定账户后再试</string>
     <string name="qq_bing_success">QQ授权绑定成功</string>
     <string name="qq_bing_error">QQ授权绑定失败</string>
     <!--ViewPager欢迎页-->

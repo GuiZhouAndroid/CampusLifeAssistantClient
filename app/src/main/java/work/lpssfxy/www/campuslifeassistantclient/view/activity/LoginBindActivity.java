@@ -163,8 +163,8 @@ public class LoginBindActivity extends BaseActivity {
      */
     private void doStartQQBindUser(String strEditUsername, String strEditPassword) {
         /** 判断是否封禁 */
-        OkGo.<String>post(Constant.USER_QUERY_BANNED_STATE+"/"+ strEditUsername )
-                .tag("判断封禁")
+        OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERNAME+"/"+ strEditUsername )
+                .tag("用户名判断封禁")
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -225,7 +225,7 @@ public class LoginBindActivity extends BaseActivity {
                                                             ResponseBean responseBean = GsonUtil.gsonToBean(response.body(),ResponseBean.class);
                                                             Log.i(TAG, "onSuccess==: " + responseBean);
                                                             //QQ授权绑定成功
-                                                            if (200 == responseBean.getCode() && "success".equals(responseBean.getMsg())){
+                                                            if (200 == responseBean.getCode() && "success".equals(responseBean.getMsg()) && responseBean.getData().equals("true")){
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_success, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();
@@ -234,7 +234,7 @@ public class LoginBindActivity extends BaseActivity {
                                                                 return;
                                                             }
                                                             //QQ授权绑定失败
-                                                            if (400 == responseBean.getCode() && "error".equals(responseBean.getMsg())){
+                                                            if (200 == responseBean.getCode() && "error".equals(responseBean.getMsg()) && responseBean.getData().equals("false")){
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_error, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();

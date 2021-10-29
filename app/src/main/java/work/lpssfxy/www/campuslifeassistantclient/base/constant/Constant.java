@@ -78,7 +78,10 @@ public class Constant {
     public static final String SA_TOKEN_DO_LOGOUT = BASE_URL + "/api/login/state/saTokenDoLogout";
 
     //通过账户名查询封禁信息
-    public static final String USER_QUERY_BANNED_STATE = BASE_URL + "/api/user/userSelectBannedAccountInfoByUsername";
+    public static final String QUERY_BANNED_STATE_BY_USERNAME = BASE_URL + "/api/user/userSelectBannedAccountInfoByUsername";
+
+    //通过账户ID查询封禁信息
+    public static final String QUERY_BANNED_STATE_BY_USERID = BASE_URL + "/api/user/userSelectBannedAccountInfoByUserId";
 
     /**
      * 用户登录会话查询
