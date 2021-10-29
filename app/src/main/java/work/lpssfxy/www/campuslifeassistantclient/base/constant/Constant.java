@@ -7,16 +7,27 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 
 /**
  * created by on 2021/8/23
- * 描述：校园帮后端开发的API接口
+ * 描述：校园帮后端开发的API接口+常量类
  *
  * @author ZSAndroid
  * @create 2021-08-23-14:20
  */
 public class Constant {
-
-    public static final int REQUEST_CODE_VALUE = 100;//Activity请求码---> startActivityForResult(new Intent(this,xxx.class),REQUEST_CODE_UPDATE);
+    /**
+     * 常量类对象
+     */
     public static QQUserSessionBean qqUserSessionBean;
     public static QQUserBean qqUser;
+    /**
+     * 全局请求码
+     */
+    public static final int REQUEST_CODE_VALUE = 100;//Activity请求码---> startActivityForResult(new Intent(this,xxx.class),REQUEST_CODE_UPDATE);
+    /**
+     * 结果码
+     */
+    public static final int RESULT_CODE_BIND_ACCOUNT_BANNED = 101;//绑定账户被封禁结果码
+    public static final int RESULT_CODE_BIND_ACCOUNT_SUCCESS = 102;//绑定账户成功
+    public static final int RESULT_CODE_BIND_ACCOUNT_ERROR = 103;//绑定账户失败
     /**
      * 腾讯QQ全局实例对象
      */
@@ -65,6 +76,9 @@ public class Constant {
 
     //注销当前已登录账号
     public static final String SA_TOKEN_DO_LOGOUT = BASE_URL + "/api/login/state/saTokenDoLogout";
+
+    //通过账户名查询封禁信息
+    public static final String USER_QUERY_BANNED_STATE = BASE_URL + "/api/user/userSelectBannedAccountInfoByUsername";
 
     /**
      * 用户登录会话查询

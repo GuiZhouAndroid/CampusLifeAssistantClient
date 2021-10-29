@@ -2,6 +2,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.SystemClock;
 import android.view.Window;
 
 import com.lzy.okgo.callback.StringCallback;

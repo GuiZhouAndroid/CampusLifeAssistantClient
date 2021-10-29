@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.tencent.connect.UserInfo;
@@ -374,32 +375,30 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     IUiListener loginListener = new BaseUiListener() {
         @Override
         protected void doComplete(JSONObject values) {
-            LoadingDialog.showSimpleLD(LoginActivity.this,getString(R.string.loading_request_service));
+            //LoadingDialog.showSimpleLD(LoginActivity.this,getString(R.string.loading_request_service));
+            //LoadingDialog.closeSimpleLD();
             Log.i(TAG, "QQ回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
             Log.i(TAG, "QQ回调后设置会话前是否有效1" + Constant.mTencent.isSessionValid());//false
             String strOpenId = values.optString("openid");
             String strAccessToken = values.optString("access_token");
             //QQ会话回调同时，执行post请求——RESTFul风格，调用MySQL数据
             OkGo.<String>post(Constant.LOGIN_QQ_SESSION + "/" + strOpenId + "/" + strAccessToken)
-                    .tag(this)
+                    .tag("QQ授权")
                     .execute(new StringDialogCallback(LoginActivity.this) {
-                        @Override
-                        public void onStart(Request<String, ? extends Request> request) {
-                            Log.i(TAG, "onStart请求URL地址: " + request.getBaseUrl());//获取请求URL地址
-                            Log.i(TAG, "onStart请求URL地址: " + request.getUrl());//获取请求URL地址
-                            Log.i(TAG, "onStart请求参数: " + request.getUrlParam("openid"));//获取key对应的请求参数，这里直接放在URL，因此返回为Null
-                            Log.i(TAG, "onStart请求参数: " + request.getParams());//获取全部的请求参数
-                            Log.i(TAG, "onStart请求缓存模式: " + request.getCacheMode());//获取请求缓存模式
-                            Log.i(TAG, "onStart请求请求头: " + request.getHeaders());//获取请求头
-                            Log.i(TAG, "onStart请求请求方法: " + request.getMethod());//获取请求方法->post
-                            Log.i(TAG, "onStart获取缓存时间: " + request.getCacheTime());//获取缓存时间 -1代表永久
-                            Log.i(TAG, "onStart获取请求标记名称: " + request.getTag());//获取请求标记名称
-                        }
-
+//                        @Override
+//                        public void onStart(Request<String, ? extends Request> request) {
+//                            Log.i(TAG, "onStart请求URL地址: " + request.getBaseUrl());//获取请求URL地址
+//                            Log.i(TAG, "onStart请求URL地址: " + request.getUrl());//获取请求URL地址
+//                            Log.i(TAG, "onStart请求参数: " + request.getUrlParam("openid"));//获取key对应的请求参数，这里直接放在URL，因此返回为Null
+//                            Log.i(TAG, "onStart请求参数: " + request.getParams());//获取全部的请求参数
+//                            Log.i(TAG, "onStart请求缓存模式: " + request.getCacheMode());//获取请求缓存模式
+//                            Log.i(TAG, "onStart请求请求头: " + request.getHeaders());//获取请求头
+//                            Log.i(TAG, "onStart请求请求方法: " + request.getMethod());//获取请求方法->post
+//                            Log.i(TAG, "onStart获取缓存时间: " + request.getCacheTime());//获取缓存时间 -1代表永久
+//                            Log.i(TAG, "onStart获取请求标记名称: " + request.getTag());//获取请求标记名称
+//                        }
                         @Override
                         public void onSuccess(Response<String> response) {
-                            SystemClock.sleep(1000);
-                            LoadingDialog.closeSimpleLD();
                             //Json字符串解析转为实体类对象
                             UserAndSessionBean userAndSessionBean = GsonUtil.gsonToBean(response.body(), UserAndSessionBean.class);
                             Log.i(TAG, "userAndSessionBean=== " + userAndSessionBean);
@@ -412,13 +411,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                         .setAction("点击绑定", new View.OnClickListener() {  //设置点击按钮
                                             @Override
                                             public void onClick(View v) {
+                                                OkGo.getInstance().cancelTag("QQ授权");//跳转前取消本次请求
                                                 //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
                                                 Intent thisIntentToBindUser = new Intent();
                                                 thisIntentToBindUser.setClass(LoginActivity.this, LoginBindActivity.class);
                                                 //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                                                 thisIntentToBindUser.putExtra("QQJsonData", values.toString());
                                                 startActivityForResultAnimLeftToRight(thisIntentToBindUser,Constant.REQUEST_CODE_VALUE);//执行动画跳转
-                                                LoadingDialog.closeSimpleLD();
+
                                             }
                                         });
                                 //设置Snackbar上提示的字体颜色
@@ -432,27 +432,21 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 Toast.makeText(LoginActivity.this, userAndSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
                                 int userId = userAndSessionBean.getData().getUlId();
                                 OkGo.<String>post(Constant.LOGIN_SELECT_QQ_AND_USER_INFO + "/" + userId)
-                                        .tag(this)
-                                        .execute(new StringDialogCallback(LoginActivity.this) {
+                                        .tag("QQ登录")
+                                        .execute(new StringCallback() {
                                             @Override
                                             public void onSuccess(Response<String> response) {
                                                 //注意这里已经是在主线程了
                                                 String data = response.body();//这个就是返回来的结果
                                                 Log.i(TAG, "onSuccess: " + data);
-                                            }
 
-                                            @Override
-                                            public void onFinish() {
-                                                super.onFinish();
                                             }
                                         });
-                                return;
                             }
                         }
 
                         @Override
                         public void onError(Response<String> response) {
-                            LoadingDialog.closeSimpleLD();
                             //未绑定温馨提示
                             Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
                                     .setActionTextColor(getResources().getColor(R.color.colorAccent));
@@ -460,11 +454,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             snackbar.show();
                         }
                     });
-            //Activity传递数据到Activity
-//            Intent intent = new Intent();
-//            intent.setClass(LoginActivity.this,LoginBindActivity.class);
-//            intent.putExtra("QQJsonDate", values.toString());
-//            startActivityAnimLeftToRight(intent);
+
+
 //            /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
 //            initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
 //            /** 保存Session信息存入SharePreference本地数据 */
@@ -623,17 +614,45 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
+        //QQ授权登录回调
         if (requestCode == Constants.REQUEST_LOGIN || requestCode == Constants.REQUEST_APPBAR) {
             Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
-        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == RESULT_OK ){
-            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindDataToBackName")+"同学，您已成功绑定QQ账号，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
+        //账户绑定QQ成功
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS ){
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName")+"同学，您已成功绑定QQ账号，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))
                     .setDuration(5000);
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }
+        //账户绑定QQ失败
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_ERROR ){
+            DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, data.getStringExtra("BindBackName")+"同学，您的账户无法绑定QQ号，请联系开发者~");
+            dialogPrompt.showAndFinish(LoginActivity.this);
+        }
+        //账户被封禁
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_BANNED ){
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName")+"同学，系统检测出您的账户处于封禁状态！", Snackbar.LENGTH_INDEFINITE)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                    .setDuration(5000)
+                    .setAction("点击申请解封", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
+                    Intent thisIntentToBindUser = new Intent();
+                    thisIntentToBindUser.setClass(LoginActivity.this, UserApplyUntieActivity.class);
+                    //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
+                    thisIntentToBindUser.putExtra("UntieBannedName", data.getStringExtra("BindBackName"));
+                    startActivityForResultAnimLeftToRight(thisIntentToBindUser,Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                }
+            });
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

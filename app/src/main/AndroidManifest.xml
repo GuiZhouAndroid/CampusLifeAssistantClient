@@ -139,6 +139,11 @@
                 <data android:scheme="tencent101965703" />
             </intent-filter>
         </activity>
+        <!-- 用户申请解封账户 -->
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.UserApplyUntieActivity"
+            android:exported="true" />
         <!--使用百度服务功能-->
 <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->
         <!-- 广播器 -->

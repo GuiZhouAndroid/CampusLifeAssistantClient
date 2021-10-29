@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.lzy.okgo.OkGo;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -270,6 +271,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         super.onDestroy();
         //解绑ButterKnife
         mUnbinder.unbind();
+        //取消网络请求，避免内存泄露
+        OkGo.getInstance().cancelAll();
     }
 
     /**
