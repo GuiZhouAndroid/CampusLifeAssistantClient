@@ -54,6 +54,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserAndSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserInfoAndQQSessionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -419,16 +420,16 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 Toast.makeText(LoginActivity.this, userAndSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
                                 //准备用户ID
                                 int userIdToSelectBannedState = userAndSessionBean.getData().getUlId();
-                                /** 判断是否封禁 */
-                                OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID+"/"+ userIdToSelectBannedState)
-                                        .tag("用户ID判断封禁")
+                                /** QQ一键登录 */
+                                OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN+"/"+ userIdToSelectBannedState)
+                                        .tag("QQ一键登录")
                                         .execute(new StringCallback(){
                                             @Override
                                             public void onSuccess(Response<String> response) {
-                                                ResponseBean responseBean = GsonUtil.gsonToBean(response.body(),ResponseBean.class);
-                                                Log.i(TAG, "onSuccess用户ID判断封禁==: " + responseBean);
-                                                if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())){
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, responseBean.getData());
+                                                UserInfoAndQQSessionInfoBean userInfoAndQQSessionInfoBean = GsonUtil.gsonToBean(response.body(),UserInfoAndQQSessionInfoBean.class);
+                                                Log.i(TAG, "onSuccessQQ一键登录==: " + userInfoAndQQSessionInfoBean);
+                                                if (200 == userInfoAndQQSessionInfoBean.getCode() && "success".equals(userInfoAndQQSessionInfoBean.getMsg())){
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userInfoAndQQSessionInfoBean.getData().getUserInfo().toString());
                                                     dialogPrompt.show();
 //                                                    dialogPrompt.showAndFinish(LoginActivity.this);
 //                                                    Intent intent = new Intent();
@@ -436,18 +437,15 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                                                    LoginActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED,intent);
                                                     return;
                                                 }
-//                                                //查询并集消息
-                                                int userId = userAndSessionBean.getData().getUlId();
-                                                OkGo.<String>post(Constant.LOGIN_SELECT_QQ_AND_USER_INFO + "/" + userId)
-                                                        .tag("QQ登录")
-                                                        .execute(new StringCallback() {
-                                                            @Override
-                                                            public void onSuccess(Response<String> response) {
-                                                                //注意这里已经是在主线程了
-                                                                String data = response.body();//这个就是返回来的结果
-                                                                Log.i(TAG, "onSuccess: " + data);
-                                                            }
-                                                        });
+                                                if (200 == userInfoAndQQSessionInfoBean.getCode() && "error".equals(userInfoAndQQSessionInfoBean.getMsg())){
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userInfoAndQQSessionInfoBean.getData().getUserInfo().toString());
+                                                    dialogPrompt.show();
+//                                                    dialogPrompt.showAndFinish(LoginActivity.this);
+//                                                    Intent intent = new Intent();
+//                                                    intent.putExtra("BindBackName","strEditUsername");
+//                                                    LoginActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED,intent);
+                                                    return;
+                                                }
                                             }
                                             @Override
                                             public void onError(Response<String> response) {

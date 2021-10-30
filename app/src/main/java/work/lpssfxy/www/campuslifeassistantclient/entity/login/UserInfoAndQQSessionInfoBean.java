@@ -1,6 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
-
-import java.util.List;
+package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
 import lombok.Data;
 
@@ -12,7 +10,7 @@ import lombok.Data;
  * @create 2021-10-28-23:42
  */
 @Data
-public class QQSessionAndUserInfo {
+public class UserInfoAndQQSessionInfoBean {
 
     private int code;
     private Data data;
@@ -42,8 +40,6 @@ public class QQSessionAndUserInfo {
         @lombok.Data
         public static class UserInfo {
             private String createTime;
-            private List<?> permissionInfo;
-            private List<?> roleInfo;
             private String ulClass;
             private String ulDept;
             private String ulEmail;

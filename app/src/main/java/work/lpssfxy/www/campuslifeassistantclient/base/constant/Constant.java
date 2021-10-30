@@ -64,7 +64,7 @@ public class Constant {
     public static final String LOGIN_ADD_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/addQQSessionInfoByUserId";
 
     //通过用户自增ID查询QQ会话和用户全部信息
-    public static final String LOGIN_SELECT_QQ_AND_USER_INFO = BASE_URL + "/api/qq/oauth/session/selectUserAndQQInfoByUserId";
+    public static final String LOGIN_SELECT_QQ_AND_USER_INFO = BASE_URL + "/api/qq/oauth/session/selectUserInfoAndQQInfoByUserId";
     /**
      * 检测用户登录状态+注销接口
      */
@@ -83,6 +83,8 @@ public class Constant {
     //通过账户ID查询封禁信息
     public static final String QUERY_BANNED_STATE_BY_USERID = BASE_URL + "/api/user/userSelectBannedAccountInfoByUserId";
 
+    //通过账户ID查询封禁信息
+    public static final String QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN = BASE_URL + "/api/user/userSelectUserInfoAndQQInfoByUserIdToOneKeyQQLogin";
     /**
      * 用户登录会话查询
      */

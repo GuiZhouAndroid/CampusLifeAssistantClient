@@ -171,7 +171,7 @@ public class LoginBindActivity extends BaseActivity {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(),ResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + responseBean);
                         if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())){
-                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, "【"+strEditUsername+"】"+"账户异常，禁止授权"+"，"+responseBean.getData(), 10);
+                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, responseBean.getData(), 10);
                             dialogPrompt.showAndFinish(LoginBindActivity.this);
                             Intent intent = new Intent();
                             intent.putExtra("BindBackName",strEditUsername);
