@@ -28,6 +28,7 @@ public class Constant {
     public static final int RESULT_CODE_BIND_ACCOUNT_BANNED = 101;//绑定账户被封禁结果码
     public static final int RESULT_CODE_BIND_ACCOUNT_SUCCESS = 102;//绑定账户成功
     public static final int RESULT_CODE_BIND_ACCOUNT_ERROR = 103;//绑定账户失败
+    public static final int RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION = 104;//QQ会话一键登录 Gson解析的实体对象数据
     /**
      * 腾讯QQ全局实例对象
      */
@@ -65,6 +66,9 @@ public class Constant {
 
     //通过用户自增ID查询QQ会话和用户全部信息
     public static final String LOGIN_SELECT_QQ_AND_USER_INFO = BASE_URL + "/api/qq/oauth/session/selectUserInfoAndQQInfoByUserId";
+
+    //通过用户自增ID更新QQ会话全部信息
+    public static final String LOGIN_UPDATE_QQ_SESSION_ALL_INFO_BY_USERID = BASE_URL + "/api/qq/oauth/session/updateQQSessionInfoByUserIdToAll";
     /**
      * 检测用户登录状态+注销接口
      */

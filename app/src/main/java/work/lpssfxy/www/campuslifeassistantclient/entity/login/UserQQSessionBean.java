@@ -1,5 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -10,7 +12,7 @@ import lombok.Data;
  * @create 2021-10-31-14:06
  */
 @Data
-public class UserQQSessionBean {
+public class UserQQSessionBean{
 
     private int code;
     private Data data;

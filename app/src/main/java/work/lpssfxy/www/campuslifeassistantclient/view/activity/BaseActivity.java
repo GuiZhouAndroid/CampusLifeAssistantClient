@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -306,6 +307,27 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     }
 
     /**
+     * 软键盘的自动弹出
+     *
+     * @param editText
+     */
+    public void showKeyboard(EditText editText) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(editText, 0);
+    }
+
+    /**
+     * 软键盘的关闭
+     */
+    public void closeKeyboard() {
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    /**
      * Activity动画跳转过渡
      * @param intent
      */
@@ -400,7 +422,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
      * 防止快速点击
      * @return
      */
-    private boolean fastClick() {
+    public boolean fastClick() {
         long lastClick = 0;
         if (System.currentTimeMillis() - lastClick <= 1000) {
             return false;

@@ -73,6 +73,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
@@ -228,6 +229,8 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
+//        DialogPrompt dialogPrompt = new DialogPrompt(IndexActivity.this, getIntent().getStringExtra("UserQQSessionBean"));
+//        dialogPrompt.show();
         /** 判断是否已登录 */
         initNotLoginGoLogin();
     }
@@ -932,7 +935,7 @@ public class IndexActivity extends BaseActivity {
      */
     private void checkQQLoginIfValid() {
         if (Constant.qqUser == null) {
-            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+            startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
@@ -1077,6 +1080,11 @@ public class IndexActivity extends BaseActivity {
         if (requestCode == Constants.REQUEST_LOGIN ||
                 requestCode == Constants.REQUEST_APPBAR) {
             Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
+        }
+        //QQ会话
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION) {
+            DialogPrompt dialogPrompt = new DialogPrompt(IndexActivity.this,data.getStringExtra("UserQQSessionBean"));
+            dialogPrompt.show();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
