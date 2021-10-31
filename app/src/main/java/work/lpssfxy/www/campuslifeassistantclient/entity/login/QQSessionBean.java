@@ -10,13 +10,19 @@ import lombok.Data;
  * @create 2021-10-28-20:28
  */
 @Data
-public class UserAndSessionBean {
+public class QQSessionBean {
 
+    /**
+     * 请求状态
+     */
     private int code;
     private Data data;
     private String msg;
     private String nowTime;
 
+    /**
+     * QQ会话数据
+     */
     @lombok.Data
     public static class Data {
         private String accessToken;
@@ -30,11 +36,9 @@ public class UserAndSessionBean {
         private String payToken;
         private String pf;
         private String pfkey;
-        private int qqOauth2Id;
         private int queryAuthorityCost;
         private int ret;
         private int ulId;
         private String updateTime;
-        private Object userInfo;
     }
 }

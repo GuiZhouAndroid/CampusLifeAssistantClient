@@ -3,14 +3,14 @@ package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 import lombok.Data;
 
 /**
- * created by on 2021/10/28
+ * created by on 2021/10/31
  * 描述：
  *
  * @author ZSAndroid
- * @create 2021-10-28-23:42
+ * @create 2021-10-31-14:06
  */
 @Data
-public class UserInfoAndQQSessionInfoBean {
+public class UserQQSessionBean {
 
     private int code;
     private Data data;
@@ -21,7 +21,6 @@ public class UserInfoAndQQSessionInfoBean {
     public static class Data {
         private String accessToken;
         private int authorityCost;
-        private String createTime;
         private int expiresIn;
         private long expiresTime;
         private int loginCost;
@@ -30,11 +29,8 @@ public class UserInfoAndQQSessionInfoBean {
         private String payToken;
         private String pf;
         private String pfkey;
-        private int qqOauth2Id;
         private int queryAuthorityCost;
         private int ret;
-        private int ulId;
-        private Object updateTime;
         private UserInfo userInfo;
 
         @lombok.Data
@@ -45,7 +41,6 @@ public class UserInfoAndQQSessionInfoBean {
             private String ulEmail;
             private int ulId;
             private String ulIdcard;
-            private String ulPassword;
             private String ulRealname;
             private String ulSex;
             private String ulStuno;

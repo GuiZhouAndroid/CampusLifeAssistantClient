@@ -36,6 +36,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
  */
 @SuppressLint("NonConstantResourceId")
 public class LoginBindActivity extends BaseActivity {
+    private static final String TAG = "LoginBindActivity";
     @BindView(R2.id.tv_qq) TextView textView;
     /** 绑定用户名 */
     @BindView(R2.id.edit_bind_username) EditText mEdit_bind_username;
@@ -43,9 +44,7 @@ public class LoginBindActivity extends BaseActivity {
     @BindView(R2.id.edit_bind_password) EditText mEdit_bind_password;
     /** 立即绑定QQ */
     @BindView(R2.id.btn_start_bind) Button mBtn_start_bind;
-
-    private static final String TAG = "LoginBindActivity";
-    private String strEditUsername, strEditPassword;//QQ会话数据、用户名数据、密码数据
+    /** QQ会话数据 */
     private QQUserSessionBean userSessionData;
 
     @Override
@@ -75,6 +74,7 @@ public class LoginBindActivity extends BaseActivity {
 
     /**
      * 加载布局XML
+     *
      * @return 布局文件
      */
     @Override
@@ -88,7 +88,7 @@ public class LoginBindActivity extends BaseActivity {
     @Override
     protected void prepareData() {
         //登录页拉起QQ授权传递QQ会话的Json数据，转为实体类对象，提供QQ信息绑定用户信息使用
-        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"),QQUserSessionBean.class);
+        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), QQUserSessionBean.class);
     }
 
     @Override
@@ -125,8 +125,8 @@ public class LoginBindActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_start_bind: //点击立即绑定
-                strEditUsername = mEdit_bind_username.getText().toString().trim();//获取输入的用户名值
-                strEditPassword = mEdit_bind_password.getText().toString().trim();//获取输入的密码值
+                String strEditUsername = mEdit_bind_username.getText().toString().trim();//获取输入的用户名值
+                String strEditPassword = mEdit_bind_password.getText().toString().trim();//获取输入的密码值
                 hideKeyboard();//隐藏软键盘
                 if (strEditUsername.isEmpty() && strEditPassword.isEmpty()) {
                     Snackbar snackbar = Snackbar.make(mBtn_start_bind, R.string.please_input_user_name_password, Snackbar.LENGTH_LONG);
@@ -158,24 +158,30 @@ public class LoginBindActivity extends BaseActivity {
      * 开始立即绑定业务逻辑--->首先通过用户名查询是否处于封禁状态，
      * 已封禁：就跳出doStartQQBindUser()并打印提示
      * 非封禁：执行登录，获取用户的全部信息，获取LoginActivity传递过来的QQ会话Json数据，调用SpringBoot授权信息关联接口，以用户自增ID为授权依据，完成账户+QQ号的绑定功能
+     *
      * @param strEditUsername 用户名
      * @param strEditPassword 密码
      */
     private void doStartQQBindUser(String strEditUsername, String strEditPassword) {
         /** 判断是否封禁 */
-        OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERNAME+"/"+ strEditUsername )
+        OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERNAME + "/" + strEditUsername)
                 .tag("用户名判断封禁")
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(),ResponseBean.class);
+                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + responseBean);
-                        if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())){
+                        if (200 == responseBean.getCode() && "查询失败，此用户名不存在".equals(responseBean.getMsg())) {
+                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, "【" + strEditUsername + "】" + "账户验证失败！" + "请您输入真实有效的用户名后重试~");
+                            dialogPrompt.show();
+                            return;
+                        }
+                        if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())) {
                             DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, responseBean.getData(), 10);
                             dialogPrompt.showAndFinish(LoginBindActivity.this);
                             Intent intent = new Intent();
-                            intent.putExtra("BindBackName",strEditUsername);
-                            LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED,intent);
+                            intent.putExtra("BindBackName", strEditUsername);
+                            LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED, intent);
                             return;
                         }
                         /** 执行至此，证明账户名没有被封禁，开始拉起用户信息 */
@@ -222,25 +228,31 @@ public class LoginBindActivity extends BaseActivity {
                                                     .execute(new StringCallback() {
                                                         @Override
                                                         public void onSuccess(Response<String> response) {
-                                                            ResponseBean responseBean = GsonUtil.gsonToBean(response.body(),ResponseBean.class);
+                                                            ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                                             Log.i(TAG, "onSuccess==: " + responseBean);
                                                             //QQ授权绑定成功
-                                                            if (200 == responseBean.getCode() && "success".equals(responseBean.getMsg()) && responseBean.getData().equals("true")){
+                                                            if (200 == responseBean.getCode() && "success".equals(responseBean.getMsg()) && responseBean.getData().equals("true")) {
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_success, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();
-                                                                intent.putExtra("BindBackName",userBeanData.getData().getUlRealname());
-                                                                LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS,intent);
+                                                                intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
+                                                                LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS, intent);
                                                                 return;
                                                             }
                                                             //QQ授权绑定失败
-                                                            if (200 == responseBean.getCode() && "error".equals(responseBean.getMsg()) && responseBean.getData().equals("false")){
+                                                            if (200 == responseBean.getCode() && "error".equals(responseBean.getMsg()) && responseBean.getData().equals("false")) {
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_error, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();
-                                                                intent.putExtra("BindBackName",userBeanData.getData().getUlRealname());
+                                                                intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
                                                                 LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_ERROR);
+                                                                return;
                                                             }
+                                                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, "授权失败！未知错误", 3);
+                                                            dialogPrompt.showAndFinish(LoginBindActivity.this);
+                                                            Intent intent = new Intent();
+                                                            intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
+                                                            LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_ERROR);
                                                         }
 
                                                         @Override
@@ -254,6 +266,7 @@ public class LoginBindActivity extends BaseActivity {
                                                     });
                                         }
                                     }
+
                                     @Override
                                     public void onError(Response<String> response) {
                                         //未绑定温馨提示

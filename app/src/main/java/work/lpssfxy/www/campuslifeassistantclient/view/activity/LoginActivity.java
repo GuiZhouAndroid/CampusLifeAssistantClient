@@ -52,9 +52,8 @@ import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserAndSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserInfoAndQQSessionInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.QQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
@@ -102,7 +101,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     /** 勾选授权同意 */
     @BindView(R2.id.check_if_authorize) CheckBox mCheck_if_authorizer;
     /** 输入的用户名密码 */
-    private String strUserName,strPassword;
+    private String strUserName, strPassword;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -388,11 +387,11 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         @Override
                         public void onSuccess(Response<String> response) {
                             //Json字符串解析转为实体类对象
-                            UserAndSessionBean userAndSessionBean = GsonUtil.gsonToBean(response.body(), UserAndSessionBean.class);
-                            Log.i(TAG, "userAndSessionBean=== " + userAndSessionBean);
+                            QQSessionBean qqSessionBean = GsonUtil.gsonToBean(response.body(), QQSessionBean.class);
+                            Log.i(TAG, "qqSessionBean=== " + qqSessionBean);
                             //当前QQ账号无授权登录APP应用——未绑定过登录账户
-                            if (200 == userAndSessionBean.getCode() && null == userAndSessionBean.getData() && "此QQ号码暂未授权".equals(userAndSessionBean.getMsg())) {
-                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userAndSessionBean.getMsg() + getString(R.string.please_qq_login));
+                            if (200 == qqSessionBean.getCode() && null == qqSessionBean.getData() && "此QQ号码暂未授权".equals(qqSessionBean.getMsg())) {
+                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, qqSessionBean.getMsg() + getString(R.string.please_qq_login));
                                 dialogPrompt.show();
                                 Snackbar snackbar = Snackbar.make(mLogin_rl_show, "没有绑定QQ账户？", Snackbar.LENGTH_INDEFINITE)
                                         .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
@@ -405,7 +404,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 thisIntentToBindUser.setClass(LoginActivity.this, LoginBindActivity.class);
                                                 //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                                                 thisIntentToBindUser.putExtra("QQJsonData", values.toString());
-                                                startActivityForResultAnimLeftToRight(thisIntentToBindUser,Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                                                startActivityForResultAnimLeftToRight(thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
 
                                             }
                                         });
@@ -415,21 +414,22 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 return;
                             }
                             //当前QQ账号已授权登录APP应用——已绑定过登录账户
-                            if (200 == userAndSessionBean.getCode() && null != userAndSessionBean.getData() && "此QQ账号已授权".equals(userAndSessionBean.getMsg())) {
+                            if (200 == qqSessionBean.getCode() && null != qqSessionBean.getData() && "此QQ账号已授权".equals(qqSessionBean.getMsg())) {
                                 //开始查询MySQL用户表+QQ授权登录并集信息
-                                Toast.makeText(LoginActivity.this, userAndSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, qqSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
                                 //准备用户ID
-                                int userIdToSelectBannedState = userAndSessionBean.getData().getUlId();
+                                int userIdToSelectBannedState = qqSessionBean.getData().getUlId();
                                 /** QQ一键登录 */
-                                OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN+"/"+ userIdToSelectBannedState)
+                                OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN + "/" + userIdToSelectBannedState)
                                         .tag("QQ一键登录")
-                                        .execute(new StringCallback(){
+                                        .execute(new StringCallback() {
                                             @Override
                                             public void onSuccess(Response<String> response) {
-                                                UserInfoAndQQSessionInfoBean userInfoAndQQSessionInfoBean = GsonUtil.gsonToBean(response.body(),UserInfoAndQQSessionInfoBean.class);
-                                                Log.i(TAG, "onSuccessQQ一键登录==: " + userInfoAndQQSessionInfoBean);
-                                                if (200 == userInfoAndQQSessionInfoBean.getCode() && "success".equals(userInfoAndQQSessionInfoBean.getMsg())){
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userInfoAndQQSessionInfoBean.getData().getUserInfo().toString());
+                                                UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
+                                                Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
+
+                                                if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "此账户处于封禁状态".equals(userQQSessionBean.getMsg())) {
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userQQSessionBean.toString());
                                                     dialogPrompt.show();
 //                                                    dialogPrompt.showAndFinish(LoginActivity.this);
 //                                                    Intent intent = new Intent();
@@ -437,8 +437,17 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                                                    LoginActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED,intent);
                                                     return;
                                                 }
-                                                if (200 == userInfoAndQQSessionInfoBean.getCode() && "error".equals(userInfoAndQQSessionInfoBean.getMsg())){
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userInfoAndQQSessionInfoBean.getData().getUserInfo().toString());
+                                                if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "success".equals(userQQSessionBean.getMsg())) {
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userQQSessionBean.getData().toString());
+                                                    dialogPrompt.show();
+//                                                    dialogPrompt.showAndFinish(LoginActivity.this);
+//                                                    Intent intent = new Intent();
+//                                                    intent.putExtra("BindBackName","strEditUsername");
+//                                                    LoginActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_BANNED,intent);
+                                                    return;
+                                                }
+                                                if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "error".equals(userQQSessionBean.getMsg())) {
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userQQSessionBean.getData().toString());
                                                     dialogPrompt.show();
 //                                                    dialogPrompt.showAndFinish(LoginActivity.this);
 //                                                    Intent intent = new Intent();
@@ -447,17 +456,19 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     return;
                                                 }
                                             }
+
                                             @Override
                                             public void onError(Response<String> response) {
                                                 //未绑定温馨提示
                                                 Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                                                .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
                                                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                                 snackbar.show();
                                             }
                                         });
                             }
                         }
+
                         @Override
                         public void onError(Response<String> response) {
                             //未绑定温馨提示
@@ -622,8 +633,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 回调数据
      *
      * @param requestCode 请求码，即调用startActivityForResult()传递过去的值
-     * @param resultCode 结果码，结果码用于标识返回数据来自指定的Activity
-     * @param data 返回数据，存放了返回数据的Intent，使用第三个输入参数可以取出新Activity返回的数据
+     * @param resultCode  结果码，结果码用于标识返回数据来自指定的Activity
+     * @param data        返回数据，存放了返回数据的Intent，使用第三个输入参数可以取出新Activity返回的数据
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -634,34 +645,34 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             Tencent.onActivityResultData(requestCode, resultCode, data, loginListener);
         }
         //账户绑定QQ成功
-        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS ){
-            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName")+"同学，您已成功绑定QQ账号，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS) {
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName") + "同学，您已成功绑定QQ账号，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))
                     .setDuration(5000);
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }
         //账户绑定QQ失败
-        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_ERROR ){
-            DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, data.getStringExtra("BindBackName")+"同学，您的账户无法绑定QQ号，请联系开发者~");
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_ERROR) {
+            DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, data.getStringExtra("BindBackName") + "同学，您的账户无法绑定QQ号，请联系开发者~");
             dialogPrompt.showAndFinish(LoginActivity.this);
         }
         //账户被封禁
-        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_BANNED ){
-            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName")+"同学，系统检测出您的账户处于封禁状态！", Snackbar.LENGTH_INDEFINITE)
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_BIND_ACCOUNT_BANNED) {
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("BindBackName") + "同学，系统检测出您的账户处于封禁状态！", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))
                     .setDuration(5000)
                     .setAction("点击申请解封", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
-                    Intent thisIntentToBindUser = new Intent();
-                    thisIntentToBindUser.setClass(LoginActivity.this, UserApplyUntieActivity.class);
-                    //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
-                    thisIntentToBindUser.putExtra("UntieBannedName", data.getStringExtra("BindBackName"));
-                    startActivityForResultAnimLeftToRight(thisIntentToBindUser,Constant.REQUEST_CODE_VALUE);//执行动画跳转
-                }
-            });
+                        @Override
+                        public void onClick(View v) {
+                            //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
+                            Intent thisIntentToBindUser = new Intent();
+                            thisIntentToBindUser.setClass(LoginActivity.this, UserApplyUntieActivity.class);
+                            //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
+                            thisIntentToBindUser.putExtra("UntieBannedName", data.getStringExtra("BindBackName"));
+                            startActivityForResultAnimLeftToRight(thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                        }
+                    });
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }

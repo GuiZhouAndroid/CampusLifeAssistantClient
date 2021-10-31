@@ -83,7 +83,7 @@ public class Constant {
     //通过账户ID查询封禁信息
     public static final String QUERY_BANNED_STATE_BY_USERID = BASE_URL + "/api/user/userSelectBannedAccountInfoByUserId";
 
-    //通过账户ID查询封禁信息
+    //通过账户ID查询封禁信息+查询QQ会话和用户全部信息
     public static final String QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN = BASE_URL + "/api/user/userSelectUserInfoAndQQInfoByUserIdToOneKeyQQLogin";
     /**
      * 用户登录会话查询

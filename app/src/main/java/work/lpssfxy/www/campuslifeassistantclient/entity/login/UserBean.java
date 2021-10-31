@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class UserBean implements Serializable {
     /**
-     * 请求状态信息
+     * 请求状态
      */
     private int code;
     private Data data;
@@ -23,8 +23,9 @@ public class UserBean implements Serializable {
     private String nowTime;
 
     /**
-     * QQ会话实体信息
+     * 登录用户信息
      */
+
     @lombok.Data
     public static class Data {
         private String createTime;
@@ -33,7 +34,6 @@ public class UserBean implements Serializable {
         private String ulEmail;
         private int ulId;
         private String ulIdcard;
-        private String ulPassword;
         private String ulRealname;
         private String ulSex;
         private String ulStuno;
