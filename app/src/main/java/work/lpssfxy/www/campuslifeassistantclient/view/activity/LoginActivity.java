@@ -44,6 +44,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
@@ -407,7 +408,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             //当前QQ账号已授权登录APP应用——已绑定过登录账户
                             if (200 == sessionUserBean.getCode() && null != sessionUserBean.getData() && "此QQ账号已授权".equals(sessionUserBean.getMsg())) {
                                 //开始查询MySQL用户表+QQ授权登录并集信息
-                                Toast.makeText(LoginActivity.this, sessionUserBean.getData().toString(), Toast.LENGTH_SHORT).show();
                                 //准备用户ID
                                 int userIdToSelectBannedState = sessionUserBean.getData().getUlId();
                                 /** QQ一键登录 */
@@ -445,7 +445,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-                                                    //App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+                                                    App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
                                                     Intent thisIntentToIndex = new Intent();
                                                     thisIntentToIndex.setClass(LoginActivity.this, IndexActivity.class);
                                                     //传入Gson解析的并集信息到首页展示
@@ -454,7 +454,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     startActivityAnimRightToLeft(thisIntentToIndex);
                                                     LoadingDialog.closeSimpleLD();//销毁之前，关闭对话框
                                                     LoginActivity.this.finish();//并销毁登录界面
-
                                                 }
                                                 if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "error".equals(userQQSessionBean.getMsg())) {
                                                     DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，未知错误，请联系开发者解决！");

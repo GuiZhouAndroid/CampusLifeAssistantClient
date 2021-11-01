@@ -4,6 +4,8 @@ import com.tencent.tauth.Tencent;
 
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 
 /**
  * created by on 2021/8/23
@@ -18,6 +20,9 @@ public class Constant {
      */
     public static SessionBean sessionBean;
     public static QQUserBean qqUser;
+    public static SessionUserBean sessionUserBean;
+    public static UserQQSessionBean userQQSessionBean;
+    public static UserQQSessionBean.Data.UserInfo userInfo;
     /**
      * 全局请求码
      */

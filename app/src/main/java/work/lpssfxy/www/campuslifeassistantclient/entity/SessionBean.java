@@ -24,4 +24,5 @@ public class SessionBean {
     public int query_authority_cost;
     public int authority_cost;
     public long expires_time;
+
 }
