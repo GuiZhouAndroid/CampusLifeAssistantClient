@@ -1,7 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
-import java.io.Serializable;
-
 import lombok.Data;
 
 /**
@@ -14,15 +12,16 @@ import lombok.Data;
 @Data
 public class UserQQSessionBean{
 
+
     private int code;
     private Data data;
     private String msg;
     private String nowTime;
-
     @lombok.Data
     public static class Data {
         private String accessToken;
         private int authorityCost;
+        private String createTime;
         private int expiresIn;
         private long expiresTime;
         private int loginCost;
@@ -33,8 +32,8 @@ public class UserQQSessionBean{
         private String pfkey;
         private int queryAuthorityCost;
         private int ret;
+        private String updateTime;
         private UserInfo userInfo;
-
         @lombok.Data
         public static class UserInfo {
             private String createTime;
@@ -48,7 +47,7 @@ public class UserQQSessionBean{
             private String ulStuno;
             private String ulTel;
             private String ulUsername;
-            private Object updateTime;
+            private String updateTime;
         }
     }
 }

@@ -71,10 +71,7 @@ public class waimai extends BaseActivity {
     protected void prepareData() {
         showImg();
         UserQQSessionBean userQQSessionBean = SharePreferenceUtil.getObject(waimai.this, UserQQSessionBean.class);
-//        Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
         Log.i(TAG, "首页: " + userQQSessionBean);
-//        Log.i(TAG, "首页Constant.qqUser: " + Constant.qqUser);
-
         JSONObject jsonObject = new JSONObject();
         if (userQQSessionBean != null) {//本地持久化xml文件有数据时才满足重组条件
             try {
@@ -89,7 +86,6 @@ public class waimai extends BaseActivity {
                 jsonObject.put("login_cost",userQQSessionBean.getData().getLoginCost());
                 jsonObject.put("query_authority_cost", userQQSessionBean.getData().getQueryAuthorityCost());
                 jsonObject.put("authority_cost", userQQSessionBean.getData().getAuthorityCost());
-                jsonObject.put("pfkey", userQQSessionBean.getData().getPfkey());
                 jsonObject.put("expires_time", userQQSessionBean.getData().getExpiresTime());
                 /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
                 Constant.mTencent.initSessionCache(jsonObject);
