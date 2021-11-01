@@ -21,7 +21,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
@@ -45,7 +45,7 @@ public class LoginBindActivity extends BaseActivity {
     /** 立即绑定QQ */
     @BindView(R2.id.btn_start_bind) Button mBtn_start_bind;
     /** QQ会话数据 */
-    private QQUserSessionBean userSessionData;
+    private SessionBean userSessionData;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -88,7 +88,7 @@ public class LoginBindActivity extends BaseActivity {
     @Override
     protected void prepareData() {
         //登录页拉起QQ授权传递QQ会话的Json数据，转为实体类对象，提供QQ信息绑定用户信息使用
-        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), QQUserSessionBean.class);
+        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), SessionBean.class);
     }
 
     @Override

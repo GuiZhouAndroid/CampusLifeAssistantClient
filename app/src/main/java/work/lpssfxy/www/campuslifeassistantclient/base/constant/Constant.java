@@ -3,7 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base.constant;
 import com.tencent.tauth.Tencent;
 
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 
 /**
  * created by on 2021/8/23
@@ -16,7 +16,7 @@ public class Constant {
     /**
      * 常量类对象
      */
-    public static QQUserSessionBean qqUserSessionBean;
+    public static SessionBean sessionBean;
     public static QQUserBean qqUser;
     /**
      * 全局请求码

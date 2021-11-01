@@ -11,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class QQUserSessionBean {
+public class SessionBean {
     public int ret;
     public String openid;
     public String access_token;

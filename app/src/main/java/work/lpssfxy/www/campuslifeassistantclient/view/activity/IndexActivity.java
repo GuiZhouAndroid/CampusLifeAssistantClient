@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -70,7 +69,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
@@ -285,9 +284,9 @@ public class IndexActivity extends BaseActivity {
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }
-        //Gson gson = new GsonBuilder().registerTypeAdapter(QQUserSessionBean.class, new QQUserTypeAdapter()).create();
-        //String strJson =gson.toJson(SharePreferenceUtil.getObject(IndexActivity.this, QQUserSessionBean.class));
-        Log.i(TAG, "(String)QQUserSessionBean重组Adapter排序前== " + SharePreferenceUtil.getObject(IndexActivity.this, QQUserSessionBean.class));
+        //Gson gson = new GsonBuilder().registerTypeAdapter(SessionBean.class, new QQUserTypeAdapter()).create();
+        //String strJson =gson.toJson(SharePreferenceUtil.getObject(IndexActivity.this, SessionBean.class));
+        Log.i(TAG, "(String)QQUserSessionBean重组Adapter排序前== " + SharePreferenceUtil.getObject(IndexActivity.this, SessionBean.class));
         Log.i(TAG, "(JSONObject)QQUserSessionBean重组排序后== " + jsonObject.toString());
         Log.i(TAG, "mTencent会话: " + Constant.mTencent.isSessionValid());
     }
@@ -696,11 +695,11 @@ public class IndexActivity extends BaseActivity {
     private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
         Log.i(TAG, "回调成功Gson解析Json前会话Session数据: " + jsonObject.toString());
         //Gson解析并序列号至Java对象中
-        QQUserSessionBean qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + qqUserSessionBean);
-        Log.i(TAG, "Access_token: " + qqUserSessionBean.getAccess_token());
+        SessionBean sessionBean = GsonUtil.gsonToBean(jsonObject.toString(), SessionBean.class);
+        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + sessionBean);
+        Log.i(TAG, "Access_token: " + sessionBean.getAccess_token());
         /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
-        SharePreferenceUtil.putObject(IndexActivity.this, qqUserSessionBean);
+        SharePreferenceUtil.putObject(IndexActivity.this, sessionBean);
     }
 
     /**
@@ -717,8 +716,8 @@ public class IndexActivity extends BaseActivity {
                         //设置本地持久化接收的QQ昵称和QQ头像
                         QQUserBeanIsValidSetTextAndGlideUserHead();
                         /** 获取首页界面拉起QQ登录授权存入持久化文件的会话信息，用于判断当前首页登录，避免导致跳转LoginActivity*/
-                        Constant.qqUserSessionBean = SharePreferenceUtil.getObject(IndexActivity.this, QQUserSessionBean.class);
-                        Log.i(TAG, "QQ回调的首页Constant.qqUserSessionBean: " + Constant.qqUserSessionBean);
+                        Constant.sessionBean = SharePreferenceUtil.getObject(IndexActivity.this, SessionBean.class);
+                        Log.i(TAG, "QQ回调的首页Constant.sessionBean: " + Constant.sessionBean);
                     } else { //QQUserBean无数据时
                         //设置未登录默认头像和点击头像登录
                         setNotLoginQQUserInfo();
@@ -820,9 +819,9 @@ public class IndexActivity extends BaseActivity {
         SharePreferenceUtil.removeObject(IndexActivity.this, QQUserBean.class);//类似于Constant.qqUser = null;
         Log.i(TAG, "注销登录的QQUserBean: " + Constant.qqUser);
 
-        Constant.qqUserSessionBean = null;
-        SharePreferenceUtil.removeObject(IndexActivity.this, QQUserSessionBean.class);//类似于Constant.qqUserSessionBean = null;
-        Log.i(TAG, "注销登录的QQUserSessionBean: " + Constant.qqUserSessionBean);
+        Constant.sessionBean = null;
+        SharePreferenceUtil.removeObject(IndexActivity.this, SessionBean.class);//类似于Constant.sessionBean = null;
+        Log.i(TAG, "注销登录的QQUserSessionBean: " + Constant.sessionBean);
         Constant.mTencent.logout(IndexActivity.this);
         Log.i(TAG, "注销登录的会话Tencent: " + Constant.mTencent.isSessionValid());
     }
@@ -888,7 +887,7 @@ public class IndexActivity extends BaseActivity {
             startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
             return;
         }
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.qqUserSessionBean != null) {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionBean != null) {
             Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
             //设置Snackbar上提示的字体颜色
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));

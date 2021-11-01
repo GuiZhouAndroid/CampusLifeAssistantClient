@@ -5,20 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.core.view.GravityCompat;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.elmargomez.typer.Font;
-import com.elmargomez.typer.Typer;
-import com.google.android.material.snackbar.Snackbar;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
@@ -29,8 +21,6 @@ import org.json.JSONObject;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 

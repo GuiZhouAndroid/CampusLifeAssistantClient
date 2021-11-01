@@ -50,8 +50,8 @@ import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.QQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
@@ -369,30 +369,20 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         protected void doComplete(JSONObject values) {
             Log.i(TAG, "QQ回调成功，会话消息===" + values.toString());//{"ret":0,"openid":"FD405BF12F7388E0A243786326AF3BC8","access_token":"EBC9BC62ADE...
             Log.i(TAG, "QQ回调后设置会话前是否有效" + Constant.mTencent.isSessionValid());//false
-            String strRet = values.optString("ret");
-            String strOpenId = values.optString("openid");
-            String strAccessToken = values.optString("access_token");
-            String strPayToken = values.optString("pay_token");
-            String strExpiresIn = values.optString("expires_in");
-            String strPf = values.optString("pf");
-            String strPfKey = values.optString("pfkey");
-            String strMsg = values.optString("msg");
-            String strLoginCost = values.optString("login_cost");
-            String strQueryAuthorityCost = values.optString("query_authority_cost");
-            String strAuthorityCost = values.optString("authority_cost");
-            String strExpiresTime = values.optString("expires_time");
+            //解析回调的QQ会话JSON数据
+            SessionBean sessionBean = GsonUtil.gsonToBean(values.toString(), SessionBean.class);
             //QQ会话回调同时，执行post请求——RESTFul风格，调用MySQL数据
-            OkGo.<String>post(Constant.LOGIN_QQ_SESSION + "/" + strOpenId + "/" + strAccessToken)
+            OkGo.<String>post(Constant.LOGIN_QQ_SESSION + "/" + sessionBean.getOpenid() + "/" + sessionBean.getAccess_token())
                     .tag("QQ授权")
                     .execute(new StringDialogCallback(LoginActivity.this) {
                         @Override
                         public void onSuccess(Response<String> response) {
                             //Json字符串解析转为实体类对象
-                            QQSessionBean qqSessionBean = GsonUtil.gsonToBean(response.body(), QQSessionBean.class);
-                            Log.i(TAG, "qqSessionBean=== " + qqSessionBean);
+                            SessionUserBean sessionUserBean = GsonUtil.gsonToBean(response.body(), SessionUserBean.class);
+                            Log.i(TAG, "qqSessionBean=== " + sessionUserBean);
                             //当前QQ账号无授权登录APP应用——未绑定过登录账户
-                            if (200 == qqSessionBean.getCode() && null == qqSessionBean.getData() && "此QQ号码暂未授权".equals(qqSessionBean.getMsg())) {
-                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, qqSessionBean.getMsg() + getString(R.string.please_qq_login));
+                            if (200 == sessionUserBean.getCode() && null == sessionUserBean.getData() && "此QQ号码暂未授权".equals(sessionUserBean.getMsg())) {
+                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, sessionUserBean.getMsg() + getString(R.string.please_qq_login));
                                 dialogPrompt.show();
                                 Snackbar snackbar = Snackbar.make(mLogin_rl_show, "没有绑定QQ账户？", Snackbar.LENGTH_INDEFINITE)
                                         .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
@@ -415,26 +405,26 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 return;
                             }
                             //当前QQ账号已授权登录APP应用——已绑定过登录账户
-                            if (200 == qqSessionBean.getCode() && null != qqSessionBean.getData() && "此QQ账号已授权".equals(qqSessionBean.getMsg())) {
+                            if (200 == sessionUserBean.getCode() && null != sessionUserBean.getData() && "此QQ账号已授权".equals(sessionUserBean.getMsg())) {
                                 //开始查询MySQL用户表+QQ授权登录并集信息
-                                Toast.makeText(LoginActivity.this, qqSessionBean.getData().toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, sessionUserBean.getData().toString(), Toast.LENGTH_SHORT).show();
                                 //准备用户ID
-                                int userIdToSelectBannedState = qqSessionBean.getData().getUlId();
+                                int userIdToSelectBannedState = sessionUserBean.getData().getUlId();
                                 /** QQ一键登录 */
                                 OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID_AND_ONE_KEY_QQ_LOGIN)
                                         .tag("QQ一键登录+更新QQ会话")
-                                        .params("ret", strRet)
-                                        .params("openid", strOpenId)
-                                        .params("accessToken", strAccessToken)
-                                        .params("payToken", strPayToken)
-                                        .params("expiresIn", strExpiresIn)
-                                        .params("pf", strPf)
-                                        .params("pfkey", strPfKey)
-                                        .params("msg", strMsg)
-                                        .params("loginCost", strLoginCost)
-                                        .params("queryAuthorityCost", strQueryAuthorityCost)
-                                        .params("authorityCost", strAuthorityCost)
-                                        .params("expiresTime", strExpiresTime)
+                                        .params("ret", sessionBean.getRet())
+                                        .params("openid", sessionBean.getOpenid())
+                                        .params("accessToken", sessionBean.getAccess_token())
+                                        .params("payToken", sessionBean.getPay_token())
+                                        .params("expiresIn", sessionBean.getExpires_in())
+                                        .params("pf", sessionBean.getPf())
+                                        .params("pfkey", sessionBean.getPfkey())
+                                        .params("msg", sessionBean.getMsg())
+                                        .params("loginCost", sessionBean.getLogin_cost())
+                                        .params("queryAuthorityCost", sessionBean.getQuery_authority_cost())
+                                        .params("authorityCost", sessionBean.getAuthority_cost())
+                                        .params("expiresTime", sessionBean.getExpires_time())
                                         .params("ulId", userIdToSelectBannedState) //此条是授权的用户自增ID，以上是拉起授权QQ会话数据
                                         .execute(new StringCallback() {
                                             @Override
@@ -453,11 +443,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     //一键登录(并联信息持久化手机内存，生命周期：存储——清空(卸载App或注销时clear))
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
 
-                                                    //准备用户ID
-                                                    int updateSessionUserId = userQQSessionBean.getData().getUserInfo().getUlId();
-                                                    Log.i(TAG, "更新QQ会话用户ID=== " + updateSessionUserId);
-                                                    Log.i(TAG, "更新QQ会话的实时数据=== " + values);
-                                                    QQUserSessionBean qqUserSessionBean = GsonUtil.gsonToBean(values.toString(), QQUserSessionBean.class);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
                                                     //App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
@@ -498,10 +483,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             snackbar.show();
                         }
                     });
-
             /** 保存Session信息存入SharePreference本地数据 */
             //initSaveSessionDataToLocalFile(values);
-
         }
     };
 
@@ -512,10 +495,10 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
         //Gson解析并序列号至Java对象中
-        Constant.qqUserSessionBean = GsonUtil.gsonToBean(jsonObject.toString(), QQUserSessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + Constant.qqUserSessionBean);
+        Constant.sessionBean = GsonUtil.gsonToBean(jsonObject.toString(), SessionBean.class);
+        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + Constant.sessionBean);
         //Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例)
-        SharePreferenceUtil.putObject(LoginActivity.this, Constant.qqUserSessionBean);
+        SharePreferenceUtil.putObject(LoginActivity.this, Constant.sessionBean);
     }
 
     /**

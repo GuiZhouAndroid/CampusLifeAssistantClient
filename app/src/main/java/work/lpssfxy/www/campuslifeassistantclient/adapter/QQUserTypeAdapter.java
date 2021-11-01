@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 
 /**
  * created by on 2021/9/4
@@ -15,10 +15,10 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserSessionBean;
  * @author ZSAndroid
  * @create 2021-09-04-15:42
  */
-public class QQUserTypeAdapter extends TypeAdapter<QQUserSessionBean> {
+public class QQUserTypeAdapter extends TypeAdapter<SessionBean> {
 
     @Override
-    public void write(JsonWriter out, QQUserSessionBean value) throws IOException {
+    public void write(JsonWriter out, SessionBean value) throws IOException {
         out.beginObject();
         //按自定义顺序输出字段信息
 
@@ -39,13 +39,13 @@ public class QQUserTypeAdapter extends TypeAdapter<QQUserSessionBean> {
     }
 
     @Override
-    public QQUserSessionBean read(JsonReader in) throws IOException {
+    public SessionBean read(JsonReader in) throws IOException {
         return null;
     }
 
     /**
      * 使用当前适配器
-     *       Gson gson = new GsonBuilder().registerTypeAdapter(QQUserSessionBean.class, new QQUserTypeAdapter())
+     *       Gson gson = new GsonBuilder().registerTypeAdapter(SessionBean.class, new QQUserTypeAdapter())
      *                 //registerTypeAdapter可以重复使用
      *                 .create();
      */

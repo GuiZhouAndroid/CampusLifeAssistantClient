@@ -10,7 +10,7 @@ import lombok.Data;
  * @create 2021-10-28-20:28
  */
 @Data
-public class QQSessionBean {
+public class SessionUserBean {
 
     /**
      * 请求状态
