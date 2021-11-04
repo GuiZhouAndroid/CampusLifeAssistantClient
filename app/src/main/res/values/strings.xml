@@ -69,6 +69,7 @@
     <string name="loading">正在加载...</string>
     <string name="loading_request_service">正在请求服务器...</string>
     <string name="indexLoadLoginInfo">正在加载登录信息...</string>
+    <string name="logoutIng">正在注销...</string>
     <!--behavior-->
     <string name="scale_down_show_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.FloatingActionButton.ScaleDownShowBehavior</string>
     <string name="bottom_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.BottomNavigation.BottomNavigationBehavior</string>

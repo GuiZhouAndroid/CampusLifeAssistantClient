@@ -2,8 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -56,7 +54,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -117,7 +114,8 @@ public class IndexActivity extends BaseActivity {
     private ImageView ivNavHeaderIcon;
     /** 侧滑顶部昵称 */
     private TextView tvNavHeaderName;
-
+    //用于数据传递到底部导航第四个页面--->用户管理信息
+    private Handler mHandler;
 
     /**
      * 关闭滑动返回
@@ -224,65 +222,8 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-        /** 获取本地QQSession持久化Java对象数据 */
-        initQQSessionToUserInfo();
-    }
-
-    /**
-     * 初始化QQSession并获取QQ个人信息
-     * 有效：取出的持久化文件的Java对象参数，重组JSON的Session数据，调用QQ的initSessionCache(JSON)来使得会话有效
-     * 无效：使用默认头像+无登录相关信息展示
-     * 本地持久化文件与LoginActivity为同一xml文件---> UserQQSessionBean(并集信息的Java对象数据)
-     */
-    private void initQQSessionToUserInfo() {
-        /** 获取本地QQSession持久化Java对象数据*/
-        Constant.userQQSessionBean = SharePreferenceUtil.getObject(IndexActivity.this, UserQQSessionBean.class);
-        Log.i(TAG, "首页UserQQSessionBean: " + Constant.userQQSessionBean);
-        /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
-        JSONObject jsonObject = new JSONObject();
-        if (Constant.userQQSessionBean != null) {//本地持久化xml文件有数据时才满足重组条件
-            try {
-                jsonObject.put("ret", Constant.userQQSessionBean.getData().getRet());
-                jsonObject.put("openid", Constant.userQQSessionBean.getData().getOpenid());
-                jsonObject.put("access_token", Constant.userQQSessionBean.getData().getAccessToken());
-                jsonObject.put("pay_token",Constant.userQQSessionBean.getData().getPayToken());
-                jsonObject.put("expires_in", Constant.userQQSessionBean.getData().getExpiresIn());
-                jsonObject.put("pf", Constant.userQQSessionBean.getData().getPf());
-                jsonObject.put("pfkey", Constant.userQQSessionBean.getData().getPfkey());
-                jsonObject.put("msg", Constant.userQQSessionBean.getData().getMsg());
-                jsonObject.put("login_cost",Constant.userQQSessionBean.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", Constant.userQQSessionBean.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", Constant.userQQSessionBean.getData().getAuthorityCost());
-                jsonObject.put("expires_time", Constant.userQQSessionBean.getData().getExpiresTime());
-                /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
-                Constant.mTencent.initSessionCache(jsonObject);
-                Log.i(TAG, "首页UserQQSessionBeanmTencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            /** 本地文件有用户数据且Session不为空有效时，提取持久化用户信息，设置QQ头像+QQ用户名+个人用户信息 */
-            if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
-                Message msg = new Message();
-                msg.obj = Constant.userQQSessionBean.getData().getUserInfo();
-                msg.what = 2;
-                QQHandler.sendMessage(msg);
-                initValidLoginUserData();//初始化已登录持久化数据
-            }
-        } else {
-            /** 设置未登录默认头像和点击头像登录 */
-            setNotLoginQQUserInfo();
-            Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
-                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
-                    .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
-                        @Override
-                        public void onClick(View v) {
-                            startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);
-                        }
-                    });
-            //设置Snackbar上提示的字体颜色
-            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-            snackbar.show();
-        }
+        /** 获取本地QQSession+用户个人信息持久化Java对象数据 */
+        initQQSessionAndUserInfo();
     }
 
     /**
@@ -386,7 +327,6 @@ public class IndexActivity extends BaseActivity {
                         //设置Snackbar上提示的字体颜色
                         setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                         snackbar.show();
-
                         /** 开启一个子线程 */
                         new Thread(new Runnable() {
                             @Override
@@ -409,16 +349,75 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
+     * 初始化QQSession并获取QQ个人信息
+     * 有效：取出的持久化文件的Java对象参数，重组JSON的Session数据，调用QQ的initSessionCache(JSON)来使得会话有效+个人用户信息
+     * 无效：使用默认头像+无登录相关信息展示
+     * 本地持久化文件与LoginActivity为同一xml文件---> UserQQSessionBean(并集信息的Java对象数据)
+     */
+    private void initQQSessionAndUserInfo() {
+        /** 获取本地QQSession持久化Java对象数据*/
+        Constant.userQQSessionBean = SharePreferenceUtil.getObject(IndexActivity.this, UserQQSessionBean.class);
+        Log.i(TAG, "首页UserQQSessionBean: " + Constant.userQQSessionBean);
+        /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
+        JSONObject jsonObject = new JSONObject();
+        if (Constant.userQQSessionBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
+            LoadingDialog.showSimpleLD(this,getString(R.string.indexLoadLoginInfo));
+            try {
+                jsonObject.put("ret", Constant.userQQSessionBean.getData().getRet());
+                jsonObject.put("openid", Constant.userQQSessionBean.getData().getOpenid());
+                jsonObject.put("access_token", Constant.userQQSessionBean.getData().getAccessToken());
+                jsonObject.put("pay_token",Constant.userQQSessionBean.getData().getPayToken());
+                jsonObject.put("expires_in", Constant.userQQSessionBean.getData().getExpiresIn());
+                jsonObject.put("pf", Constant.userQQSessionBean.getData().getPf());
+                jsonObject.put("pfkey", Constant.userQQSessionBean.getData().getPfkey());
+                jsonObject.put("msg", Constant.userQQSessionBean.getData().getMsg());
+                jsonObject.put("login_cost",Constant.userQQSessionBean.getData().getLoginCost());
+                jsonObject.put("query_authority_cost", Constant.userQQSessionBean.getData().getQueryAuthorityCost());
+                jsonObject.put("authority_cost", Constant.userQQSessionBean.getData().getAuthorityCost());
+                jsonObject.put("expires_time", Constant.userQQSessionBean.getData().getExpiresTime());
+                /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
+                Constant.mTencent.initSessionCache(jsonObject);
+                Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            /** 本地文件有用户数据且Session不为空有效时，提取持久化用户信息，设置QQ头像+QQ用户名+个人用户信息 */
+            if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
+                Message msg = new Message();
+                msg.obj = Constant.userQQSessionBean.getData().getUserInfo();
+                msg.what = 2;
+                QQHandler.sendMessage(msg);
+                initValidLoginUserData();//初始化已登录持久化数据
+            }
+        } else {//未登录无持久化数据
+            //发送方式一 直接发送一个空的Message，
+            QQHandler.sendEmptyMessage(1);
+            Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//false
+            Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
+                    .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);
+                        }
+                    });
+            //设置Snackbar上提示的字体颜色
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }
+    }
+
+    /**
      * 初始化ViewPage+适配器填充4个Fragment+左右滑动ViewPager根据当前的item与底部导航BottomBar的item实现动画联动切换
      */
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
-        fragmentList.addAll(Arrays.asList(fragments));
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mVp_content.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
-        //        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mVp_content.setOffscreenPageLimit(fragmentList.size());//viewPager单次预加载Fragment页数
+        //ViewPager滑动监听
         mVp_content.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -437,6 +436,8 @@ public class IndexActivity extends BaseActivity {
 
             }
         });
+        //必须再这个地方写，要ViewPager适配填充Fragment页面后，才有效，执行顺序原因
+        mVp_content.setCurrentItem(0);//默认第1页
     }
 
     /**
@@ -527,49 +528,6 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
-     * 接受QQ登录广播，数据来源于广播，不是本地持久化数据文件，因此需要严格区分
-     */
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @SuppressLint("CheckResult")
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
-//            Constant.qqUser = (QQUserBean) intent.getSerializableExtra("QQUserBean");
-//            Log.i(TAG, "BroadcastReceiver的QQUserBean: " + Constant.qqUser);
-//            if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
-//                if (Constant.qqUser != null) { //QQUserBean有数据时
-//                    /** 仿真效果，打开侧滑菜单 */
-//                    mDrawer_layout.openDrawer(GravityCompat.START);
-//                    //Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this,QQUserBean.class);
-//                    /** 标题栏字体加粗 */
-//                    Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-//                    /** 创建Glide圆形图像实例*/
-//                    RequestOptions options = new RequestOptions();
-//                    options.circleCrop();
-//                    /** 设置QQ登录成功需要设置加载信息的控件 */
-//                    setQQAlreadyLoginState(font, options, Constant.qqUser);
-//
-//                    Snackbar snackbar = Snackbar.make(mDrawer_layout, "登录成功~", Snackbar.LENGTH_SHORT)
-//                            .setActionTextColor(getResources().getColor(R.color.colorAccent));
-//                    //设置Snackbar上提示的字体颜色
-//                    setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-//                    snackbar.show();
-//                } else { //QQUserBean无数据时
-//                    /** 设置未登录默认头像和点击头像登录 */
-//                    setNotLoginQQUserInfo();
-//                }
-//            } else {
-//                Snackbar snackbar = Snackbar.make(mDrawer_layout, "登录失效", Snackbar.LENGTH_SHORT)
-//                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
-//                //设置Snackbar上提示的字体颜色
-//                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-//                snackbar.show();
-//            }
-//        }
-//    };
-
-
-    /**
      * 打开APP，进入首页，获取QQSession持久化数据调用，实现DefaultUiListener接口
      * 回调new UserInfo(this,Constant.mTencent.getQQToken()) 获取用户信息
      * 持久化数据文件无数据时，调用未登录默认设置的方法
@@ -578,21 +536,17 @@ public class IndexActivity extends BaseActivity {
     private void initValidLoginUserData() {
 
         IUiListener listener = new DefaultUiListener() {
-            /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
+            /** 以下进行实时联网获取授权QQ用户信息 + 以及发送Handler 更新UI */
             @Override
             public void onComplete(final Object response) {
                 Log.d(TAG, "请求回调用户信息列表= " + response.toString());
                 /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
                 Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
-                /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-                // SharePreferenceUtil.putObject(IndexActivity.this, Constant.qqUser);
                 Log.i(TAG, "qqUser全部数据: " + Constant.qqUser);
                 Message msg = new Message();
                 msg.obj = Constant.qqUser;
                 msg.what = 0;
                 QQHandler.sendMessage(msg);
-                /** 关闭正在加载登录信息友好进度条*/
-                //LoadingDialog.closeSimpleLD();
             }
 
             @Override
@@ -613,24 +567,13 @@ public class IndexActivity extends BaseActivity {
 
         /** 调用SharePreference工具类获取Gson转化后的Java对象，持久化文件名“ZSAndroid”的本地数据 */
 
-//        Log.i(TAG, "initLoginUserData: " + userQQSessionBean);
-//        if (userQQSessionBean != null) {
-//            /** 标题栏字体加粗 */
-//            Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-//            /** 创建Glide圆形图像实例*/
-//            RequestOptions options = new RequestOptions();
-//            options.circleCrop();
-//            /** 设置QQ登录成功需要设置加载信息的控件 */
-//            setQQAlreadyLoginState(font, options, userBean[0]);
-//            Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
-//                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
-//            //设置Snackbar上提示的字体颜色
-//            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-//            snackbar.show();
-//        } else {
-//            /** 设置未登录默认头像和点击头像登录 */
-//            setNotLoginQQUserInfo();
-//        }
+        /** 标题栏字体加粗 */
+        Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+        /** 创建Glide圆形图像实例*/
+        RequestOptions options = new RequestOptions();
+        options.circleCrop();
+        /** 设置QQ登录成功需要设置加载信息的控件 */
+
     }
 
     /**
@@ -657,42 +600,90 @@ public class IndexActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    /** 判断本地取出的QQUser对象是否有数据*/
-                    if (Constant.qqUser != null) { //QQUserBean有数据时
-                        //设置本地持久化接收的QQ昵称和QQ头像
+                    /** 回调QQ授权用户的个人资料信息有数据时，通过UI展示信息，这里Constant.qqUser 不可能为null，不需要设置默认显示setNotLoginQQUserInfo(); */
+                    if (Constant.qqUser != null) {
                         Constant.qqUser = (QQUserBean) msg.obj;
-                        Log.i(TAG, "消息.sessionBean: " + Constant.qqUser);
-                        QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);
-                        /** 获取首页界面拉起QQ登录授权存入持久化文件的会话信息，用于判断当前首页登录，避免导致跳转LoginActivity*/
-
-                    } else { //QQUserBean无数据时
-                        //设置未登录默认头像和点击头像登录
-                        setNotLoginQQUserInfo();
+                        Log.i(TAG, "实时回调的QQ用户信息=== " + Constant.qqUser);
+                        QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);//加载在线动态QQ昵称和QQ头像
+                        startHaveDataQQUserInfoToMineFragment(Constant.qqUser);
+                        /** 关闭正在加载登录信息友好进度条*/
+                        LoadingDialog.closeSimpleLD();
+                    } else { //设置未登录默认头像和点击头像登录
                     }
                     break;
                 case 1: //未登录
                     /** 状态设置默认的头像和文本 */
                     setNotLoginQQUserInfo();
-                    /**  清空本机持久化--->QQ会话失效 */
+                    /** 清空本机持久化--->QQ会话失效 */
                     setQQUserLoginLogout();
+                    startNotHaveDataAllUserInfoToMineFragment();
                     break;
-                case 2: //用户登录成功信息
+                case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
                     Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
-                    DialogPrompt dialogPrompt = new DialogPrompt(IndexActivity.this,Constant.userInfo.toString());
-                    dialogPrompt.show();
+                    startHaveDataUserInfoToMineFragment(Constant.userInfo);
                     break;
             }
         }
     };
 
     /**
-     * QQUserBean有数据时设置本地持久化或广播消息接收的QQ昵称和QQ头像
+     * MainActivity 与 底部导航BottomMineFragment 共享Handler实例
+     *
+     * @param handler
+     */
+    public void setHandler(Handler handler) {
+        // 3.在HandlerFragment中通过调用此方法，即可实现共享Handler消息对象
+        mHandler = handler;
+    }
+
+    /**
+     * 用户数据开始传递数据到Fragment《我的》
+     *
+     * @param userInfo
+     */
+    public void startHaveDataUserInfoToMineFragment(UserQQSessionBean.Data.UserInfo userInfo) {
+        //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
+        Message msg = new Message();
+        //5.携带数据为输入框文本数据
+        msg.obj = userInfo;
+        //5.消息标记为1
+        msg.what = 1;
+        //5.开始发送消息
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * QQ数据开始传递数据到Fragment《我的》
+     *
+     * @param qqUserInfo
+     */
+    public void startHaveDataQQUserInfoToMineFragment(QQUserBean qqUserInfo) {
+        //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
+        Message msg = new Message();
+        //5.携带数据为输入框文本数据
+        msg.obj = qqUserInfo;
+        //5.消息标记为1
+        msg.what = 2;
+        //5.开始发送消息
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 无数据时点击开始传递数据到Fragment《我的》
+     *
+     */
+    public void startNotHaveDataAllUserInfoToMineFragment() {
+        mHandler.sendEmptyMessage(3);
+    }
+
+    /**
+     * 有数据获取时：加载在线动态QQ昵称和QQ头像（QQ相关信息）
      * @param qqUser
      */
     private void QQUserBeanIsValidSetTextAndGlideUserHead(QQUserBean qqUser) {
         /** 标题栏字体加粗 */
         Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-//        Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
+        //Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
         /** 创建Glide圆形图像实例*/
         RequestOptions options = new RequestOptions();
         options.circleCrop();
@@ -719,7 +710,7 @@ public class IndexActivity extends BaseActivity {
                 .apply(options)
                 .into(ivNavHeaderIcon);
 
-        Snackbar snackbar = Snackbar.make(mDrawer_layout, "登录成功~", Snackbar.LENGTH_SHORT)
+        Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
                 .setActionTextColor(getResources().getColor(R.color.colorAccent));
         //设置Snackbar上提示的字体颜色
         setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
@@ -765,43 +756,12 @@ public class IndexActivity extends BaseActivity {
      */
     private void setQQUserLoginLogout() {
         //清空持久化用户并集xml文件，使得QQ会话无法有效初始化，用户信息无法读取
-        Constant.userQQSessionBean = null;
-        SharePreferenceUtil.removeObject(IndexActivity.this, UserQQSessionBean.class);//类似于Constant.qqUser = null;
+        Constant.userQQSessionBean = null;//清空当前对象数据
+        SharePreferenceUtil.removeObject(IndexActivity.this, UserQQSessionBean.class);//清空持久化xml文件
         Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.userQQSessionBean);
         //注销mTencent
         Constant.mTencent.logout(IndexActivity.this);
         Log.i(TAG, "注销QQ登录的会话Tencent: " + Constant.mTencent.isSessionValid());
-    }
-
-    /**
-     * 设置QQ登录成功需要设置加载信息的控件
-     *
-     * @param font    加粗字体
-     * @param options Glide
-     * @param qqUser  用户
-     */
-    private void setQQAlreadyLoginState(Typeface font, RequestOptions options, QQUserBean qqUser) {
-        /** 设置昵称动态开始——动态结束的字体样式 */
-        mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
-        mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-        /** 设置Toolbar的QQ昵称 */
-        mCollapsing_toolbar_layout.setTitle(qqUser.getNickname());
-        /** 设置侧滑的QQ昵称 */
-        tvNavHeaderName.setText(qqUser.getNickname());
-        /** 设置友好时间状态可见*/
-        mIndex_tv_user_hello.setVisibility(View.VISIBLE);
-        /** 设置Toolbar的圆形QQ头像 */
-        Glide.with(IndexActivity.this)
-                .load(qqUser.getFigureurl_qq_1())
-                .apply(options)
-                .into(mIndex_iv_user_head);
-        /** 设置侧滑的圆形QQ头像 */
-        Glide.with(IndexActivity.this)
-                .load(qqUser.getFigureurl_qq_1())
-                .apply(options)
-                .into(ivNavHeaderIcon);
-        /** 设置友好时间提示*/
-        getDate(mIndex_tv_user_hello);
     }
 
     /**
@@ -855,7 +815,7 @@ public class IndexActivity extends BaseActivity {
                 /** 判断检查QQ登录是否有效 */
                 checkQQLoginIfValid();
                 break;
-            case R.id.floating_action_btn:
+            case R.id.floating_action_btn://貌似没有效果，大概被置顶功能取代
                 Snackbar snackbar = Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT)
                         .setActionTextColor(getResources().getColor(R.color.colorAccent));
                 //设置Snackbar上提示的字体颜色
@@ -879,7 +839,6 @@ public class IndexActivity extends BaseActivity {
                 mDrawer_layout.openDrawer(GravityCompat.START);
                 break;
             case R.id.search:
-                //new ToastUtil().ToastLocation(MainActivity.this,"搜索待实现", Toast.LENGTH_SHORT, Gravity.CENTER);
                 OpenToolbarPopup();//打开标题栏弹窗
                 break;
 //            case R.id.qr:
@@ -1007,6 +966,49 @@ public class IndexActivity extends BaseActivity {
         super.onDestroy();
 //        unregisterReceiver(broadcastReceiver);
     }
+
+
+    /**
+     * 接受QQ登录广播，数据来源于广播，不是本地持久化数据文件，因此需要严格区分
+     */
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @SuppressLint("CheckResult")
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
+//            Constant.qqUser = (QQUserBean) intent.getSerializableExtra("QQUserBean");
+//            Log.i(TAG, "BroadcastReceiver的QQUserBean: " + Constant.qqUser);
+//            if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
+//                if (Constant.qqUser != null) { //QQUserBean有数据时
+//                    /** 仿真效果，打开侧滑菜单 */
+//                    mDrawer_layout.openDrawer(GravityCompat.START);
+//                    //Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this,QQUserBean.class);
+//                    /** 标题栏字体加粗 */
+//                    Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
+//                    /** 创建Glide圆形图像实例*/
+//                    RequestOptions options = new RequestOptions();
+//                    options.circleCrop();
+//                    /** 设置QQ登录成功需要设置加载信息的控件 */
+//                    setQQAlreadyLoginState(font, options, Constant.qqUser);
+//
+//                    Snackbar snackbar = Snackbar.make(mDrawer_layout, "登录成功~", Snackbar.LENGTH_SHORT)
+//                            .setActionTextColor(getResources().getColor(R.color.colorAccent));
+//                    //设置Snackbar上提示的字体颜色
+//                    setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+//                    snackbar.show();
+//                } else { //QQUserBean无数据时
+//                    /** 设置未登录默认头像和点击头像登录 */
+//                    setNotLoginQQUserInfo();
+//                }
+//            } else {
+//                Snackbar snackbar = Snackbar.make(mDrawer_layout, "登录失效", Snackbar.LENGTH_SHORT)
+//                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
+//                //设置Snackbar上提示的字体颜色
+//                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+//                snackbar.show();
+//            }
+//        }
+//    };
 
     //多个控件对应公共事件
 //    @OnClick({R2.id.btn, R2.id.btn1})
