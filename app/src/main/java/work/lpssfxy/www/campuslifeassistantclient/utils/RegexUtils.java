@@ -12,6 +12,52 @@ import java.util.regex.Pattern;
  */
 public class RegexUtils {
 
+    private boolean startCheck(String reg, String string) {
+        boolean tem = false;
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(string);
+        tem = matcher.matches();
+        return tem;
+    }
+
+
+    /**
+     * 验证用户名
+     */
+    /**
+     * 检验用户名 取值范围为a-z,A-Z,0-9,"_",汉字，不能以"_"结尾 用户名有最小长度和最大长度限制，比如用户名必须是4-20位
+     * */
+    public boolean checkUsername(String username, int min, int max) {
+        String regex = "[\\w\u4e00-\u9fa5]{" + min + "," + max + "}(?<!_)";
+        return startCheck(regex, username);
+    }
+
+
+    //密码设定规则：8-16位，其中必须包含数字、小写字母、大写字母；字符仅支持“！@#¥%”，不支持空格
+    public static boolean isCheckPwd(String str){
+        String regex ="^(?!.*[！·（）{}【】“”：；，》￥、。‘’——\\s-……%\\n])(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*()_+`\\-={}:\";'<>?,.\\/])[^\\u4e00-\\u9fa5]{8,16}$";
+        boolean isfalg =  str.matches(regex);
+        if(isfalg){
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 验证密码格式
+     * 6-16位 大小写特殊字符，无划线，横线等
+     * @param password
+     * @return
+     */
+
+    public static boolean checkPassword(String password) {
+        String psRegex = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
+
+        return password.matches(psRegex);
+    }
+
+
     /**
      * 验证Email
      *

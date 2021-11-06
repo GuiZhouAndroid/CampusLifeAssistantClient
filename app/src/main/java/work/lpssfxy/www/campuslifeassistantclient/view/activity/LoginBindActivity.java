@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,6 +25,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
@@ -166,14 +168,22 @@ public class LoginBindActivity extends BaseActivity {
         /** 判断是否封禁 */
         OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERNAME + "/" + strEditUsername)
                 .tag("用户名判断封禁")
-                .execute(new StringDialogCallback(this) {
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        XPopupUtils.setShowDialog(LoginBindActivity.this,"正在验证账户");
+                    }
+
                     @Override
                     public void onSuccess(Response<String> response) {
+                        XPopupUtils.setDisDialog();
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + responseBean);
                         if (200 == responseBean.getCode() && "查询失败，此用户名不存在".equals(responseBean.getMsg())) {
-                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, "【" + strEditUsername + "】" + "账户验证失败！" + "请您输入真实有效的用户名后重试~");
-                            dialogPrompt.show();
+                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请您输入有效的用户名后重试~", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
                             return;
                         }
                         if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())) {
@@ -197,8 +207,7 @@ public class LoginBindActivity extends BaseActivity {
                                         /** 用户名密码效验失败 */
                                         if (200 == userBeanData.getCode() && null == userBeanData.getData() && "登录失败，用户名和密码不匹配".equals(userBeanData.getMsg())) {
                                             //QQ授权绑定用户失败
-                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, userBeanData.getMsg(), Snackbar.LENGTH_SHORT)
-                                                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, userBeanData.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                             snackbar.show();
                                             return;
@@ -258,13 +267,17 @@ public class LoginBindActivity extends BaseActivity {
                                                         @Override
                                                         public void onError(Response<String> response) {
                                                             //未绑定温馨提示
-                                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                                                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                                             snackbar.show();
                                                         }
                                                     });
                                         }
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        XPopupUtils.setDisDialog();
                                     }
 
                                     @Override
@@ -281,8 +294,7 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onError(Response<String> response) {
                         //未绑定温馨提示
-                        Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                         setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                         snackbar.show();
                     }

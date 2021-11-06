@@ -35,9 +35,10 @@
     <string name="please_input_password">请输入密码</string>
     <string name="please_input_bind_user_name">请输入绑定的用户名</string>
     <string name="please_input_bind_password">请输入密码</string>
-    <string name="index_already_login_qq">QQ登录已经啦~</string>
+    <string name="index_already_login_qq">哎哟~戳我干嘛！您已经登录啦~</string>
     <string name="i_kown">我知道了</string>
-    <string name="please_qq_login">，请您绑定账户后再试</string>
+    <string name="please_bind_User_login">，请您绑定账户后重试</string>
+    <string name="please_bind_qq_login">，请授权后再登录</string>
     <string name="qq_bing_success">QQ授权绑定成功</string>
     <string name="qq_bing_error">QQ授权绑定失败</string>
     <!--ViewPager欢迎页-->
@@ -51,6 +52,9 @@
     <!--    首页-->
     <string name="click_user_image">点击头像登录</string>
     <string name="signature">您还没有设置个性签名，点击头像设置</string>
+    <string name="LastLoginInfo">您上次登录时间信息</string>
+    <string name="QQLastLoginTime">&#160;QQ授权&#160;&#160;：</string>
+    <string name="userLastLoginTime">账户验证：</string>
     <string name="drawer_menu_info_school">进入官网</string>
     <string name="drawer_menu_see_calendar">查看日历</string>
     <string name="drawer_menu_night_mode">夜间模式</string>
@@ -70,6 +74,7 @@
     <string name="loading_request_service">正在请求服务器...</string>
     <string name="indexLoadLoginInfo">正在加载登录信息...</string>
     <string name="logoutIng">正在注销...</string>
+    <string name="notLogin">未登录</string>
     <!--behavior-->
     <string name="scale_down_show_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.FloatingActionButton.ScaleDownShowBehavior</string>
     <string name="bottom_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.BottomNavigation.BottomNavigationBehavior</string>

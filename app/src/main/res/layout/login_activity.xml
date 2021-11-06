@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/White"
             android:hint="@string/username"
-            android:inputType="phone"
+            android:inputType="text"
             android:maxLength="18"
             android:textColor="@color/viewBackground" />
     </com.google.android.material.textfield.TextInputLayout>

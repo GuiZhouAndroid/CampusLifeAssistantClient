@@ -1,11 +1,22 @@
 package work.lpssfxy.www.campuslifeassistantclient;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.lxj.xpopup.XPopup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import work.lpssfxy.www.campuslifeassistantclient.base.BasicLibInit;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 
 /**
  * created by on 2021/8/18
@@ -60,6 +71,7 @@ public class App extends Application {
         myApp = this;
         /** 初始化第三方资源SDK包 */
         BasicLibInit.init(myApp);
+       // initPermission();
     }
 
     /**
@@ -69,5 +81,7 @@ public class App extends Application {
     public static boolean isDebug() {
         return BuildConfig.DEBUG;
     }
+
+
 }
 

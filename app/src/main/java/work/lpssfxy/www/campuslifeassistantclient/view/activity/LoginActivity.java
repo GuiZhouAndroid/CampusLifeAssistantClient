@@ -3,8 +3,10 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
+import static com.xuexiang.xutil.tip.ToastUtils.toast;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -27,9 +29,24 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.core.ImageViewerPopupView;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
+import com.lxj.xpopup.interfaces.OnSelectListener;
+import com.lxj.xpopup.interfaces.OnSrcViewUpdateListener;
+import com.lxj.xpopup.util.SmartGlideImageLoader;
+import com.lxj.xpopupext.listener.CityPickerListener;
+import com.lxj.xpopupext.listener.CommonPickerListener;
+import com.lxj.xpopupext.listener.TimePickerListener;
+import com.lxj.xpopupext.popup.CityPickerPopup;
+import com.lxj.xpopupext.popup.CommonPickerPopup;
+import com.lxj.xpopupext.popup.TimePickerPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.AuthAgent;
 import com.tencent.connect.common.Constants;
@@ -40,6 +57,9 @@ import com.tencent.tauth.UiError;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -49,6 +69,8 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
@@ -57,6 +79,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean
 import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
@@ -103,6 +126,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     @BindView(R2.id.check_if_authorize) CheckBox mCheck_if_authorizer;
     /** 输入的用户名密码 */
     private String strUserName, strPassword;
+    /** 自定义对话框 */
+    private AlertDialog mDialog;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -301,6 +326,23 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     private void userGoTelNumberLogin() {
         ToastUtil.showToast("手机号快捷登录");
+        CommonPickerPopup popup = new CommonPickerPopup(LoginActivity.this);
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("小猫");
+        list.add("小狗");
+        list.add("小羊");
+        popup.setPickerData(list)
+                .setCurrentItem(1);
+        popup.setCommonPickerListener(new CommonPickerListener() {
+            @Override
+            public void onItemSelected(int index, String data) {
+                Toast.makeText(LoginActivity.this, "选中的是 "+ data, Toast.LENGTH_SHORT).show();
+            }
+        });
+        new XPopup.Builder(LoginActivity.this)
+                .asCustom(popup)
+                .show();
+
     }
 
     /**
@@ -308,6 +350,23 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     private void userFindPassword() {
         ToastUtil.showToast("找回密码");
+        CityPickerPopup popup = new CityPickerPopup(LoginActivity.this);
+        popup.setCityPickerListener(new CityPickerListener() {
+            @Override
+            public void onCityConfirm(String province, String city, String area, View v) {
+                Log.e("tag", province +" - " +city+" - " +area);
+                Toast.makeText(LoginActivity.this, province +" - " +city+" - " +area, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onCityChange(String province, String city, String area) {
+                Log.e("tag", province +" - " +city+" - " +area);
+                Toast.makeText(LoginActivity.this, province +" - " +city+" - " +area, Toast.LENGTH_SHORT).show();
+            }
+        });
+        new XPopup.Builder(LoginActivity.this)
+                .asCustom(popup)
+                .show();
+
     }
 
     /**
@@ -315,28 +374,53 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     private void userGoRegisterAccount() {
         ToastUtil.showToast("跳转注册");
+        Calendar date = Calendar.getInstance();
+        date.set(2000, 5,1);
+        Calendar date2 = Calendar.getInstance();
+        date2.set(2020, 5,1);
+        TimePickerPopup popup = new TimePickerPopup(LoginActivity.this)
+//                        .setDefaultDate(date)  //设置默认选中日期
+//                        .setYearRange(1990, 1999) //设置年份范围
+//                        .setDateRange(date, date2) //设置日期范围
+                .setTimePickerListener(new TimePickerListener() {
+                    @Override
+                    public void onTimeChanged(Date date) {
+                        //时间改变
+                    }
+                    @Override
+                    public void onTimeConfirm(Date date, View view) {
+                        //点击确认时间
+                        Toast.makeText(LoginActivity.this, "选择的时间："+date.toLocaleString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        new XPopup.Builder(LoginActivity.this)
+                .asCustom(popup)
+                .show();
+
     }
 
     /**
      * 微信登录
      */
     private void weChatLogin() {
-        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
-                .tag(this)
-                .params("ulUsername", "ZSAndroid").params("ulPassword", "ZSAndroid1998")
-                .execute(new StringDialogCallback(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        //注意这里已经是在主线程了
-                        String data = response.body();//这个就是返回来的结果
-                        Log.i(TAG, "onSuccess: " + data);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                    }
-                });
+        notification4();
+//        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
+//                .tag(this)
+//                .params("ulUsername", "ZSAndroid").params("ulPassword", "ZSAndroid1998")
+//                .execute(new StringDialogCallback(this) {
+//                    @Override
+//                    public void onSuccess(Response<String> response) {
+//                        //注意这里已经是在主线程了
+//                        String data = response.body();//这个就是返回来的结果
+//                        Log.i(TAG, "onSuccess: " + data);
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        super.onFinish();
+//                    }
+//                });
     }
 
     /**
@@ -375,7 +459,11 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             //QQ会话回调同时，执行post请求——RESTFul风格，调用MySQL数据
             OkGo.<String>post(Constant.LOGIN_QQ_SESSION + "/" + sessionBean.getOpenid() + "/" + sessionBean.getAccess_token())
                     .tag("QQ授权")
-                    .execute(new StringDialogCallback(LoginActivity.this) {
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onStart(Request<String, ? extends Request> request) {
+                            XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户");
+                        }
                         @Override
                         public void onSuccess(Response<String> response) {
                             //Json字符串解析转为实体类对象
@@ -383,13 +471,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             Log.i(TAG, "qqSessionBean=== " + sessionUserBean);
                             //当前QQ账号无授权登录APP应用——未绑定过登录账户
                             if (200 == sessionUserBean.getCode() && null == sessionUserBean.getData() && "此QQ号码暂未授权".equals(sessionUserBean.getMsg())) {
-                                DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, sessionUserBean.getMsg() + getString(R.string.please_qq_login));
-                                dialogPrompt.show();
-                                Snackbar snackbar = Snackbar.make(mLogin_rl_show, "没有绑定QQ账户？", Snackbar.LENGTH_INDEFINITE)
-                                        .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
-                                        .setAction("点击绑定", new View.OnClickListener() {  //设置点击按钮
+                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                builder.setTitle("授权提示")//这里设置标题
+                                        .setMessage("系统检测此QQ号未关联账户")//这里设置提示信息
+                                        .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                                        .setPositiveButton("点击关联", new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onClick(View v) {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mDialog.dismiss();
                                                 OkGo.getInstance().cancelTag("QQ授权");//跳转前取消本次请求
                                                 //设置Intent意图参数，跳转账户信息绑定QQ会话的Session数据
                                                 Intent thisIntentToBindUser = new Intent();
@@ -397,12 +486,10 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                                                 thisIntentToBindUser.putExtra("QQJsonData", values.toString());
                                                 startActivityForResultAnimLeftToRight(thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
-
                                             }
                                         });
-                                //设置Snackbar上提示的字体颜色
-                                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                snackbar.show();
+                                mDialog = builder.create();
+                                mDialog.show();
                                 return;
                             }
                             //当前QQ账号已授权登录APP应用——已绑定过登录账户
@@ -430,7 +517,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                             @Override
                                             public void onSuccess(Response<String> response) {
                                                 //等待对话框
-                                                LoadingDialog.showSimpleLD(LoginActivity.this, getString(R.string.indexLoadLoginInfo));
                                                 UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
                                                 Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
 
@@ -439,10 +525,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     dialogPrompt.show();
                                                     return;
                                                 }
-                                                if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "success".equals(userQQSessionBean.getMsg())) {
+                                                if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "QQ一键登录失败".equals(userQQSessionBean.getMsg())) {
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，未知错误，请联系开发者解决！");
+                                                    dialogPrompt.show();
+                                                    return;
+                                                }
+                                                if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                                                     //一键登录(并联信息持久化手机内存，生命周期：存储——清空(卸载App或注销时clear))
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
-
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
                                                     App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
@@ -452,25 +542,24 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     thisIntentToIndex.putExtra("UserQQSessionBean", String.valueOf(userQQSessionBean));
                                                     LoginActivity.this.setResult(Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION, thisIntentToIndex);
                                                     startActivityAnimRightToLeft(thisIntentToIndex);
-                                                    LoadingDialog.closeSimpleLD();//销毁之前，关闭对话框
                                                     LoginActivity.this.finish();//并销毁登录界面
-                                                }
-                                                if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "error".equals(userQQSessionBean.getMsg())) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，未知错误，请联系开发者解决！");
-                                                    dialogPrompt.show();
                                                 }
                                             }
 
                                             @Override
                                             public void onError(Response<String> response) {
                                                 //未绑定温馨提示
-                                                Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                                        .setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                                 snackbar.show();
                                             }
                                         });
                             }
+                        }
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            XPopupUtils.setDisDialog();
                         }
 
                         @Override
@@ -482,23 +571,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             snackbar.show();
                         }
                     });
-            /** 保存Session信息存入SharePreference本地数据 */
-            //initSaveSessionDataToLocalFile(values);
         }
     };
-
-    /**
-     * 登录回调成功后保存Session信息本地XML数据文件中
-     *
-     * @param jsonObject QQ回调Session的JSON数据
-     */
-    private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
-        //Gson解析并序列号至Java对象中
-        Constant.sessionBean = GsonUtil.gsonToBean(jsonObject.toString(), SessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + Constant.sessionBean);
-        //Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例)
-        SharePreferenceUtil.putObject(LoginActivity.this, Constant.sessionBean);
-    }
 
     /**
      * 拉起选择QQ授权界面后监听回调结果
@@ -668,24 +742,113 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     /**
      * 登录转场
      */
-    private Handler mHandler = new Handler() {
-
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             mLogin_ptn_anim.stopAnim(new ProgressButton.OnStopAnim() {
                 @Override
                 public void Stop() {
-//                    UiTools.showSimpleLD(loginAc.this,getString(R.string.loading_login));
-//                    userNameOrPhone = edit_login_usernameOrPhone.getText().toString();
-//                    password = edit_login_password.getText().toString();
-//                    //  用户名/手机号和密码登录
-//                    StartUsernameOrPhonePassword(userNameOrPhone ,password);
+                    //UiTools.showSimpleLD(LoginActivity.this,"getString(R.string.loading_login)");
+                    strUserName = mLogin_edit_username.getText().toString();
+                    strPassword = mLogin_edit_password.getText().toString();
+                    //用户名和密码登录
+                    StartUserNameAndPassWordByLogin(strUserName ,strPassword);
                 }
             });
 
         }
     };
+
+    /**
+     *
+     * @param strUserName 用户名
+     * @param strPassword 密码
+     */
+    private void StartUserNameAndPassWordByLogin(String strUserName, String strPassword) {
+
+        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD_AND_QQ_SESSION)
+                .tag("用户名密码登录")
+                .params("ulUsername", strUserName).params("ulPassword", strPassword)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户");
+                        //popupView.dismiss();  //立即消失
+                        //popupView.delayDismiss(300);//延时消失，有时候消失过快体验可能不好，可以延时一下
+                        //popupView.smartDismiss(); //会等待弹窗的开始动画执行完毕再进行消失，可以防止接口调用过快导致的动画不完整。
+                    }
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //等待对话框
+                        //LoadingDialog.showSimpleLD(LoginActivity.this, getString(R.string.indexLoadLoginInfo));
+                        UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
+                        Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
+                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，用户名和密码不匹配".equals(userQQSessionBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLogin_rl_show, userQQSessionBean.getMsg(), Snackbar.LENGTH_INDEFINITE).setActionTextColor(getResources().getColor(R.color.colorAccent)).setDuration(5000);
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            return;
+                        }
+                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "此账户处于封禁状态".equals(userQQSessionBean.getMsg())) {
+                            DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userQQSessionBean.getMsg());
+                            dialogPrompt.show();
+                            return;
+                        }
+                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，此账户未绑定QQ".equals(userQQSessionBean.getMsg())) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setTitle("登录提示")
+                                    .setMessage("当前账户还未绑定QQ~" + getString(R.string.please_bind_qq_login))
+                                    .setTopImage(R.drawable.icon_tanchuang_wenhao)
+                                    .setNegativeButton("溜了溜了", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mDialog.dismiss();
+                                        }
+                                    })
+                                    .setPositiveButton("立即授权", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            OkGo.getInstance().cancelTag("用户名密码登录");//跳转前取消本次请求
+                                            QQLogin(false);//传入false，即拉起手Q登录，无须扫码
+                                            mDialog.dismiss();
+                                        }
+                                    });
+                            mDialog = builder.create();
+                            mDialog.show();
+                            return;
+                        }
+                        if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
+                            //拉去并联登录信息持久化
+                            SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
+                            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+                            Intent thisIntentToIndex = new Intent();
+                            thisIntentToIndex.setClass(LoginActivity.this, IndexActivity.class);
+                            //传入Gson解析的并集信息到首页展示
+                            thisIntentToIndex.putExtra("UserQQSessionBean", String.valueOf(userQQSessionBean));
+                            LoginActivity.this.setResult(Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION, thisIntentToIndex);
+                            startActivityAnimRightToLeft(thisIntentToIndex);
+                            LoginActivity.this.finish();//并销毁登录界面
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        XPopupUtils.setDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        //未绑定温馨提示
+                        Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                        snackbar.show();
+                    }
+                });
+    }
 
     /**
      * 初始化Check状态+登录按钮状态动画

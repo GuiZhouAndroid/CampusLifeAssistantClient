@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 public class UserQQSessionBean{
 
-
     private int code;
     private Data data;
     private String msg;
@@ -37,6 +36,7 @@ public class UserQQSessionBean{
         @lombok.Data
         public static class UserInfo {
             private String createTime;
+            private String lastLoginTime;
             private String ulClass;
             private String ulDept;
             private String ulEmail;

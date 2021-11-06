@@ -3,6 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import butterknife.BindBitmap;
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
@@ -40,7 +42,7 @@ public class BottomMineFragment extends BaseFragment {
     private IndexActivity indexActivity;
     private static final String TAG = "BottomMineFragment";
 
-
+    @BindBitmap(R.mipmap.index_not_login) Bitmap mIndex_not_login;//绑定资源文件中mipmap中的ic_launcher图片
     /** 原生View布局 */
     @BindView(R2.id.qq_head) ImageView mQQHead;
     @BindView(R2.id.qq_back) ImageView mQQBack;
@@ -97,14 +99,36 @@ public class BottomMineFragment extends BaseFragment {
                             .transform(new BlurTransformation(20, 3))
                             .into(mQQBack);
                     break;
-                case 3://匹配成功，接收IndexActivity发来的空消息
-//                    tv_username.setText("无数据");
-//                    tv_sex.setText("无数据");
+                case 3://匹配成功，接收IndexActivity发来的空消息--->未登录设置默认值
+                    //设置圆形图像
+                    RequestOptions options1 = new RequestOptions();
+                    options1.circleCrop();
+                    Glide.with(getActivity())
+                            .load(mIndex_not_login)
+                            .apply(options1)
+                            .into(mQQHead);
+                    //设置背景高斯模糊效果
+                    Glide.with(getActivity())
+                            .load(mIndex_not_login)
+                            .transform(new BlurTransformation(20, 3))
+                            .into(mQQBack);
+                    mQQProvince.setText("请先");//设置QQ信息的省份
+                    mQQCity.setText("登录");//设置QQ信息的城市
+                    mQQNickName.setRightDesc(getString(R.string.notLogin));//设置QQ信息的城市
+                    mUserName.setRightDesc(getString(R.string.notLogin));
+                    mSex.setRightDesc(getString(R.string.notLogin));
+                    mRealName.setRightDesc(getString(R.string.notLogin));
+                    mIdCard.setRightDesc(getString(R.string.notLogin));
+                    mStuNo.setRightDesc(getString(R.string.notLogin));
+                    mTel.setRightDesc(getString(R.string.notLogin));
+                    mEmail.setRightDesc(getString(R.string.notLogin));
+                    mDept.setRightDesc(getString(R.string.notLogin));
+                    mClass.setRightDesc(getString(R.string.notLogin));
+                    mCreateTime.setRightDesc(getString(R.string.notLogin));
+                    mUpdateTime.setRightDesc(getString(R.string.notLogin));
                     break;
             }
         }
-
-        ;
     };
 
 
@@ -124,18 +148,7 @@ public class BottomMineFragment extends BaseFragment {
 
     @Override
     protected void prepareData(Bundle savedInstanceState) {
-//        mNickName.setItemClickListener(new ItemView.itemClickListener() {
-//            @Override
-//            public void itemClick(String text) {
-//                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        mSex.setItemClickListener(new ItemView.itemClickListener() {
-//            @Override
-//            public void itemClick(String text) {
-//                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
     }
 
     @Override
@@ -243,14 +256,12 @@ public class BottomMineFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         Glide.get(getActivity()).clearMemory();
-        Glide.get(getActivity()).clearDiskCache();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Glide.get(getActivity()).clearMemory();
-        Glide.get(getActivity()).clearDiskCache();
     }
 
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_drawer_bg"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_drawer_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@mipmap/index_drawer_top_background"
     android:gravity="bottom"
     android:orientation="horizontal"
@@ -16,13 +16,12 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-
         <ImageView
+            android:layout_centerHorizontal="true"
             android:id="@+id/index_iv_nav_header_icon"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginTop="24dp" />
-
         <TextView
             android:id="@+id/index_tv_nav_header_name"
             android:layout_width="wrap_content"
@@ -37,18 +36,60 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="32dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_signature"
+            android:id="@+id/tv_LastLoginInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/signature"
+            android:text="@string/LastLoginInfo"
             android:textColor="@color/viewBackground"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/QQLastLoginTime"
+                android:textColor="@color/viewBackground"
+                android:textSize="12sp" />
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/tv_QQLastLoginTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/viewBackground"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/userLastLoginTime"
+                android:textColor="@color/viewBackground"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_userLastLoginTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/viewBackground"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

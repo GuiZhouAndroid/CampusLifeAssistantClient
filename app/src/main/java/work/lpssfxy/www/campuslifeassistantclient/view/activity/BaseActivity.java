@@ -2,6 +2,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,8 @@ import butterknife.Unbinder;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
@@ -39,7 +43,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     private Unbinder mUnbinder;
     /** 滑动返回 */
     private SwipeBackLayout mSwipeBackLayout;
-
+    /** 自定义对话框 */
+    private AlertDialog mDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +80,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         initListener();
         /** 业务操作 */
         doBusiness();
-
 
     }
 
@@ -439,5 +443,87 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
         View view = snackbar.getView();
         ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
+    }
+
+
+    //自定义的弹窗（提示框）
+    public void notification() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示框")//这里设置标题
+                .setMessage("提示框可以自定义布局样式，只有一个按钮")//这里设置提示信息
+                .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDialog.dismiss();
+                    }
+                });
+        mDialog = builder.create();
+        mDialog.show();
+    }
+
+    //自定义的弹窗（两个按钮的选择框）
+    public void notification2() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("两个按钮的选择框")
+                .setMessage("选择可以自定义布局样式，有两个按钮")
+                .setTopImage(R.drawable.icon_tanchuang_wenhao)
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDialog.dismiss();
+                    }
+                });
+        mDialog = builder.create();
+        mDialog.show();
+    }
+
+    //自定义的弹窗（一个按钮没有顶部图标）
+    public void notification3() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("没有提示信息，没有顶部图标")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDialog.dismiss();
+                    }
+                });
+        mDialog = builder.create();
+        mDialog.show();
+    }
+
+    //自定义的弹窗（鲜艳版）
+    public void notification4() {
+        CustomDialog.Builder builder = new CustomDialog.Builder(BaseActivity.this);
+        builder.setMessage("这个就是自定义的提示框");
+        builder.setTitle("提示");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+                Toast.makeText(BaseActivity.this,"queding",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(BaseActivity.this,"queding",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 }

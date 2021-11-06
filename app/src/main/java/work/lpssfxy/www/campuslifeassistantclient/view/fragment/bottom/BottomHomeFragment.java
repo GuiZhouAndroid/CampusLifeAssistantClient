@@ -285,7 +285,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionBean != null) {
+                if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.QQSession != null) {
                     Toast.makeText(getActivity(), "QQ登录已经啦", Toast.LENGTH_SHORT).show();
                     return;
                 }

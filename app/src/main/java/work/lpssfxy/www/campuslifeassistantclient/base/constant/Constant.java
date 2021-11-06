@@ -18,10 +18,11 @@ public class Constant {
     /**
      * 常量类对象
      */
-    public static SessionBean sessionBean;
+    public static SessionBean QQSession;
     public static QQUserBean qqUser;
-    public static SessionUserBean sessionUserBean;
-    public static UserQQSessionBean userQQSessionBean;
+    public static SessionUserBean sessionUser;
+    public static UserQQSessionBean userQQSession;
+    public static UserQQSessionBean.Data userQQSessionData;
     public static UserQQSessionBean.Data.UserInfo userInfo;
     /**
      * 全局请求码
@@ -51,7 +52,7 @@ public class Constant {
     /**
      * 用户注册
      */
-    //用户名密码登录
+    //用户名密码注册
     public static final String REGISTER_USER_INFO = BASE_URL + "/api/user/registerUserInfo";
 
     /**
@@ -59,6 +60,9 @@ public class Constant {
      */
     //用户名密码登录
     public static final String LOGIN_USERNAME_PASSWORD = BASE_URL + "/api/user/userDoLoginByNameAndPwd";
+
+    //用户名密码登录，拉去并集信息
+    public static final String LOGIN_USERNAME_PASSWORD_AND_QQ_SESSION = BASE_URL + "/api/user/userSelectUserInfoAndQQInfoByUserNameAndPasswordToLogin";
 
     //用户名密码登录，参数一：ulTel手机号码，参数二：ulPassword登录密码
     public static final String LOGIN_TEL_PASSWORD = BASE_URL + "/api/user/userDoLoginByTelAndPwd";

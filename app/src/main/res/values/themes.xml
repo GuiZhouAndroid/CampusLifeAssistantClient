@@ -76,6 +76,18 @@
         <item name="android:textSize">@dimen/sp_15</item>
     </style>
 
+    <!--base目录的自定义对话框-->
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <!--base目录的自定义对话框-->
+    <style name="DialogStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
     <!--Tooblar弹出菜单主题-->
 <!--    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">-->

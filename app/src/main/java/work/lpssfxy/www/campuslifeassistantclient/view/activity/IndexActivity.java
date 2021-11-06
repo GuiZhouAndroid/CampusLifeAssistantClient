@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,8 +70,8 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
@@ -112,8 +113,10 @@ public class IndexActivity extends BaseActivity {
     private CustomPopWindow mCustomPopWindow;
     /** 侧滑顶部头像 */
     private ImageView ivNavHeaderIcon;
-    /** 侧滑顶部昵称 */
-    private TextView tvNavHeaderName;
+    /** 侧滑顶部昵称 + 上次QQ授权时间 + 上次账户登录时间 */
+    private TextView tvNavHeaderName,tv_QQLastLoginTime,tv_userLastLoginTime;
+    /** 侧滑背景图片 */
+    private LinearLayout ll_drawer_bg;
     //用于数据传递到底部导航第四个页面--->用户管理信息
     private Handler mHandler;
 
@@ -346,6 +349,12 @@ public class IndexActivity extends BaseActivity {
         ivNavHeaderIcon = mNav_view.getHeaderView(0).findViewById(R.id.index_iv_nav_header_icon);
         //侧滑顶部昵称
         tvNavHeaderName = mNav_view.getHeaderView(0).findViewById(R.id.index_tv_nav_header_name);
+        //侧滑QQ授权
+        tv_QQLastLoginTime = mNav_view.getHeaderView(0).findViewById(R.id.tv_QQLastLoginTime);
+        //侧滑账户验证
+        tv_userLastLoginTime = mNav_view.getHeaderView(0).findViewById(R.id.tv_userLastLoginTime);
+        //侧滑背景图片
+        ll_drawer_bg = mNav_view.getHeaderView(0).findViewById(R.id.ll_drawer_bg);
     }
 
     /**
@@ -356,25 +365,25 @@ public class IndexActivity extends BaseActivity {
      */
     private void initQQSessionAndUserInfo() {
         /** 获取本地QQSession持久化Java对象数据*/
-        Constant.userQQSessionBean = SharePreferenceUtil.getObject(IndexActivity.this, UserQQSessionBean.class);
-        Log.i(TAG, "首页UserQQSessionBean: " + Constant.userQQSessionBean);
+        Constant.userQQSession = SharePreferenceUtil.getObject(IndexActivity.this, UserQQSessionBean.class);
+        Log.i(TAG, "首页UserQQSessionBean: " + Constant.userQQSession);
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
-        if (Constant.userQQSessionBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
-            LoadingDialog.showSimpleLD(this,getString(R.string.indexLoadLoginInfo));
+        if (Constant.userQQSession != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
+            XPopupUtils.setShowDialog(this,getString(R.string.indexLoadLoginInfo));
             try {
-                jsonObject.put("ret", Constant.userQQSessionBean.getData().getRet());
-                jsonObject.put("openid", Constant.userQQSessionBean.getData().getOpenid());
-                jsonObject.put("access_token", Constant.userQQSessionBean.getData().getAccessToken());
-                jsonObject.put("pay_token",Constant.userQQSessionBean.getData().getPayToken());
-                jsonObject.put("expires_in", Constant.userQQSessionBean.getData().getExpiresIn());
-                jsonObject.put("pf", Constant.userQQSessionBean.getData().getPf());
-                jsonObject.put("pfkey", Constant.userQQSessionBean.getData().getPfkey());
-                jsonObject.put("msg", Constant.userQQSessionBean.getData().getMsg());
-                jsonObject.put("login_cost",Constant.userQQSessionBean.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", Constant.userQQSessionBean.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", Constant.userQQSessionBean.getData().getAuthorityCost());
-                jsonObject.put("expires_time", Constant.userQQSessionBean.getData().getExpiresTime());
+                jsonObject.put("ret", Constant.userQQSession.getData().getRet());
+                jsonObject.put("openid", Constant.userQQSession.getData().getOpenid());
+                jsonObject.put("access_token", Constant.userQQSession.getData().getAccessToken());
+                jsonObject.put("pay_token",Constant.userQQSession.getData().getPayToken());
+                jsonObject.put("expires_in", Constant.userQQSession.getData().getExpiresIn());
+                jsonObject.put("pf", Constant.userQQSession.getData().getPf());
+                jsonObject.put("pfkey", Constant.userQQSession.getData().getPfkey());
+                jsonObject.put("msg", Constant.userQQSession.getData().getMsg());
+                jsonObject.put("login_cost",Constant.userQQSession.getData().getLoginCost());
+                jsonObject.put("query_authority_cost", Constant.userQQSession.getData().getQueryAuthorityCost());
+                jsonObject.put("authority_cost", Constant.userQQSession.getData().getAuthorityCost());
+                jsonObject.put("expires_time", Constant.userQQSession.getData().getExpiresTime());
                 /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
                 Constant.mTencent.initSessionCache(jsonObject);
                 Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
@@ -383,15 +392,20 @@ public class IndexActivity extends BaseActivity {
             }
             /** 本地文件有用户数据且Session不为空有效时，提取持久化用户信息，设置QQ头像+QQ用户名+个人用户信息 */
             if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
+                //1.发送用户全部信息到handler进行UI更新，包括上次登录时间
                 Message msg = new Message();
-                msg.obj = Constant.userQQSessionBean.getData().getUserInfo();
+                msg.obj = Constant.userQQSession.getData().getUserInfo();
                 msg.what = 2;
                 QQHandler.sendMessage(msg);
-                initValidLoginUserData();//初始化已登录持久化数据
+                //2.发送QQ上次授权时间到handler进行UI更新
+                Message msg1 = new Message();
+                msg1.obj = Constant.userQQSession.getData();
+                msg1.what = 3;
+                QQHandler.sendMessage(msg1);
+                //3.初始化已登录持久化数据
+                initValidLoginUserData();
             }
         } else {//未登录无持久化数据
-            //发送方式一 直接发送一个空的Message，
-            QQHandler.sendEmptyMessage(1);
             Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//false
             Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
@@ -404,6 +418,8 @@ public class IndexActivity extends BaseActivity {
             //设置Snackbar上提示的字体颜色
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
+            //发送方式一 直接发送一个空的Message，
+            QQHandler.sendEmptyMessage(1);
         }
     }
 
@@ -569,11 +585,6 @@ public class IndexActivity extends BaseActivity {
 
         /** 标题栏字体加粗 */
         Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-        /** 创建Glide圆形图像实例*/
-        RequestOptions options = new RequestOptions();
-        options.circleCrop();
-        /** 设置QQ登录成功需要设置加载信息的控件 */
-
     }
 
     /**
@@ -607,8 +618,7 @@ public class IndexActivity extends BaseActivity {
                         QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);//加载在线动态QQ昵称和QQ头像
                         startHaveDataQQUserInfoToMineFragment(Constant.qqUser);
                         /** 关闭正在加载登录信息友好进度条*/
-                        LoadingDialog.closeSimpleLD();
-                    } else { //设置未登录默认头像和点击头像登录
+                        XPopupUtils.setDisDialog();
                     }
                     break;
                 case 1: //未登录
@@ -616,11 +626,25 @@ public class IndexActivity extends BaseActivity {
                     setNotLoginQQUserInfo();
                     /** 清空本机持久化--->QQ会话失效 */
                     setQQUserLoginLogout();
+                    /** 无数据时点击开始传递数据到Fragment《我的》 */
                     startNotHaveDataAllUserInfoToMineFragment();
                     break;
                 case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
                     Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
-                    startHaveDataUserInfoToMineFragment(Constant.userInfo);
+                    if (Constant.userInfo != null) {
+                        startHaveDataUserInfoToMineFragment(Constant.userInfo);
+                        //UI更新用户上次登录时间
+                        tv_userLastLoginTime.setText(Constant.userInfo.getLastLoginTime());
+                        /** 设置Toolbar的真实名字 */
+                        mCollapsing_toolbar_layout.setTitle(Constant.userInfo.getUlRealname());
+                    }
+                    break;
+                case 3:
+                    //UI更新QQ上次授权时间
+                    Constant.userQQSessionData = (UserQQSessionBean.Data) msg.obj;
+                    if (Constant.userQQSessionData != null) {
+                        tv_QQLastLoginTime.setText(Constant.userQQSessionData.getUpdateTime());
+                    }
                     break;
             }
         }
@@ -673,7 +697,13 @@ public class IndexActivity extends BaseActivity {
      *
      */
     public void startNotHaveDataAllUserInfoToMineFragment() {
-        mHandler.sendEmptyMessage(3);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //发送方式一 直接发送一个空的Message
+                mHandler.sendEmptyMessage(3);
+            }
+        }).start();
     }
 
     /**
@@ -683,15 +713,12 @@ public class IndexActivity extends BaseActivity {
     private void QQUserBeanIsValidSetTextAndGlideUserHead(QQUserBean qqUser) {
         /** 标题栏字体加粗 */
         Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
-        //Constant.qqUser = SharePreferenceUtil.getObject(IndexActivity.this, QQUserBean.class);
         /** 创建Glide圆形图像实例*/
         RequestOptions options = new RequestOptions();
         options.circleCrop();
         /** 设置昵称动态开始——动态结束的字体样式 */
         mCollapsing_toolbar_layout.setExpandedTitleTypeface(font);
         mCollapsing_toolbar_layout.setCollapsedTitleTypeface(font);
-        /** 设置ToolbarQQ昵称 */
-        mCollapsing_toolbar_layout.setTitle(qqUser.getNickname());
         /** 设置侧滑的QQ昵称 */
         tvNavHeaderName.setText(qqUser.getNickname());
         /** 设置友好时间状态可见*/
@@ -703,16 +730,14 @@ public class IndexActivity extends BaseActivity {
                 .load(qqUser.getFigureurl_qq_2())
                 .apply(options)
                 .into(mIndex_iv_user_head);
-
         /** 设置侧滑的圆形QQ头像 */
         Glide.with(IndexActivity.this)
                 .load(qqUser.getFigureurl_qq_2())
                 .apply(options)
                 .into(ivNavHeaderIcon);
-
+        /** 温馨提示 */
         Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
                 .setActionTextColor(getResources().getColor(R.color.colorAccent));
-        //设置Snackbar上提示的字体颜色
         setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
         snackbar.show();
     }
@@ -741,11 +766,14 @@ public class IndexActivity extends BaseActivity {
                 .load(mIndex_not_login)
                 .apply(options)
                 .into(mIndex_iv_user_head);
+
         /** 设置侧滑菜单默认的圆形头像 */
         Glide.with(IndexActivity.this)
                 .load(mIndex_not_login)
-                .apply(options)
                 .into(ivNavHeaderIcon);
+
+        tv_userLastLoginTime.setText("请先登录");
+        tv_QQLastLoginTime.setText("请先登录");
     }
 
     /**
@@ -756,9 +784,9 @@ public class IndexActivity extends BaseActivity {
      */
     private void setQQUserLoginLogout() {
         //清空持久化用户并集xml文件，使得QQ会话无法有效初始化，用户信息无法读取
-        Constant.userQQSessionBean = null;//清空当前对象数据
+        Constant.userQQSession = null;//清空当前对象数据
         SharePreferenceUtil.removeObject(IndexActivity.this, UserQQSessionBean.class);//清空持久化xml文件
-        Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.userQQSessionBean);
+        Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.userQQSession);
         //注销mTencent
         Constant.mTencent.logout(IndexActivity.this);
         Log.i(TAG, "注销QQ登录的会话Tencent: " + Constant.mTencent.isSessionValid());
@@ -790,11 +818,11 @@ public class IndexActivity extends BaseActivity {
      * 判断检查QQ登录是否有效
      */
     private void checkQQLoginIfValid() {
-        if (Constant.userQQSessionBean == null) {
+        if (Constant.userQQSession == null) {
             startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
             return;
         }
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSessionBean != null) {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSession != null) {
             Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
             //设置Snackbar上提示的字体颜色
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
