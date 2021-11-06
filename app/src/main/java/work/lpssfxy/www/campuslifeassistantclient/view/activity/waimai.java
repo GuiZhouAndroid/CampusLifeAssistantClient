@@ -57,6 +57,7 @@ public class waimai extends BaseActivity {
         return R.layout.activity_waimai;
     }
 
+
     @Override
     protected void prepareData() {
         showImg();

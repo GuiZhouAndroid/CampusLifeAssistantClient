@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical"
+    tools:context=".view.activity.MineInfoActivity">
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_username"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_nick_name"
+        app:left_text="用户名" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_sex"
+        app:left_text="性别" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_realname"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_sign_name"
+        app:left_text="真实姓名" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_idcard"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_pass"
+        app:left_text="身份证号" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_stuno"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_pass"
+        app:left_text="学号" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="手机号" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_email"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="QQ邮箱" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_dept"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="所属院系" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_class"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="专业班级" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_create_time"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="账户注册时间" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_update_time"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_about"
+        app:left_text="账户更新时间" />
+
+</LinearLayout>

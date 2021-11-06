@@ -137,6 +137,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
         return R.layout.welcome_activity;
     }
 
+
     /**
      * 准备数据
      */

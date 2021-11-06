@@ -30,13 +30,6 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.core.BasePopupView;
-import com.lxj.xpopup.core.ImageViewerPopupView;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
-import com.lxj.xpopup.interfaces.OnSelectListener;
-import com.lxj.xpopup.interfaces.OnSrcViewUpdateListener;
-import com.lxj.xpopup.util.SmartGlideImageLoader;
 import com.lxj.xpopupext.listener.CityPickerListener;
 import com.lxj.xpopupext.listener.CommonPickerListener;
 import com.lxj.xpopupext.listener.TimePickerListener;
@@ -64,13 +57,10 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
@@ -82,7 +72,6 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.LoadingDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 
@@ -158,6 +147,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     public int bindLayout() {
         return R.layout.login_activity;
     }
+
 
     @Override
     protected void prepareData() {
@@ -532,17 +522,12 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 }
                                                 if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                                                     //一键登录(并联信息持久化手机内存，生命周期：存储——清空(卸载App或注销时clear))
+                                                    IndexActivity.indexActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-                                                    App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-                                                    Intent thisIntentToIndex = new Intent();
-                                                    thisIntentToIndex.setClass(LoginActivity.this, IndexActivity.class);
-                                                    //传入Gson解析的并集信息到首页展示
-                                                    thisIntentToIndex.putExtra("UserQQSessionBean", String.valueOf(userQQSessionBean));
-                                                    LoginActivity.this.setResult(Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION, thisIntentToIndex);
-                                                    startActivityAnimRightToLeft(thisIntentToIndex);
-                                                    LoginActivity.this.finish();//并销毁登录界面
+                                                    startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
+                                                    finish();
                                                 }
                                             }
 
@@ -559,7 +544,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         @Override
                         public void onFinish() {
                             super.onFinish();
-                            XPopupUtils.setDisDialog();
+                            XPopupUtils.setSmartDisDialog();
                         }
 
                         @Override
@@ -822,22 +807,17 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         }
                         if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                             //拉去并联登录信息持久化
+                            IndexActivity.indexActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
                             SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
-                            App.appActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
-                            Intent thisIntentToIndex = new Intent();
-                            thisIntentToIndex.setClass(LoginActivity.this, IndexActivity.class);
-                            //传入Gson解析的并集信息到首页展示
-                            thisIntentToIndex.putExtra("UserQQSessionBean", String.valueOf(userQQSessionBean));
-                            LoginActivity.this.setResult(Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION, thisIntentToIndex);
-                            startActivityAnimRightToLeft(thisIntentToIndex);
-                            LoginActivity.this.finish();//并销毁登录界面
+                            startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
+                            finish();
                         }
                     }
 
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.setDisDialog();
+                        XPopupUtils.setSmartDisDialog();
                     }
 
                     @Override

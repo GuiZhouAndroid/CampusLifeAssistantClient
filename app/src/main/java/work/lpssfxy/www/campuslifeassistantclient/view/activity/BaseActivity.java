@@ -366,7 +366,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
      * @param activity
      * @param intent
      */
-    public static void startActivityAnimLeftToRight(Activity activity, Intent intent) {
+    public void startActivityAnimLeftToRight(Activity activity, Intent intent) {
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }

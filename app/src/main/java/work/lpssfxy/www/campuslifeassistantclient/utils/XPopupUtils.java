@@ -21,7 +21,11 @@ public class XPopupUtils {
                 .show();
     }
 
-    public static void setDisDialog(){
+    public static void setSmartDisDialog(){
         popupView.smartDismiss();
+    }
+
+    public static void setTimerDisDialog(){
+        popupView.delayDismiss(500);
     }
 }

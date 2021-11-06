@@ -45,6 +45,7 @@ public class UserApplyUntieActivity extends BaseActivity {
         return R.layout.activity_user_apply_untie;
     }
 
+
     @Override
     protected void prepareData() {
 
@@ -52,7 +53,7 @@ public class UserApplyUntieActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        Toast.makeText(this, getIntent().getStringExtra("UntieBannedName"), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, getIntent().getStringExtra("UntieBannedName"), Toast.LENGTH_LONG).show();
     }
 
     @Override

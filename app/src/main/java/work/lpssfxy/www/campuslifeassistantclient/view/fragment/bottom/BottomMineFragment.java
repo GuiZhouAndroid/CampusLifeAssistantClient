@@ -3,15 +3,21 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,11 +27,17 @@ import butterknife.BindView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.base.ActivityInteraction;
+import work.lpssfxy.www.campuslifeassistantclient.base.ParcelableData;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -39,54 +51,46 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class BottomMineFragment extends BaseFragment {
-    private IndexActivity indexActivity;
     private static final String TAG = "BottomMineFragment";
-
     @BindBitmap(R.mipmap.index_not_login) Bitmap mIndex_not_login;//绑定资源文件中mipmap中的ic_launcher图片
     /** 原生View布局 */
-    @BindView(R2.id.qq_head) ImageView mQQHead;
-    @BindView(R2.id.qq_back) ImageView mQQBack;
-    @BindView(R2.id.qq_province) TextView mQQProvince;
-    @BindView(R2.id.qq_city) TextView mQQCity;
+    @BindView(R2.id.qq_head) ImageView mQQHead;//QQ头像
+    @BindView(R2.id.qq_back) ImageView mQQBack;//QQ头像高斯模糊背景
+    @BindView(R2.id.qq_province) TextView mQQProvince;//QQ省份
+    @BindView(R2.id.qq_city) TextView mQQCity;//QQ城市
+    @BindView(R2.id.btn_logout_login) Button mLogoutLogin;//注销登录
 
     /** item控件--->用户信息 */
-    @BindView(R2.id.qq_nickname) ItemView mQQNickName;//用户名
-    @BindView(R2.id.ll_username) ItemView mUserName;//用户名
-    @BindView(R2.id.ll_sex) ItemView mSex;//性别
-    @BindView(R2.id.ll_realname) ItemView mRealName;//真实姓名
-    @BindView(R2.id.ll_idcard) ItemView mIdCard;//身份证号
-    @BindView(R2.id.ll_stuno) ItemView mStuNo;//学号
-    @BindView(R2.id.ll_tel) ItemView mTel;//手机号
-    @BindView(R2.id.ll_email) ItemView mEmail;//QQ邮箱
-    @BindView(R2.id.ll_dept) ItemView mDept;//所属院系
-    @BindView(R2.id.ll_class) ItemView mClass;//专业班级
-    @BindView(R2.id.ll_create_time) ItemView mCreateTime;//账户注册时间
-    @BindView(R2.id.ll_update_time) ItemView mUpdateTime;//账户更新时间
+    @BindView(R2.id.qq_nickname) ItemView mQQNickname;//QQ昵称
+    @BindView(R2.id.ll_my_info) ItemView mMyInfo;//我的信息
+    @BindView(R2.id.ll_my_goods) ItemView mMyGoods;//我的订单
+    @BindView(R2.id.ll_feedback) ItemView mFeedback;//意见反馈
+    @BindView(R2.id.ll_report_center) ItemView mReportCenter;//举报中心
+    @BindView(R2.id.ll_account_safe) ItemView mAccountSafe;//账户安全
+    @BindView(R2.id.ll_check_update) ItemView mCheckUpdate;//检查更新
+    @BindView(R2.id.ll_system_set) ItemView mSystemSet;//系统设置
 
+    /** 自定义对话框 */
+    private AlertDialog mDialog;
     // 接收MainActivity发送消息，匹配消息what值(消息标记)
     @SuppressLint("HandlerLeak")
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
-                case 1://匹配成功，获取IndexActivity个人用户信息
+                case 1:
                     Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
-                    mUserName.setRightDesc(Constant.userInfo.getUlUsername());
-                    mSex.setRightDesc(Constant.userInfo.getUlSex());
-                    mRealName.setRightDesc(Constant.userInfo.getUlRealname());
-                    mIdCard.setRightDesc(Constant.userInfo.getUlIdcard());
-                    mStuNo.setRightDesc(Constant.userInfo.getUlStuno());
-                    mTel.setRightDesc(Constant.userInfo.getUlTel());
-                    mEmail.setRightDesc(Constant.userInfo.getUlEmail());
-                    mDept.setRightDesc(Constant.userInfo.getUlDept());
-                    mClass.setRightDesc(Constant.userInfo.getUlClass());
-                    mCreateTime.setRightDesc(Constant.userInfo.getCreateTime());
-                    mUpdateTime.setRightDesc(Constant.userInfo.getUpdateTime());
+                    if (Constant.userInfo !=null){
+                        mAccountSafe.setRightDesc(Constant.userInfo.getCreateTime());//设置QQ信息的城市
+                    }else {
+                        mAccountSafe.setRightDesc("未登录");//设置QQ信息的城市
+                    }
+                    Log.i(TAG, "Fragment用户信息: "+ Constant.userInfo);
                     break;
                 case 2://匹配成功，获取IndexActivity登录QQ用户信息
                     Constant.qqUser = (QQUserBean) msg.obj;
                     mQQProvince.setText(Constant.qqUser.getProvince() + "省");//设置QQ信息的省份
                     mQQCity.setText(Constant.qqUser.getCity());//设置QQ信息的城市
-                    mQQNickName.setRightDesc(Constant.qqUser.getNickname());//设置QQ信息的城市
+                    mQQNickname.setRightDesc(Constant.qqUser.getNickname());//设置QQ信息的城市
                     //设置圆形图像
                     RequestOptions options = new RequestOptions();
                     options.circleCrop();
@@ -101,6 +105,7 @@ public class BottomMineFragment extends BaseFragment {
                     break;
                 case 3://匹配成功，接收IndexActivity发来的空消息--->未登录设置默认值
                     //设置圆形图像
+                    Constant.userInfo = null;
                     RequestOptions options1 = new RequestOptions();
                     options1.circleCrop();
                     Glide.with(getActivity())
@@ -114,30 +119,50 @@ public class BottomMineFragment extends BaseFragment {
                             .into(mQQBack);
                     mQQProvince.setText("请先");//设置QQ信息的省份
                     mQQCity.setText("登录");//设置QQ信息的城市
-                    mQQNickName.setRightDesc(getString(R.string.notLogin));//设置QQ信息的城市
-                    mUserName.setRightDesc(getString(R.string.notLogin));
-                    mSex.setRightDesc(getString(R.string.notLogin));
-                    mRealName.setRightDesc(getString(R.string.notLogin));
-                    mIdCard.setRightDesc(getString(R.string.notLogin));
-                    mStuNo.setRightDesc(getString(R.string.notLogin));
-                    mTel.setRightDesc(getString(R.string.notLogin));
-                    mEmail.setRightDesc(getString(R.string.notLogin));
-                    mDept.setRightDesc(getString(R.string.notLogin));
-                    mClass.setRightDesc(getString(R.string.notLogin));
-                    mCreateTime.setRightDesc(getString(R.string.notLogin));
-                    mUpdateTime.setRightDesc(getString(R.string.notLogin));
+                    mQQNickname.setRightDesc("未登录");//设置QQ信息的城市
                     break;
             }
         }
     };
 
+    public static BottomMineFragment newInstance(){
+        //GlobalBus.getBus().register(fragment);
+        return new BottomMineFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IndexActivity activity=(IndexActivity) getActivity();
+        if (activity!=null){
+            activity.setStartPushUserInfoListener(new ActivityInteraction() {
+                @Override
+                public void userAllInfoPutMineFragment(UserQQSessionBean.Data.UserInfo userInfo) {
+                    onAttach(activity);
+                    if (userInfo != null) {
+                        Message msg = new Message();
+                        //5.携带数据为输入框文本数据
+                        msg.obj = userInfo;
+                        //5.消息标记为1
+                        msg.what = 1;
+                        //5.开始发送消息
+                        mHandler.sendMessage(msg);
+                        Toast.makeText(getActivity(), userInfo.toString(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        mHandler.sendEmptyMessage(3);
+                    }
+                }
+
+            });
+        }
+    }
 
     @Override
     public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
         IndexActivity mIndexActivity = (IndexActivity) activity;
         //通过强转成宿主activity，就可以获取到传递过来的数据
-//        titles = mIndexActivity.getTitles();
+        //titles = mIndexActivity.getTitles();
         mIndexActivity.setHandler(mHandler);
     }
 
@@ -163,7 +188,108 @@ public class BottomMineFragment extends BaseFragment {
 
     @Override
     protected void initEvent() {
-        managerMyUserInfo();
+        mQQNickname.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+        //点击我的信息跳转详情页，提供完善信息功能
+        mMyInfo.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                XPopupUtils.setShowDialog(getActivity(),"请求跳转中...");
+                //子线程延迟0.5秒执行跳转
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //跳转前，关闭对话框
+                        XPopupUtils.setTimerDisDialog();
+                        if (Constant.userInfo !=null){ //登录有数据
+                            // 实现 Android 自带的Parcelable接口，封装对象数据，通过Bundle键值对形式，传递参数到MineInfoActivity页面
+                            Intent thisIntentToMineActivity= new Intent();;
+                            thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
+                            Bundle bundle=new Bundle();
+                            //bundle.putString("userInfo",Constant.userInfo.toString());
+                            bundle.putParcelable("userInfo", new ParcelableData(
+                                    Constant.userInfo.getCreateTime(),Constant.userInfo.getLastLoginTime(),Constant.userInfo.getUlClass(),
+                                    Constant.userInfo.getUlDept(),Constant.userInfo.getUlEmail(),Constant.userInfo.getUlId(),
+                                    Constant.userInfo.getUlIdcard(),Constant.userInfo.getUlRealname(),Constant.userInfo.getUlSex(),Constant.userInfo.getUlStuno(),
+                                    Constant.userInfo.getUlTel(),Constant.userInfo.getUlUsername(),Constant.userInfo.getUpdateTime()));
+                            thisIntentToMineActivity.putExtras(bundle);
+                            startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
+                        }else {
+                            //如果没有
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("温馨提示")//这里设置标题
+                                    .setMessage("您还没有登录呀~")//这里设置提示信息
+                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mDialog.dismiss();
+                                        }
+                                    });
+                            mDialog = builder.create();
+                            mDialog.show();
+                        }
+                    }
+                }, 500);
+
+            }
+        });
+        mMyGoods.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+
+//                Toast.makeText(getActivity(), Constant.userInfo.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        mFeedback.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mReportCenter.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mAccountSafe.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                XPopupUtils.setShowDialog(getActivity(),"请求跳转中...");
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        XPopupUtils.setTimerDisDialog();
+                        startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
+                    }
+                }, 500);
+            }
+        });
+        mCheckUpdate.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mSystemSet.setItemClickListener(new ItemView.itemClickListener() {
+            @Override
+            public void itemClick(String text) {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mLogoutLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -177,91 +303,21 @@ public class BottomMineFragment extends BaseFragment {
 
     }
 
-    public void managerMyUserInfo() {
-        mQQNickName.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mUserName.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mSex.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mRealName.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mIdCard.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mStuNo.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mTel.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mEmail.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mDept.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mClass.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mCreateTime.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-        mUpdateTime.setItemClickListener(new ItemView.itemClickListener() {
-            @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         Glide.get(getActivity()).clearMemory();
+
+        //Unregister the Registered Event.
+        //GlobalBus.getBus().unregister(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Glide.get(getActivity()).clearMemory();
+        mHandler.removeCallbacksAndMessages(null);
+        //GlobalBus.getBus().unregister(this);
     }
 
 }

@@ -140,6 +140,8 @@ dependencies {
     implementation 'com.github.li-xiaojun:XPopup:2.6.6'
     //XPopupExt是XPopup的扩展功能库选择器弹窗和城市选择器弹窗必须添加XPopup依赖 https://github.com/li-xiaojun/XPopupExt
     implementation 'com.github.li-xiaojun:XPopupExt:0.0.8'
+    //EventBus消息机制总线
+//    implementation 'org.greenrobot:eventbus:3.2.0'
 
 
 }

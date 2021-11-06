@@ -20,7 +20,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
@@ -83,6 +82,7 @@ public class LoginBindActivity extends BaseActivity {
     public int bindLayout() {
         return R.layout.login_activity_bind;
     }
+
 
     /**
      * 准备数据
@@ -177,7 +177,7 @@ public class LoginBindActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        XPopupUtils.setDisDialog();
+                        XPopupUtils.setSmartDisDialog();
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + responseBean);
                         if (200 == responseBean.getCode() && "查询失败，此用户名不存在".equals(responseBean.getMsg())) {
@@ -277,7 +277,7 @@ public class LoginBindActivity extends BaseActivity {
 
                                     @Override
                                     public void onFinish() {
-                                        XPopupUtils.setDisDialog();
+                                        XPopupUtils.setSmartDisDialog();
                                     }
 
                                     @Override

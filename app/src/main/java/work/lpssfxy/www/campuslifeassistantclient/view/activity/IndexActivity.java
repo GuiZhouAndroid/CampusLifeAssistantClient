@@ -2,6 +2,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -61,10 +63,10 @@ import java.util.List;
 import butterknife.BindBitmap;
 import butterknife.BindView;
 import butterknife.OnClick;
-import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.base.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
@@ -119,6 +121,10 @@ public class IndexActivity extends BaseActivity {
     private LinearLayout ll_drawer_bg;
     //用于数据传递到底部导航第四个页面--->用户管理信息
     private Handler mHandler;
+
+    private ActivityInteraction mActivityInteraction;
+
+    public static Activity indexActivity;
 
     /**
      * 关闭滑动返回
@@ -181,6 +187,7 @@ public class IndexActivity extends BaseActivity {
         return R.layout.index_activity;
     }
 
+
     /**
      * 准备数据
      */
@@ -204,7 +211,8 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void initView() {
         /** IndexActivity赋值单例静态全局变量，此处用于LoginActivity指定销毁当前IndexActivity*/
-        App.appActivity = IndexActivity.this;
+//        App.appActivity = IndexActivity.this;
+        indexActivity = this;
         /**判断Toolbar，开启主图标并显示title*/
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -252,7 +260,6 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void doBusiness() {
-
     }
 
     /**
@@ -397,6 +404,7 @@ public class IndexActivity extends BaseActivity {
                 msg.obj = Constant.userQQSession.getData().getUserInfo();
                 msg.what = 2;
                 QQHandler.sendMessage(msg);
+
                 //2.发送QQ上次授权时间到handler进行UI更新
                 Message msg1 = new Message();
                 msg1.obj = Constant.userQQSession.getData();
@@ -412,7 +420,7 @@ public class IndexActivity extends BaseActivity {
                     .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
                         @Override
                         public void onClick(View v) {
-                            startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);
+                            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
                         }
                     });
             //设置Snackbar上提示的字体颜色
@@ -618,7 +626,7 @@ public class IndexActivity extends BaseActivity {
                         QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);//加载在线动态QQ昵称和QQ头像
                         startHaveDataQQUserInfoToMineFragment(Constant.qqUser);
                         /** 关闭正在加载登录信息友好进度条*/
-                        XPopupUtils.setDisDialog();
+                        XPopupUtils.setSmartDisDialog();
                     }
                     break;
                 case 1: //未登录
@@ -628,16 +636,21 @@ public class IndexActivity extends BaseActivity {
                     setQQUserLoginLogout();
                     /** 无数据时点击开始传递数据到Fragment《我的》 */
                     startNotHaveDataAllUserInfoToMineFragment();
+                    if (mActivityInteraction != null){
+                        mActivityInteraction.userAllInfoPutMineFragment(null);
+                    }
                     break;
                 case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
                     Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
-                    if (Constant.userInfo != null) {
                         startHaveDataUserInfoToMineFragment(Constant.userInfo);
+                        Log.i(TAG, "handleMessage: "+Constant.userInfo);
+                        if (mActivityInteraction != null){
+                            mActivityInteraction.userAllInfoPutMineFragment(Constant.userInfo);
+                        }
                         //UI更新用户上次登录时间
                         tv_userLastLoginTime.setText(Constant.userInfo.getLastLoginTime());
                         /** 设置Toolbar的真实名字 */
                         mCollapsing_toolbar_layout.setTitle(Constant.userInfo.getUlRealname());
-                    }
                     break;
                 case 3:
                     //UI更新QQ上次授权时间
@@ -661,19 +674,31 @@ public class IndexActivity extends BaseActivity {
     }
 
     /**
+     * 写一个对外公开的方法，传递数据
+     * @param interaction
+     */
+    public void setStartPushUserInfoListener(ActivityInteraction interaction){
+        this.mActivityInteraction = interaction;
+    }
+
+    /**
      * 用户数据开始传递数据到Fragment《我的》
      *
      * @param userInfo
      */
     public void startHaveDataUserInfoToMineFragment(UserQQSessionBean.Data.UserInfo userInfo) {
+        Log.i(TAG, "Hadnler用户信息: "+ userInfo);
         //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
         Message msg = new Message();
         //5.携带数据为输入框文本数据
         msg.obj = userInfo;
         //5.消息标记为1
         msg.what = 1;
+        Log.i(TAG, "mHandler:== "+ mHandler);
         //5.开始发送消息
-        mHandler.sendMessage(msg);
+        if (mHandler!=null){
+            mHandler.sendMessage(msg);
+        }
     }
 
     /**
@@ -689,7 +714,9 @@ public class IndexActivity extends BaseActivity {
         //5.消息标记为1
         msg.what = 2;
         //5.开始发送消息
-        mHandler.sendMessage(msg);
+        if (mHandler!=null){
+            mHandler.sendMessage(msg);
+        }
     }
 
     /**
@@ -697,13 +724,9 @@ public class IndexActivity extends BaseActivity {
      *
      */
     public void startNotHaveDataAllUserInfoToMineFragment() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //发送方式一 直接发送一个空的Message
-                mHandler.sendEmptyMessage(3);
-            }
-        }).start();
+        if (mHandler != null) {
+            mHandler.sendEmptyMessage(3);
+        }
     }
 
     /**
@@ -819,10 +842,19 @@ public class IndexActivity extends BaseActivity {
      */
     private void checkQQLoginIfValid() {
         if (Constant.userQQSession == null) {
-            startActivityForResultAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
+            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSession != null) {
+            XPopupUtils.setShowDialog(this,"请求跳转中...");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    XPopupUtils.setTimerDisDialog();
+                    startActivityAnimLeftToRight(new Intent(IndexActivity.this,MineInfoActivity.class));
+                }
+            }, 500);
             Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
             //设置Snackbar上提示的字体颜色
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
@@ -959,11 +991,6 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
-        //QQ会话
-        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION) {
-            DialogPrompt dialogPrompt = new DialogPrompt(IndexActivity.this,data.getStringExtra("UserQQSessionBean"));
-            dialogPrompt.show();
-        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -992,6 +1019,8 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        QQHandler.removeCallbacksAndMessages(null);
+        mHandler.removeCallbacksAndMessages(null);
 //        unregisterReceiver(broadcastReceiver);
     }
 
