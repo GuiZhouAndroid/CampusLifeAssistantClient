@@ -38,7 +38,6 @@ import skin.support.app.SkinCardViewInflater;
 import skin.support.constraint.app.SkinConstraintViewInflater;
 import skin.support.design.app.SkinMaterialViewInflater;
 import work.lpssfxy.www.campuslifeassistantclient.App;
-import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 
 
 /**

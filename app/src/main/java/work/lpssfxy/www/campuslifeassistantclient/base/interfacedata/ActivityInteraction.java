@@ -1,6 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.base.interfacedata;
 
-import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 
 /**

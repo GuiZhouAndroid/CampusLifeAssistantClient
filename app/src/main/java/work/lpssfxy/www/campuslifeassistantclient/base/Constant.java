@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.base.constant;
+package work.lpssfxy.www.campuslifeassistantclient.base;
 
 import com.tencent.tauth.Tencent;
 
