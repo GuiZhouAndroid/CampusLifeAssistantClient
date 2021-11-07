@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class RegexUtils {
 
-    private boolean startCheck(String reg, String string) {
+    private static boolean startCheck(String reg, String string) {
         boolean tem = false;
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(string);
@@ -27,7 +27,7 @@ public class RegexUtils {
     /**
      * 检验用户名 取值范围为a-z,A-Z,0-9,"_",汉字，不能以"_"结尾 用户名有最小长度和最大长度限制，比如用户名必须是4-20位
      * */
-    public boolean checkUsername(String username, int min, int max) {
+    public static boolean checkUsername(String username, int min, int max) {
         String regex = "[\\w\u4e00-\u9fa5]{" + min + "," + max + "}(?<!_)";
         return startCheck(regex, username);
     }
@@ -96,6 +96,17 @@ public class RegexUtils {
     }
 
     /**
+     * 只能输入由数字或字母组成的20位字符串
+     *
+     * @param stuNo 学号
+     * @return
+     */
+    public static boolean checkEnglishAndNumber(String stuNo) {
+        String regex = "^([A-Z0-9]{10,20})|([A-z0-9]{10,20})|([a-z0-9]{10,20})$";
+        return Pattern.matches(regex, stuNo);
+    }
+
+    /**
      * 验证固定电话号码
      *
      * @param phone 电话号码，格式：国家（地区）电话代码 + 区号（城市代码） + 电话号码，如：+8602085588447
@@ -153,6 +164,22 @@ public class RegexUtils {
     public static boolean checkChinese(String chinese) {
         String regex = "^[\u4E00-\u9FA5]+$";
         return Pattern.matches(regex, chinese);
+    }
+
+    /**
+     * 验证真实姓名
+     *
+     * 1.不能有特殊字符和数字
+     * 2.可以输入英文，可以有空格，可以输入英文名字中的点
+     * 3.可以输入汉字
+     * 4.中文英文不能同时出现
+     * 5.长度在1-10
+     * @param RealName 姓名
+     * @return 验证成功返回true，验证失败返回false
+     */
+    public static boolean checkRealName(String RealName) {
+        String regex = "^([\\u4e00-\\u9fa5]{1,10}|[a-zA-Z\\.\\s]{1,10})$";
+        return Pattern.matches(regex, RealName);
     }
 
     /**

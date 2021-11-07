@@ -21,6 +21,9 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import butterknife.BindBitmap;
 import butterknife.BindView;
@@ -33,9 +36,14 @@ import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.BaseActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.GuideActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.LaunchActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -58,7 +66,7 @@ public class BottomMineFragment extends BaseFragment {
     @BindView(R2.id.qq_back) ImageView mQQBack;//QQ头像高斯模糊背景
     @BindView(R2.id.qq_province) TextView mQQProvince;//QQ省份
     @BindView(R2.id.qq_city) TextView mQQCity;//QQ城市
-    @BindView(R2.id.btn_logout_login) Button mLogoutLogin;//注销登录
+    //@BindView(R2.id.btn_logout_login) Button mLogoutLogin;//注销登录
 
     /** item控件--->用户信息 */
     @BindView(R2.id.qq_nickname) ItemView mQQNickname;//QQ昵称
@@ -78,13 +86,13 @@ public class BottomMineFragment extends BaseFragment {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 1:
-                    Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
-                    if (Constant.userInfo !=null){
-                        mAccountSafe.setRightDesc(Constant.userInfo.getCreateTime());//设置QQ信息的城市
+                    UserQQSessionBean.Data.UserInfo userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
+                    if (userInfo !=null){
+                        mAccountSafe.setRightDesc(userInfo.getCreateTime());//设置QQ信息的城市
                     }else {
                         mAccountSafe.setRightDesc("未登录");//设置QQ信息的城市
                     }
-                    Log.i(TAG, "Fragment用户信息: "+ Constant.userInfo);
+                    Log.i(TAG, "Fragment用户信息: "+ userInfo);
                     break;
                 case 2://匹配成功，获取IndexActivity登录QQ用户信息
                     Constant.qqUser = (QQUserBean) msg.obj;
@@ -178,7 +186,6 @@ public class BottomMineFragment extends BaseFragment {
 
     @Override
     protected void initView(View rootView) {
-
     }
 
     @Override
@@ -198,52 +205,64 @@ public class BottomMineFragment extends BaseFragment {
         mMyInfo.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-                XPopupUtils.setShowDialog(getActivity(),"请求跳转中...");
-                //子线程延迟0.5秒执行跳转
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //跳转前，关闭对话框
-                        XPopupUtils.setTimerDisDialog();
-                        if (Constant.userInfo !=null){ //登录有数据
-                            // 实现 Android 自带的Parcelable接口，封装对象数据，通过Bundle键值对形式，传递参数到MineInfoActivity页面
-                            Intent thisIntentToMineActivity= new Intent();;
-                            thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
-                            Bundle bundle=new Bundle();
-                            //bundle.putString("userInfo",Constant.userInfo.toString());
-                            bundle.putParcelable("userInfo", new ParcelableData(
-                                    Constant.userInfo.getCreateTime(),Constant.userInfo.getLastLoginTime(),Constant.userInfo.getUlClass(),
-                                    Constant.userInfo.getUlDept(),Constant.userInfo.getUlEmail(),Constant.userInfo.getUlId(),
-                                    Constant.userInfo.getUlIdcard(),Constant.userInfo.getUlRealname(),Constant.userInfo.getUlSex(),Constant.userInfo.getUlStuno(),
-                                    Constant.userInfo.getUlTel(),Constant.userInfo.getUlUsername(),Constant.userInfo.getUpdateTime()));
-                            thisIntentToMineActivity.putExtras(bundle);
-                            startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
-                        }else {
-                            //如果没有
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("温馨提示")//这里设置标题
-                                    .setMessage("您还没有登录呀~")//这里设置提示信息
-                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                if (Constant.userInfo !=null){ //登录有数据
+                    int userId = Constant.userInfo.getUlId();
+                    // 实现 Android 自带的Parcelable接口，封装对象数据，通过Bundle键值对形式，传递参数到MineInfoActivity页面
+                    OkGo.<String>post(Constant.SELECT_USER_ALL_INFO_BY_USERID + "/" + userId)
+                            .tag("用户ID查询个人信息")
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+                                    XPopupUtils.setShowDialog(getActivity(),"请求信息中...");
+                                    //Json字符串解析转为实体类对象
+                                    UserBean userBeanData = GsonUtil.gsonToBean(response.body(), UserBean.class);
+                                    Log.i(TAG, "userBeanData=== " + userBeanData);
+                                    Intent thisIntentToMineActivity= new Intent();;
+                                    thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
+                                    Bundle bundle=new Bundle();
+                                    //bundle.putString("userInfo",Constant.userInfo.toString());
+                                    bundle.putParcelable("userInfo", new ParcelableData(
+                                            userBeanData.getData().getCreateTime(),userBeanData.getData().getUlClass(), userBeanData.getData().getUlDept(),
+                                            userBeanData.getData().getUlEmail(),userBeanData.getData().getUlId(), userBeanData.getData().getUlIdcard(),
+                                            userBeanData.getData().getUlRealname(),userBeanData.getData().getUlSex(),userBeanData.getData().getUlStuno(),
+                                            userBeanData.getData().getUlTel(),userBeanData.getData().getUlUsername(),userBeanData.getData().getUpdateTime()));
+                                    thisIntentToMineActivity.putExtras(bundle);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mDialog.dismiss();
+                                        public void run() {
+                                            startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
+                                            OkGo.getInstance().cancelTag("用户ID查询个人信息");
                                         }
-                                    });
-                            mDialog = builder.create();
-                            mDialog.show();
-                        }
-                    }
-                }, 500);
+                                    }, 200);
+                                }
 
+                                @Override
+                                public void onFinish() {
+                                    XPopupUtils.setSmartDisDialog();
+                                }
+                            });
+                }else {
+                    //如果没有
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("温馨提示")//这里设置标题
+                            .setMessage("您还没有登录呀~")//这里设置提示信息
+                            .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                            .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mDialog.dismiss();
+                                }
+                            });
+                    mDialog = builder.create();
+                    mDialog.show();
+                }
             }
         });
         mMyGoods.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-
-//                Toast.makeText(getActivity(), Constant.userInfo.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
             }
         });
         mFeedback.setItemClickListener(new ItemView.itemClickListener() {
@@ -284,12 +303,6 @@ public class BottomMineFragment extends BaseFragment {
                 Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
             }
         });
-        mLogoutLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     @Override
@@ -307,7 +320,6 @@ public class BottomMineFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         Glide.get(getActivity()).clearMemory();
-
         //Unregister the Registered Event.
         //GlobalBus.getBus().unregister(this);
     }
@@ -316,7 +328,9 @@ public class BottomMineFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         Glide.get(getActivity()).clearMemory();
-        mHandler.removeCallbacksAndMessages(null);
+        if (mHandler!=null){
+            mHandler.removeCallbacksAndMessages(null);
+        }
         //GlobalBus.getBus().unregister(this);
     }
 

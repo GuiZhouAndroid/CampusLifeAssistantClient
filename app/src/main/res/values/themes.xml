@@ -89,6 +89,16 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="AlertDialogStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <!--Tooblar弹出菜单主题-->
 <!--    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">-->
 <!--        <item name="android:colorBackground">#C60C0C</item>-->

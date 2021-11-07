@@ -9,6 +9,13 @@
     tools:context=".view.activity.MineInfoActivity">
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+        android:id="@+id/ll_user_number"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_50"
+        app:left_icon="@drawable/ic_nick_name"
+        app:left_text="用户编号" />
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_username"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"

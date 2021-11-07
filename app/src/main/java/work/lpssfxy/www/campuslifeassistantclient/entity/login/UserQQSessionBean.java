@@ -1,5 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.entity.login;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -34,7 +36,7 @@ public class UserQQSessionBean{
         private String updateTime;
         private UserInfo userInfo;
         @lombok.Data
-        public static class UserInfo {
+        public static class UserInfo implements Serializable {
             private String createTime;
             private String lastLoginTime;
             private String ulClass;

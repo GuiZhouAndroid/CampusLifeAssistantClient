@@ -57,6 +57,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
@@ -316,23 +317,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     private void userGoTelNumberLogin() {
         ToastUtil.showToast("手机号快捷登录");
-        CommonPickerPopup popup = new CommonPickerPopup(LoginActivity.this);
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("小猫");
-        list.add("小狗");
-        list.add("小羊");
-        popup.setPickerData(list)
-                .setCurrentItem(1);
-        popup.setCommonPickerListener(new CommonPickerListener() {
-            @Override
-            public void onItemSelected(int index, String data) {
-                Toast.makeText(LoginActivity.this, "选中的是 "+ data, Toast.LENGTH_SHORT).show();
-            }
-        });
-        new XPopup.Builder(LoginActivity.this)
-                .asCustom(popup)
-                .show();
-
     }
 
     /**
@@ -522,7 +506,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 }
                                                 if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                                                     //一键登录(并联信息持久化手机内存，生命周期：存储——清空(卸载App或注销时clear))
-                                                    IndexActivity.indexActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+                                                    App.appActivity.finish();//销毁的Activity界面
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
@@ -618,60 +602,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                 Constant.mTencent.setOpenId(openId);//应用唯一标识设置至Tencent实例
                 Log.i(TAG, "回调后设置会话后是否有效:" + Constant.mTencent.isSessionValid());//true
                 /** 会话Session有效时进行QQ授权用户的信息列表请求与回调 */
-                //GsonParseJsonDataToLocalAndToBroadcast();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Constant.mTencent的Session有效为true时进行QQ授权用户的信息列表请求与回调
-     * Gson解析Json数据存入SharePreference+通过广播消息发送解析后Json数据
-     */
-    private void GsonParseJsonDataToLocalAndToBroadcast() {
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) { //
-            IUiListener listener = new DefaultUiListener() {
-                /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
-                @Override
-                public void onComplete(final Object response) {
-                    Log.d(TAG, "请求回调用户信息列表= " + response.toString());
-                    /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-                    Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
-                    /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-                    //SharePreferenceUtil.putObject(LoginActivity.this, Constant.qqUser);
-                    Log.i(TAG, "qqUser全部数据: " + Constant.qqUser);
-                    /** 通过Intent发送广播消息，*/
-                    Intent intent = new Intent(action);
-                    /**创建捆绑实例，Intent传递Java对象*/
-                    Bundle bundle = new Bundle();
-                    /** Java对象序列化存入Intent */
-                    bundle.putSerializable("QQUserBean", Constant.qqUser);
-                    /** 发送Intent序列化数据至Bundle捆绑对象*/
-                    intent.putExtras(bundle);
-                    Log.i(TAG, "bundle: " + bundle.toString());
-                    /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */
-                    sendBroadcast(intent);
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(LoginActivity.this, "取消获取授权用户信息", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(UiError e) {
-                    Toast.makeText(LoginActivity.this, "获取授权用户信息出错：" + e.errorDetail, Toast.LENGTH_SHORT).show();
-                }
-            };
-            /** 根据Constant.mTencent会话中TOKEN值，请求回调授权用户信息列表*/
-            UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
-            Log.i(TAG, "QQToken====: " + Constant.mTencent.getQQToken().toString());
-            /** 开始监听请求回调操作*/
-            info.getUserInfo(listener);
-
-        } else {
-            Toast.makeText(this, "QQ无效Session", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -807,7 +740,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         }
                         if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                             //拉去并联登录信息持久化
-                            IndexActivity.indexActivity.finish();//通过Application全局单例模式，在IndexActivity中赋值待销毁的Activity界面
+                            App.appActivity.finish();//销毁的Activity界面
                             SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                             startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
                             finish();
@@ -894,5 +827,4 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         LoginActivity.this.finish();
     }
-
 }

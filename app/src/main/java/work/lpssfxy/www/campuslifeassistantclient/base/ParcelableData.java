@@ -16,7 +16,6 @@ import lombok.Data;
 public class ParcelableData implements Parcelable {
 
     private String createTime;
-    private String lastLoginTime;
     private String ulClass;
     private String ulDept;
     private String ulEmail;
@@ -33,9 +32,8 @@ public class ParcelableData implements Parcelable {
 
     }
 
-    public ParcelableData(String createTime, String lastLoginTime, String ulClass, String ulDept, String ulEmail, int ulId, String ulIdcard, String ulRealname, String ulSex, String ulStuno, String ulTel, String ulUsername, String updateTime) {
+    public ParcelableData(String createTime, String ulClass, String ulDept, String ulEmail, int ulId, String ulIdcard, String ulRealname, String ulSex, String ulStuno, String ulTel, String ulUsername, String updateTime) {
         this.createTime = createTime;
-        this.lastLoginTime = lastLoginTime;
         this.ulClass = ulClass;
         this.ulDept = ulDept;
         this.ulEmail = ulEmail;
@@ -61,7 +59,6 @@ public class ParcelableData implements Parcelable {
      */
     protected ParcelableData(Parcel in) {
         createTime = in.readString();
-        lastLoginTime = in.readString();
         ulClass = in.readString();
         ulDept = in.readString();
         ulEmail = in.readString();
@@ -109,7 +106,6 @@ public class ParcelableData implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(createTime);
-        parcel.writeString(lastLoginTime);
         parcel.writeString(ulClass);
         parcel.writeString(ulDept);
         parcel.writeString(ulEmail);

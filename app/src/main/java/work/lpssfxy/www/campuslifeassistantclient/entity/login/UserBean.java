@@ -34,11 +34,12 @@ public class UserBean implements Serializable {
         private String ulEmail;
         private int ulId;
         private String ulIdcard;
+        private String ulPassword;
         private String ulRealname;
         private String ulSex;
         private String ulStuno;
         private String ulTel;
         private String ulUsername;
-        private Object updateTime;
+        private String updateTime;
     }
 }
