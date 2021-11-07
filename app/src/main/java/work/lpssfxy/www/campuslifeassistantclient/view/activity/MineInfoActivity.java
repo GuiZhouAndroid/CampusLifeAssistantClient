@@ -1,7 +1,6 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.helloworld.library.MiddleDialogConfig;
 import com.helloworld.library.utils.DialogEnum;
 import com.lxj.xpopup.XPopup;
@@ -24,8 +22,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.base.ParcelableData;
-import work.lpssfxy.www.campuslifeassistantclient.base.StringDialogCallback;
+import work.lpssfxy.www.campuslifeassistantclient.entity.ParcelableData;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;

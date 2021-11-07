@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.base;/**
+package work.lpssfxy.www.campuslifeassistantclient.base.dialog;/**
  * created by on 2021/11/5
  * 描述：
  *

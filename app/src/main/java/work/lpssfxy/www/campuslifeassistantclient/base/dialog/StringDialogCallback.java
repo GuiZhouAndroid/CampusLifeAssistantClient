@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.base;
+package work.lpssfxy.www.campuslifeassistantclient.base.dialog;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

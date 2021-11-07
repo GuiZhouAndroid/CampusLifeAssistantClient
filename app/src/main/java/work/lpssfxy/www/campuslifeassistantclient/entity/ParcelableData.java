@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.base;
+package work.lpssfxy.www.campuslifeassistantclient.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

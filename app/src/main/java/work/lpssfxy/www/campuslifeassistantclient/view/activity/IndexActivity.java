@@ -2,9 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -68,7 +65,7 @@ import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.base.ActivityInteraction;
+import work.lpssfxy.www.campuslifeassistantclient.base.interfacedata.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.constant.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
