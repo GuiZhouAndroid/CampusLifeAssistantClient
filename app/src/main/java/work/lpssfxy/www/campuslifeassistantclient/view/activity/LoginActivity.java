@@ -3,7 +3,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 import static com.tencent.connect.common.Constants.KEY_QRCODE;
 import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
 import static com.tencent.connect.common.Constants.KEY_SCOPE;
-import static com.xuexiang.xutil.tip.ToastUtils.toast;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -31,9 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopupext.listener.CityPickerListener;
-import com.lxj.xpopupext.listener.TimePickerListener;
 import com.lxj.xpopupext.popup.CityPickerPopup;
-import com.lxj.xpopupext.popup.TimePickerPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -47,8 +44,6 @@ import com.tencent.tauth.UiError;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -342,31 +337,31 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 跳转注册
      */
     private void userGoRegisterAccount() {
-        ToastUtil.showToast("跳转注册");
-        Calendar date = Calendar.getInstance();
-        date.set(2000, 5,1);
-        Calendar date2 = Calendar.getInstance();
-        date2.set(2020, 5,1);
-        TimePickerPopup popup = new TimePickerPopup(LoginActivity.this)
-//                        .setDefaultDate(date)  //设置默认选中日期
-//                        .setYearRange(1990, 1999) //设置年份范围
-//                        .setDateRange(date, date2) //设置日期范围
-                .setTimePickerListener(new TimePickerListener() {
-                    @Override
-                    public void onTimeChanged(Date date) {
-                        //时间改变
-                    }
-                    @Override
-                    public void onTimeConfirm(Date date, View view) {
-                        //点击确认时间
-                        Toast.makeText(LoginActivity.this, "选择的时间："+date.toLocaleString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        new XPopup.Builder(LoginActivity.this)
-                .asCustom(popup)
-                .show();
-
+//        ToastUtil.showToast("跳转注册");
+//        Calendar date = Calendar.getInstance();
+//        date.set(2000, 5,1);
+//        Calendar date2 = Calendar.getInstance();
+//        date2.set(2020, 5,1);
+//        TimePickerPopup popup = new TimePickerPopup(LoginActivity.this)
+////                        .setDefaultDate(date)  //设置默认选中日期
+////                        .setYearRange(1990, 1999) //设置年份范围
+////                        .setDateRange(date, date2) //设置日期范围
+//                .setTimePickerListener(new TimePickerListener() {
+//                    @Override
+//                    public void onTimeChanged(Date date) {
+//                        //时间改变
+//                    }
+//                    @Override
+//                    public void onTimeConfirm(Date date, View view) {
+//                        //点击确认时间
+//                        Toast.makeText(LoginActivity.this, "选择的时间："+date.toLocaleString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//        new XPopup.Builder(LoginActivity.this)
+//                .asCustom(popup)
+//                .show();
+        startActivityAnimLeftToRight(new Intent(this,RegisterActivity.class));
     }
 
     /**

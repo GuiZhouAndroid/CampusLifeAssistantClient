@@ -3,7 +3,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
@@ -74,7 +73,7 @@ public class UserApplyUntieActivity extends BaseActivity implements View.OnClick
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_user_apply_untie;
+        return R.layout.user_apply_untie_activity;
     }
 
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -119,7 +118,7 @@ public class MineInfoActivity extends BaseActivity  {
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_mine_info;
+        return R.layout.mine_info_activity;
     }
 
     @Override

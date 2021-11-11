@@ -17,7 +17,8 @@
     <string name="http_response_error">服务器响应异常，请稍后再试</string>
     <string name="http_server_error">服务器连接异常，请稍后再试</string>
     <string name="http_request_cancel">请求被中断，请重试</string>
-
+    <string name="app_login">登&#160;&#160;&#160;&#160;录</string>
+    <string name="app_register">注&#160;&#160;&#160;&#160;册</string>
     <!--视频欢迎页-->
     <string name="btn_guide_skip">跳过</string>
     <!--登录-->
@@ -41,6 +42,17 @@
     <string name="please_bind_qq_login">，请授权后再登录</string>
     <string name="qq_bing_success">QQ授权绑定成功</string>
     <string name="qq_bing_error">QQ授权绑定失败</string>
+    <!--注册-->
+    <string name="register_username">用户名</string>
+    <string name="register_password">密码</string>
+    <string name="register_real_name">真实姓名</string>
+    <string name="register_sex">性别</string>
+    <string name="register_id_card">身份证号</string>
+    <string name="register_stu_no">学号</string>
+    <string name="register_tel">手机号</string>
+    <string name="register_email">QQ邮箱</string>
+    <string name="register_code">输入6位短信验证码</string>
+    <string name="get_phone_code">获取验证码</string>
     <!--ViewPager欢迎页-->
     <string name="welcome_guid_text_one_title">个&#8194;性&#8194;推&#8194;荐</string>
     <string name="welcome_guid_text_one_info">每&#8197;天&#8197;为&#8197;你&#8197;良&#8197;心&#8197;推&#8197;荐&#8197;最&#8197;合&#8197;口&#8197;味&#8197;的&#8197;好&#8197;音&#8197;乐</string>
