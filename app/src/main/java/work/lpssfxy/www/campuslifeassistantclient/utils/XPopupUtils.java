@@ -7,7 +7,7 @@ import com.lxj.xpopup.core.BasePopupView;
 
 /**
  * created by on 2021/11/5
- * 描述：
+ * 描述： XPopup自定义工具类，请求进度条的延迟关闭，仿真网络请求
  *
  * @author ZSAndroid
  * @create 2021-11-05-23:25

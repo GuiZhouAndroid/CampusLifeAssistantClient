@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.helloworld.library.MiddleDialogConfig;
 import com.helloworld.library.utils.DialogEnum;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopupext.listener.CommonPickerListener;
+
 import com.lxj.xpopupext.popup.CommonPickerPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -165,7 +167,7 @@ public class MineInfoActivity extends BaseActivity  {
         mUserNumber.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-                Toast.makeText(MineInfoActivity.this, "【"+text+"】"+"唯一编号，不可修改~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MineInfoActivity.this, "【"+text+"】"+"唯一编号，无法修改~", Toast.LENGTH_SHORT).show();
             }
         });
         mUserName.setItemClickListener(new ItemView.itemClickListener() {
@@ -217,138 +219,19 @@ public class MineInfoActivity extends BaseActivity  {
         mSex.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String oldSex) {
-                CommonPickerPopup popup = new CommonPickerPopup(MineInfoActivity.this);
-                ArrayList<String> list = new ArrayList<String>();
-                list.add("男");
-                list.add("女");
-                if ("男".equals(oldSex)){
-                    popup.setPickerData(list).setCurrentItem(0);
-                }else {
-                    popup.setPickerData(list).setCurrentItem(1);
-                }
-                popup.setCommonPickerListener(new CommonPickerListener() {
-                    @Override
-                    public void onItemSelected(int index, String newSex) {
-                        OkGo.<String>post(Constant.UPDATE_SEX+ "/" + nowUserName  + "/" + oldSex + "/" + newSex)
-                                .tag("更新性别")
-                                .execute(new StringDialogCallback(MineInfoActivity.this) {
-                                    @Override
-                                    public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
-                                            mSex.setRightDesc(newSex);//设置文本为新性别
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"性别更新成功！",3);
-                                            dialogPrompt.show();
-                                            return;
-                                        }
-                                        if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"性别更新失败！",3);
-                                            dialogPrompt.show();
-                                        }
-                                    }
-                                    @Override
-                                    public void onError(Response<String> response) {
-                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
-                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
-                                    }
-                                });
-                    }
-                });
-                new XPopup.Builder(MineInfoActivity.this)
-                        .asCustom(popup)
-                        .show();
+                Toast.makeText(MineInfoActivity.this, "【"+oldSex+"】"+"性别无法修改~", Toast.LENGTH_SHORT).show();
             }
         });
         mRealName.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String oldRealName) {
-                new MiddleDialogConfig().builder(MineInfoActivity.this)
-                        .setEditHint("输入新的真实姓名")
-                        .setEditHintColor("#FF4081")
-                        .setTitleColor("#FF4081")
-                        .setEditTextColor("#00bfff")
-                        .setTitle("更新真实姓名")
-                        .setDialogStyle(DialogEnum.EDIT)
-                        .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
-                            @Override
-                            public void rightBtn(String newRealName) {
-                                if (RegexUtils.checkRealName(newRealName)){
-                                    OkGo.<String>post(Constant.UPDATE_REAL_NAME + "/" + nowUserName + "/" + oldRealName + "/" + newRealName)
-                                            .tag("更新真实姓名")
-                                            .execute(new StringDialogCallback(MineInfoActivity.this) {
-                                                @Override
-                                                public void onSuccess(Response<String> response) {
-                                                    ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                                    if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
-                                                        mRealName.setRightDesc(newRealName);//设置文本为真实姓名
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"真实姓名更新成功！",3);
-                                                        dialogPrompt.show();
-                                                        return;
-                                                    }
-                                                    if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"真实姓名更新失败！",3);
-                                                        dialogPrompt.show();
-                                                    }
-                                                }
-                                                @Override
-                                                public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
-                                                }
-                                            });
-                                    return;
-                                }
-                                DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"姓名格式有误，请您重新输入！");
-                                dialogPrompt.show();
-                            }
-                        })
-                       .show();
+                Toast.makeText(MineInfoActivity.this, "真实姓名无法修改~", Toast.LENGTH_SHORT).show();
             }
         });
         mIdCard.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String oldIdCard) {
-                new MiddleDialogConfig().builder(MineInfoActivity.this)
-                        .setEditHint("输入新的身份证号")
-                        .setEditHintColor("#FF4081")
-                        .setTitleColor("#FF4081")
-                        .setEditTextColor("#00bfff")
-                        .setTitle("更新身份证号")
-                        .setDialogStyle(DialogEnum.EDIT)
-                        .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
-                            @Override
-                            public void rightBtn(String newIdCard) {
-                                if (RegexUtils.checkIdCard(newIdCard)){//正则表达式，判断身份证号
-                                    OkGo.<String>post(Constant.UPDATE_ID_CARD + "/" + nowUserName + "/" + oldIdCard + "/" + newIdCard)
-                                            .tag("更新身份证号")
-                                            .execute(new StringDialogCallback(MineInfoActivity.this) {
-                                                @Override
-                                                public void onSuccess(Response<String> response) {
-                                                    ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                                    if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
-                                                        mIdCard.setRightDesc(newIdCard);//设置文本为新身份证号
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"身份证号更新成功！",3);
-                                                        dialogPrompt.show();
-                                                        return;
-                                                    }
-                                                    if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"身份证号更新失败！",3);
-                                                        dialogPrompt.show();
-                                                    }
-                                                }
-                                                @Override
-                                                public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"更新请求被系统拒绝！请输入本人身份证号码！" ,10);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
-                                                }
-                                            });
-                                    return;
-                                }
-                                DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"【"+newIdCard+"】"+"身份证格式错误！",3);
-                                dialogPrompt.show();
-                            }
-                        })
-                        .show();
+                Toast.makeText(MineInfoActivity.this, "【"+oldIdCard+"】"+"身份证号无法修改~", Toast.LENGTH_SHORT).show();
             }
         });
         mStuNo.setItemClickListener(new ItemView.itemClickListener() {
@@ -491,14 +374,101 @@ public class MineInfoActivity extends BaseActivity  {
         });
         mDept.setItemClickListener(new ItemView.itemClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(MineInfoActivity.this, text, Toast.LENGTH_SHORT).show();
+            public void itemClick(String oldDept) {
+                CommonPickerPopup popup = new CommonPickerPopup(MineInfoActivity.this);
+                ArrayList<String> list = new ArrayList<String>();
+                list.add("数学与计算机科学学院");
+                list.add("马克思主义学院");
+                list.add("旅游与历史文化学院");
+                list.add("文学与新闻学院");
+                list.add("外国语学院");
+                list.add("教育科学学院");
+                list.add("物理与电气工程学院");
+                list.add("化学与材料工程学院");
+                list.add("生物科学与技术学院");
+                list.add("矿业与土木工程学院");
+                list.add("美术与设计学院");
+                list.add("体育学院");
+                list.add("经济与管理学院");
+                list.add("音乐学院");
+                list.add("继续教育学院");
+                popup.setPickerData(list).setCurrentItem(0);//默认选中《数学与计算机科学学院》
+                popup.setCommonPickerListener(new CommonPickerListener() {
+                    @Override
+                    public void onItemSelected(int index, String newDept) {
+                        OkGo.<String>post(Constant.UPDATE_DEPT+ "/" + nowUserName  + "/" + oldDept + "/" + newDept)
+                                .tag("更新所属院系")
+                                .execute(new StringDialogCallback(MineInfoActivity.this) {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
+                                            mDept.setRightDesc(newDept);//设置文本为新所属院系
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"所属院系更新成功！",3);
+                                            dialogPrompt.show();
+                                            return;
+                                        }
+                                        if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"所属院系更新失败！",3);
+                                            dialogPrompt.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
+                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                    }
+                                });
+                    }
+                });
+                new XPopup.Builder(MineInfoActivity.this)
+                        .asCustom(popup)
+                        .show();
             }
         });
         mClass.setItemClickListener(new ItemView.itemClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(MineInfoActivity.this, text, Toast.LENGTH_SHORT).show();
+            public void itemClick(String oldClass) {
+                CommonPickerPopup popup = new CommonPickerPopup(MineInfoActivity.this);
+                ArrayList<String> list = new ArrayList<String>();
+                list.add("计算机科学与技术");
+                list.add("城乡规划");
+                list.add("机械电子工程");
+                list.add("冶金工程");
+                list.add("植物科学与技术");
+                list.add("教育科学学院");
+                popup.setPickerData(list).setCurrentItem(0);//默认选中《数学与计算机科学学院》
+                popup.setCommonPickerListener(new CommonPickerListener() {
+                    @Override
+                    public void onItemSelected(int index, String newClass) {
+                        OkGo.<String>post(Constant.UPDATE_CLASS+ "/" + nowUserName  + "/" + oldClass + "/" + newClass)
+                                .tag("更新专业班级")
+                                .execute(new StringDialogCallback(MineInfoActivity.this) {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
+                                            mClass.setRightDesc(newClass);//设置文本为新所属专业班级
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"专业班级更新成功！",3);
+                                            dialogPrompt.show();
+                                            return;
+                                        }
+                                        if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"专业班级更新失败！",3);
+                                            dialogPrompt.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
+                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                    }
+                                });
+                    }
+                });
+                new XPopup.Builder(MineInfoActivity.this)
+                        .asCustom(popup)
+                        .show();
             }
         });
         mCreateTime.setItemClickListener(new ItemView.itemClickListener() {

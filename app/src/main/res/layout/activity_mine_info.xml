@@ -13,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_nick_name"
-        app:left_text="用户编号" />
+        app:left_text="用户编号"
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_username"
@@ -27,20 +28,23 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_sex"
-        app:left_text="性别" />
+        app:left_text="性别"
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_realname"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_sign_name"
-        app:left_text="真实姓名" />
+        app:left_text="真实姓名"
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_idcard"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_pass"
+        app:show_right_arrow="false"
         app:left_text="身份证号" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
@@ -83,13 +87,15 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_about"
-        app:left_text="账户注册时间" />
+        app:left_text="账户注册时间"
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_update_time"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_about"
-        app:left_text="账户更新时间" />
+        app:left_text="账户更新时间"
+        app:show_right_arrow="false" />
 
 </LinearLayout>

@@ -138,15 +138,15 @@ dependencies {
     //替代Dialog，PopupWindow，PopupMenu，BottomSheet，DrawerLayout，Spinner等组件
     // 自带十几种效果良好的动画，支持完全的UI和动画自定义，https://github.com/li-xiaojun/XPopup
     implementation 'com.github.li-xiaojun:XPopup:2.6.6'
-    //XPopupExt是XPopup的扩展功能库选择器弹窗和城市选择器弹窗必须添加XPopup依赖 https://github.com/li-xiaojun/XPopupExt
-    implementation 'com.github.li-xiaojun:XPopupExt:0.0.8'
+    //XPopupExt  https://github.com/li-xiaojun/XPopupExt
+    implementation'com.github.li-xiaojun:XPopupExt:0.0.8'
     //EventBus消息机制总线
     //implementation 'org.greenrobot:eventbus:3.2.0'
     //各种简单样式的弹出框 https://github.com/HelloWordFeng/BottomMenu
     implementation 'com.github.HelloWordFeng:BottomMenu:1.0.4'
     //时间选择器、省市区三级联动 https://github.com/Bigkoo/Android-PickerView
-    implementation 'com.contrarywind:Android-PickerView:4.1.9'
-    implementation 'com.contrarywind:wheelview:4.1.0'
+    //implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    //compileOnly 'com.contrarywind:wheelview:4.1.0'
 
 
 }
