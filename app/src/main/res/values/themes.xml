@@ -73,7 +73,7 @@
     </style>
     <style name="LoginTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/LoginInputBackground</item>
-        <item name="android:textSize">@dimen/sp_15</item>
+        <item name="android:textSize">@dimen/sp_13</item>
     </style>
 
     <!--base目录的自定义对话框-->

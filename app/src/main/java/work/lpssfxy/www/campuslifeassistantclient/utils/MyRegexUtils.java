@@ -95,7 +95,7 @@ public class MyRegexUtils {
     }
 
     /**
-     * 只能输入由数字或字母组成的20位字符串，不区分大小写
+     * 只能输入由数字或字母组成的10-20位字符串，不区分大小写
      *
      * @param stuNo 学号
      * @return

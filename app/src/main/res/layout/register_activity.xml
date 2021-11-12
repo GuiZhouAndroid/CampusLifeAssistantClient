@@ -1,278 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_register_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg"
     tools:context=".view.activity.RegisterActivity">
 
-    <ImageView
-        android:id="@+id/iv_touxiang"
-        android:layout_width="@dimen/dp_80"
-        android:layout_height="@dimen/dp_80"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_70"
-        android:src="@mipmap/login_touxiang" />
+    <RelativeLayout
+        android:id="@+id/rl_register_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dp_50">
 
-    <TextView
-        android:id="@+id/tv_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_touxiang"
-        android:layout_marginTop="@dimen/dp_10"
-        android:gravity="center"
-        android:text="@string/app_register"
-        android:textColor="@color/LoginInputBackground"
-        android:textSize="@dimen/sp_20" />
-    <!-- 用户名 -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_register"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
+        <ImageView
+            android:id="@+id/iv_touxiang"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_70"
+            android:src="@mipmap/login_touxiang" />
 
-        <EditText
-            android:id="@+id/edit_register_username"
+        <TextView
+            android:id="@+id/tv_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_username"
-            android:inputType="text"
-            android:maxLength="20"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 密码 -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_username"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/Pink"
-        app:passwordToggleTintMode="multiply">
-        <EditText
-            android:id="@+id/edit_register_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:maxLength="10"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 真实姓名 -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_real_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_password"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_real_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_real_name"
-            android:inputType="textPersonName"
-            android:maxLength="10"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 性别 -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_real_sex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_real_name"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_sex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_sex"
-            android:inputType="text"
-            android:maxLength="1"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 身份证号-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_id_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_real_sex"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_id_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_id_card"
-            android:inputType="text"
-            android:maxLength="18"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 学号-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_stu_no"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_id_card"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_stu_no"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_stu_no"
-            android:inputType="text"
-            android:maxLength="20"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 手机号-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_tel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_stu_no"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_tel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_tel"
-            android:inputType="phone"
-            android:maxLength="11"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- 邮箱 -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_register_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_tel"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30"
-        android:textColorHint="@color/LoginInputBackground">
-        <EditText
-            android:id="@+id/edit_register_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/White"
-            android:hint="@string/register_email"
-            android:inputType="textEmailAddress"
-            android:maxLength="20"
-            android:singleLine="true"
-            android:textColor="@color/viewBackground"
-            android:textColorHint="@color/LoginInputBackground"
-            tools:ignore="TextFields" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_input_code"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_register_email"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_30">
-
+            android:layout_below="@id/iv_touxiang"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:text="@string/app_register"
+            android:textColor="@color/LoginInputBackground"
+            android:textSize="@dimen/sp_20" />
+        <!-- 用户名 -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_input_phone_register_code"
-            android:layout_width="0dp"
+            android:id="@+id/til_input_register_username"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_below="@id/tv_register"
+            android:layout_marginTop="@dimen/dp_10"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:textColorHint="@color/LoginInputBackground">
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
             <EditText
-                android:id="@+id/edit_register_phone_code"
+                android:id="@+id/edit_register_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/White"
-                android:hint="@string/register_code"
-                android:inputType="number"
-                android:maxLength="6"
+                android:hint="@string/register_username"
+                android:inputType="text"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 密码 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_username"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="16"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/Pink"
+            app:passwordToggleTintMode="multiply">
+
+            <EditText
+                android:id="@+id/edit_register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 真实姓名 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_real_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_password"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
+            <EditText
+                android:id="@+id/edit_register_real_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_real_name"
+                android:inputType="textPersonName"
+                android:maxLength="11"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 性别 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_real_name"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="1"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+            <EditText
+                android:focusableInTouchMode="false"
+                android:id="@+id/edit_register_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_sex"
+                android:inputType="text"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 身份证号-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_id_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_sex"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="18"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
+            <EditText
+                android:id="@+id/edit_register_id_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_id_card"
+                android:inputType="text"
+                android:maxLength="18"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 学号-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_stu_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_id_card"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
+            <EditText
+                android:id="@+id/edit_register_stu_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_stu_no"
+                android:inputType="text"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 手机号-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_tel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_stu_no"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="11"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
+            <EditText
+                android:id="@+id/edit_register_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_tel"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:singleLine="true"
+                android:textColor="@color/viewBackground"
+                android:textColorHint="@color/LoginInputBackground"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- 邮箱 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_register_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_tel"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/LoginInputBackground"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance">
+
+            <EditText
+                android:id="@+id/edit_register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/White"
+                android:hint="@string/register_email"
+                android:inputType="textEmailAddress"
+                android:maxLength="20"
                 android:singleLine="true"
                 android:textColor="@color/viewBackground"
                 android:textColorHint="@color/LoginInputBackground"
                 tools:ignore="TextFields" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_register_phone_code"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_40"
-            android:layout_gravity="center"
-            android:layout_weight="1.3"
-            android:background="@drawable/btn_bg_phone_code"
-            android:text="@string/get_phone_code"
-            android:textColor="@color/Black"
-            android:textSize="@dimen/sp_16" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_input_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/til_input_register_email"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30">
 
-    <work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton
-        android:id="@+id/ptn_register"
-        android:layout_width="@dimen/dp_300"
-        android:layout_height="@dimen/dp_50"
-        android:layout_below="@id/ll_input_code"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_10" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_input_phone_register_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textColorHint="@color/LoginInputBackground">
 
-</RelativeLayout>
+                <EditText
+                    android:id="@+id/edit_register_phone_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/White"
+                    android:hint="@string/register_code"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:textColor="@color/viewBackground"
+                    android:textColorHint="@color/LoginInputBackground"
+                    tools:ignore="TextFields" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_register_phone_code"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_35"
+                android:layout_gravity="center"
+                android:layout_weight="1.3"
+                android:background="@drawable/btn_bg_phone_code"
+                android:text="@string/get_phone_code"
+                android:textColor="@color/Black"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
+        <work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton
+            android:id="@+id/ptn_register"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_50"
+            android:layout_below="@id/ll_input_code"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_10" />
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>
