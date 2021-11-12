@@ -57,7 +57,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -183,7 +183,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!RegexUtils.checkMobile(String.valueOf(charSequence))) {
+                if (!MyRegexUtils.checkMobile(String.valueOf(charSequence))) {
                     mTil_login_username.setError("手机号码格式不正确！");
                     mTil_login_username.setErrorEnabled(true);
                 } else {
@@ -205,7 +205,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!RegexUtils.checkMobile(String.valueOf(charSequence))) {
+                if (!MyRegexUtils.checkMobile(String.valueOf(charSequence))) {
                     mTil_login_password.setError("手机号码格式不正确！");
                     mTil_login_password.setErrorEnabled(true);
                 } else {

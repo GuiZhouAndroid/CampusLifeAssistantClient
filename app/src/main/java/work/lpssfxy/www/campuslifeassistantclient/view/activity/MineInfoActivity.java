@@ -28,7 +28,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallba
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.RegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
@@ -182,7 +182,7 @@ public class MineInfoActivity extends BaseActivity  {
                         .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
                             @Override
                             public void rightBtn(String newUserName) {
-                                if (RegexUtils.checkUsername(newUserName,5,10)){
+                                if (MyRegexUtils.checkUsername(newUserName,5,10)){
                                     OkGo.<String>post(Constant.UPDATE_USERNAME + "/" + nowUserName + "/" + oldUserName + "/" + newUserName)
                                             .tag("更新用户名")
                                             .execute(new StringDialogCallback(MineInfoActivity.this) {
@@ -246,7 +246,7 @@ public class MineInfoActivity extends BaseActivity  {
                         .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
                             @Override
                             public void rightBtn(String newStuNo) {
-                                if (RegexUtils.checkEnglishAndNumber(newStuNo)){//正则表达式，判断身份证号
+                                if (MyRegexUtils.checkEnglishAndNumber(newStuNo)){//正则表达式，判断身份证号
                                     OkGo.<String>post(Constant.UPDATE_STU_NO + "/" + nowUserName + "/" + oldStuNo + "/" + newStuNo)
                                             .tag("更新学号")
                                             .execute(new StringDialogCallback(MineInfoActivity.this) {
@@ -292,7 +292,7 @@ public class MineInfoActivity extends BaseActivity  {
                         .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
                             @Override
                             public void rightBtn(String newTel) {
-                                if (RegexUtils.checkMobile(newTel)){//正则表达式，判断手机号
+                                if (MyRegexUtils.checkMobile(newTel)){//正则表达式，判断手机号
                                     OkGo.<String>post(Constant.UPDATE_TEL + "/" + nowUserName + "/" + oldTel + "/" + newTel)
                                             .tag("更新手机号")
                                             .execute(new StringDialogCallback(MineInfoActivity.this) {
@@ -338,7 +338,7 @@ public class MineInfoActivity extends BaseActivity  {
                         .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
                             @Override
                             public void rightBtn(String newEmail) {
-                                if (RegexUtils.checkEmail(newEmail)){//正则表达式，判断QQ邮箱
+                                if (MyRegexUtils.checkEmail(newEmail)){//正则表达式，判断QQ邮箱
                                     OkGo.<String>post(Constant.UPDATE_QQ_EMAIL + "/" + nowUserName + "/" + oldEmail + "/" + newEmail)
                                             .tag("更新QQ邮箱")
                                             .execute(new StringDialogCallback(MineInfoActivity.this) {

@@ -28,7 +28,7 @@
         android:textSize="@dimen/sp_20" />
     <!-- 用户名 -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_username"
+        android:id="@+id/til_input_register_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_register"
@@ -54,10 +54,10 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 密码 -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_password"
+        android:id="@+id/til_input_register_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_username"
+        android:layout_below="@id/til_input_register_username"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/dp_30"
@@ -84,7 +84,7 @@
         android:id="@+id/til_input_real_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_password"
+        android:layout_below="@id/til_input_register_password"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/dp_30"
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/White"
             android:hint="@string/register_real_name"
-            android:inputType="text"
+            android:inputType="textPersonName"
             android:maxLength="10"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
@@ -105,7 +105,7 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 性别 -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_real_sex"
+        android:id="@+id/til_input_register_real_sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/til_input_real_name"
@@ -114,7 +114,6 @@
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30"
         android:textColorHint="@color/LoginInputBackground">
-
         <EditText
             android:id="@+id/edit_register_sex"
             android:layout_width="match_parent"
@@ -122,7 +121,7 @@
             android:backgroundTint="@color/White"
             android:hint="@string/register_sex"
             android:inputType="text"
-            android:maxLength="2"
+            android:maxLength="1"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
             android:textColorHint="@color/LoginInputBackground"
@@ -130,16 +129,15 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 身份证号-->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_id_card"
+        android:id="@+id/til_input_register_id_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_real_sex"
+        android:layout_below="@id/til_input_register_real_sex"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30"
         android:textColorHint="@color/LoginInputBackground">
-
         <EditText
             android:id="@+id/edit_register_id_card"
             android:layout_width="match_parent"
@@ -147,7 +145,7 @@
             android:backgroundTint="@color/White"
             android:hint="@string/register_id_card"
             android:inputType="text"
-            android:maxLength="10"
+            android:maxLength="18"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
             android:textColorHint="@color/LoginInputBackground"
@@ -155,10 +153,10 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 学号-->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_stu_no"
+        android:id="@+id/til_input_register_stu_no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_id_card"
+        android:layout_below="@id/til_input_register_id_card"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/dp_30"
@@ -171,7 +169,7 @@
             android:backgroundTint="@color/White"
             android:hint="@string/register_stu_no"
             android:inputType="text"
-            android:maxLength="10"
+            android:maxLength="20"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
             android:textColorHint="@color/LoginInputBackground"
@@ -179,17 +177,15 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 手机号-->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_tel"
+        android:id="@+id/til_input_register_tel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_stu_no"
+        android:layout_below="@id/til_input_register_stu_no"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:maxLength="11"
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30"
         android:textColorHint="@color/LoginInputBackground">
-
         <EditText
             android:id="@+id/edit_register_tel"
             android:layout_width="match_parent"
@@ -197,7 +193,7 @@
             android:backgroundTint="@color/White"
             android:hint="@string/register_tel"
             android:inputType="phone"
-            android:maxLength="10"
+            android:maxLength="11"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
             android:textColorHint="@color/LoginInputBackground"
@@ -205,13 +201,12 @@
     </com.google.android.material.textfield.TextInputLayout>
     <!-- 邮箱 -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_input_email"
+        android:id="@+id/til_input_register_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_tel"
+        android:layout_below="@id/til_input_register_tel"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:maxLength="11"
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30"
         android:textColorHint="@color/LoginInputBackground">
@@ -222,7 +217,7 @@
             android:backgroundTint="@color/White"
             android:hint="@string/register_email"
             android:inputType="textEmailAddress"
-            android:maxLength="10"
+            android:maxLength="20"
             android:singleLine="true"
             android:textColor="@color/viewBackground"
             android:textColorHint="@color/LoginInputBackground"
@@ -233,13 +228,13 @@
         android:id="@+id/ll_input_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/til_input_email"
+        android:layout_below="@id/til_input_register_email"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_input_phone_code"
+            android:id="@+id/til_input_phone_register_code"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"

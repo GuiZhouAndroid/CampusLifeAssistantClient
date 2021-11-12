@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author ZSAndroid
  * @create 2021-09-02-22:29
  */
-public class RegexUtils {
+public class MyRegexUtils {
 
     private static boolean startCheck(String reg, String string) {
         boolean tem = false;
@@ -19,7 +19,6 @@ public class RegexUtils {
         tem = matcher.matches();
         return tem;
     }
-
 
     /**
      * 验证用户名
@@ -32,51 +31,51 @@ public class RegexUtils {
         return startCheck(regex, username);
     }
 
-
-    //密码设定规则：8-16位，其中必须包含数字、小写字母、大写字母；字符仅支持“！@#¥%”，不支持空格
-    public static boolean isCheckPwd(String str){
-        String regex ="^(?!.*[！·（）{}【】“”：；，》￥、。‘’——\\s-……%\\n])(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*()_+`\\-={}:\";'<>?,.\\/])[^\\u4e00-\\u9fa5]{8,16}$";
-        boolean isfalg =  str.matches(regex);
-        if(isfalg){
-            return true;
-        }
-        return false;
-    }
-
-
     /**
-     * 验证密码格式
-     * 6-16位 大小写特殊字符，无划线，横线等
-     * @param password
-     * @return
+     *
+     * 验证用户密码:必须包含一个大写，一个小写字母，且长度为8到16位
+     * 必须包含一个大写，一个小写字母，一个特殊字符，且长度为8到16位：^(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@&%#_])[a-zA-Z0-9~!@&%#_]{8,16}$
+     * 必须包含一个大写，一个小写字母，一个数字，一个特殊字符，且长度为8到16位：^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@&%#_])[a-zA-Z0-9~!@&%#_]{8,16}$
+     * @param password 密码
+     * @return 验证结果
      */
-
     public static boolean checkPassword(String password) {
-        String psRegex = "^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{6,16}$";
-
+        String psRegex = "^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9~!@&%#_]{8,16}$";
         return password.matches(psRegex);
     }
 
 
     /**
-     * 验证Email
+     * 验证QQ邮箱表达式
      *
-     * @param email email地址，格式：zhangsan@sina.com，zhangsan@xxx.com.cn，xxx代表邮件服务商
+     * @param email  QQ邮箱地址
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkEmail(String email) {
-        String regex = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
+        String regex = "[1-9]\\d{7,10}@qq\\.com";
         return Pattern.matches(regex, email);
+    }
+
+    /**
+     * 自定义限制长度：纯数字校验：只能输入6位的数字：“\\d{6}”
+     * 只能输入数字：“^[0-9]*$”
+     * 只能输入n位的数字：“^d{n}$”
+     * 只能输入至少n位数字：“^d{n,}$”
+     * 短信验证码
+     */
+    public static boolean checkAllNumber(String number) {
+        String regex = "\\d{6}";
+        return Pattern.matches(regex, number);
     }
 
     /**
      * 验证身份证号码
      *
-     * @param idCard 居民身份证号码18位，第一位不能为0，最后一位可能是数字或字母，中间16位为数字 \d同[0-9]
+     * @param idCard 验证身份证号（15位或18位数字）
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkIdCard(String idCard) {
-        String regex = "[1-9]\\d{16}[a-zA-Z0-9]{1}";
+        String regex = "(^\\d{15}$)|(^\\d{17}([0-9]|X|x)$)";
         return Pattern.matches(regex, idCard);
     }
 
@@ -96,7 +95,7 @@ public class RegexUtils {
     }
 
     /**
-     * 只能输入由数字或字母组成的20位字符串
+     * 只能输入由数字或字母组成的20位字符串，不区分大小写
      *
      * @param stuNo 学号
      * @return

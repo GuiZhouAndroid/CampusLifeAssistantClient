@@ -34,6 +34,13 @@
     <string name="please_input_user_name_password">请输入用户名和密码</string>
     <string name="please_input_user_name">请输入用户名</string>
     <string name="please_input_password">请输入密码</string>
+    <string name="please_input_RealUsername">请输入真实姓名</string>
+    <string name="please_input_Sex">请输入性别</string>
+    <string name="please_input_id_card">请输入身份证号</string>
+    <string name="please_input_stu_no">请输入学号</string>
+    <string name="please_input_tel">请输入手机号</string>
+    <string name="please_input_qq_email">请输入QQ邮箱</string>
+    <string name="please_input_phone_code">请输入6位短信验证码</string>
     <string name="please_input_bind_user_name">请输入绑定的用户名</string>
     <string name="please_input_bind_password">请输入密码</string>
     <string name="index_already_login_qq">哎哟~戳我干嘛！您已经登录啦~</string>
