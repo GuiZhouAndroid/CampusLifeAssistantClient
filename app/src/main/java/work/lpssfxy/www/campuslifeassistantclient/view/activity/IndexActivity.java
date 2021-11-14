@@ -43,6 +43,8 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -67,7 +69,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
@@ -952,7 +956,20 @@ public class IndexActivity extends BaseActivity {
                 }
                 switch (v.getId()) {
                     case R.id.item1:
-                        Toast.makeText(IndexActivity.this, "点击 Item菜单1", Toast.LENGTH_SHORT).show();
+                        OkGo.<String>post(Constant.SA_TOKEN_IS_LOGIN)
+                                .tag(this)
+                                .execute(new StringDialogCallback(IndexActivity.this) {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        Toast.makeText(IndexActivity.this, responseBean.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                    }
+                                });
                         break;
                     case R.id.item2:
                         Toast.makeText(IndexActivity.this, "点击 Item菜单2", Toast.LENGTH_SHORT).show();
