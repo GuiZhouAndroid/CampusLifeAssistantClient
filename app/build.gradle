@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'com.jakewharton.butterknife'
 }
-
 android {
     compileSdk 31
     defaultConfig {
@@ -147,6 +146,8 @@ dependencies {
     //时间选择器、省市区三级联动 https://github.com/Bigkoo/Android-PickerView
     //implementation 'com.contrarywind:Android-PickerView:4.1.9'
     //compileOnly 'com.contrarywind:wheelview:4.1.0'
-
+    implementation 'io.github.bmob:android-sdk:3.8.11'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
 }

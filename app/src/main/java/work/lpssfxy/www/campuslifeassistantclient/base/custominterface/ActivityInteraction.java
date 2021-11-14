@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.base.interfacedata;
+package work.lpssfxy.www.campuslifeassistantclient.base.custominterface;
 
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 

@@ -277,7 +277,9 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         //解绑ButterKnife
         mUnbinder.unbind();
         //取消网络请求，避免内存泄露
-        OkGo.getInstance().cancelAll();
+        if (OkGo.getInstance()!=null){
+            OkGo.getInstance().cancelAll();
+        }
     }
 
     /**
@@ -407,6 +409,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        this.finish();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         //finish();
         //overridePendingTransition(R.anim.anim_left, R.anim.anim_right);
@@ -526,4 +529,5 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
                 });
         builder.create().show();
     }
+
 }

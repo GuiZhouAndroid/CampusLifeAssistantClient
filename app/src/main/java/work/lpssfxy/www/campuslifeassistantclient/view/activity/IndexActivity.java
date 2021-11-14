@@ -65,7 +65,7 @@ import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.base.interfacedata.ActivityInteraction;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;

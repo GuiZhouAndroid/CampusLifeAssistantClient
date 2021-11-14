@@ -48,11 +48,15 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
@@ -361,7 +365,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //        new XPopup.Builder(LoginActivity.this)
 //                .asCustom(popup)
 //                .show();
-        startActivityAnimLeftToRight(new Intent(this,RegisterActivity.class));
+
+        startActivityForResultAnimLeftToRight(new Intent(this,RegisterActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
     }
 
     /**
@@ -426,7 +431,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     .execute(new StringCallback() {
                         @Override
                         public void onStart(Request<String, ? extends Request> request) {
-                            XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户");
+                            XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户...");
                         }
                         @Override
                         public void onSuccess(Response<String> response) {
@@ -644,6 +649,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
         }
+        //注册账户成功回调用户名显示
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_REGISTER_ACCOUNT_SUCCESS) {
+            Snackbar snackbar = Snackbar.make(mLogin_rl_show, data.getStringExtra("RegisterBackName") + "同学！系统检测出您的账户已注册成功，快去登录吧~", Snackbar.LENGTH_INDEFINITE)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                    .setDuration(5000);
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -651,7 +664,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 登录转场
      */
     @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -683,7 +696,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户");
+                        XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户...");
                         //popupView.dismiss();  //立即消失
                         //popupView.delayDismiss(300);//延时消失，有时候消失过快体验可能不好，可以延时一下
                         //popupView.smartDismiss(); //会等待弹窗的开始动画执行完毕再进行消失，可以防止接口调用过快导致的动画不完整。
@@ -816,5 +829,17 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         LoginActivity.this.finish();
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mHandler !=null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
     }
 }

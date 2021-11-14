@@ -172,7 +172,7 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.setShowDialog(LoginBindActivity.this,"正在验证账户");
+                        XPopupUtils.setShowDialog(LoginBindActivity.this,"正在验证账户...");
                     }
 
                     @Override

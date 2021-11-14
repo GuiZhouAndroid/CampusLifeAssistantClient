@@ -35,7 +35,7 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="please_input_password">请输入密码</string>
     <string name="please_input_RealUsername">请输入真实姓名</string>
-    <string name="please_input_Sex">请输入性别</string>
+    <string name="please_input_Sex">请选择性别</string>
     <string name="please_input_id_card">请输入身份证号</string>
     <string name="please_input_stu_no">请输入学号</string>
     <string name="please_input_tel">请输入手机号</string>
@@ -60,6 +60,7 @@
     <string name="register_email">QQ邮箱</string>
     <string name="register_code">输入6位短信验证码</string>
     <string name="get_phone_code">获取验证码</string>
+    <string name="register_success">注册成功！</string>
     <!--ViewPager欢迎页-->
     <string name="welcome_guid_text_one_title">个&#8194;性&#8194;推&#8194;荐</string>
     <string name="welcome_guid_text_one_info">每&#8197;天&#8197;为&#8197;你&#8197;良&#8197;心&#8197;推&#8197;荐&#8197;最&#8197;合&#8197;口&#8197;味&#8197;的&#8197;好&#8197;音&#8197;乐</string>

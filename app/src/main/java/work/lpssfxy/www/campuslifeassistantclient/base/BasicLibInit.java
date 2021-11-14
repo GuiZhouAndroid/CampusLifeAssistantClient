@@ -12,6 +12,7 @@ import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
+import com.mob.MobSDK;
 import com.tencent.open.log.SLog;
 import com.tencent.tauth.Tencent;
 import com.xuexiang.xui.XUI;
@@ -27,6 +28,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import cn.bmob.v3.Bmob;
 import me.jessyan.autosize.AutoSize;
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.onAdaptListener;
@@ -74,6 +76,10 @@ public class BasicLibInit {
         initUtils(application);
         /** 初始化Okhttp3网络请求框架 */
         initOkHttpSDK(application);
+        /** 初始化BmobSDK */
+        Bmob.initialize(application, "3a01454761d0ca0348f6386e1811301b");
+        /** 初始化MobSDK */
+        MobSDK.init(application, "m340e99eda0074", "a9f4ede8c508728294751f9f67749c08");
     }
 
     /**

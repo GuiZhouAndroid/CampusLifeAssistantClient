@@ -137,13 +137,22 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="tencent101965703" />
             </intent-filter>
         </activity>
+        <!-- 适配 Android 7.0 文件意图 QQ登录使用-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- 用户申请解封账户 -->
         <activity
             android:name=".view.activity.UserApplyUntieActivity"
@@ -172,16 +181,13 @@
         <!--                android:resource="@xml/file_paths" />-->
         <!--        </provider>-->
 
-        <!-- 适配 Android 7.0 文件意图 -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+        <!-- Bomb消息接收器，在这里进行注册 -->
+        <receiver android:name="work.lpssfxy.www.campuslifeassistantclient.base.MyPushMessageReceiver"
+            android:exported="true">
+            <intent-filter >
+                <action android:name="cn.bmob.push.action.MESSAGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

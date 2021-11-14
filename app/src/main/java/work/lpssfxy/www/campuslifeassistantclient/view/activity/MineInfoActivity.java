@@ -483,22 +483,4 @@ public class MineInfoActivity extends BaseActivity  {
             }
         });
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        MineInfoActivity.this.finish();
-    }
-
-
-    /**
-     * 销毁时：清楚全部网络请求
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        OkGo.getInstance().cancelAll();
-        //GlobalBus.getBus().unregister(this);
-    }
-
 }

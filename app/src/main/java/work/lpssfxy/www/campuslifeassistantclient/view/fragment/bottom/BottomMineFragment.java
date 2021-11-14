@@ -29,7 +29,7 @@ import butterknife.BindView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.base.interfacedata.ActivityInteraction;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ParcelableData;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;

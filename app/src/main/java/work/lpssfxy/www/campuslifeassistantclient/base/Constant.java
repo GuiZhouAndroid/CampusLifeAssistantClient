@@ -35,6 +35,7 @@ public class Constant {
     public static final int RESULT_CODE_BIND_ACCOUNT_SUCCESS = 102;//绑定账户成功
     public static final int RESULT_CODE_BIND_ACCOUNT_ERROR = 103;//绑定账户失败
     public static final int RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION = 104;//QQ会话一键登录 Gson解析的实体对象数据
+    public static final int RESULT_CODE_REGISTER_ACCOUNT_SUCCESS = 105;//注册账户成功
     /**
      * 腾讯QQ全局实例对象
      */
