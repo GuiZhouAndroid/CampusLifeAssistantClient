@@ -76,6 +76,10 @@
         <item name="android:textSize">@dimen/sp_13</item>
     </style>
 
+    <style name="LoginTextAppearance2" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">@dimen/sp_13</item>
+    </style>
     <!--base目录的自定义对话框-->
     <style name="Dialog" parent="android:style/Theme.Dialog">
         <item name="android:background">#00000000</item>

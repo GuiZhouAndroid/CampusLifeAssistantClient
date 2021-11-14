@@ -136,12 +136,13 @@
             app:counterMaxLength="1"
             app:counterOverflowTextAppearance="@style/HintError"
             app:counterTextAppearance="@style/LoginTextAppearance">
+
             <EditText
-                android:focusableInTouchMode="false"
                 android:id="@+id/edit_register_sex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/White"
+                android:focusableInTouchMode="false"
                 android:hint="@string/register_sex"
                 android:inputType="text"
                 android:maxLength="1"

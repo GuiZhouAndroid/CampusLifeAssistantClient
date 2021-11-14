@@ -61,7 +61,6 @@ public class RegisterActivity extends BaseActivity {
     private static final String TAG = "RegisterActivity";
 
     /****************** 1.获取TextInputLayout父控件 *******************/
-
     /** 父布局 */
     @BindView(R2.id.rl_register_show) RelativeLayout mRl_register_show;
     /** 用户名输入控件 */
@@ -241,7 +240,7 @@ public class RegisterActivity extends BaseActivity {
             //start 输入框中改变后的字符串的起始位置
             //before 输入框中改变前的字符串的位置 默认为0
             //count 输入框中改变后的一共输入字符串的数量
-            String text = s.toString();
+            String text = s.toString().trim();
             switch (editText.getId()) {
                 case R.id.edit_register_username:
                     if (text.isEmpty()) {
@@ -290,7 +289,7 @@ public class RegisterActivity extends BaseActivity {
                         textInputLayout.setError("身份证号必须填写喔");
                     } else {
                         if (!MyRegexUtils.checkIdCard(text)) {
-                            textInputLayout.setError("身份证号格式不正确");
+                            textInputLayout.setError("请输入15位或18位身份证号码");
                             textInputLayout.setErrorEnabled(true);
                         } else {
                             textInputLayout.setErrorEnabled(false);
@@ -316,7 +315,7 @@ public class RegisterActivity extends BaseActivity {
                         textInputLayout.setError("手机号必须填写喔");
                     } else {
                         if (!MyRegexUtils.checkMobile(text)) {
-                            textInputLayout.setError("手机号格式不正确");
+                            textInputLayout.setError("请输入11位数的手机号");
                             textInputLayout.setErrorEnabled(true);
                         } else {
                             textInputLayout.setErrorEnabled(false);
@@ -342,7 +341,7 @@ public class RegisterActivity extends BaseActivity {
                         textInputLayout.setError("短信验证码必须填写喔");
                     } else {
                         if (!MyRegexUtils.checkAllNumber(text)) {
-                            textInputLayout.setError("短信验证码格式不正确");
+                            textInputLayout.setError("请输入6位数的短信验证码");
                             textInputLayout.setErrorEnabled(true);
                         } else {
                             textInputLayout.setErrorEnabled(false);
@@ -360,7 +359,7 @@ public class RegisterActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             //s 输入结束呈现在输入框中的信息
-            String text = s.toString();
+            String text = s.toString().trim();
             switch (editText.getId()) {
                 case R.id.edit_register_username:
                     strUsername = text;
@@ -478,7 +477,7 @@ public class RegisterActivity extends BaseActivity {
         } else {
             //验证真实姓名
             if (!MyRegexUtils.checkIdCard(strIdCard)) {
-                Snackbar snackbar = Snackbar.make(mRl_register_show, "身份证号格式不正确！", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(mRl_register_show, "请输入15位或18位身份证号码！", Snackbar.LENGTH_LONG);
                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                 snackbar.show();
                 return;
@@ -508,7 +507,7 @@ public class RegisterActivity extends BaseActivity {
         } else {
             //验证手机号码
             if (!MyRegexUtils.checkMobile(phoneNumber)) {
-                Snackbar snackbar = Snackbar.make(mRl_register_show, "手机号格式不正确！", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(mRl_register_show, "请输入11位数的手机号！", Snackbar.LENGTH_LONG);
                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                 snackbar.show();
                 return;
@@ -654,7 +653,7 @@ public class RegisterActivity extends BaseActivity {
         } else {
             //验证真实姓名
             if (!MyRegexUtils.checkIdCard(strIdCard)) {
-                Snackbar snackbar = Snackbar.make(mRl_register_show, "身份证号格式不正确！", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(mRl_register_show, "请输入15位或18位身份证号码！", Snackbar.LENGTH_LONG);
                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                 snackbar.show();
                 return;
@@ -684,7 +683,7 @@ public class RegisterActivity extends BaseActivity {
         } else {
             //验证手机号码
             if (!MyRegexUtils.checkMobile(phoneNumber)) {
-                Snackbar snackbar = Snackbar.make(mRl_register_show, "手机号格式不正确！", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(mRl_register_show, "请输入11位数的手机号！", Snackbar.LENGTH_LONG);
                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                 snackbar.show();
                 return;
@@ -714,7 +713,7 @@ public class RegisterActivity extends BaseActivity {
         } else {
             //验证短信验证码
             if (!MyRegexUtils.checkAllNumber(phoneCode)) {
-                Snackbar snackbar = Snackbar.make(mRl_register_show, "短信验证码格式不正确！", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(mRl_register_show, "请输入6位数的短信验证码！", Snackbar.LENGTH_LONG);
                 setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                 snackbar.show();
                 return;

@@ -114,9 +114,14 @@
             android:name=".view.activity.IndexActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <!-- 注册登录Activity -->
+        <!-- 登录主界面 -->
         <activity
             android:name=".view.activity.LoginActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <!-- 手机号登录 -->
+        <activity
+            android:name=".view.activity.PhoneCodeLoginActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <!-- QQ信息绑定用户信息 -->

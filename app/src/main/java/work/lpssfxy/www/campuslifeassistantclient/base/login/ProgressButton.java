@@ -110,7 +110,7 @@ public class ProgressButton extends View {
         paintText = new Paint();
         paintText.setAntiAlias(true);
         paintText.setStyle(Paint.Style.FILL);
-        paintText.setTextSize(dip2px(15));
+        paintText.setTextSize(dip2px(16));
         paintPro = new Paint();
         paintPro.setAntiAlias(true);
         paintPro.setStyle(Paint.Style.STROKE);

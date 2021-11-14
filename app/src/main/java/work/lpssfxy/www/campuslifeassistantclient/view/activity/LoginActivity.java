@@ -113,6 +113,10 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     /** 自定义对话框 */
     private AlertDialog mDialog;
 
+    public static LoginActivity getInstance() {
+        return new LoginActivity();
+    }
+
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -310,7 +314,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 手机号快捷登录
      */
     private void userGoTelNumberLogin() {
-        ToastUtil.showToast("手机号快捷登录");
+        startActivityAnimLeftToRight(new Intent(LoginActivity.this, PhoneCodeLoginActivity.class));
     }
 
     /**
@@ -501,12 +505,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 }
                                                 if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                                                     //一键登录(并联信息持久化手机内存，生命周期：存储——清空(卸载App或注销时clear))
-                                                    App.appActivity.finish();//销毁的Activity界面
+                                                    if (App.appActivity != null) {
+                                                        App.appActivity.finish();//销毁主页
+                                                    }
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
                                                     startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
-                                                    finish();
+                                                    LoginActivity.this.finish();
                                                 }
                                             }
 
@@ -584,7 +590,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      *
      * @param jsonObject
      */
-    public void initOpenidAndTokenAndGsonGetParseQQUserInfo(JSONObject jsonObject) {
+    private void initOpenidAndTokenAndGsonGetParseQQUserInfo(JSONObject jsonObject) {
         try {
             /**获取Constant.mTencent.login(监听器loginListener) 回调成功有效Session中的 openid值、access_token值、expires_in值*/
             String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);//用户应用唯一标识
@@ -743,7 +749,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         }
                         if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
                             //拉去并联登录信息持久化
-                            App.appActivity.finish();//销毁的Activity界面
+                            if (App.appActivity != null) {
+                                App.appActivity.finish();//销毁主页
+                            }
                             SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                             startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
                             finish();
@@ -832,7 +840,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     }
 
     /**
-     *
+     * 释放资源
      */
     @Override
     protected void onDestroy() {

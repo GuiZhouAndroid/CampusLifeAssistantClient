@@ -68,6 +68,9 @@ public class Constant {
     //用户名密码登录，参数一：ulTel手机号码，参数二：ulPassword登录密码
     public static final String LOGIN_TEL_PASSWORD = BASE_URL + "/api/user/userDoLoginByTelAndPwd";
 
+    //手机号快捷登录
+    public static final String LOGIN_FAST_TEL = BASE_URL + "/api/user/userSelectUserInfoAndQQInfoByUserTelToLogin";
+
     //查询QQ是否授权登录过校园帮APP
     public static final String LOGIN_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/selectIfBindQQSession";
 
@@ -79,6 +82,7 @@ public class Constant {
 
     //通过用户自增ID更新QQ会话全部信息
     public static final String LOGIN_UPDATE_QQ_SESSION_ALL_INFO_BY_USERID = BASE_URL + "/api/qq/oauth/session/updateQQSessionInfoByUserIdToAll";
+
     /**
      * 用户个人信息管理
      */

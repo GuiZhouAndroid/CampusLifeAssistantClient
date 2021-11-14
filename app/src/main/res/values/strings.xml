@@ -32,21 +32,24 @@
     <string name="QQ">QQ快捷登录</string>
     <string name="weChat">微信快捷登录</string>
     <string name="please_input_user_name_password">请输入用户名和密码</string>
+    <string name="sms_phone_code_fast_login">短信验证码快捷登录</string>
     <string name="please_input_user_name">请输入用户名</string>
     <string name="please_input_password">请输入密码</string>
     <string name="please_input_RealUsername">请输入真实姓名</string>
     <string name="please_input_Sex">请选择性别</string>
-    <string name="please_input_id_card">请输入身份证号</string>
+    <string name="please_input_id_card">请输入15位或18位身份证号</string>
     <string name="please_input_stu_no">请输入学号</string>
-    <string name="please_input_tel">请输入手机号</string>
+    <string name="please_input_tel">请输入11位数的手机号</string>
     <string name="please_input_qq_email">请输入QQ邮箱</string>
-    <string name="please_input_phone_code">请输入6位短信验证码</string>
+    <string name="please_input_phone_code">请输入6位数的短信验证码</string>
     <string name="please_input_bind_user_name">请输入绑定的用户名</string>
     <string name="please_input_bind_password">请输入密码</string>
     <string name="index_already_login_qq">哎哟~戳我干嘛！您已经登录啦~</string>
     <string name="i_kown">我知道了</string>
     <string name="please_bind_User_login">，请您绑定账户后重试</string>
-    <string name="please_bind_qq_login">，请授权后再登录</string>
+    <string name="please_bind_back_User_login">，请您返回登录主页绑定账户后重试</string>
+    <string name="please_bind_qq_login">，请授权QQ后重试</string>
+    <string name="please_bind_back_qq_login">，请您返回登录主页授权QQ后重试</string>
     <string name="qq_bing_success">QQ授权绑定成功</string>
     <string name="qq_bing_error">QQ授权绑定失败</string>
     <!--注册-->
@@ -58,7 +61,7 @@
     <string name="register_stu_no">学号</string>
     <string name="register_tel">手机号</string>
     <string name="register_email">QQ邮箱</string>
-    <string name="register_code">输入6位短信验证码</string>
+    <string name="register_code">验证码</string>
     <string name="get_phone_code">获取验证码</string>
     <string name="register_success">注册成功！</string>
     <!--ViewPager欢迎页-->

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_login_show"
+    android:background="#FFFFFF"
+    tools:context=".view.activity.PhoneCodeLoginActivity">
+
+    <!--标题控件-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_login_phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/Light_Blue"
+        android:fitsSystemWindows="true"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:id="@+id/fl_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/telNumberLogin"
+                android:textColor="@color/White"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_tel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_20"
+            android:text="@string/sms_phone_code_fast_login"
+            android:textColor="@color/Grey900"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <!-- 手机号-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_login_tel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30"
+            android:textColorHint="@color/Black"
+            app:counterEnabled="true"
+            app:counterMaxLength="11"
+            app:counterOverflowTextAppearance="@style/HintError"
+            app:counterTextAppearance="@style/LoginTextAppearance2">
+
+            <EditText
+                android:id="@+id/edit_login_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:hint="@string/register_tel"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:singleLine="true"
+                android:textColor="@color/Light_Blue"
+                android:textColorHint="@color/Light_Blue"
+                android:textSize="@dimen/sp_15"
+                tools:ignore="TextFields" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_input_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_30"
+            android:paddingRight="@dimen/dp_30">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_input_login_phone_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textColorHint="@color/Black">
+
+                <EditText
+                    android:id="@+id/edit_login_phone_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/red"
+                    android:hint="@string/register_code"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:textColor="@color/Light_Blue"
+                    android:textColorHint="@color/Light_Blue"
+                    android:textSize="@dimen/sp_15"
+                    tools:ignore="TextFields" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_login_phone_code"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_35"
+                android:layout_gravity="center"
+                android:layout_weight="1.5"
+                android:background="@drawable/btn_bg_login_phone_code"
+                android:text="@string/get_phone_code"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
+        <work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton
+            android:id="@+id/ptn_login_phone"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_20" />
+    </LinearLayout>
+
+</RelativeLayout>
