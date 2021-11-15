@@ -125,7 +125,7 @@ dependencies {
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:2.0.0'
     implementation 'com.github.xuexiangjys.XUtil:xutil-sub:2.0.0'
     // 轮子哥权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:12.3'
+    implementation 'com.github.getActivity:XXPermissions:13.0'
     // 轮子哥吐司框架：https://github.com/getActivity/ToastUtils
     implementation 'com.github.getActivity:ToastUtils:9.5'
     // 轮子哥标题栏框架：https://github.com/getActivity/TitleBar
@@ -149,5 +149,7 @@ dependencies {
     implementation 'io.github.bmob:android-sdk:3.8.11'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    //阿里云OSS对象存储
+    implementation 'com.aliyun.dpa:oss-android-sdk:2.3.0'
 
 }

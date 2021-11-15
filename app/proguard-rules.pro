@@ -66,10 +66,16 @@
   *** rewind();
 }
 
-#---------------------------------6.XPopup-------------------------------
+#---------------------------------5.XPopup-------------------------------
 # XPopup
 -dontwarn com.lxj.xpopup.widget.**
 -keep class com.lxj.xpopup.widget.**{*;}
+
+#---------------------------------6.阿里云OSS-------------------------------
+# 阿里云OSS
+-keep class com.alibaba.sdk.android.oss.** { *; }
+-dontwarn okio.**
+-dontwarn org.apache.commons.codec.binary.**
 
 
 
