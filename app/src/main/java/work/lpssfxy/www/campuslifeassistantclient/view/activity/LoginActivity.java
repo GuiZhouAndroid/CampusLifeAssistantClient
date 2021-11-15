@@ -113,10 +113,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     /** 自定义对话框 */
     private AlertDialog mDialog;
 
-    public static LoginActivity getInstance() {
-        return new LoginActivity();
-    }
-
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -147,6 +143,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         return R.layout.login_activity;
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public static LoginActivity loginActivity;
 
     @Override
     protected void prepareData() {
@@ -159,6 +157,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     @Override
     protected void initView() {
+        loginActivity = this;//静态方式提供给手机快捷登录，调用finish，直接从手机验证码登录界面跳转到首页，并更新用户数据
         Log.i(TAG, "进入登录" + Constant.mTencent.isSessionValid());//true
         /** 默认不勾选✓授权同意 */
         mCheck_if_authorizer.setChecked(false);

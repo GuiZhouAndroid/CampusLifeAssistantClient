@@ -402,9 +402,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                             if (App.appActivity != null) {
                                 App.appActivity.finish();//销毁主页
                             }
-                            if (LoginActivity.getInstance() != null) {
-                                LoginActivity.getInstance().finish();//登录主页单例模式上下文，登录成功，销毁登录页
-                            }
+                            LoginActivity.loginActivity.finish();//销毁未finish的登录主页
                             SharePreferenceUtil.putObject(PhoneCodeLoginActivity.this, userQQSessionBean);
                             startActivityAnimRightToLeft(new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
                             PhoneCodeLoginActivity.this.finish();
