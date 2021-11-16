@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Item 菜单1"
+            android:text="当前登录会话"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Item 菜单2"
+            android:text="检查登录状态"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Item 菜单3"
+            android:text="注销登录"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 

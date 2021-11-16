@@ -178,23 +178,23 @@ public class Constant {
     /**
      * 管理员权利的账户封禁+踢人下线
      */
-    // 管理员通过已登录账户用户名踢人下线
-    public static final String ADMIN_KICK_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginUsername";
+    // 管理员通过已登录账户真实姓名踢人下线
+    public static final String ADMIN_KICK_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginRealName";
 
     // 管理员通过已登录账户Token令牌值踢人下线
     public static final String ADMIN_KICK_BY_TOKEN_VALUES = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginTokenValues";
 
-    // 管理员通过已登录账户用户名封禁账户
-    public static final String ADMIN_BANNED_ACCOUNT_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToBannedAccountByUsername";
+    // 管理员通过已登录账户真实姓名封禁账户
+    public static final String ADMIN_BANNED_ACCOUNT_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToBannedAccountByRealName";
 
-    // 管理员通过已登录账户用户名查询封禁状态
-    public static final String ADMIN_SELECT_BANNED_ACCOUNT_STATE_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountStateByUsername";
+    // 管理员通过已登录账户真实姓名查询封禁状态
+    public static final String ADMIN_SELECT_BANNED_ACCOUNT_STATE_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountStateByRealName";
 
-    // 管理员通过已登录账户用户名查询剩余封禁时间
-    public static final String ADMIN_SELECT_BANNED_ACCOUNT_RESIDUE_TIME_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountResidueTimeByUsername";
+    // 管理员通过已登录账户真实姓名查询剩余封禁时间
+    public static final String ADMIN_SELECT_BANNED_ACCOUNT_RESIDUE_TIME_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminSelectBannedAccountResidueTimeByRealName";
 
-    // 管理员通过已登录账户用户名解除封禁
-    public static final String ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_USERNAME = BASE_URL + "/api/admin/kickOffLine/adminToUntieBannedAccountByUsername";
+    // 管理员通过已登录账户真实姓名解除封禁
+    public static final String ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToUntieBannedAccountByRealName";
 
     /**
      * 普通用户信息关联QQ登录信息

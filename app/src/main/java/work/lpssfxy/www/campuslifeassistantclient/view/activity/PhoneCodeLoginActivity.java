@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -77,7 +78,10 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 @SuppressLint("NonConstantResourceId")
 public class PhoneCodeLoginActivity extends BaseActivity {
     private static final String TAG = "PhoneCodeLoginActivity";
+    /** 父部局控件 */
     @BindView(R2.id.rl_login_show) RelativeLayout mRlLoginShow;
+    /** 返回按钮 */
+    @BindView(R2.id.iv_phone_login_back) ImageView mIvLoginPhoneBack;
     /** Toolbar */
     @BindView(R2.id.toolbar_login_phone) Toolbar mLoginToolbar;
     /****************** 1.获取TextInputLayout父控件 *******************/
@@ -189,7 +193,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.btn_login_phone_code, R2.id.ptn_login_phone})
+    @OnClick({R2.id.btn_login_phone_code, R2.id.ptn_login_phone, R2.id.iv_phone_login_back})
     public void onLoginViewClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_phone_code://点击获取验证码
@@ -200,6 +204,9 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                 break;
             case R.id.ptn_login_phone://点击开始手机号登录
                 RegexVerifySMSPhoneCodeToLogin(strPhoneNumber, strPhoneCode);
+                break;
+            case R.id.iv_phone_login_back://点击返回
+                PhoneCodeLoginActivity.this.finish();
                 break;
         }
     }

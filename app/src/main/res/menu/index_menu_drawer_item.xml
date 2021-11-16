@@ -6,13 +6,13 @@
             android:title="@string/drawer_menu_info_school"
             android:icon="@drawable/ic_home_black_24dp"/>
         <item
-            android:id="@+id/drawer_menu_see_calendar"
-            android:title="@string/drawer_menu_see_calendar"
-            android:icon="@drawable/ic_perm_contact_calendar_black_24dp"/>
-        <item
             android:id="@+id/drawer_menu_setting"
             android:title="@string/drawer_menu_setting_title"
             android:icon="@drawable/ic_settings_black_24dp"/>
+        <item
+            android:id="@+id/drawer_menu_developer_system_safe"
+            android:title="@string/drawer_menu_developer_system_safe"
+            android:icon="@drawable/ic_perm_contact_calendar_black_24dp"/>
         <item
             android:id="@+id/drawer_menu_about_author"
             android:title="@string/drawer_menu_about_author"

@@ -169,6 +169,11 @@
             android:name=".view.activity.RegisterActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+        <!-- 开发者安全中心 -->
+        <activity
+            android:name=".view.activity.DeveloperSystemSafeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->
         <!-- 广播器 -->

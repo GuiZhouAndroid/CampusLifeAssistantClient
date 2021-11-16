@@ -497,8 +497,13 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     dialogPrompt.show();
                                                     return;
                                                 }
+                                                if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "error".equals(userQQSessionBean.getMsg())) {
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，此QQ已绑定其它账户！");
+                                                    dialogPrompt.show();
+                                                    return;
+                                                }
                                                 if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "QQ一键登录失败".equals(userQQSessionBean.getMsg())) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，未知错误，请联系开发者解决！");
+                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, "登录失败，未知错误，请反馈给开发者！");
                                                     dialogPrompt.show();
                                                     return;
                                                 }

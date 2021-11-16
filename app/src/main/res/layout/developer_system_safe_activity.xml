@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_developer_safe_show"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".view.activity.DeveloperSystemSafeActivity">
+
+    <!--标题控件-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_developer_safe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/Grey800"
+        android:fitsSystemWindows="true"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:id="@+id/fl_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_developer_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/developer_system_safe_center"
+                android:textColor="@color/White"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_developer_safe"
+        tools:context=".MainActivity">
+
+        <q.rorbin.verticaltablayout.VerticalTabLayout
+            android:id="@+id/vertical_tab_layout_developer_safe"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/Grey800"
+            android:fitsSystemWindows="true"
+            android:scrollIndicators="bottom"
+            app:indicator_color="@color/White"
+            app:indicator_corners="5dp"
+            app:indicator_gravity="fill"
+            app:indicator_width="2dp"
+            app:tab_height="50dp"
+            app:tab_mode="scrollable"
+            tools:targetApi="m" />
+
+        <work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager
+            android:id="@+id/vertical_viewpager_developer_safe"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4" />
+
+    </LinearLayout>
+
+</RelativeLayout>

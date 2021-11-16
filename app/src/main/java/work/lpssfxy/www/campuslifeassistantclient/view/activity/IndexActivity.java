@@ -44,7 +44,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -69,7 +71,6 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
@@ -311,17 +312,17 @@ public class IndexActivity extends BaseActivity {
             @Override
 
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                mDrawer_layout.closeDrawer(GravityCompat.START);
+//                mDrawer_layout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()) {
                     case R.id.drawer_menu_school:
                         Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
                         startActivityAnimLeftToRight(new Intent(IndexActivity.this, waimai.class));
                         return true;
-                    case R.id.drawer_menu_see_calendar:
-                        Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        return true;
                     case R.id.drawer_menu_setting:
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.drawer_menu_developer_system_safe: //开发者后台安全中心
+                        startActivityAnimLeftToRight(new Intent(IndexActivity.this,DeveloperSystemSafeActivity.class));
                         return true;
                     case R.id.drawer_menu_about_author:
                         Snackbar.make(mDrawer_layout, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
@@ -957,25 +958,83 @@ public class IndexActivity extends BaseActivity {
                 switch (v.getId()) {
                     case R.id.item1:
                         OkGo.<String>post(Constant.SA_TOKEN_IS_LOGIN)
-                                .tag(this)
-                                .execute(new StringDialogCallback(IndexActivity.this) {
+                                .tag("判断当前登录状态")
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onStart(Request<String, ? extends Request> request) {
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
+                                    }
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        Toast.makeText(IndexActivity.this, responseBean.toString(), Toast.LENGTH_SHORT).show();
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this,responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this,responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
                                     }
-
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
+                                        XPopupUtils.setSmartDisDialog();
                                     }
                                 });
                         break;
                     case R.id.item2:
-                        Toast.makeText(IndexActivity.this, "点击 Item菜单2", Toast.LENGTH_SHORT).show();
+                        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                                .tag("检查登录")
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onStart(Request<String, ? extends Request> request) {
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
+                                    }
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前账户已登录".equals(responseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        XPopupUtils.setSmartDisDialog();
+                                    }
+                                });
                         break;
                     case R.id.item3:
-                        Toast.makeText(IndexActivity.this, "点击 Item菜单3", Toast.LENGTH_SHORT).show();
+                        OkGo.<String>post(Constant.SA_TOKEN_DO_LOGOUT)
+                                .tag("注销登录")
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onStart(Request<String, ? extends Request> request) {
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前登录账户注销成功".equals(responseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "注销失败，未登录".equals(responseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        XPopupUtils.setSmartDisDialog();
+                                    }
+                                });
                         break;
                     case R.id.item4:
                         Toast.makeText(IndexActivity.this, "点击 Item菜单4", Toast.LENGTH_SHORT).show();

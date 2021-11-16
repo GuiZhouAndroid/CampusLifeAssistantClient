@@ -9,6 +9,17 @@
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/activity_phone_register.xml" value="0.264" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/activity_register_layout.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_homepage_nestedscrollview.xml" value="0.1" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/custom_toolbar_pop_menu.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_banned_account_by_username.xml" value="0.24320652173913043" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_banned_account_username.xml" value="0.18478260869565216" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_kickoff_line_by_token.xml" value="0.24456521739130435" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_kickoff_line_by_username.xml" value="0.24456521739130435" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_kickoff_line_token.xml" value="0.18478260869565216" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_select_banned_account_residue_time_by_username.xml" value="0.24320652173913043" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_select_banned_account_state_by_username.xml" value="0.24320652173913043" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_system_safe_activity.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_untie_banned_account_by_username.xml" value="0.24320652173913043" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/developer_untie_banned_account_username.xml" value="0.18478260869565216" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/index_activity.xml" value="0.1" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/index_bottom_navication_lottie_item.xml" value="0.1" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/index_custom_appbar.xml" value="0.20969202898550723" />
@@ -20,8 +31,10 @@
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/login_activi.xml" value="0.18070652173913043" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/login_activity.xml" value="0.2" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/login_activity_bind.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/login_activity_phone_code.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/login_dialog_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/layout/mine_info_activity.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/1/AndroidStudioProjects/CampusLifeAssistantClient/app/src/main/res/menu/index_menu_drawer_item.xml" value="0.2074074074074074" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable-v24/btn_login_bg.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable-v24/login_btn_bg.xml" value="0.3764102564102564" />
