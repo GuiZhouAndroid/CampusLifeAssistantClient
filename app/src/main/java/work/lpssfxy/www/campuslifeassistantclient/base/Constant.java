@@ -119,6 +119,9 @@ public class Constant {
 
     //更新专业班级
     public static final String UPDATE_CLASS = BASE_URL + "/api/user/updateOldClassNewClassAndUserName";
+
+    //当前登录会话的用户名，查询该用户的对应的角色集合
+    public static final String SELECT_NOW_USERNAME_ROLE_LIST = BASE_URL + "/api/user/selectRoleListByRedisToUserName";
     /**
      * 检测用户登录状态+注销接口
      */
