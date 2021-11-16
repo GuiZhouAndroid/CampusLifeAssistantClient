@@ -1,2 +1,2 @@
 # CampusLifeAssistantClient
-毕设作品——Android客户端
+毕设作品——Android移动端
