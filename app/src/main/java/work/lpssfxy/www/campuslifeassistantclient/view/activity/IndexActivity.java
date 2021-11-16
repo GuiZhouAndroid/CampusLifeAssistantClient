@@ -2,6 +2,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -59,6 +60,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -71,8 +73,10 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.RoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
@@ -122,8 +126,11 @@ public class IndexActivity extends BaseActivity {
     private TextView tvNavHeaderName,tv_QQLastLoginTime,tv_userLastLoginTime;
     /** 侧滑背景图片 */
     private LinearLayout ll_drawer_bg;
+    /** 自定义对话框 */
+    private AlertDialog mDialog;
     //用于数据传递到底部导航第四个页面--->用户管理信息
     private Handler mHandler;
+    //接口传递用户信息数据
     private ActivityInteraction mActivityInteraction;
 
     /**
@@ -322,17 +329,86 @@ public class IndexActivity extends BaseActivity {
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_developer_system_safe: //开发者后台安全中心
-                        startActivityAnimLeftToRight(new Intent(IndexActivity.this,DeveloperSystemSafeActivity.class));
+
+                        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                                .tag("检查登录")
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onStart(Request<String, ? extends Request> request) {
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
+                                    }
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
+                                            builder.setTitle("验证结果")//这里设置标题
+                                                    .setMessage("您当前未登录，禁止访问！")//这里设置提示信息
+                                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            mDialog.dismiss();
+                                                        }
+                                                    });
+                                            mDialog = builder.create();
+                                            mDialog.show();
+                                            return;
+                                        }
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前账户已登录".equals(responseBean.getMsg())) {
+                                            OkGo.<String>post(Constant.SELECT_NOW_USERNAME_ROLE_LIST)
+                                                    .tag("当前登录会话角色集合")
+                                                    .execute(new StringCallback() {
+                                                        @Override
+                                                        public void onSuccess(Response<String> response) {
+                                                            RoleOrPermissionListBean roleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), RoleOrPermissionListBean.class);
+                                                            Log.i(TAG, "RoleOrPermissionListBean: " + roleOrPermissionListBean.getData());
+                                                            if (roleOrPermissionListBean.getData().contains("超级管理员")) {
+                                                                //List<String> 集合中，包含角色"超级管理员"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
+                                                                startActivityAnimLeftToRight(new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
+                                                            } else {//无认证权限，提示信息
+                                                                AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
+                                                                builder.setTitle("验证结果")//这里设置标题
+                                                                        .setMessage("《后台安全》仅开发者使用，您无权访问！谢谢合作~")//这里设置提示信息
+                                                                        .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
+                                                                        .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                mDialog.dismiss();
+                                                                            }
+                                                                        });
+                                                                mDialog = builder.create();
+                                                                mDialog.show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onError(Response<String> response) {
+                                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                                            snackbar.show();
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        XPopupUtils.setSmartDisDialog();
+                                    }
+
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                        snackbar.show();
+                                    }
+                                });
                         return true;
                     case R.id.drawer_menu_about_author:
                         Snackbar.make(mDrawer_layout, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
-                    case R.id.drawer_menu_logout://退出QQ登录
-                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "已退出QQ登录~", Snackbar.LENGTH_SHORT)
-                                .setActionTextColor(getResources().getColor(R.color.colorAccent));
-                        //设置Snackbar上提示的字体颜色
-                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                        snackbar.show();
+                    case R.id.drawer_menu_logout://注销账户：本地持久数据 + 服务器Session数据
                         /** 开启一个子线程 */
                         new Thread(new Runnable() {
                             @Override
@@ -341,6 +417,36 @@ public class IndexActivity extends BaseActivity {
                                 QQHandler.sendEmptyMessage(1);
                             }
                         }).start();
+                        OkGo.<String>post(Constant.SA_TOKEN_DO_LOGOUT)
+                                .tag("注销登录")
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onStart(Request<String, ? extends Request> request) {
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前登录账户注销成功".equals(responseBean.getMsg())) {
+                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                            snackbar.show();
+                                            return;
+                                        }
+                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "注销失败，未登录".equals(responseBean.getMsg())) {
+                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, "您还未登录呢~请先登录！", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                            snackbar.show();
+                                            return;
+                                        }
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        XPopupUtils.setSmartDisDialog();
+                                    }
+                                });
                         return true;
                 }
                 return false;
@@ -1009,32 +1115,7 @@ public class IndexActivity extends BaseActivity {
                                 });
                         break;
                     case R.id.item3:
-                        OkGo.<String>post(Constant.SA_TOKEN_DO_LOGOUT)
-                                .tag("注销登录")
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
-                                    }
 
-                                    @Override
-                                    public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前登录账户注销成功".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "注销失败，未登录".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                    }
-                                    @Override
-                                    public void onFinish() {
-                                        super.onFinish();
-                                        XPopupUtils.setSmartDisDialog();
-                                    }
-                                });
                         break;
                     case R.id.item4:
                         Toast.makeText(IndexActivity.this, "点击 Item菜单4", Toast.LENGTH_SHORT).show();
