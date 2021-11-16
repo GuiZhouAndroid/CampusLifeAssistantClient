@@ -546,7 +546,7 @@ public class RegisterActivity extends BaseActivity {
         //启动60秒倒计时
         buttonHelper.start();
         /* 3. 请求获取手机验证码。第一个参数：手机号　第二个参数：Bmob官方控制台短信模板 */
-        BmobSMS.requestSMSCode(phoneNumber, "", new QueryListener<Integer>() {
+        BmobSMS.requestSMSCode(phoneNumber, "注册", new QueryListener<Integer>() {
             @Override
             public void done(Integer smsId, BmobException e) {
                 if (e == null) {

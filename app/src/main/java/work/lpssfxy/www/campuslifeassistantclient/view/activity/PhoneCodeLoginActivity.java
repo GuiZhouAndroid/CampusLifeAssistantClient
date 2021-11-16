@@ -244,7 +244,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
         //启动60秒倒计时
         buttonHelper.start();
         /* 3. 请求获取手机验证码。第一个参数：手机号　第二个参数：Bmob官方控制台短信模板 */
-        BmobSMS.requestSMSCode(strPhoneNumber, "", new QueryListener<Integer>() {
+        BmobSMS.requestSMSCode(strPhoneNumber, "登录", new QueryListener<Integer>() {
             @Override
             public void done(Integer smsId, BmobException e) {
                 if (e == null) {
