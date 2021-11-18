@@ -445,6 +445,13 @@ public class IndexActivity extends BaseActivity {
                                         super.onFinish();
                                         XPopupUtils.setSmartDisDialog();
                                     }
+
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                        snackbar.show();
+                                    }
                                 });
                         return true;
                 }
@@ -1069,22 +1076,31 @@ public class IndexActivity extends BaseActivity {
                                     public void onStart(Request<String, ? extends Request> request) {
                                         XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
+
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                         if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this,responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                         if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this,responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                     }
+
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
                                         XPopupUtils.setSmartDisDialog();
+                                    }
+
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                        snackbar.show();
                                     }
                                 });
                         break;
@@ -1094,22 +1110,31 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
+                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在检查登录...");
                                     }
+
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                         if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前账户已登录".equals(responseBean.getMsg())) {
                                             Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
-                                        }else {
+                                        } else {
                                             Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
+
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
                                         XPopupUtils.setSmartDisDialog();
+                                    }
+
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                        snackbar.show();
                                     }
                                 });
                         break;
