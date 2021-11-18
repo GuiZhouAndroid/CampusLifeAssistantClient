@@ -49,6 +49,8 @@ public class Constant {
      * 服务器+协议+端口号+域名
      */
     public static final String BASE_URL = "https://www.lpssfxy.work";
+    private static final String BASE_OSS_URL = "https://www.zsitking.top";//阿里云OSS域名
+    private static final String OSS_IMG_PATH = "/pic_data/";//阿里云OSS 存储文件夹路径 非目录名
 
     /**
      * 用户注册
