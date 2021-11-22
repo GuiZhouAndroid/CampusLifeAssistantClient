@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -80,6 +81,8 @@ public class BasicLibInit {
         Bmob.initialize(application, "3a01454761d0ca0348f6386e1811301b");
         /** 初始化MobSDK */
         MobSDK.init(application, "m340e99eda0074", "a9f4ede8c508728294751f9f67749c08");
+        /** 初始化轮子哥吐司框架 */
+        ToastUtils.init(application);
     }
 
     /**

@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.utils;
+package work.lpssfxy.www.campuslifeassistantclient.utils.okhttp;
 
 import android.app.Activity;
 import android.graphics.Color;

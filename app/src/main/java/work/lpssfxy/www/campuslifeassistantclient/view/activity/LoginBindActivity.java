@@ -21,11 +21,11 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -131,7 +131,7 @@ public class LoginBindActivity extends BaseActivity {
             case R.id.btn_start_bind: //点击立即绑定
                 String strEditUsername = mEdit_bind_username.getText().toString().trim();//获取输入的用户名值
                 String strEditPassword = mEdit_bind_password.getText().toString().trim();//获取输入的密码值
-                hideKeyboard();//隐藏软键盘
+                KeyboardUtil.hideKeyboard(LoginBindActivity.this);//隐藏软键盘
                 if (strEditUsername.isEmpty() && strEditPassword.isEmpty()) {
                     Snackbar snackbar = Snackbar.make(mBtn_start_bind, R.string.please_input_user_name_password, Snackbar.LENGTH_LONG);
                     //设置Snackbar上提示的字体颜色
@@ -174,12 +174,12 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.setShowDialog(LoginBindActivity.this,"正在验证账户...");
+                        XPopupUtils.getInstance().setShowDialog(LoginBindActivity.this,"正在验证账户...");
                     }
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + responseBean);
                         if (200 == responseBean.getCode() && "查询失败，此用户名不存在".equals(responseBean.getMsg())) {
@@ -276,7 +276,7 @@ public class LoginBindActivity extends BaseActivity {
 
                                     @Override
                                     public void onFinish() {
-                                        XPopupUtils.setSmartDisDialog();
+                                        XPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override

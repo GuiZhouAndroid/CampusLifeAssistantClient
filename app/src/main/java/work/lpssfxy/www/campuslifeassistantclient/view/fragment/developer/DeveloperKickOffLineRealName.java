@@ -2,8 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,16 +21,12 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -122,7 +116,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.setShowDialog(getActivity(), "正在执行...");
+                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在执行...");
                     }
 
                     @Override
@@ -184,7 +178,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override

@@ -40,11 +40,11 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -400,7 +400,7 @@ public class RegisterActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_register_phone_code://点击获取验证码
                 RegexRequestSMSPhoneCode(strTel);//正则表达式判断 + 60秒倒计时 + 请求短信验证码
-                closeKeyboard();//隐藏软键盘
+                KeyboardUtil.closeKeyboard(RegisterActivity.this);//关闭软键盘
                 break;
             case R.id.edit_register_sex://点击选择性别
                 chooseSex();
@@ -797,7 +797,7 @@ public class RegisterActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        XPopupUtils.setShowDialog(RegisterActivity.this,"正在注册账户...");
+                        XPopupUtils.getInstance().setShowDialog(RegisterActivity.this,"正在注册账户...");
                     }
 
                     @Override
@@ -856,7 +856,7 @@ public class RegisterActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
                 });
     }

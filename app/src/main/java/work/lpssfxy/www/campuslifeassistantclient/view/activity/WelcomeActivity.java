@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
 
+import com.hjq.toast.ToastUtils;
+
 import java.lang.reflect.Field;
 
 import butterknife.BindDrawable;
@@ -382,7 +384,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
             case KeyEvent.KEYCODE_BACK:
                 long secondTime = System.currentTimeMillis();
                 if (secondTime - firstTime > 3000) {
-                    BaseActivity.showToast("再按一次退出程序！");
+                    ToastUtils.show("再按一次退出程序！");
                     firstTime = secondTime;
                     return true;
                 } else {

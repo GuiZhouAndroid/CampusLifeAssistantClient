@@ -3,7 +3,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -37,13 +36,12 @@ import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.PhoneCodeLoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
@@ -212,7 +210,7 @@ public class BottomMineFragment extends BaseFragment {
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(Response<String> response) {
-                                    XPopupUtils.setShowDialog(getActivity(),"请求信息中...");
+                                    XPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
                                     //Json字符串解析转为实体类对象
                                     UserBean userBeanData = GsonUtil.gsonToBean(response.body(), UserBean.class);
                                     Log.i(TAG, "userBeanData=== " + userBeanData);
@@ -238,7 +236,7 @@ public class BottomMineFragment extends BaseFragment {
 
                                 @Override
                                 public void onFinish() {
-                                    XPopupUtils.setSmartDisDialog();
+                                    XPopupUtils.getInstance().setSmartDisDialog();
                                 }
                             });
                 }else {
@@ -268,12 +266,12 @@ public class BottomMineFragment extends BaseFragment {
         mAccountSafe.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-                XPopupUtils.setShowDialog(getActivity(),"请求跳转中...");
+                XPopupUtils.getInstance().setShowDialog(getActivity(),"请求跳转中...");
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        XPopupUtils.setTimerDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                         IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
                     }
                 }, 500);

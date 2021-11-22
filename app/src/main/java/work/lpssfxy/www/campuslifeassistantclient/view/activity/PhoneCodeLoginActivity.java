@@ -1,18 +1,11 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
-import static com.tencent.connect.common.Constants.KEY_QRCODE;
-import static com.tencent.connect.common.Constants.KEY_RESTORE_LANDSCAPE;
-import static com.tencent.connect.common.Constants.KEY_SCOPE;
-
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,17 +26,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-import com.tencent.connect.auth.AuthAgent;
-import com.tencent.connect.common.Constants;
-import com.tencent.tauth.DefaultUiListener;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,20 +39,15 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
 /**
@@ -204,7 +182,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                 strPhoneNumber = mLoginTel.getText().toString().trim();
                 strPhoneCode = mLoginPhoneCode.getText().toString().trim();
                 RegexRequestSMSPhoneNumber(strPhoneNumber);//正则表达式判断手机号 + 60秒倒计时 + 请求短信验证码
-                closeKeyboard();//隐藏软键盘
+                KeyboardUtil.closeKeyboard(PhoneCodeLoginActivity.this);//关闭软键盘
                 break;
             case R.id.ptn_login_phone://点击开始手机号登录
                 RegexVerifySMSPhoneCodeToLogin(strPhoneNumber, strPhoneCode);
@@ -353,7 +331,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        XPopupUtils.setShowDialog(PhoneCodeLoginActivity.this, "正在验证账户...");
+                        XPopupUtils.getInstance().setShowDialog(PhoneCodeLoginActivity.this, "正在验证账户...");
                     }
 
                     @Override
@@ -393,7 +371,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
                 });
     }

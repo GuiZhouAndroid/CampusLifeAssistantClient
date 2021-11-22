@@ -48,24 +48,20 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobSMS;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -258,7 +254,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             case R.id.login_ptn_anim://动画登录
                 strUserName = mLogin_edit_username.getText().toString();//获取用户输入信息
                 strPassword = mLogin_edit_password.getText().toString();//获取用户输入密码
-                closeKeyboard();//隐藏软键盘
+                KeyboardUtil.closeKeyboard(LoginActivity.this);//关闭软键盘
                 userLogin(strUserName, strPassword);//用户名密码登录
                 break;
             case R.id.login_tv_forget_pwd://忘记密码
@@ -438,7 +434,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     .execute(new StringCallback() {
                         @Override
                         public void onStart(Request<String, ? extends Request> request) {
-                            XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户...");
+                            XPopupUtils.getInstance().setShowDialog(LoginActivity.this,"正在验证账户...");
                         }
                         @Override
                         public void onSuccess(Response<String> response) {
@@ -534,7 +530,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                         @Override
                         public void onFinish() {
                             super.onFinish();
-                            XPopupUtils.setSmartDisDialog();
+                            XPopupUtils.getInstance().setSmartDisDialog();
                         }
 
                         @Override
@@ -703,7 +699,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.setShowDialog(LoginActivity.this,"正在验证账户...");
+                        XPopupUtils.getInstance().setShowDialog(LoginActivity.this,"正在验证账户...");
                         //popupView.dismiss();  //立即消失
                         //popupView.delayDismiss(300);//延时消失，有时候消失过快体验可能不好，可以延时一下
                         //popupView.smartDismiss(); //会等待弹窗的开始动画执行完毕再进行消失，可以防止接口调用过快导致的动画不完整。
@@ -762,7 +758,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override

@@ -44,6 +44,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -55,6 +56,7 @@ import com.tencent.connect.UserInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
+import com.xuexiang.xui.widget.toast.XToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,10 +81,10 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.RoleOrPermissionListBea
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
@@ -337,7 +339,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
+                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
 
                                     @Override
@@ -409,7 +411,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.setSmartDisDialog();
+                                        XPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -436,7 +438,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在注销...");
+                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在注销...");
                                     }
 
                                     @Override
@@ -459,7 +461,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.setSmartDisDialog();
+                                        XPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -512,7 +514,7 @@ public class IndexActivity extends BaseActivity {
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
         if (Constant.userQQSession != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
-            XPopupUtils.setShowDialog(this,getString(R.string.indexLoadLoginInfo));
+            XPopupUtils.getInstance().setShowDialog(this,getString(R.string.indexLoadLoginInfo));
             try {
                 jsonObject.put("ret", Constant.userQQSession.getData().getRet());
                 jsonObject.put("openid", Constant.userQQSession.getData().getOpenid());
@@ -761,7 +763,7 @@ public class IndexActivity extends BaseActivity {
                         QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);//加载在线动态QQ昵称和QQ头像
                         startHaveDataQQUserInfoToMineFragment(Constant.qqUser);
                         /** 关闭正在加载登录信息友好进度条*/
-                        XPopupUtils.setSmartDisDialog();
+                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
                     break;
                 case 1: //未登录
@@ -985,12 +987,12 @@ public class IndexActivity extends BaseActivity {
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSession != null) {
-            XPopupUtils.setShowDialog(this,"请求跳转中...");
+            XPopupUtils.getInstance().setShowDialog(this,"请求跳转中...");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    XPopupUtils.setTimerDisDialog();
+                    XPopupUtils.getInstance().setSmartDisDialog();
                     IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this,MineInfoActivity.class));
                 }
             }, 500);
@@ -1088,7 +1090,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
+                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
 
                                     @Override
@@ -1107,7 +1109,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.setSmartDisDialog();
+                                        XPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -1122,7 +1124,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.setShowDialog(IndexActivity.this, "正在检查登录...");
+                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在检查登录...");
                                     }
 
                                     @Override
@@ -1139,7 +1141,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.setSmartDisDialog();
+                                        XPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -1202,7 +1204,7 @@ public class IndexActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 3000) {
-                BaseActivity.showToast("再按一次退出程序！");
+                ToastUtils.show("再按一次退出程序！");
                 firstTime = secondTime;
                 return true;
             } else {

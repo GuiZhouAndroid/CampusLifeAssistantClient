@@ -272,14 +272,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     protected abstract void doBusiness();
 
     /**
-     * Toast提示信息
-     * @param s
-     */
-    public static void showToast(String s) {
-        ToastUtil.showToast(s);
-    }
-
-    /**
      * 监听onClick单击事件
      *
      * @param view
@@ -289,37 +281,24 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
 
     }
 
-
     /**
-     * 隐藏键盘
+     * 初始化换肤框架
+     * @return
      */
-    public void hideKeyboard() {
-        View view = getCurrentFocus();
-        if (view != null) {
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
-                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
+    @NonNull
+    @Override
+    public AppCompatDelegate getDelegate() {
+        return SkinAppCompatDelegateImpl.get(this, this);
     }
 
     /**
-     * 软键盘的自动弹出
-     *
-     * @param editText
+     * 设置Snackbar上提示的字体颜色
+     * @param snackbar
+     * @param color
      */
-    public void showKeyboard(EditText editText) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.showSoftInput(editText, 0);
-    }
-
-    /**
-     * 软键盘的关闭
-     */
-    public void closeKeyboard() {
-        View view = getWindow().peekDecorView();
-        if (view != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+    public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
+        View view = snackbar.getView();
+        ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 
     /**
@@ -334,39 +313,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         //finish();
         //overridePendingTransition(R.anim.anim_left, R.anim.anim_right);
-    }
-
-    /**
-     * 初始化换肤框架
-     * @return
-     */
-    @NonNull
-    @Override
-    public AppCompatDelegate getDelegate() {
-        return SkinAppCompatDelegateImpl.get(this, this);
-    }
-
-    /**
-     * 防止快速点击
-     * @return
-     */
-    public boolean fastClick() {
-        long lastClick = 0;
-        if (System.currentTimeMillis() - lastClick <= 1000) {
-            return false;
-        }
-        lastClick = System.currentTimeMillis();
-        return true;
-    }
-
-    /**
-     * 设置Snackbar上提示的字体颜色
-     * @param snackbar
-     * @param color
-     */
-    public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
-        View view = snackbar.getView();
-        ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 
     /**
