@@ -103,6 +103,15 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <!-- 飞机刷新 -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <!-- 飞机Toolbar -->
+    <style name="AppTheme.Toolbar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
     <!--Tooblar弹出菜单主题-->
 <!--    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">-->
 <!--        <item name="android:colorBackground">#C60C0C</item>-->

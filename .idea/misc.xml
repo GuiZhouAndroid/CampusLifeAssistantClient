@@ -54,6 +54,8 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_about_we_black_24dp.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_arrow_back_white_24dp.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_baseline_insert_emoticon_24.xml" value="0.3764102564102564" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_fly_refresh_folder.xml" value="0.36256410256410254" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_fly_refresh_info.xml" value="0.36256410256410254" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_fly_refresh_phone.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ic_launcher_app_logo_background.xml" value="0.3764102564102564" />
@@ -73,6 +75,7 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ulz_white_selector.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/welcome_circle_gray.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout-v26/index_activity.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_fly_refresh_item.xml" value="0.35208333333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_lottie_demo.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_mine_info.xml" value="0.34791666666666665" />

@@ -77,7 +77,11 @@
     <string name="welcome_guid_text_three_title">精&#8197;选&#8197;视&#8197;频</string>
     <string name="welcome_guid_text_three_info">音&#8197;乐&#8197;热&#8197;点，娱&#8197;乐&#8197;资&#8197;讯&#8197;尽&#8197;收&#8197;眼&#8197;底</string>
 
-    <!--    首页-->
+    <!-- 个人信息 -->
+    <string name="my_info">我的信息</string>
+
+
+    <!-- 首页 -->
     <string name="click_user_image">点击头像登录</string>
     <string name="signature">您还没有设置个性签名，点击头像设置</string>
     <string name="LastLoginInfo">您上次登录时间信息</string>
