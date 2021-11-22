@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".view.activity.DeveloperSystemSafeActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/rl_dev_kickoff_realname"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="@dimen/dp_20"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText
+            android:id="@+id/edit_kick_offline_realname"
+            android:hint="@string/KickOffLine_realname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            app:clearDrawable="@mipmap/edit_clear_all"
+            app:BtnWidth="@dimen/dp_25"
+            app:BtnSpacing="@dimen/dp_24"
+            app:borderStyle="halfRect"
+            app:styleColor="#ff0000"
+            android:singleLine="true"
+            android:textSize="@dimen/sp_15"/>
+        <TextView
+            android:layout_marginTop="@dimen/dp_10"
+            android:textStyle="bold"
+            android:id="@+id/tv_show1"
+            android:textSize="@dimen/sp_14"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:text="功能说明：通过用户的真实姓名，使其已登录账号强制离线"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_gravity="center"
+            android:text="@string/KickOffLine_ok"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/btn_kickoffLine"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_30"/>
+    </LinearLayout>
+
+</RelativeLayout>

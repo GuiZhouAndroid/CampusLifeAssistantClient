@@ -37,10 +37,13 @@ import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.PhoneCodeLoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
@@ -227,7 +230,7 @@ public class BottomMineFragment extends BaseFragment {
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
+                                            IntentUtil.startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
                                             OkGo.getInstance().cancelTag("用户ID查询个人信息");
                                         }
                                     }, 200);
@@ -240,18 +243,7 @@ public class BottomMineFragment extends BaseFragment {
                             });
                 }else {
                     //如果没有
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("温馨提示")//这里设置标题
-                            .setMessage("您还没有登录呀~")//这里设置提示信息
-                            .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                            .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mDialog.dismiss();
-                                }
-                            });
-                    mDialog = builder.create();
-                    mDialog.show();
+                    CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
                 }
             }
         });
@@ -282,7 +274,7 @@ public class BottomMineFragment extends BaseFragment {
                     @Override
                     public void run() {
                         XPopupUtils.setTimerDisDialog();
-                        startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
+                        IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
                     }
                 }, 500);
             }

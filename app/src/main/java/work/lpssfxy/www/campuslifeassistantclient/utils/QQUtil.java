@@ -47,9 +47,9 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-public class Util {
+public class QQUtil {
 
-    private static final String TAG = "SDK_Sample.Util";
+    private static final String TAG = "SDK_Sample.QQUtil";
 
     private static Dialog mProgressDialog;
     private static Toast mToast;
@@ -432,9 +432,9 @@ public class Util {
                                               String title) {
         if (msg == null) return;
         String rmsg = msg.replace(",", "\n");
-        Log.d("Util", rmsg);
+        Log.d("QQUtil", rmsg);
         new AlertDialog.Builder(context).setTitle(title).setMessage(rmsg)
-                .setNegativeButton("知道了", null).create().show();
+                .setNegativeButton("我知道了", null).create().show();
     }
 
     public static final void showProgressDialog(Context context, String title,

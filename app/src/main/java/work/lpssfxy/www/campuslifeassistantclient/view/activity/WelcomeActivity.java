@@ -28,6 +28,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.MyFragmentPage
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.TextPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.FixedSpeedScroller;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.MyInterceptViewPager;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 
 /**
  * created by on 2021/8/13
@@ -218,12 +219,12 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
 
                 break;
             case R.id.welcome_tv_go_login:
-                startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, LoginActivity.class));
+                IntentUtil.startActivityAnimLeftToRight(WelcomeActivity.this,new Intent(WelcomeActivity.this, LoginActivity.class));
                 WelcomeActivity.this.finish(); //手动单击登录后销毁当前 WelcomeActivity ，否则暂时不销毁 WelcomeActivity
                 break;
             case R.id.welcome_tv_go_index:
-                startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, IndexActivity.class));
-                finish(); //手动单击进入首页后，同时销毁当前 WelcomeActivity
+                IntentUtil.startActivityAnimLeftToRight(WelcomeActivity.this,new Intent(WelcomeActivity.this, IndexActivity.class));
+                WelcomeActivity.this.finish(); //手动单击进入首页后，同时销毁当前 WelcomeActivity
                 break;
         }
     }
@@ -350,8 +351,8 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
                         main_image_pager.setCurrentItem(2, true);//图片动画——跳转第三页
                         main_text_pager.setCurrentItem(2, true);//文字滑动——跳转第三页
                     } else if (pageIndex == 2) { //第三页时——最后一页ViewPager滑动之后，跳转到主页面
-                        startActivityAnimLeftToRight(new Intent(WelcomeActivity.this, IndexActivity.class));
-                        finish();
+                        IntentUtil.startActivityAnimLeftToRight(WelcomeActivity.this,new Intent(WelcomeActivity.this, IndexActivity.class));
+                        WelcomeActivity.this.finish();
                     }
                 } else if (endX - startX >= (width / 8)) { // endX - startX   大于0 且大于宽的1/8 往前翻页(往右滑)
                     if (pageIndex == 2) { //第三页时，右滑动一次

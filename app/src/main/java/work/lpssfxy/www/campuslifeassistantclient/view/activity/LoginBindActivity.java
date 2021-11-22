@@ -21,9 +21,11 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -266,10 +268,7 @@ public class LoginBindActivity extends BaseActivity {
 
                                                         @Override
                                                         public void onError(Response<String> response) {
-                                                            //未绑定温馨提示
-                                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                            snackbar.show();
+                                                            OkGoErrorUtil.CustomFragmentOkGoError(response,LoginBindActivity.this, mBtn_start_bind, "请求错误，服务器连接失败！");
                                                         }
                                                     });
                                         }
@@ -282,21 +281,14 @@ public class LoginBindActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        //未绑定温馨提示
-                                        Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                                .setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                        snackbar.show();
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,LoginBindActivity.this, mBtn_start_bind, "请求错误，服务器连接失败！");
                                     }
                                 });
                     }
 
                     @Override
                     public void onError(Response<String> response) {
-                        //未绑定温馨提示
-                        Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                        snackbar.show();
+                        OkGoErrorUtil.CustomFragmentOkGoError(response,LoginBindActivity.this, mBtn_start_bind, "请求错误，服务器连接失败！");
                     }
                 });
     }

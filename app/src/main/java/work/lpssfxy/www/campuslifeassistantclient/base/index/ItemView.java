@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.base.button.NotFastButton;
 
 /**
  * created by on 2021/11/4
@@ -70,21 +71,20 @@ public class ItemView extends LinearLayout {
 
         //设置点击事件
         //给整个item设置点击事件
-        rootView.setOnClickListener(new View.OnClickListener() {
+        rootView.setOnClickListener(new NotFastButton.NotFastClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNotFastClick(View v) {
                 listener.itemClick(rightDesc.getText().toString());
             }
         });
 
         //给最右侧的小箭头设置点击事件
-        rightArrow.setOnClickListener(new View.OnClickListener() {
+        rightArrow.setOnClickListener(new NotFastButton.NotFastClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNotFastClick(View v) {
                 listener.itemClick(rightDesc.getText().toString());
             }
         });
-
         ta.recycle();
     }
 

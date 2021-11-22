@@ -14,6 +14,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProgress;
 import work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 
 /**
@@ -160,9 +161,9 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         int count = SharePreferenceUtil.getInstance().getInt("first", 0); // 取出数据
         //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
-            startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
+            IntentUtil.startActivityAnimActivity(GuideActivity.this,new Intent(GuideActivity.this, WelcomeActivity.class));
         } else {
-            startActivityAnimActivity(new Intent(GuideActivity.this, IndexActivity.class));
+            IntentUtil.startActivityAnimActivity(GuideActivity.this,new Intent(GuideActivity.this, IndexActivity.class));
         }
         finish();
         //存入数据
@@ -189,11 +190,10 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
         int count = SharePreferenceUtil.getInstance().getInt("first", 0); // 取出数据
         //如果用户不是第一次使用则直接调转到显示界面,否则调转到引导界面
         if (count == 0) {
-            startActivityAnimActivity(new Intent(GuideActivity.this, WelcomeActivity.class));
+            IntentUtil.startActivityAnimActivity(GuideActivity.this,new Intent(GuideActivity.this, WelcomeActivity.class));
         } else {
-            startActivityAnimActivity(new Intent(GuideActivity.this, IndexActivity.class));
+            IntentUtil.startActivityAnimActivity(GuideActivity.this,new Intent(GuideActivity.this, IndexActivity.class));
         }
-
         finish();
         //存入数据
         SharePreferenceUtil.getInstance().putInt("first", 1); // 存入数据

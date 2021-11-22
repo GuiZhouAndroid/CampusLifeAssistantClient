@@ -65,6 +65,10 @@
     <string name="register_code">验证码</string>
     <string name="get_phone_code">获取验证码</string>
     <string name="register_success">注册成功！</string>
+    <!-- 封禁账户-->
+    <string name="KickOffLine">踢人下线</string>
+    <string name="KickOffLine_realname">用户真实姓名</string>
+    <string name="KickOffLine_ok">确定执行</string>
     <!--ViewPager欢迎页-->
     <string name="welcome_guid_text_one_title">个&#8194;性&#8194;推&#8194;荐</string>
     <string name="welcome_guid_text_one_info">每&#8197;天&#8197;为&#8197;你&#8197;良&#8197;心&#8197;推&#8197;荐&#8197;最&#8197;合&#8197;口&#8197;味&#8197;的&#8197;好&#8197;音&#8197;乐</string>

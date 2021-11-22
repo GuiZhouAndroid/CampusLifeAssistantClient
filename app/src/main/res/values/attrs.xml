@@ -140,4 +140,19 @@
         <attr name="show_right_arrow" format="boolean" />
         <attr name="show_bottom_line" format="boolean" />
     </declare-styleable>
+
+    <!--自定义EditText-->
+    <declare-styleable name="PowerfulEditText">
+        <!--图片资源-->
+        <attr name="clearDrawable" format="reference"/>
+        <attr name="visibleDrawable" format="reference"/>
+        <attr name="invisibleDrawable" format="reference"/>
+        <!--按钮宽度大小-->
+        <attr name="BtnWidth" format="dimension"/>
+        <!--按钮间距大小-->
+        <attr name="BtnSpacing" format="dimension"/>
+        <!--边框颜色和样式-->
+        <attr name="styleColor" format="color"/>
+        <attr name="borderStyle" format="string" />
+    </declare-styleable>
 </resources>

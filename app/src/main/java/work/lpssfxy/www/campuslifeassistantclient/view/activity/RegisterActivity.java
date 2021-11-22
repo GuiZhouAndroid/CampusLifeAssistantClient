@@ -44,6 +44,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallba
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -849,9 +850,7 @@ public class RegisterActivity extends BaseActivity {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        //服务器连接失败
-                        DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"服务器连接失败：" + response.getException());
-                        dialogPrompt.show();
+                        OkGoErrorUtil.CustomFragmentOkGoError(response,RegisterActivity.this, mRl_register_show, "请求错误，服务器连接失败！");
                     }
 
                     @Override

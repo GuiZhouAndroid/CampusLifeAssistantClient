@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.SkinAppCompatDelegateImpl;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -26,8 +28,10 @@ import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomDialog;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -268,21 +272,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     protected abstract void doBusiness();
 
     /**
-     * Activity销毁时清理资源
-     */
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "-->onDestroy");
-        super.onDestroy();
-        //解绑ButterKnife
-        mUnbinder.unbind();
-        //取消网络请求，避免内存泄露
-        if (OkGo.getInstance()!=null){
-            OkGo.getInstance().cancelAll();
-        }
-    }
-
-    /**
      * Toast提示信息
      * @param s
      */
@@ -334,74 +323,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     }
 
     /**
-     * Activity动画跳转过渡
-     * @param intent
-     */
-    public void startActivityAnimActivity(Intent intent) {
-        startActivity(intent);
-        overridePendingTransition(R.anim.activity_common_anim_out, R.anim.activity_common_anim_in);
-    }
-
-    /**
-     * 深入浅出：启动动画
-     *
-     * @param intent
-     */
-    public static void startActivityAnimInAndOut(Activity activity,Intent intent) {
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.launch_anim_fade_in, R.anim.launch_anim_fade_out);
-    }
-    /**
-     * 子类Activity调用
-     * 左————>右：启动动画
-     *
-     * @param intent
-     */
-    public void startActivityAnimLeftToRight(Intent intent) {
-        startActivity(intent);
-        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
-    }
-
-    /**
-     * 子类Fragment调用
-     * 左————>右：启动动画
-     * @param activity
-     * @param intent
-     */
-    public void startActivityAnimLeftToRight(Activity activity, Intent intent) {
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
-    }
-    /**
-     * 传值
-     * 左————>右：启动动画
-     * @param intent
-     * @param code
-     */
-    public void startActivityForResultAnimLeftToRight(Intent intent, int code) {
-        startActivityForResult(intent, code);
-        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
-    }
-
-    /**
-     * 右————>左：启动动画
-     * 不传值
-     * @param intent
-     */
-    public void startActivityAnimRightToLeft(Intent intent) {
-        startActivity(intent);
-        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
-    }
-    /**
-     * 右————>左：启动动画
-     * 传值
-     * @param intent
-     */
-    public void startActivityForResultAnimRightToLeft(Intent intent, int code) {
-        startActivity(intent);
-        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
-    }
-    /**
      *
      * 物理键返回键执行上一页
      * 右————>左：，启动动画
@@ -448,86 +369,18 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 
-
-    //自定义的弹窗（提示框）
-    public void notification() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示框")//这里设置标题
-                .setMessage("提示框可以自定义布局样式，只有一个按钮")//这里设置提示信息
-                .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDialog.dismiss();
-                    }
-                });
-        mDialog = builder.create();
-        mDialog.show();
+    /**
+     * Activity销毁时清理资源
+     */
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "-->onDestroy");
+        super.onDestroy();
+        //解绑ButterKnife
+        mUnbinder.unbind();
+        //取消网络请求，避免内存泄露
+        if (OkGo.getInstance()!=null){
+            OkGo.getInstance().cancelAll();
+        }
     }
-
-    //自定义的弹窗（两个按钮的选择框）
-    public void notification2() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("两个按钮的选择框")
-                .setMessage("选择可以自定义布局样式，有两个按钮")
-                .setTopImage(R.drawable.icon_tanchuang_wenhao)
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDialog.dismiss();
-                    }
-                })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDialog.dismiss();
-                    }
-                });
-        mDialog = builder.create();
-        mDialog.show();
-    }
-
-    //自定义的弹窗（一个按钮没有顶部图标）
-    public void notification3() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("没有提示信息，没有顶部图标")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDialog.dismiss();
-                    }
-                })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDialog.dismiss();
-                    }
-                });
-        mDialog = builder.create();
-        mDialog.show();
-    }
-
-    //自定义的弹窗（鲜艳版）
-    public void notification4() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(BaseActivity.this);
-        builder.setMessage("这个就是自定义的提示框");
-        builder.setTitle("提示");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                //设置你的操作事项
-                Toast.makeText(BaseActivity.this,"queding",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("取消",
-                new android.content.DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(BaseActivity.this,"queding",Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
-
 }

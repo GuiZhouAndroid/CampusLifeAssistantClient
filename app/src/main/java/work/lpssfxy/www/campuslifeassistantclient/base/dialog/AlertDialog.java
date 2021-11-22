@@ -236,21 +236,7 @@ public class AlertDialog extends Dialog {
 
 //    private AlertDialog mDialog;
 //
-//    //自定义的弹窗（提示框）
-//    public void notification() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("提示框")//这里设置标题
-//                .setMessage("提示框可以自定义布局样式，只有一个按钮")//这里设置提示信息
-//                .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-//                .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        mDialog.dismiss();
-//                    }
-//                });
-//        mDialog = builder.create();
-//        mDialog.show();
-//    }
+
 //
 //    //自定义的弹窗（两个按钮的选择框）
 //    public void notification2() {

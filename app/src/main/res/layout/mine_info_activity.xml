@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
+    android:id="@+id/ll_mine_info_show"
     android:orientation="vertical"
     tools:context=".view.activity.MineInfoActivity">
 
@@ -87,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_about"
-        app:left_text="账户注册时间"
+        app:left_text="注册时间"
         app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
@@ -95,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_about"
-        app:left_text="账户更新时间"
+        app:left_text="更新时间"
         app:show_right_arrow="false" />
 
 </LinearLayout>

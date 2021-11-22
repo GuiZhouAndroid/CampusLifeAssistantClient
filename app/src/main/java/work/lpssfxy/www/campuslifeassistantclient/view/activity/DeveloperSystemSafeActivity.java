@@ -1,7 +1,6 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +23,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutVie
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountUserName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineToken;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineUserName;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateUserName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeUserName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserName;
@@ -131,7 +130,7 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        fragments = new Fragment[]{new DeveloperKickOffLineUserName(), new DeveloperKickOffLineToken(), new DeveloperBannedAccountUserName(), new DeveloperSelectBannedStateUserName(), new DeveloperSelectBannedTimeUserName(), new DeveloperUntieBannedAccountUserName()};
+        fragments = new Fragment[]{new DeveloperKickOffLineRealName(), new DeveloperKickOffLineToken(), new DeveloperBannedAccountUserName(), new DeveloperSelectBannedStateUserName(), new DeveloperSelectBannedTimeUserName(), new DeveloperUntieBannedAccountUserName()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         //进行TabLayout 关联 ViewPager

@@ -56,12 +56,16 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -313,7 +317,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 手机号快捷登录
      */
     private void userGoTelNumberLogin() {
-        startActivityAnimLeftToRight(new Intent(LoginActivity.this, PhoneCodeLoginActivity.class));
+        IntentUtil.startActivityAnimLeftToRight(LoginActivity.this,new Intent(LoginActivity.this, PhoneCodeLoginActivity.class));
     }
 
     /**
@@ -369,14 +373,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                .asCustom(popup)
 //                .show();
 
-        startActivityForResultAnimLeftToRight(new Intent(this,RegisterActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
+        IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,new Intent(LoginActivity.this,RegisterActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
     }
 
     /**
      * 微信登录
      */
     private void weChatLogin() {
-        notification4();
+        CustomAlertDialogUtil.notification4(this,"提示","这个就是自定义的提示框","确定","取消");
 //        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
 //                .tag(this)
 //                .params("ulUsername", "ZSAndroid").params("ulPassword", "ZSAndroid1998")
@@ -457,7 +461,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 thisIntentToBindUser.setClass(LoginActivity.this, LoginBindActivity.class);
                                                 //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                                                 thisIntentToBindUser.putExtra("QQJsonData", values.toString());
-                                                startActivityForResultAnimLeftToRight(thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                                                IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
                                             }
                                         });
                                 mDialog = builder.create();
@@ -515,17 +519,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-                                                    startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
+                                                    IntentUtil.startActivityAnimRightToLeft(LoginActivity.this,new Intent(LoginActivity.this, IndexActivity.class));
                                                     LoginActivity.this.finish();
                                                 }
                                             }
 
                                             @Override
                                             public void onError(Response<String> response) {
-                                                //未绑定温馨提示
-                                                Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                snackbar.show();
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -538,11 +539,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
                         @Override
                         public void onError(Response<String> response) {
-                            //未绑定温馨提示
-                            Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT)
-                                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
-                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                            snackbar.show();
+                            OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                         }
                     });
         }
@@ -653,7 +650,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             thisIntentToBindUser.setClass(LoginActivity.this, UserApplyUntieActivity.class);
                             //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                             thisIntentToBindUser.putExtra("UntieBannedName", data.getStringExtra("BindBackName"));
-                            startActivityForResultAnimLeftToRight(thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                            IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
                         }
                     });
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
@@ -757,7 +754,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 App.appActivity.finish();//销毁主页
                             }
                             SharePreferenceUtil.putObject(LoginActivity.this, userQQSessionBean);
-                            startActivityAnimRightToLeft(new Intent(LoginActivity.this, IndexActivity.class));
+                            IntentUtil.startActivityAnimRightToLeft(LoginActivity.this,new Intent(LoginActivity.this, IndexActivity.class));
                             finish();
                         }
                     }
@@ -770,10 +767,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
                     @Override
                     public void onError(Response<String> response) {
-                        //未绑定温馨提示
-                        Snackbar snackbar = Snackbar.make(mLogin_rl_show, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                        snackbar.show();
+                        OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                     }
                 });
     }

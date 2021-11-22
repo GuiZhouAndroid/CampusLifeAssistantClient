@@ -1,14 +1,18 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.helloworld.library.MiddleDialogConfig;
 import com.helloworld.library.utils.DialogEnum;
 import com.lxj.xpopup.XPopup;
@@ -23,12 +27,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ParcelableData;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
@@ -42,7 +48,8 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 @SuppressLint("NonConstantResourceId")
 public class MineInfoActivity extends BaseActivity  {
     private static final String TAG = "MineInfoActivity";
-
+    //父布局控件
+    @BindView(R2.id.ll_mine_info_show) LinearLayout mLlMineInfoShow;
     /** item控件--->用户信息 */
     @BindView(R2.id.ll_user_number) ItemView mUserNumber;//用户编号
     @BindView(R2.id.ll_username) ItemView mUserName;//用户名
@@ -192,18 +199,19 @@ public class MineInfoActivity extends BaseActivity  {
                                                     if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
                                                         mUserName.setRightDesc(newUserName);//设置文本为新用户名
                                                         DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"用户名更新成功！",3);
-                                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                                        dialogPrompt.show();
                                                         return;
                                                     }
                                                     if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
                                                         DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"用户名更新失败！",3);
                                                         dialogPrompt.show();
                                                     }
+
                                                 }
+
                                                 @Override
                                                 public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "更新请求被系统拒绝！此用户名已被别人使用");
                                                 }
                                             });
                                     return;
@@ -264,10 +272,10 @@ public class MineInfoActivity extends BaseActivity  {
                                                         dialogPrompt.show();
                                                     }
                                                 }
+
                                                 @Override
                                                 public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"更新请求被系统拒绝！请输入本人学号！" ,10);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "更新请求被系统拒绝！此学号已被别人使用");
                                                 }
                                             });
                                     return;
@@ -312,8 +320,7 @@ public class MineInfoActivity extends BaseActivity  {
                                                 }
                                                 @Override
                                                 public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"更新请求被系统拒绝！请输入本人手机号！" ,10);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "更新请求被系统拒绝！此手机号已被别人使用");
                                                 }
                                             });
                                     return;
@@ -358,8 +365,7 @@ public class MineInfoActivity extends BaseActivity  {
                                                 }
                                                 @Override
                                                 public void onError(Response<String> response) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"更新请求被系统拒绝！请输入本人QQ邮箱！" ,10);
-                                                    dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "更新请求被系统拒绝！此QQ邮箱已被别人使用");
                                                 }
                                             });
                                     return;
@@ -401,21 +407,21 @@ public class MineInfoActivity extends BaseActivity  {
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if(200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())){
+                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
                                             mDept.setRightDesc(newDept);//设置文本为新所属院系
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"所属院系更新成功！",3);
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "所属院系更新成功！", 3);
                                             dialogPrompt.show();
                                             return;
                                         }
-                                        if(200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())){
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"所属院系更新失败！",3);
+                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())) {
+                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "所属院系更新失败！", 3);
                                             dialogPrompt.show();
                                         }
                                     }
+
                                     @Override
                                     public void onError(Response<String> response) {
-                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
-                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "请求错误，服务器连接失败！");
                                     }
                                 });
                     }
@@ -459,8 +465,7 @@ public class MineInfoActivity extends BaseActivity  {
                                     }
                                     @Override
                                     public void onError(Response<String> response) {
-                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this,"请求错误，服务器连接失败",3);
-                                        dialogPrompt.showAndFinish(MineInfoActivity.this);
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,MineInfoActivity.this, mLlMineInfoShow, "请求错误，服务器连接失败！");
                                     }
                                 });
                     }

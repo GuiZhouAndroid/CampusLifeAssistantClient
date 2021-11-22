@@ -56,12 +56,16 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
@@ -357,51 +361,15 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                         UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
                         Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
                         if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "此账户处于封禁状态".equals(userQQSessionBean.getMsg())) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PhoneCodeLoginActivity.this);
-                            builder.setTitle("登录提示")//这里设置标题
-                                    .setMessage("当前手机号关联账户处于封禁状态，去主页查询封禁详情")
-                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            OkGo.getInstance().cancelTag("手机号快捷登录");//跳转前取消本次请求
-                                            mDialog.dismiss();
-                                        }
-                                    });
-                            mDialog = builder.create();
-                            mDialog.show();
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号关联账户处于封禁状态，去主页查询封禁详情","朕知道了");
                             return;
                         }
                         if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，此手机号未绑定账户".equals(userQQSessionBean.getMsg())) {
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(PhoneCodeLoginActivity.this);
-                            builder1.setTitle("登录提示")//这里设置标题
-                                    .setMessage("当前手机号还未绑定账户~" + getString(R.string.please_bind_back_User_login))
-                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            OkGo.getInstance().cancelTag("手机号快捷登录");//跳转前取消本次请求
-                                            mDialog.dismiss();
-                                        }
-                                    });
-                            mDialog = builder1.create();
-                            mDialog.show();
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定账户~" + getString(R.string.please_bind_back_User_login),"朕知道了");
                             return;
                         }
                         if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，此手机号未绑定QQ".equals(userQQSessionBean.getMsg())) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PhoneCodeLoginActivity.this);
-                            builder.setTitle("登录提示")//这里设置标题
-                                    .setMessage("当前手机号还未绑定QQ~" + getString(R.string.please_bind_back_qq_login))
-                                    .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                                    .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            OkGo.getInstance().cancelTag("手机号快捷登录");//跳转前取消本次请求
-                                            mDialog.dismiss();
-                                        }
-                                    });
-                            mDialog = builder.create();
-                            mDialog.show();
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定QQ~" + getString(R.string.please_bind_back_qq_login),"朕知道了");
                             return;
                         }
                         if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
@@ -411,7 +379,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                             }
                             LoginActivity.loginActivity.finish();//销毁未finish的登录主页
                             SharePreferenceUtil.putObject(PhoneCodeLoginActivity.this, userQQSessionBean);
-                            startActivityAnimRightToLeft(new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
+                            IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this,new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
                             PhoneCodeLoginActivity.this.finish();
                         }
                     }
@@ -419,9 +387,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        //服务器连接失败
-                        DialogPrompt dialogPrompt = new DialogPrompt(PhoneCodeLoginActivity.this, "服务器连接失败：" + response.getException());
-                        dialogPrompt.show();
+                        OkGoErrorUtil.CustomFragmentOkGoError(response,PhoneCodeLoginActivity.this, mRlLoginShow, "请求错误，服务器连接失败！");
                     }
 
                     @Override

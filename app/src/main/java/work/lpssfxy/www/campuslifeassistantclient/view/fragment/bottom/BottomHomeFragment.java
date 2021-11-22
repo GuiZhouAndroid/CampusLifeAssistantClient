@@ -57,8 +57,8 @@ import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.QQUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.Util;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
@@ -241,24 +241,24 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                             JSONObject jsonObject = Constant.mTencent.loadSession(Constant.APP_ID);
                             Constant.mTencent.initSessionCache(jsonObject);
                             if (jsonObject == null) {
-                                Util.showResultDialog(getActivity(), "jsonObject is null", "登录失败");
+                                QQUtil.showResultDialog(getActivity(), "jsonObject is null", "登录失败");
                             } else {
-                                Util.showResultDialog(getActivity(), jsonObject.toString(), "登录成功");
+                                QQUtil.showResultDialog(getActivity(), jsonObject.toString(), "登录成功");
                             }
 
                         } else {
-                            Util.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+                            QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
                         }
                     }
 
                     @Override
                     public void onError(UiError e) {
-                        Util.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+                        QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
                     }
 
                     @Override
                     public void onCancel() {
-                        Util.toastMessage(getActivity(), "onCancel");
+                        QQUtil.toastMessage(getActivity(), "onCancel");
                     }
                 });
                 break;
@@ -573,8 +573,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                         JSONObject jsonObject = (JSONObject) response;
                         try {
                             String unionid = jsonObject.getString("unionid");
-                            Util.showResultDialog(getActivity(), "unionid:\n" + unionid, "onComplete");
-                            Util.dismissDialog();
+                            QQUtil.showResultDialog(getActivity(), "unionid:\n" + unionid, "onComplete");
+                            QQUtil.dismissDialog();
                             Log.i(TAG, "getUnionId: ===" + unionid);
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "no unionid", Toast.LENGTH_LONG).show();

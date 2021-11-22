@@ -3,18 +3,25 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.lzy.okgo.model.Response;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 
 /**
  * created by on 2021/8/21
@@ -109,11 +116,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     protected abstract void doBusiness(Context context);
 
-
-
-    public void startActivityAnimLeftToRight(Activity activity, Intent intent) {
-        startActivity(intent);
-        activity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    /**
+     * 设置Snackbar上提示的字体颜色
+     * @param snackbar
+     * @param color
+     */
+    public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
+        View view = snackbar.getView();
+        ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 
     /**

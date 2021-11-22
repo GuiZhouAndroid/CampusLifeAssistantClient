@@ -78,8 +78,11 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.RoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
@@ -322,7 +325,7 @@ public class IndexActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.drawer_menu_school:
                         Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        startActivityAnimLeftToRight(new Intent(IndexActivity.this, waimai.class));
+                        IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, waimai.class));
                         return true;
                     case R.id.drawer_menu_setting:
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
@@ -336,18 +339,43 @@ public class IndexActivity extends BaseActivity {
                                     public void onStart(Request<String, ? extends Request> request) {
                                         XPopupUtils.setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
+
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
+                                            CustomAlertDialogUtil.notification1(IndexActivity.this,"温馨提示","您还没有登录呀~","朕知道了");
+                                            return;
+                                        }
+
+                                        if (401 == responseBean.getCode() && "验证失败，禁止访问".equals(responseBean.getMsg()) && "已被系统强制下线".equals(responseBean.getData())) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
-                                            builder.setTitle("验证结果")//这里设置标题
-                                                    .setMessage("您当前未登录，禁止访问！")//这里设置提示信息
+                                            builder.setTitle("超管提示")//这里设置标题
+                                                    .setMessage("已被系统超管强制下线！")//这里设置提示信息
                                                     .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
                                                     .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             mDialog.dismiss();
+                                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, "超过3次提醒，将被永久封号！", Snackbar.LENGTH_INDEFINITE)
+                                                                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
+                                                                    .setAction("我知道了", new View.OnClickListener() {  //设置点击按钮
+                                                                        @Override
+                                                                        public void onClick(View v) {
+                                                                            /** 开启一个子线程注销QQ登录 + 清空UI数据 + 本地持久化文件 */
+                                                                            new Thread(new Runnable() {
+                                                                                @Override
+                                                                                public void run() {
+                                                                                    //发送方式一 直接发送一个空的Message
+                                                                                    QQHandler.sendEmptyMessage(1);
+                                                                                }
+                                                                            }).start();
+                                                                            Toast.makeText(IndexActivity.this, "别撒谎喔~", Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
+                                                            //设置Snackbar上提示的字体颜色
+                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                                            snackbar.show();
                                                         }
                                                     });
                                             mDialog = builder.create();
@@ -362,34 +390,22 @@ public class IndexActivity extends BaseActivity {
                                                         public void onSuccess(Response<String> response) {
                                                             RoleOrPermissionListBean roleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), RoleOrPermissionListBean.class);
                                                             Log.i(TAG, "RoleOrPermissionListBean: " + roleOrPermissionListBean.getData());
-                                                            if (roleOrPermissionListBean.getData().contains("超级管理员")) {
+                                                            if (roleOrPermissionListBean.getData().contains("超管")) {
                                                                 //List<String> 集合中，包含角色"超级管理员"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
-                                                                startActivityAnimLeftToRight(new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
+                                                                IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
                                                             } else {//无认证权限，提示信息
-                                                                AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
-                                                                builder.setTitle("验证结果")//这里设置标题
-                                                                        .setMessage("《后台安全》仅开发者使用，您无权访问！谢谢合作~")//这里设置提示信息
-                                                                        .setTopImage(R.drawable.icon_tanchuang_tanhao)//这里设置顶部图标
-                                                                        .setPositiveButton("朕知道了", new DialogInterface.OnClickListener() {
-                                                                            @Override
-                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                mDialog.dismiss();
-                                                                            }
-                                                                        });
-                                                                mDialog = builder.create();
-                                                                mDialog.show();
+                                                                CustomAlertDialogUtil.notification1(IndexActivity.this,"超管提示","《后台安全》仅开发者使用，您无权访问！谢谢合作~","朕知道了");
                                                             }
                                                         }
 
                                                         @Override
                                                         public void onError(Response<String> response) {
-                                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                            snackbar.show();
+                                                            OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                                         }
                                                     });
                                         }
                                     }
+
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
@@ -398,9 +414,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                        snackbar.show();
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         return true;
@@ -408,7 +422,7 @@ public class IndexActivity extends BaseActivity {
                         Snackbar.make(mDrawer_layout, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_logout://注销账户：本地持久数据 + 服务器Session数据
-                        /** 开启一个子线程 */
+                        /** 1.开启一个子线程注销QQ登录 + 清空UI数据 + 本地持久化文件 */
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -416,6 +430,7 @@ public class IndexActivity extends BaseActivity {
                                 QQHandler.sendEmptyMessage(1);
                             }
                         }).start();
+                        /** 2.同时注销后端服务器中的账户Session信息*/
                         OkGo.<String>post(Constant.SA_TOKEN_DO_LOGOUT)
                                 .tag("注销登录")
                                 .execute(new StringCallback() {
@@ -440,6 +455,7 @@ public class IndexActivity extends BaseActivity {
                                             return;
                                         }
                                     }
+
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
@@ -448,9 +464,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                        snackbar.show();
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         return true;
@@ -541,7 +555,7 @@ public class IndexActivity extends BaseActivity {
                     .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
                         @Override
                         public void onClick(View v) {
-                            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));
+                            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, LoginActivity.class));
                         }
                     });
             //设置Snackbar上提示的字体颜色
@@ -967,7 +981,7 @@ public class IndexActivity extends BaseActivity {
      */
     private void checkQQLoginIfValid() {
         if (Constant.userQQSession == null) {
-            startActivityAnimLeftToRight(new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
+            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSession != null) {
@@ -977,7 +991,7 @@ public class IndexActivity extends BaseActivity {
                 @Override
                 public void run() {
                     XPopupUtils.setTimerDisDialog();
-                    startActivityAnimLeftToRight(new Intent(IndexActivity.this,MineInfoActivity.class));
+                    IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this,MineInfoActivity.class));
                 }
             }, 500);
             Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
@@ -1098,9 +1112,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                        snackbar.show();
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         break;
@@ -1132,9 +1144,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        Snackbar snackbar = Snackbar.make(mDrawer_layout, "请求错误，服务器连接失败：" + response.getException(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                        snackbar.show();
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         break;

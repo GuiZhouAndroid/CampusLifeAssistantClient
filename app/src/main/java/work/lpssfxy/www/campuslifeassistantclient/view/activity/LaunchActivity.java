@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -39,7 +40,7 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                BaseActivity.startActivityAnimInAndOut(LaunchActivity.this, new Intent(LaunchActivity.this, GuideActivity.class));
+                IntentUtil.startActivityAnimInAndOut(LaunchActivity.this, new Intent(LaunchActivity.this, GuideActivity.class));
                 finish();
             }
         }, 1000);

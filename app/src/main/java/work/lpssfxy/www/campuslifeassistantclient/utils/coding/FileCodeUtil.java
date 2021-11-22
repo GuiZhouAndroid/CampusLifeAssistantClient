@@ -434,7 +434,7 @@ public class FileCodeUtil {
         String rmsg = msg.replace(",", "\n");
         Log.d("FileCodeUtil", rmsg);
         new AlertDialog.Builder(context).setTitle(title).setMessage(rmsg)
-                .setNegativeButton("知道了", null).create().show();
+                .setNegativeButton("我知道了", null).create().show();
     }
 
     public static final void showProgressDialog(Context context, String title,
