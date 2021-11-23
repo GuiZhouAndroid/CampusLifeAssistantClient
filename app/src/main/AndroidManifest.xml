@@ -77,7 +77,7 @@
         <!--百度地图ak码-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="YNWsEQ3Qrd1aDlQOPWfWmaRqM563zbHK"></meta-data>
+            android:value="YNWsEQ3Qrd1aDlQOPWfWmaRqM563zbHK"/>
         <!-- 程序主入口：你好同学 -->
         <activity
             android:name=".view.activity.LaunchActivity"
@@ -172,6 +172,11 @@
         <!-- 开发者安全中心 -->
         <activity
             android:name=".view.activity.DeveloperSystemSafeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <!-- 食堂跑腿代购 -->
+        <activity
+            android:name=".view.activity.CanteenRunBuyActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <!--使用百度服务功能-->

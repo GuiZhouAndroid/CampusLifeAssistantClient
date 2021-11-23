@@ -53,6 +53,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
@@ -491,10 +492,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 //等待对话框
                                                 UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
                                                 Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
-
                                                 if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "此账户处于封禁状态".equals(userQQSessionBean.getMsg())) {
-                                                    DialogPrompt dialogPrompt = new DialogPrompt(LoginActivity.this, userQQSessionBean.toString());
-                                                    dialogPrompt.show();
+                                                    CustomAlertDialogUtil.notification1(LoginActivity.this, "超管提示", "此账户处于封禁状态！", "我知道了");
                                                     return;
                                                 }
                                                 if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "error".equals(userQQSessionBean.getMsg())) {

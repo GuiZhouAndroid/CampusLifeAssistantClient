@@ -2,10 +2,29 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
+import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -18,6 +37,14 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 @SuppressLint("NonConstantResourceId")
 public class DeveloperKickOffLineToken extends BaseFragment {
+
+    private static final String TAG = "DeveloperKickOffLineToken";
+    //父布局
+    @BindView(R2.id.rl_dev_kickoff_token) RelativeLayout mRlDevKicOffToken;
+    //被下线真实姓名输入框
+    @BindView(R2.id.edit_kick_offline_token) PowerfulEditText mEditKickOffLineToken;
+    //确定执行下线
+    @BindView(R2.id.btn_kickoffLine_token) Button mBtnKickoffLineToken;
 
     @Override
     protected int bindLayout() {
@@ -46,18 +73,84 @@ public class DeveloperKickOffLineToken extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        //showImg();//显示网络图片
+
     }
 
     /**
-     * 使用Glide加载显示网络图片 记得加网络权限和http地址url访问许可
+     * @param view 视图View
      */
-    private void showImg() {
+    @OnClick({R2.id.btn_kickoffLine_token})
+    public void onKickOffLineRealNameViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_kickoffLine_token://确定执行
+                //超管输入的用户登录Token值
+                String strEditToken = mEditKickOffLineToken.getText().toString().trim();
+                doKickOffLine(strEditToken);
+                break;
+        }
+    }
 
+
+    /**
+     * 点击执行下线
+     *
+     * @param strEditToken 登录Token
+     */
+    private void doKickOffLine(String strEditToken) {
+        //判空处理
+        if (TextUtils.isEmpty(strEditToken)) {
+            mEditKickOffLineToken.startShakeAnimation();//抖动输入框
+            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "请填入登录Token", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        //开始网络请求，访问后端服务器，执行强制下线操作
+        OkGo.<String>post(Constant.ADMIN_KICK_BY_TOKEN_VALUES)
+                .tag("登录Token下线")
+                .params("kickTokenValues", strEditToken)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在执行...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                        //失败
+                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            return;
+                        }
+                        //成功
+                        if (200 == responseBean.getCode() && "踢人下线成功".equals(responseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "踢下线成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        XPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevKicOffToken, "请求错误，服务器连接失败！");
+                    }
+                });
     }
 
     @Override
-    public void onClick(View view) {
-
+    public boolean onBackPressed() {
+        return false;
     }
 }

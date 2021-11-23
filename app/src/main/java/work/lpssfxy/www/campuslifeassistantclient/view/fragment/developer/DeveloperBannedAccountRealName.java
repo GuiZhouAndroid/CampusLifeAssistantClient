@@ -29,27 +29,30 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
-
 /**
- * created by on 2021/8/20
- * 描述：开发者通过真实姓名踢人下线
+ * created by on 2021/11/16
+ * 描述：开发者通过用户名封禁账户
  *
  * @author ZSAndroid
- * @create 2021-08-20-15:01
+ * @create 2021-11-16-13:03
  */
+
 @SuppressLint("NonConstantResourceId")
-public class DeveloperKickOffLineRealName extends BaseFragment {
-    private static final String TAG = "DeveloperKickOffLineRealName";
+public class DeveloperBannedAccountRealName extends BaseFragment {
+
+    private static final String TAG = "DeveloperBannedAccountRealName";
     //父布局
-    @BindView(R2.id.rl_dev_kickoff_realname) RelativeLayout mRlDevKicOffRealName;
-    //被下线真实姓名输入框
-    @BindView(R2.id.edit_kick_offline_realname) PowerfulEditText mEditKickOffLineRealName;
+    @BindView(R2.id.rl_dev_ban_account_realname) RelativeLayout mRlDevBanAccountRealName;
+    //被封禁真实姓名
+    @BindView(R2.id.edit_ban_account_realname) PowerfulEditText mEditBanAccountRealName;
+    //被封禁时长/天
+    @BindView(R2.id.edit_ban_account_day) PowerfulEditText mEditBanAccountDay;
     //确定执行下线
-    @BindView(R2.id.btn_kickoffLine_realname) Button mBtnKickoffLineRealName;
+    @BindView(R2.id.btn_ban_account_realname) Button mBtnBanAccountRealName;
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_kickoff_line_realname;
+        return R.layout.developer_banned_account_real_name;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+
     }
 
     @Override
@@ -76,39 +80,48 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
 
     }
 
-
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_kickoffLine_realname})
-    public void onKickOffLineRealNameViewClick(View view) {
+    @OnClick({R2.id.btn_ban_account_realname})
+    public void onBannedAccountRealNameViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_kickoffLine_realname://确定执行
-                //超管输入的用户真实姓名
-                String strEditRealName = mEditKickOffLineRealName.getText().toString().trim();
-                doKickOffLine(strEditRealName);
+            case R.id.btn_ban_account_realname://确定执行
+                //超管输入的用户真实姓名、封禁时长
+                String strBanAccountRealName = mEditBanAccountRealName.getText().toString().trim();
+                String strBanAccountDay = mEditBanAccountDay.getText().toString().trim();
+                doBanAccount(strBanAccountRealName, strBanAccountDay);
                 break;
         }
     }
 
     /**
-     * 点击执行下线
+     * 开始封禁指定账户
      *
-     * @param strEditRealName 真实姓名
+     * @param strBanAccountRealName 真实姓名
+     * @param strBanAccountDay      封禁时长
      */
-    private void doKickOffLine(String strEditRealName) {
+    private void doBanAccount(String strBanAccountRealName, String strBanAccountDay) {
         //判空处理
-        if (TextUtils.isEmpty(strEditRealName)) {
-            mEditKickOffLineRealName.startShakeAnimation();//抖动输入框
-            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "请填入真实姓名", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+        if (TextUtils.isEmpty(strBanAccountRealName)) {
+            mEditBanAccountRealName.startShakeAnimation();//抖动输入框
+            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "请填入真实姓名", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
             return;
         }
-        //开始网络请求，访问后端服务器，执行强制下线操作
-        OkGo.<String>post(Constant.ADMIN_KICK_BY_REAL_NAME)
-                .tag("真实姓名踢人下线")
-                .params("kickIdValues", strEditRealName)
+        if (TextUtils.isEmpty(strBanAccountDay)) {
+            mEditBanAccountDay.startShakeAnimation();//抖动输入框
+            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "请填入天数", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        //开始网络请求，访问后端服务器，执行封禁账户操作
+        OkGo.<String>post(Constant.ADMIN_BANNED_ACCOUNT_BY_REAL_NAME)
+                .tag("真实姓名封禁账户")
+                .params("accountBannedValues", strBanAccountRealName)
+                .params("accountBannedDay", Long.parseLong(strBanAccountDay))
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -121,12 +134,11 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                         //失败
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
-
                         if (401 == responseBean.getCode() && "验证失败，禁止访问".equals(responseBean.getMsg()) && "已被系统强制下线".equals(responseBean.getData())) {
                             new CustomAlertDialog(getActivity())
                                     .builder()
@@ -140,7 +152,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                                     .setOkButton("我知道了", 0, "#FF0000", "", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "超过3次提醒，将被永久封号！", Snackbar.LENGTH_INDEFINITE)
+                                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "超过3次提醒，将被永久封号！", Snackbar.LENGTH_INDEFINITE)
                                                     .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
                                                     .setAction("我知道了", new View.OnClickListener() {  //设置点击按钮
                                                         @Override
@@ -156,16 +168,16 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                                     .show();
                             return;
                         }
-                        if (200 == responseBean.getCode() && "踢人下线失败，此真实姓名不存在".equals(responseBean.getMsg())) {
-                            mEditKickOffLineRealName.startShakeAnimation();//抖动输入框
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == responseBean.getCode() && "封禁账户失败，此真实姓名不存在".equals(responseBean.getMsg())) {
+                            mEditBanAccountRealName.startShakeAnimation();//抖动输入框
+                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功
-                        if (200 == responseBean.getCode() && "踢人下线成功".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "踢下线成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == responseBean.getCode() && "账户封禁成功".equals(responseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "账户封禁成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                         }
@@ -181,7 +193,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevKicOffRealName, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevBanAccountRealName, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -191,3 +203,4 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
         return false;
     }
 }
+

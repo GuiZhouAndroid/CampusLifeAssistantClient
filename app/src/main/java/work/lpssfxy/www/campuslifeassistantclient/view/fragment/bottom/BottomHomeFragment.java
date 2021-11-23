@@ -49,6 +49,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.bmob.v3.http.I;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyRecyclerViewAdapter;
@@ -57,8 +58,11 @@ import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.QQUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
@@ -71,7 +75,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  * @create 2021-08-20-15:01
  */
 @SuppressLint("NonConstantResourceId")
-public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, AutoFlowLayout.OnItemClickListener, OnBannerItemClickListener {
+public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener, AutoFlowLayout.OnItemClickListener, OnBannerItemClickListener, View.OnClickListener {
     private static final String TAG = "BottomHomeFragment";
     /** 图片轮播 */
 //    @BindView(R2.id.banner) BGABanner mBanner;
@@ -231,6 +235,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             case 0://食堂代取
                 Constant.mTencent.reportDAU();
                 Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(),CanteenRunBuyActivity.class));
                 break;
             case 1://快递代取
                 checkQQLogin();
@@ -582,5 +587,10 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 QQUtil.toastMessage(getActivity(), "onCancel");
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }

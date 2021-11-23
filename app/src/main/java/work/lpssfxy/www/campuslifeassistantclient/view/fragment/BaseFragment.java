@@ -1,10 +1,8 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.lzy.okgo.model.Response;
+import com.hjq.toast.ToastUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import lombok.Data;
+import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.FragmentBackHandler;
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
+import work.lpssfxy.www.campuslifeassistantclient.utils.BackHandlerHelper;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
 
 /**
  * created by on 2021/8/21
@@ -30,7 +30,17 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
  * @author ZSAndroid
  * @create 2021-08-21-17:55
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements FragmentBackHandler {
+
+    private boolean BackMode;
+
+    public boolean getBackMode() {
+        return BackMode;
+    }
+
+    public void setBackMode(boolean backMode) {
+        this.BackMode = backMode;
+    }
 
     /**
      * 获取TAG的fragment名称
@@ -136,4 +146,5 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
         super.onDestroyView();
     }
+
 }

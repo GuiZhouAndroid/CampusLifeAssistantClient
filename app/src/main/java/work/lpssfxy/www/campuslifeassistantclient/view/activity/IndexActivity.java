@@ -328,7 +328,7 @@ public class IndexActivity extends BaseActivity {
             @Override
 
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                mDrawer_layout.closeDrawer(GravityCompat.START);
+                // mDrawer_layout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()) {
                     case R.id.drawer_menu_school:
                         Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
@@ -496,7 +496,6 @@ public class IndexActivity extends BaseActivity {
     /**
      * 接受QQ登录广播，数据来源于广播，不是本地持久化数据文件，因此需要严格区分
      */
-
 //    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 //        @SuppressLint("CheckResult")
 //        @Override
@@ -713,11 +712,6 @@ public class IndexActivity extends BaseActivity {
         Log.i(TAG, "首页QQToken====: " + Constant.mTencent.getQQToken().toString());
         /** 开始监听请求回调操作*/
         info.getUserInfo(listener);
-
-        /** 调用SharePreference工具类获取Gson转化后的Java对象，持久化文件名“ZSAndroid”的本地数据 */
-
-        /** 标题栏字体加粗 */
-        Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
     }
 
     /**
@@ -1192,7 +1186,7 @@ public class IndexActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 3000) {
-                ToastUtils.show("再按一次退出程序！");
+                ToastUtils.show("再按一次退出程序");
                 firstTime = secondTime;
                 return true;
             } else {

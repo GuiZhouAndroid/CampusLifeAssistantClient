@@ -21,11 +21,11 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountUserName;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountRealName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineToken;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateUserName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeUserName;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealName;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealName;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserName;
 
 /**
@@ -130,7 +130,7 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        fragments = new Fragment[]{new DeveloperKickOffLineRealName(), new DeveloperKickOffLineToken(), new DeveloperBannedAccountUserName(), new DeveloperSelectBannedStateUserName(), new DeveloperSelectBannedTimeUserName(), new DeveloperUntieBannedAccountUserName()};
+        fragments = new Fragment[]{new DeveloperKickOffLineRealName(), new DeveloperKickOffLineToken(), new DeveloperBannedAccountRealName(), new DeveloperSelectBannedStateRealName(), new DeveloperSelectBannedTimeRealName(), new DeveloperUntieBannedAccountUserName()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         //进行TabLayout 关联 ViewPager

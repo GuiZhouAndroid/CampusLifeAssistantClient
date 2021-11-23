@@ -16,12 +16,14 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
+
         <ImageView
-            android:layout_centerHorizontal="true"
             android:id="@+id/index_iv_nav_header_icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp" />
+
         <TextView
             android:id="@+id/index_tv_nav_header_name"
             android:layout_width="wrap_content"
@@ -36,9 +38,9 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_marginStart="@dimen/dp_20"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/dp_20"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -52,31 +54,34 @@
             android:textSize="15sp" />
 
         <LinearLayout
-            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/QQLastLoginTime"
                 android:textColor="@color/viewBackground"
                 android:textSize="12sp" />
+
             <TextView
-                android:layout_gravity="center"
                 android:id="@+id/tv_QQLastLoginTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:textColor="@color/viewBackground"
                 android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

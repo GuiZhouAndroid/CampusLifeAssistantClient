@@ -66,7 +66,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_nick_name"
         app:left_text="QQ昵称"
-        app:show_right_arrow="false"/>
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_my_info"
@@ -74,7 +74,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_nick_name"
         app:left_text="我的信息"
-        app:right_text="去瞅瞅"/>
+        app:right_text="去瞅瞅" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_my_goods"
@@ -82,7 +82,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_nick_name"
         app:left_text="我的订单"
-        app:right_text="下单/发单"/>
+        app:right_text="下单/发单" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_report_center"
@@ -90,7 +90,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_pass"
         app:left_text="举报中心"
-        app:right_text="实名/匿名"/>
+        app:right_text="实名/匿名" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_account_safe"
@@ -98,7 +98,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_pass"
         app:left_text="账户安全"
-        app:right_text="申诉/查封"/>
+        app:right_text="申诉/查封" />
 
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
@@ -107,7 +107,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_sign_name"
         app:left_text="意见反馈"
-        app:show_right_arrow="false"/>
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_check_update"
@@ -115,7 +115,7 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_pass"
         app:left_text="检测更新"
-        app:show_right_arrow="false"/>
+        app:show_right_arrow="false" />
 
     <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
         android:id="@+id/ll_system_set"
@@ -123,17 +123,17 @@
         android:layout_height="@dimen/dp_50"
         app:left_icon="@drawable/ic_sex"
         app:left_text="系统设置"
-        app:show_right_arrow="false"/>
+        app:show_right_arrow="false" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_logout_login"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_marginStart="@dimen/dp_50"-->
-<!--        android:layout_marginTop="@dimen/dp_15"-->
-<!--        android:layout_marginEnd="@dimen/dp_50"-->
-<!--        android:background="@drawable/logout_btn_bg"-->
-<!--        android:text="注销登录"-->
-<!--        android:textSize="@dimen/sp_17" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_logout_login"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:layout_marginStart="@dimen/dp_50"-->
+    <!--        android:layout_marginTop="@dimen/dp_15"-->
+    <!--        android:layout_marginEnd="@dimen/dp_50"-->
+    <!--        android:background="@drawable/logout_btn_bg"-->
+    <!--        android:text="注销登录"-->
+    <!--        android:textSize="@dimen/sp_17" />-->
 
 </LinearLayout>

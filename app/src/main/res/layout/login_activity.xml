@@ -81,6 +81,7 @@
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/bbl_ff0000"
         app:passwordToggleTintMode="multiply">
+
         <EditText
             android:id="@+id/login_edit_password"
             android:layout_width="match_parent"

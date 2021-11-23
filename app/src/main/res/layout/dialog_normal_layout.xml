@@ -4,45 +4,45 @@
     android:layout_height="fill_parent"
     android:clickable="true"
     android:orientation="vertical"
-    android:padding="20.0dip" >
+    android:padding="20.0dip">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#ff7200"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:gravity="center"
             android:text="自定义弹窗"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
             android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" >
+            android:gravity="center">
 
 
             <TextView
-                android:background="#ffffff"
                 android:id="@+id/message"
-                android:textColor="#b8b8b8"
-                android:textSize="16sp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:background="#ffffff"
                 android:gravity="left|center"
                 android:lineSpacingMultiplier="1.5"
-                android:paddingBottom="15.0dip"
                 android:paddingLeft="20.0dip"
+                android:paddingTop="15.0dip"
                 android:paddingRight="20.0dip"
-                android:paddingTop="15.0dip" />
+                android:paddingBottom="15.0dip"
+                android:textColor="#b8b8b8"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -51,29 +51,29 @@
             android:layout_gravity="bottom"
             android:background="#ffffff"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/positiveTextView"
-                android:textColor="#b8b8b8"
-                android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
                 android:gravity="center"
                 android:text="ok"
-                android:clickable="true"/>
+                android:textColor="#b8b8b8"
+                android:textSize="16sp" />
 
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/negativeTextView"
-                android:textColor="#ff9138"
-                android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
                 android:gravity="center"
                 android:text="cancel"
-                android:clickable="true"/>
+                android:textColor="#ff9138"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 

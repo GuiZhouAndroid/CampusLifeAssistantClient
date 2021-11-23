@@ -42,9 +42,9 @@
             app:bb_activeTabAlpha="1"
             app:bb_activeTabColor="#962DE3"
             app:bb_behavior="shy"
-            app:bb_titleTextAppearance="@style/BottomNavigationTheme"
             app:bb_inActiveTabColor="@color/white"
-            app:bb_tabXmlResource="@xml/bottombar_color_activity" />
+            app:bb_tabXmlResource="@xml/bottombar_color_activity"
+            app:bb_titleTextAppearance="@style/BottomNavigationTheme" />
         <!--浮动按钮-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_btn"

@@ -59,7 +59,7 @@ public class MineInfoActivity extends BaseActivity {
     @BindView(R2.id.iv_my_info_back) ImageView mIvMyInfoBack;
     /** Toolbar */
     @BindView(R2.id.toolbar_my_info) Toolbar mToolbarMyInfo;
-    //RefreshLayout盒子下拉刷新
+    /** RefreshLayout盒子下拉刷新 */
     @BindView(R2.id.refreshLayout_my_info) RefreshLayout mRefreshLayoutMyInfo;
 
     /**

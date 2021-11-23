@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_dev_kickoff_token"
+    android:id="@+id/rl_dev_ban_account_time_realname"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.activity.DeveloperSystemSafeActivity">
@@ -15,10 +15,10 @@
         android:padding="@dimen/dp_20">
 
         <work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText
-            android:id="@+id/edit_kick_offline_token"
+            android:id="@+id/edit_ban_account_time_realname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/KickOffLine_token"
+            android:hint="@string/KickOffLine_realname"
             android:inputType="text"
             android:singleLine="true"
             android:textSize="@dimen/sp_15"
@@ -35,18 +35,18 @@
             android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
             android:padding="@dimen/dp_15"
-            android:text="功能说明：通过用户登录Token值，使其已登录账号强制离线"
+            android:text="功能说明：通过用户的真实姓名，实时查询账户当前封禁剩余时间。"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
 
         <Button
             android:background="@drawable/orderlist_refund_selector"
-            android:id="@+id/btn_kickoffLine_token"
+            android:id="@+id/btn_ban_account_time_realname"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="@string/KickOffLine_ok"
+            android:text="@string/start_select"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>
 

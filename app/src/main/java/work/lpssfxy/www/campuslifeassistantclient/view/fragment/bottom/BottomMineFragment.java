@@ -152,7 +152,7 @@ public class BottomMineFragment extends BaseFragment {
                         msg.what = 1;
                         //5.开始发送消息
                         mHandler.sendMessage(msg);
-                        Toast.makeText(getActivity(), userInfo.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), userInfo.toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         mHandler.sendEmptyMessage(3);
                     }
@@ -296,12 +296,6 @@ public class BottomMineFragment extends BaseFragment {
 
     }
 
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -320,4 +314,8 @@ public class BottomMineFragment extends BaseFragment {
         //GlobalBus.getBus().unregister(this);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 }

@@ -25,6 +25,7 @@ import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
+import work.lpssfxy.www.campuslifeassistantclient.utils.BackHandlerHelper;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -35,6 +36,17 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBar
  * @create 2021-08-12-2:08
  */
 public abstract class BaseActivity extends SwipeBackActivity implements View.OnClickListener {
+
+    private boolean BackMode;
+
+    public boolean getBackMode() {
+        return BackMode;
+    }
+
+    public void setBackMode(boolean backMode) {
+        this.BackMode = backMode;
+    }
+
     private static final String TAG = "BaseActivity";
     /** 解绑ButterKnife */
     private Unbinder mUnbinder;
@@ -335,6 +347,10 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         //finish();
         //overridePendingTransition(R.anim.anim_left, R.anim.anim_right);
+
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed();
+        }
     }
 
     /**
