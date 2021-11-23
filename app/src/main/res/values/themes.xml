@@ -57,8 +57,13 @@
 
     <!--CollapsingToolbarLayout开始主题-->
     <style name="CollTitleTextEndTheme">
-        <item name="android:textColor">#00F65A</item>
+        <item name="android:textColor">#962DE3</item>
         <item name="android:textSize">@dimen/sp_30</item>
+    </style>
+
+    <!--CollapsingToolbarLayout开始主题-->
+    <style name="BottomNavigationTheme">
+        <item name="android:textSize">@dimen/sp_13</item>
     </style>
 
     <!--CollapsingToolbarLayout结束主题-->

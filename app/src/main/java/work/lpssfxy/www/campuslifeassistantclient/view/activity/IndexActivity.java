@@ -52,11 +52,11 @@ import com.lzy.okgo.request.base.Request;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
-import com.xuexiang.xui.widget.toast.XToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,10 +86,8 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomShopFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class IndexActivity extends BaseActivity {
@@ -106,6 +104,8 @@ public class IndexActivity extends BaseActivity {
     @BindView(R2.id.index_iv_user_head) ImageView mIndex_iv_user_head;
     /** Toolbar名字标签 */
     @BindView(R2.id.index_tv_user_hello) TextView mIndex_tv_user_hello;
+    /** 金色校园下拉刷新 */
+    @BindView(R2.id.refreshLayout_index) RefreshLayout mRefreshLayoutIndex;
     /** 侧滑主体 */
     @BindView(R2.id.drawer_layout) DrawerLayout mDrawer_layout;
     /** 抽屉抽屉 */
@@ -204,6 +204,11 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void prepareData() {
+        setThemeColor(mRefreshLayoutIndex, android.R.color.holo_blue_light);
+        //进入触发自动刷新，不做数据，只演示效果
+        mRefreshLayoutIndex.autoRefresh();
+        //延时2.5秒完成刷新
+        mRefreshLayoutIndex.finishRefresh(2500);
         /** 初始化DrawerLayout侧滑抽屉 */
         initDrawerLayout();
         initViewPager();
@@ -574,7 +579,8 @@ public class IndexActivity extends BaseActivity {
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
+        //fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
+        fragments = new Fragment[]{new BottomHomeFragment(), new BottomMineFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mVp_content.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         mVp_content.setOffscreenPageLimit(fragmentList.size());//viewPager单次预加载Fragment页数
@@ -607,7 +613,7 @@ public class IndexActivity extends BaseActivity {
      */
     private void initBottomNaviCation() {
         //在tab3上，添加红色角标数字5
-        mBottomBar.getTabWithId(R.id.tab3).setBadgeCount(5);
+        mBottomBar.getTabWithId(R.id.tab1).setBadgeCount(5);
         //选定的BottomBarTab更改时被触发——当前处于Item时点击其它Item
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @SuppressLint("NonConstantResourceId")
@@ -616,20 +622,11 @@ public class IndexActivity extends BaseActivity {
                 switch (tabId) {
                     case R.id.tab1:
                         mVp_content.setCurrentItem(0);
-                        Toast.makeText(IndexActivity.this, "tab1", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(IndexActivity.this, "首页", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.tab2:
-                        mVp_content.setCurrentItem(1);
-                        Toast.makeText(IndexActivity.this, "tab2", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.tab3:
-                        mVp_content.setCurrentItem(2);
-                        Toast.makeText(IndexActivity.this, "tab3", Toast.LENGTH_SHORT).show();
-                        mBottomBar.getTabWithId(R.id.tab3).removeBadge();
-                        break;
-                    case R.id.tab4:
                         mVp_content.setCurrentItem(3);
-                        Toast.makeText(IndexActivity.this, "tab4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(IndexActivity.this, "我的", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -642,21 +639,12 @@ public class IndexActivity extends BaseActivity {
             public void onTabReSelected(@IdRes int tabId) {
                 switch (tabId) {
                     case R.id.tab1:
-                        //           viewPager.setCurrentItem(0);
-                        Toast.makeText(IndexActivity.this, "再次点击了tab1", Toast.LENGTH_SHORT).show();
+                        //viewPager.setCurrentItem(0);
+                        Toast.makeText(IndexActivity.this, "再次滑到首页", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.tab2:
-                        //           viewPager.setCurrentItem(1);
-                        Toast.makeText(IndexActivity.this, "再次点击了tab2", Toast.LENGTH_SHORT).show();
-
-                        break;
-                    case R.id.tab3:
-                        //       viewPager.setCurrentItem(2);
-                        Toast.makeText(IndexActivity.this, "再次点击了tab3", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.tab4:
-                        //        viewPager.setCurrentItem(3);
-                        Toast.makeText(IndexActivity.this, "再次点击了tab4", Toast.LENGTH_SHORT).show();
+                        //viewPager.setCurrentItem(1);
+                        Toast.makeText(IndexActivity.this, "再次滑到我的", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -966,15 +954,15 @@ public class IndexActivity extends BaseActivity {
         tv.setTypeface(font);
         Date d = new Date();
         if (d.getHours() < 4) {
-            tv.setText("早点休息哟~,");
+            tv.setText("该休息啦~");
         } else if (d.getHours() < 11) {
-            tv.setText("早上好,");
+            tv.setText("早上好~");
         } else if (d.getHours() < 14) {
-            tv.setText("中午好,");
+            tv.setText("中午好~");
         } else if (d.getHours() < 18) {
-            tv.setText("下午好,");
+            tv.setText("下午好~");
         } else if (d.getHours() < 24) {
-            tv.setText("晚上好,");
+            tv.setText("晚上好~");
         }
     }
 

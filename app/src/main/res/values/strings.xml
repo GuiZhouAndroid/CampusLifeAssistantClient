@@ -27,7 +27,7 @@
     <string name="password">密码</string>
     <string name="forgetpassword">忘记密码?</string>
     <string name="telNumberLogin">手机号快捷登录</string>
-    <string name="developer_system_safe_center">开发者后台安全中心</string>
+    <string name="developer_system_safe_center">开发者后台系统管理中心</string>
     <string name="login">登\t\t\t\t\t录</string>
     <string name="no_account">没有账号？去注册</string>
     <string name="QQ">QQ快捷登录</string>
@@ -88,7 +88,7 @@
     <string name="QQLastLoginTime">&#160;QQ授权&#160;&#160;：</string>
     <string name="userLastLoginTime">账户验证：</string>
     <string name="drawer_menu_info_school">进入官网</string>
-    <string name="drawer_menu_developer_system_safe">后台安全</string>
+    <string name="drawer_menu_developer_system_safe">后台中心</string>
     <string name="drawer_menu_night_mode">夜间模式</string>
     <string name="drawer_menu_about_author">关于作者</string>
     <string name="drawer_menu_logout_title">退出登录</string>

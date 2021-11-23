@@ -8,20 +8,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.helloworld.library.MiddleDialogConfig;
 import com.helloworld.library.utils.DialogEnum;
@@ -34,26 +27,20 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRecyclerAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.SmartViewHolder;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ParcelableData;
 import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
-import static android.R.layout.simple_list_item_2;
-import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
 
 /**
  * created by on 2021/11/6
@@ -73,7 +60,7 @@ public class MineInfoActivity extends BaseActivity {
     /** Toolbar */
     @BindView(R2.id.toolbar_my_info) Toolbar mToolbarMyInfo;
     //RefreshLayout盒子下拉刷新
-    @BindView(R2.id.refreshLayout_my_info) RefreshLayout mRefreshLayout;
+    @BindView(R2.id.refreshLayout_my_info) RefreshLayout mRefreshLayoutMyInfo;
 
     /**
      * item控件--->用户信息
@@ -153,12 +140,18 @@ public class MineInfoActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-        //进入触发自动刷新，不做数据，只演示效果
-        mRefreshLayout.autoRefresh();
-        //延时2.5秒完成刷新
-        mRefreshLayout.finishRefresh(2500);
+        initRefresh();
     }
 
+    /**
+     * 模拟自动刷新
+     */
+    private void initRefresh() {
+        //进入触发自动刷新，不做数据，只演示效果
+        mRefreshLayoutMyInfo.autoRefresh();
+        //延时2.5秒完成刷新
+        mRefreshLayoutMyInfo.finishRefresh(2500);
+    }
     @Override
     protected void initView() {
         /**判断Toolbar，开启主图标并显示title*/
@@ -202,21 +195,7 @@ public class MineInfoActivity extends BaseActivity {
     @Override
     protected void doBusiness() {
         //设置默认主题
-        setThemeColor(R.color.boxBg, R.color.boxBg);
-    }
-
-    /**
-     * 设置下拉刷新主题颜色
-     * @param colorPrimary Toolbar背景色
-     * @param colorPrimaryDark RefreshLayout主题色
-     */
-    @SuppressLint("ObsoleteSdkInt")
-    private void setThemeColor(int colorPrimary, int colorPrimaryDark) {
-        mToolbarMyInfo.setBackgroundResource(colorPrimary);
-        mRefreshLayout.setPrimaryColorsId(colorPrimary, android.R.color.white);
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, colorPrimaryDark));
-        }
+        setThemeColor(this,mToolbarMyInfo,mRefreshLayoutMyInfo,R.color.boxBg, R.color.boxBg);
     }
     /**
      * 使用 ButterKnife注解式监听单击事件
@@ -260,6 +239,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                                     if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                                        initRefresh();
                                                         mUserName.setRightDesc(newUserName);//设置文本为新用户名
                                                         //这句重要：当页面未销毁时，当前页首次更新成功，那么后端服务器用户名更改已生效
                                                         // 再次更新时会使用原来的旧用户名作为更新依据，出现更新失败，只需把更新后新用户名值覆盖旧用户名值，即可解决
@@ -328,6 +308,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                                     if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                                        initRefresh();
                                                         mStuNo.setRightDesc(newStuNo);//设置文本为新用户名
                                                         DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "学号更新成功！", 3);
                                                         dialogPrompt.show();
@@ -374,6 +355,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                                     if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                                        initRefresh();
                                                         mTel.setRightDesc(newTel);//设置文本为新用户名
                                                         DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "手机号更新成功！", 3);
                                                         dialogPrompt.show();
@@ -420,6 +402,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                                     if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                                        initRefresh();
                                                         mEmail.setRightDesc(newEmail);//设置文本为新QQ邮箱
                                                         DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "QQ邮箱更新成功！", 3);
                                                         dialogPrompt.show();
@@ -476,6 +459,7 @@ public class MineInfoActivity extends BaseActivity {
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                         if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                            initRefresh();
                                             mDept.setRightDesc(newDept);//设置文本为新所属院系
                                             DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "所属院系更新成功！", 3);
                                             dialogPrompt.show();
@@ -521,6 +505,7 @@ public class MineInfoActivity extends BaseActivity {
                                     public void onSuccess(Response<String> response) {
                                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
                                         if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
+                                            initRefresh();
                                             mClass.setRightDesc(newClass);//设置文本为新所属专业班级
                                             DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "专业班级更新成功！", 3);
                                             dialogPrompt.show();

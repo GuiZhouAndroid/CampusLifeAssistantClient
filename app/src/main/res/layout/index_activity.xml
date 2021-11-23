@@ -14,7 +14,7 @@
         <include layout="@layout/index_custom_appbar" />
         <!--刷新核心-->
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+            android:id="@+id/refreshLayout_index"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
@@ -23,9 +23,9 @@
             app:srlEnableLoadMore="false"
             app:srlPrimaryColor="@color/colorPrimary">
             <!--刷新头部 header.TaurusHeader-->
-            <com.scwang.smartrefresh.header.BezierCircleHeader
+            <com.scwang.smartrefresh.header.PhoenixHeader
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="@dimen/dp_100" />
             <!--底部导航-->
             <!--        <include layout="@layout/index_bottom_navication_lottie_item" />-->
             <androidx.viewpager.widget.ViewPager
@@ -40,8 +40,9 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             app:bb_activeTabAlpha="1"
-            app:bb_activeTabColor="#FFEB3B"
+            app:bb_activeTabColor="#962DE3"
             app:bb_behavior="shy"
+            app:bb_titleTextAppearance="@style/BottomNavigationTheme"
             app:bb_inActiveTabColor="@color/white"
             app:bb_tabXmlResource="@xml/bottombar_color_activity" />
         <!--浮动按钮-->

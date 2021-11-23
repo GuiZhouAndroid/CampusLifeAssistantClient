@@ -92,10 +92,12 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     /** 自定义滑动控件NestedScrollView */
     private GoTopNestedScrollView goTopNestedScrollView;
     /** 网格布局适配数据源 */
-    private static final String[] Grid_Tv_Data = new String[]{"食堂预定","食堂代取", "快递代取", "二手交易","失物招领","星座运势","笑话百科", "天气预报", "位置服务","进入官网"};
-    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_own_food,R.mipmap.index_other_people_server,
-            R.mipmap.index_express, R.mipmap.index_second_hand,R.mipmap.index_lost_and_found,R.mipmap.index_horoscope,
-            R.mipmap.index_joke_encyclopedia, R.mipmap.index_weather,R.mipmap.index_map,R.mipmap.index_into_school};
+    //private static final String[] Grid_Tv_Data = new String[]{"食堂预定","食堂代取", "快递代取", "二手交易","失物招领","星座运势","笑话百科", "天气预报", "位置服务","进入官网"};
+    //private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_own_food,R.mipmap.index_other_people_server,
+    //R.mipmap.index_express, R.mipmap.index_second_hand,R.mipmap.index_lost_and_found,R.mipmap.index_horoscope,
+    //R.mipmap.index_joke_encyclopedia, R.mipmap.index_weather,R.mipmap.index_map,R.mipmap.index_into_school};
+    private static final String[] Grid_Tv_Data = new String[]{"食堂代取","快递代取","笑话百科","星座运势","六师官网"};
+    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_other_people_server, R.mipmap.index_express, R.mipmap.index_joke_encyclopedia,R.mipmap.index_horoscope,R.mipmap.index_into_school};
     /** 底部弹出——第三方地图 */
     private BottomSheetPop mBottomSheetPop;
     private View openBottomView;
@@ -186,8 +188,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         if (dy <= toolbarHeight) {
             float scale = (float) dy / toolbarHeight;
             float alpha = scale * 255;
-            toolbar.setBackgroundColor(Color.argb((int) alpha, 100, 200, 200));
-            collapsing_toolbar_layout.setBackgroundColor(Color.argb((int) alpha, 100, 200, 200));
+            toolbar.setBackgroundColor(Color.argb((int) alpha, 246, 105, 174));
+            collapsing_toolbar_layout.setBackgroundColor(Color.argb((int) alpha, 246, 105, 174));
         }
     }
 
@@ -226,69 +228,24 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     public void onItemClick(int position, View view) {
         switch (position) {
-            case 0://食堂预定
-                getUnionId();
-                break;
-            case 1://食堂代取
+            case 0://食堂代取
                 Constant.mTencent.reportDAU();
+                Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
                 break;
-            case 2://快递代取
-                Constant.mTencent.checkLogin(new DefaultUiListener() {
-                    @Override
-                    public void onComplete(Object response) {
-                        JSONObject jsonResp = (JSONObject) response;
-                        if (jsonResp.optInt("ret", -1) == 0) {
-                            JSONObject jsonObject = Constant.mTencent.loadSession(Constant.APP_ID);
-                            Constant.mTencent.initSessionCache(jsonObject);
-                            if (jsonObject == null) {
-                                QQUtil.showResultDialog(getActivity(), "jsonObject is null", "登录失败");
-                            } else {
-                                QQUtil.showResultDialog(getActivity(), jsonObject.toString(), "登录成功");
-                            }
-
-                        } else {
-                            QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
-                        }
-                    }
-
-                    @Override
-                    public void onError(UiError e) {
-                        QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        QQUtil.toastMessage(getActivity(), "onCancel");
-                    }
-                });
+            case 1://快递代取
+                checkQQLogin();
+                Toast.makeText(getActivity(), "快递代取", Toast.LENGTH_SHORT).show();
                 break;
-            case 3://二手交易
-                Toast.makeText(getActivity(), "二手交易", Toast.LENGTH_SHORT).show();
-                break;
-            case 4://失误招领
-                Toast.makeText(getActivity(), "失误招领", Toast.LENGTH_SHORT).show();
-                break;
-            case 5://星座运势
-                Toast.makeText(getActivity(), "星座运势", Toast.LENGTH_SHORT).show();
-                break;
-            case 6://笑话百科
+            case 2://笑话百科
+                getUnionId();
                 Toast.makeText(getActivity(), "笑话百科", Toast.LENGTH_SHORT).show();
                 break;
-            case 7://天气预报
-                Toast.makeText(getActivity(), "天气预报", Toast.LENGTH_SHORT).show();
+            case 3://星座运势
+                Toast.makeText(getActivity(), "星座运势", Toast.LENGTH_SHORT).show();
                 break;
-            case 8://位置服务
+            case 4://六师官网
                 openBottomMapNaviCation();
-                break;
-            case 9://进入官网
-                if (Constant.qqUser == null) {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    return;
-                }
-                if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.QQSession != null) {
-                    Toast.makeText(getActivity(), "QQ登录已经啦", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                Toast.makeText(getActivity(), "六师官网", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -311,8 +268,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         // 准备数据
         ArrayList<BannerInfo> bannerInfos = new ArrayList<>();
         List<Object> bgList = new ArrayList<>();
-        bannerInfos.add(new BannerInfo(R.mipmap.banner_1, "first"));
-        bannerInfos.add(new BannerInfo(R.mipmap.banner_2, "second"));
+        bannerInfos.add(new BannerInfo(R.drawable.index_banner_img2, "first"));
+        bannerInfos.add(new BannerInfo(R.drawable.index_banner_img1, "second"));
         bgList.add(R.mipmap.banner_bg1);
         bgList.add(R.mipmap.banner_bg2);
         // 设置监听
@@ -594,5 +551,36 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         } else {
             Toast.makeText(getActivity(), "please login frist!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void checkQQLogin() {
+        Constant.mTencent.checkLogin(new DefaultUiListener() {
+            @Override
+            public void onComplete(Object response) {
+                JSONObject jsonResp = (JSONObject) response;
+                if (jsonResp.optInt("ret", -1) == 0) {
+                    JSONObject jsonObject = Constant.mTencent.loadSession(Constant.APP_ID);
+                    Constant.mTencent.initSessionCache(jsonObject);
+                    if (jsonObject == null) {
+                        QQUtil.showResultDialog(getActivity(), "jsonObject is null", "登录失败");
+                    } else {
+                        QQUtil.showResultDialog(getActivity(), jsonObject.toString(), "登录成功");
+                    }
+
+                } else {
+                    QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+                }
+            }
+
+            @Override
+            public void onError(UiError e) {
+                QQUtil.showResultDialog(getActivity(), "token过期，请调用登录接口拉起手Q授权登录", "登录失败");
+            }
+
+            @Override
+            public void onCancel() {
+                QQUtil.toastMessage(getActivity(), "onCancel");
+            }
+        });
     }
 }

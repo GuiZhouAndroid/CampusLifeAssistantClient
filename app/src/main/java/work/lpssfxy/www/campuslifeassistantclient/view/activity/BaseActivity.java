@@ -1,26 +1,23 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.SkinAppCompatDelegateImpl;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,10 +25,6 @@ import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomDialog;
-import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtils;
 
 /**
@@ -299,6 +292,35 @@ public abstract class BaseActivity extends SwipeBackActivity implements View.OnC
     public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
         View view = snackbar.getView();
         ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
+    }
+
+    /**
+     * 设置下拉刷新主题颜色
+     *
+     * @param refreshLayout RefreshLayout实例
+     * @param colorPrimary  RefreshLayout主题色
+     */
+    @SuppressLint("ObsoleteSdkInt")
+    public void setThemeColor(RefreshLayout refreshLayout, int colorPrimary) {
+        refreshLayout.setPrimaryColorsId(colorPrimary, android.R.color.white);
+    }
+
+    /**
+     * 设置下拉刷新主题颜色
+     *
+     * @param activity         上下午文
+     * @param toolbar          Androidx库Toolbar
+     * @param refreshLayout    RefreshLayout实例
+     * @param colorPrimary     Toolbar背景色
+     * @param colorPrimaryDark RefreshLayout背景色
+     */
+    @SuppressLint("ObsoleteSdkInt")
+    public void setThemeColor(Activity activity, Toolbar toolbar, RefreshLayout refreshLayout, int colorPrimary, int colorPrimaryDark) {
+        toolbar.setBackgroundResource(colorPrimary);
+        refreshLayout.setPrimaryColorsId(colorPrimary, android.R.color.white);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(activity, colorPrimaryDark));
+        }
     }
 
     /**

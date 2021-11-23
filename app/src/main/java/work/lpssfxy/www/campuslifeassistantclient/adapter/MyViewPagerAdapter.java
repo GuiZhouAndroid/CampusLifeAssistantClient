@@ -5,14 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomCategoryFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomShopFragment;
 
 /**
  * created by on 2021/8/23
