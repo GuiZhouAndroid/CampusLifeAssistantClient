@@ -38,8 +38,8 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  * @create 2021-08-20-15:01
  */
 @SuppressLint("NonConstantResourceId")
-public class DeveloperKickOffLineRealName extends BaseFragment {
-    private static final String TAG = "DeveloperKickOffLineRealName";
+public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
+    private static final String TAG = "DeveloperKickOffLineRealNameFragment";
     //父布局
     @BindView(R2.id.rl_dev_kickoff_realname) RelativeLayout mRlDevKicOffRealName;
     //被下线真实姓名输入框
@@ -49,7 +49,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_kickoff_line_realname;
+        return R.layout.developer_fragment_kickoff_line_realname;
     }
 
     @Override
@@ -119,43 +119,14 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        //失败
+                        //失败(超管未登录)
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
-
-                        if (401 == responseBean.getCode() && "验证失败，禁止访问".equals(responseBean.getMsg()) && "已被系统强制下线".equals(responseBean.getData())) {
-                            new CustomAlertDialog(getActivity())
-                                    .builder()
-                                    .setCancelable(false)
-                                    .setTitle("超管提示")
-                                    .setTitleTextColor("#FF0000")
-                                    .setTitleTextSizeSp(18)
-                                    .setTitleTextBold(true)
-                                    .setMsg("已被系统超管强制下线！")
-                                    .setMsgTextBold(true)
-                                    .setOkButton("我知道了", 0, "#FF0000", "", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "超过3次提醒，将被永久封号！", Snackbar.LENGTH_INDEFINITE)
-                                                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
-                                                    .setAction("我知道了", new View.OnClickListener() {  //设置点击按钮
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            Toast.makeText(getActivity(), "别撒谎喔~", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    });
-                                            //设置Snackbar上提示的字体颜色
-                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                            snackbar.show();
-                                        }
-                                    })
-                                    .show();
-                            return;
-                        }
+                        //成功(下线失败)
                         if (200 == responseBean.getCode() && "踢人下线失败，此真实姓名不存在".equals(responseBean.getMsg())) {
                             mEditKickOffLineRealName.startShakeAnimation();//抖动输入框
                             Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
@@ -163,7 +134,7 @@ public class DeveloperKickOffLineRealName extends BaseFragment {
                             snackbar.show();
                             return;
                         }
-                        //成功
+                        //成功(下线成功)
                         if (200 == responseBean.getCode() && "踢人下线成功".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "踢下线成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));

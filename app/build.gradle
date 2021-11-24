@@ -153,5 +153,6 @@ dependencies {
     implementation 'com.aliyun.dpa:oss-android-sdk:2.9.10'
     //垂直纵向的TabLayout https://github.com/qstumn/VerticalTabLayout
     implementation 'q.rorbin:VerticalTabLayout:1.2.5'
-
+    //强大的RecyclerAdapter框架BaseRecyclerView https://github.com/CymChad/BaseRecyclerViewAdapterHelper 简书：https://www.jianshu.com/p/b343fcff51b0
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
 }

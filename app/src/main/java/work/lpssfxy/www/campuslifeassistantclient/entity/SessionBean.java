@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * created by on 2021/9/4
- * 描述：
+ * 描述：QQ授权登录返回的纯Session数据
  *
  * @author ZSAndroid
  * @create 2021-09-04-14:26

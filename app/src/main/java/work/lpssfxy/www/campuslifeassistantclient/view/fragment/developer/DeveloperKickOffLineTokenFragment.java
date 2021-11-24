@@ -36,9 +36,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  * @create 2021-08-20-15:01
  */
 @SuppressLint("NonConstantResourceId")
-public class DeveloperKickOffLineToken extends BaseFragment {
+public class DeveloperKickOffLineTokenFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperKickOffLineToken";
+    private static final String TAG = "DeveloperKickOffLineTokenFragment";
     //父布局
     @BindView(R2.id.rl_dev_kickoff_token) RelativeLayout mRlDevKicOffToken;
     //被下线真实姓名输入框
@@ -48,7 +48,7 @@ public class DeveloperKickOffLineToken extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_kickoff_line_token;
+        return R.layout.developer_fragment_kickoff_line_token;
     }
 
     @Override
@@ -119,14 +119,14 @@ public class DeveloperKickOffLineToken extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        //失败
+                        //失败(超管未登录)
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
-                        //成功
+                        //成功(下线成功)
                         if (200 == responseBean.getCode() && "踢人下线成功".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "踢下线成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));

@@ -77,6 +77,16 @@
 -dontwarn okio.**
 -dontwarn org.apache.commons.codec.binary.**
 
+#---------------------------------7.BaseRecyclerViewAdapterHelper(自带混淆规则，正常情况无须手动配置，我就要配置，以防不正常情况)-------------------------------
+# BaseRecyclerViewAdapterHelper
+-keep class com.chad.library.adapter.** {
+*;
+}
+-keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
+-keep public class * extends com.chad.library.adapter.base.viewholder.BaseViewHolder
+-keepclassmembers  class **$** extends com.chad.library.adapter.base.viewholder.BaseViewHolder {
+     <init>(...);
+}
 
 
 

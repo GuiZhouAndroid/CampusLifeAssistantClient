@@ -38,9 +38,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 
 @SuppressLint("NonConstantResourceId")
-public class DeveloperBannedAccountRealName extends BaseFragment {
+public class DeveloperBannedAccountRealNameFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperBannedAccountRealName";
+    private static final String TAG = "DeveloperBannedAccountRealNameFragment";
     //父布局
     @BindView(R2.id.rl_dev_ban_account_realname) RelativeLayout mRlDevBanAccountRealName;
     //被封禁真实姓名
@@ -52,7 +52,7 @@ public class DeveloperBannedAccountRealName extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_banned_account_real_name;
+        return R.layout.developer_fragment_banned_account_real_name;
     }
 
     @Override
@@ -132,13 +132,14 @@ public class DeveloperBannedAccountRealName extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        //失败
+                        //失败(超管未登录)
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
+                        //失败(超管封禁了自己或强制下线了自己)
                         if (401 == responseBean.getCode() && "验证失败，禁止访问".equals(responseBean.getMsg()) && "已被系统强制下线".equals(responseBean.getData())) {
                             new CustomAlertDialog(getActivity())
                                     .builder()
@@ -168,6 +169,7 @@ public class DeveloperBannedAccountRealName extends BaseFragment {
                                     .show();
                             return;
                         }
+                        //成功(真实姓名不存在)
                         if (200 == responseBean.getCode() && "封禁账户失败，此真实姓名不存在".equals(responseBean.getMsg())) {
                             mEditBanAccountRealName.startShakeAnimation();//抖动输入框
                             Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
@@ -175,7 +177,7 @@ public class DeveloperBannedAccountRealName extends BaseFragment {
                             snackbar.show();
                             return;
                         }
-                        //成功
+                        //成功(已封禁)
                         if (200 == responseBean.getCode() && "账户封禁成功".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "账户封禁成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));

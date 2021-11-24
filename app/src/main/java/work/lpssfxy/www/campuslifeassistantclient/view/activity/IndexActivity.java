@@ -398,7 +398,7 @@ public class IndexActivity extends BaseActivity {
                                                             RoleOrPermissionListBean roleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), RoleOrPermissionListBean.class);
                                                             Log.i(TAG, "RoleOrPermissionListBean: " + roleOrPermissionListBean.getData());
                                                             if (roleOrPermissionListBean.getData().contains("超管")) {
-                                                                //List<String> 集合中，包含角色"超级管理员"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
+                                                                //List<String> 集合中，包含角色"超级超管"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
                                                                 IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
                                                             } else {//无认证权限，提示信息
                                                                 CustomAlertDialogUtil.notification1(IndexActivity.this,"超管提示","《后台安全》仅开发者使用，您无权访问！谢谢合作~","朕知道了");

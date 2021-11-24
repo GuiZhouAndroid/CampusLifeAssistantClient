@@ -37,9 +37,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectBannedStateRealName extends BaseFragment {
+public class DeveloperSelectBannedStateRealNameFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperSelectBannedStateRealName";
+    private static final String TAG = "DeveloperSelectBannedStateRealNameFragment";
     //父布局
     @BindView(R2.id.rl_dev_ban_account_state_realname) RelativeLayout mRlDevBanAccountStateRealName;
     //待查讯真实姓名
@@ -49,7 +49,7 @@ public class DeveloperSelectBannedStateRealName extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_select_banned_state_real_name;
+        return R.layout.developer_fragment_select_banned_state_real_name;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class DeveloperSelectBannedStateRealName extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        //失败
+                        //失败(超管未登录)
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mRlDevBanAccountStateRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));

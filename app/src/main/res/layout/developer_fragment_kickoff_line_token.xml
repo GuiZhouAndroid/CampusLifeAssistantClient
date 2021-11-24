@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_dev_ban_account_realname"
+    android:id="@+id/rl_dev_kickoff_token"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.activity.DeveloperSystemSafeActivity">
@@ -15,10 +15,10 @@
         android:padding="@dimen/dp_20">
 
         <work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText
-            android:id="@+id/edit_ban_account_realname"
+            android:id="@+id/edit_kick_offline_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/KickOffLine_realname"
+            android:hint="@string/KickOffLine_token"
             android:inputType="text"
             android:singleLine="true"
             android:textSize="@dimen/sp_15"
@@ -28,39 +28,23 @@
             app:clearDrawable="@mipmap/edit_clear_all"
             app:styleColor="#ff0000" />
 
-        <work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText
-            android:id="@+id/edit_ban_account_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
-            android:hint="@string/banned_day"
-            android:inputType="number"
-            android:singleLine="true"
-            android:textSize="@dimen/sp_15"
-            app:BtnSpacing="@dimen/dp_24"
-            app:BtnWidth="@dimen/dp_25"
-            app:borderStyle="halfRect"
-            app:clearDrawable="@mipmap/edit_clear_all"
-            app:styleColor="#ff0000" />
-
         <TextView
-            android:id="@+id/tv_show1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
             android:padding="@dimen/dp_15"
-            android:text="功能说明：通过用户的真实姓名，对违规账户进行定时(时长/天)封禁，-1代表永久封禁。"
+            android:text="功能说明：通过用户登录Token值，使其已登录账号强制离线"
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
 
         <Button
-            android:background="@drawable/orderlist_refund_selector"
-            android:id="@+id/btn_ban_account_realname"
+            android:id="@+id/btn_kickoffLine_token"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/orderlist_refund_selector"
             android:text="@string/KickOffLine_ok"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>

@@ -48,7 +48,7 @@ public class LoginBindActivity extends BaseActivity {
     /** 立即绑定QQ */
     @BindView(R2.id.btn_start_bind) Button mBtn_start_bind;
     /** QQ会话数据 */
-    private SessionBean userSessionData;
+    private SessionBean sessionBean;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -92,7 +92,7 @@ public class LoginBindActivity extends BaseActivity {
     @Override
     protected void prepareData() {
         //登录页拉起QQ授权传递QQ会话的Json数据，转为实体类对象，提供QQ信息绑定用户信息使用
-        userSessionData = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), SessionBean.class);
+        sessionBean = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), SessionBean.class);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class LoginBindActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        textView.setText(userSessionData.toString());
+        textView.setText(sessionBean.toString());
     }
 
     @Override
@@ -218,23 +218,23 @@ public class LoginBindActivity extends BaseActivity {
                                         if (200 == userBeanData.getCode() && null != userBeanData.getData() && "登录成功".equals(userBeanData.getMsg())) {
                                             int userBindUserId = userBeanData.getData().getUlId();
                                             Log.i(TAG, "QQ授权绑定的用户ID=== " + userBindUserId);
-                                            Log.i(TAG, "QQ授权绑定的QQ会话=== " + userSessionData);
+                                            Log.i(TAG, "QQ授权绑定的QQ会话=== " + sessionBean);
                                             //以上2份数据准备就绪，调用绑定接口，执行授权业务
                                             /** 开始调用SpringBoot授权信息关联接口 */
                                             OkGo.<String>post(Constant.LOGIN_ADD_QQ_SESSION)
                                                     .tag("绑定QQ")
-                                                    .params("ret", userSessionData.getRet())
-                                                    .params("openid", userSessionData.getOpenid())
-                                                    .params("accessToken", userSessionData.getAccess_token())
-                                                    .params("payToken", userSessionData.getPay_token())
-                                                    .params("expiresIn", userSessionData.getExpires_in())
-                                                    .params("pf", userSessionData.getPf())
-                                                    .params("pfkey", userSessionData.getPfkey())
-                                                    .params("msg", userSessionData.getMsg())
-                                                    .params("loginCost", userSessionData.getLogin_cost())
-                                                    .params("queryAuthorityCost", userSessionData.getQuery_authority_cost())
-                                                    .params("authorityCost", userSessionData.getAuthority_cost())
-                                                    .params("expiresTime", userSessionData.getExpires_time())
+                                                    .params("ret", sessionBean.getRet())
+                                                    .params("openid", sessionBean.getOpenid())
+                                                    .params("accessToken", sessionBean.getAccess_token())
+                                                    .params("payToken", sessionBean.getPay_token())
+                                                    .params("expiresIn", sessionBean.getExpires_in())
+                                                    .params("pf", sessionBean.getPf())
+                                                    .params("pfkey", sessionBean.getPfkey())
+                                                    .params("msg", sessionBean.getMsg())
+                                                    .params("loginCost", sessionBean.getLogin_cost())
+                                                    .params("queryAuthorityCost", sessionBean.getQuery_authority_cost())
+                                                    .params("authorityCost", sessionBean.getAuthority_cost())
+                                                    .params("expiresTime", sessionBean.getExpires_time())
                                                     .params("ulId", userBindUserId) //此条是授权的用户自增ID，以上是拉起授权QQ会话数据
                                                     .execute(new StringCallback() {
                                                         @Override

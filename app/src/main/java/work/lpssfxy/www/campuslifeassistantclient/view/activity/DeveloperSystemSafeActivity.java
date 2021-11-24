@@ -21,12 +21,14 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountRealName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineToken;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealName;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserName;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperAddRoleInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineTokenFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserNameFragment;
 
 /**
  * created by on 2021/11/16
@@ -81,7 +83,7 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.developer_system_safe_activity;
+        return R.layout.developer_activity_system_safe;
     }
 
     @Override
@@ -130,7 +132,9 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        fragments = new Fragment[]{new DeveloperKickOffLineRealName(), new DeveloperKickOffLineToken(), new DeveloperBannedAccountRealName(), new DeveloperSelectBannedStateRealName(), new DeveloperSelectBannedTimeRealName(), new DeveloperUntieBannedAccountUserName()};
+        fragments = new Fragment[]{new DeveloperKickOffLineRealNameFragment(), new DeveloperKickOffLineTokenFragment(), new DeveloperBannedAccountRealNameFragment(),
+                new DeveloperSelectBannedStateRealNameFragment(), new DeveloperSelectBannedTimeRealNameFragment(), new DeveloperUntieBannedAccountUserNameFragment(),
+                new DeveloperSelectAllRoleInfoFragment(), new DeveloperAddRoleInfoFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         //进行TabLayout 关联 ViewPager

@@ -30,26 +30,26 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 /**
  * created by on 2021/11/16
- * 描述：开发者通过用户名查询封禁剩余时间
+ * 描述：开发者通过用户名查询解除封禁
  *
  * @author ZSAndroid
  * @create 2021-11-16-13:04
  */
 
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectBannedTimeRealName extends BaseFragment {
+public class DeveloperUntieBannedAccountUserNameFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperSelectBannedTimeRealName";
+    private static final String TAG = "DeveloperSelectBannedTimeRealNameFragment";
     //父布局
-    @BindView(R2.id.rl_dev_ban_account_time_realname) RelativeLayout mRlDevBanAccountTimeRealName;
+    @BindView(R2.id.rl_dev_un_ban_account_realname) RelativeLayout mRlDevUnBanAccountRealName;
     //待查讯真实姓名
-    @BindView(R2.id.edit_ban_account_time_realname) PowerfulEditText mEditBanAccountTimeRealName;
+    @BindView(R2.id.edit_un_ban_account_realname) PowerfulEditText mEditUnBanAccountRealName;
     //确定执行下线
-    @BindView(R2.id.btn_ban_account_time_realname) Button mBtnBanAccountTimeRealName;
+    @BindView(R2.id.btn_un_ban_account_realname) Button mBtnUnBanAccountRealName;
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_select_banned_time_real_name;
+        return R.layout.developer_fragment_untie_banned_account_real_name;
     }
 
     @Override
@@ -80,63 +80,63 @@ public class DeveloperSelectBannedTimeRealName extends BaseFragment {
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_ban_account_time_realname})
-    public void onBannedAccountTimeRealNameViewClick(View view) {
+    @OnClick({R2.id.btn_un_ban_account_realname})
+    public void onUnBannedAccountTimeRealNameViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_ban_account_time_realname://确定执行
+            case R.id.btn_un_ban_account_realname://确定执行
                 //超管输入的用户真实姓名
-                String strBanAccountTimeRealName = mEditBanAccountTimeRealName.getText().toString().trim();
-                doSelectBanAccountTime(strBanAccountTimeRealName);
+                String strUnBanAccountRealName = mEditUnBanAccountRealName.getText().toString().trim();
+                doUnBanAccount(strUnBanAccountRealName);
                 break;
         }
     }
 
     /**
-     * 开始查询账户剩余的封禁时间
+     * 开始解除账户封禁状态
      *
-     * @param strBanAccountTimeRealName 真实姓名
+     * @param strUnBanAccountRealName 真实姓名
      */
-    private void doSelectBanAccountTime(String strBanAccountTimeRealName) {
+    private void doUnBanAccount(String strUnBanAccountRealName) {
         //判空处理
-        if (TextUtils.isEmpty(strBanAccountTimeRealName)) {
-            mEditBanAccountTimeRealName.startShakeAnimation();//抖动输入框
-            Snackbar snackbar = Snackbar.make(mRlDevBanAccountTimeRealName, "请填入真实姓名", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+        if (TextUtils.isEmpty(strUnBanAccountRealName)) {
+            mEditUnBanAccountRealName.startShakeAnimation();//抖动输入框
+            Snackbar snackbar = Snackbar.make(mRlDevUnBanAccountRealName, "请填入真实姓名", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
             return;
         }
-        //开始网络请求，访问后端服务器，执行查封剩余时间操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_BANNED_ACCOUNT_RESIDUE_TIME_BY_REAL_NAME)
-                .tag("查封剩余时间真实姓名")
-                .params("accountBannedValues", strBanAccountTimeRealName)
+        //开始网络请求，访问后端服务器，执行解除封禁操作
+        OkGo.<String>post(Constant.ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_REAL_NAME)
+                .tag("解除封禁真实姓名")
+                .params("accountBannedValues", strUnBanAccountRealName)
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在查询...");
+                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在解封...");
                     }
 
                     @Override
                     public void onSuccess(Response<String> response) {
                         ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        //失败
+                        //失败(超管未登录)
                         if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountTimeRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mRlDevUnBanAccountRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
-                        //成功,未封禁
+                        //成功(未封禁)
                         if (200 == responseBean.getCode() && "此账户未封禁".equals(responseBean.getMsg())) {
-                            mEditBanAccountTimeRealName.startShakeAnimation();//抖动输入框
+                            mEditUnBanAccountRealName.startShakeAnimation();//抖动输入框
                             DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户未封禁！" + responseBean.getData());
                             dialogPrompt.show();
                             return;
                         }
-                        //成功,已封禁，显示状态+剩余时间
-                        if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())) {
-                            mEditBanAccountTimeRealName.startShakeAnimation();//抖动输入框
-                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户已封禁！" + responseBean.getData());
+                        //成功(已解封)
+                        if (200 == responseBean.getCode() && "此账户已解除封禁".equals(responseBean.getMsg())) {
+                            mEditUnBanAccountRealName.startShakeAnimation();//抖动输入框
+                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户已解除封禁！" + responseBean.getData());
                             dialogPrompt.show();
                         }
                     }
@@ -150,7 +150,7 @@ public class DeveloperSelectBannedTimeRealName extends BaseFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevBanAccountTimeRealName, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevUnBanAccountRealName, "请求错误，服务器连接失败！");
                     }
                 });
     }
