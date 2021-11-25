@@ -118,17 +118,17 @@ public class DeveloperKickOffLineTokenFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         //失败(超管未登录)
-                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "未登录：" + okGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(下线成功)
-                        if (200 == OkGoResponseBean.getCode() && "踢人下线成功".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "踢下线成功：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == okGoResponseBean.getCode() && "踢人下线成功".equals(okGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffToken, "踢下线成功：" + okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                         }

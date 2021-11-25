@@ -159,23 +159,6 @@ public class XPopupUtils {
     }
 
     /**
-     * 显示带输入框的确认和取消对话框
-     * 如需另外执行，请Copy方法体，自定义onConfirm事件
-     *
-     * @param activity 上下文
-     */
-    public void SrcViewUpdateDialog(Activity activity) {
-        new XPopup.Builder(activity).asInputConfirm("我是标题", "请输入内容。",
-                new OnInputConfirmListener() {
-                    @Override
-                    public void onConfirm(String text) {
-                        toast("input text: " + text);
-                    }
-                })
-                .show();
-    }
-
-    /**
      * 显示依附于某个View或者某个点的弹窗
      * 如需另外执行，请Copy方法体，自定义onConfirm事件
      * 大图浏览弹窗

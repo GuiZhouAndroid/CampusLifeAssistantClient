@@ -28,6 +28,8 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealNameFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserNameFragment;
 
 /**
@@ -134,7 +136,7 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{new DeveloperKickOffLineRealNameFragment(), new DeveloperKickOffLineTokenFragment(), new DeveloperBannedAccountRealNameFragment(),
                 new DeveloperSelectBannedStateRealNameFragment(), new DeveloperSelectBannedTimeRealNameFragment(), new DeveloperUntieBannedAccountUserNameFragment(),
-                new DeveloperSelectAllRoleInfoFragment(), new DeveloperAddRoleInfoFragment()};
+                new DeveloperSelectAllRoleInfoFragment(), new DeveloperAddRoleInfoFragment(),new DeveloperSelectUserRoleByUserNameFragment(),new DeveloperSelectHaveRoleUserInfoByRoleIdFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         //进行TabLayout 关联 ViewPager

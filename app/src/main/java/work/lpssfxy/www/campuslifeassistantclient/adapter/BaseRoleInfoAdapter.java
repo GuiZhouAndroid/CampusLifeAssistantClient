@@ -39,7 +39,8 @@ public class BaseRoleInfoAdapter extends BaseQuickAdapter<RoleInfoBean, BaseView
     public BaseRoleInfoAdapter(int layoutResId, @Nullable List<RoleInfoBean> data) {
         super(layoutResId, data);
         //通过子View的Id绑定适配器，创建适配器实例时，自动添加子view监听事件
-        addChildClickViewIds(R.id.btn_do_role);
+        addChildClickViewIds(R.id.select_all_role_name);
+        addChildClickViewIds(R.id.select_all_role_info);
     }
 
     /**
