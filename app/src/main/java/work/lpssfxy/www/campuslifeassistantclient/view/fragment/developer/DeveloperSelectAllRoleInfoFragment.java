@@ -6,10 +6,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -24,8 +31,8 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRoleInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -43,8 +50,10 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     private static final String TAG = "DeveloperSelectAllRoleInfoFragment";
 
-    //父布局
+    /* 父布局 */
     @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
+    /* 角色拥有数 */
+    @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
     /* RecyclerView列表 */
     @BindView(R2.id.recyclerView_all_role_info) RecyclerView mRecyclerViewAllRoleInfo;
     /* 角色信息列表适配器 */
@@ -108,6 +117,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
         //开始网络请求，访问后端服务器，执行封禁账户操作
         OkGo.<String>post(Constant.ADMIN_SELECT_ALL_ROLE_INFO)
                 .tag("查询全部角色信息")
+                // .upString("这是要上传的长文本数据！", MediaType.parse("application/xml"))
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -115,6 +125,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                         XPopupUtils.getInstance().setShowDialog(getActivity(), "正在查询...");
                     }
 
+                    @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoRoleInfoBean okGoRoleInfoBean = GsonUtil.gsonToBean(response.body(), OkGoRoleInfoBean.class);
@@ -139,6 +150,38 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                             roleInfoAdapter = new BaseRoleInfoAdapter(R.layout.developer_fragment_select_all_info_recycler_view_item, roleInfoBeanList);
                             // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
                             mRecyclerViewAllRoleInfo.setAdapter(roleInfoAdapter);
+                            // 7.设置角色拥有数
+                            mTvAllRoleInfoShow.setText("校园帮APP已有："+roleInfoBeanList.size()+"条角色信息");
+                            // 8.为item添加监听事件
+                            roleInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
+                                @Override
+                                public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
+                                    Toast.makeText(getContext(), "onItemClick" + roleInfoBean.getTrName() + roleInfoBean.getTrDescription(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                            roleInfoAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+                                @Override
+                                public boolean onItemLongClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
+                                    Toast.makeText(getContext(), "onItemLongClick" + roleInfoBean.getTrName() + roleInfoBean.getTrDescription(), Toast.LENGTH_SHORT).show();
+
+                                    return false;
+                                }
+                            });
+                            // 9.执行子View单击事件业务逻辑
+                            roleInfoAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+                                @Override
+                                public void onItemChildClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                                    if (view.getId() == R.id.btn_do_role) {
+                                        RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
+                                        Toast.makeText(getContext(), "onItemChildClick" + roleInfoBean.getTrName() + roleInfoBean.getTrDescription(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
                         }
 
                     }

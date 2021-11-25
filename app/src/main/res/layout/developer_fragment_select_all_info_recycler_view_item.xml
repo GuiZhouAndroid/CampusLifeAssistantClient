@@ -17,8 +17,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="角色编号"
-            android:textSize="17sp" />
+            android:text="编号"
+            android:textSize="@dimen/sp_15" />
 
         <TextView
             android:id="@+id/select_all_role_name"
@@ -28,8 +28,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="角色名称"
-            android:textSize="17sp" />
+            android:text="名称"
+            android:textSize="@dimen/sp_15" />
 
         <TextView
             android:id="@+id/select_all_role_info"
@@ -39,8 +39,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="角色描述"
-            android:textSize="17sp" />
+            android:text="描述"
+            android:textSize="@dimen/sp_15" />
 
         <TextView
             android:id="@+id/select_all_role_create_time"
@@ -50,8 +50,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="添加时间"
-            android:textSize="17sp" />
+            android:text="添加"
+            android:textSize="@dimen/sp_15" />
 
         <TextView
             android:id="@+id/select_all_role_update_time"
@@ -61,14 +61,19 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="更新时间"
-            android:textSize="17sp" />
+            android:text="更新"
+            android:textSize="@dimen/sp_15" />
+        <Button
+            android:id="@+id/btn_do_role"
+            android:text="修改"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
-        android:background="@color/white"
+        android:background="@color/Grey700"
         android:gravity="center"
         android:padding="30dp"
         android:textSize="15sp" />

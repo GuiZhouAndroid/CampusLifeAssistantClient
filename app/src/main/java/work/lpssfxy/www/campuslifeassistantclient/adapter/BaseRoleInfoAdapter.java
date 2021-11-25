@@ -31,13 +31,15 @@ public class BaseRoleInfoAdapter extends BaseQuickAdapter<RoleInfoBean, BaseView
     }
 
     /**
-     * 有参实例，无集合数据
+     * 有参实例，有集合数据
      *
      * @param layoutResId 数据需要自动适配的XML视图布局的id
      * @param data        OkGo网络请求SpringBoot后端接口，服务器返回的List<Role>对象数据集合
      */
     public BaseRoleInfoAdapter(int layoutResId, @Nullable List<RoleInfoBean> data) {
         super(layoutResId, data);
+        //通过子View的Id绑定适配器，创建适配器实例时，自动添加子view监听事件
+        addChildClickViewIds(R.id.btn_do_role);
     }
 
     /**
@@ -49,7 +51,8 @@ public class BaseRoleInfoAdapter extends BaseQuickAdapter<RoleInfoBean, BaseView
     @Override
     protected void convert(@NonNull BaseViewHolder baseViewHolder, RoleInfoBean roleInfoBean) {
         //可链式调用赋值
-        baseViewHolder.setText(R.id.select_all_role_id, String.valueOf(roleInfoBean.getTrId()))
+        baseViewHolder
+                .setText(R.id.select_all_role_id, String.valueOf(roleInfoBean.getTrId()))
                 .setText(R.id.select_all_role_name, roleInfoBean.getTrName())
                 .setText(R.id.select_all_role_info, roleInfoBean.getTrDescription())
                 .setText(R.id.select_all_role_create_time, roleInfoBean.getCreateTime())

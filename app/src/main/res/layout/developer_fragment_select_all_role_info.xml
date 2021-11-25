@@ -8,12 +8,13 @@
     tools:context=".view.activity.DeveloperSystemSafeActivity">
 
     <TextView
+        android:id="@+id/tv_all_role_info_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="30dp"
-        android:text="校园帮当前拥有全部角色信息概况"
-        android:textSize="20sp" />
+        android:text="角色拥有数量"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,46 +27,46 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="角色编号"
-            android:textSize="15sp" />
+            android:text="编号"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="角色名称"
-            android:textSize="15sp" />
+            android:text="名称"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="角色描述"
-            android:textSize="15sp" />
+            android:text="描述"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="添加时间"
-            android:textSize="15sp" />
+            android:text="添加"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="更新时间"
-            android:textSize="15sp" />
+            android:text="更新"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
-        android:background="@color/white"
+        android:background="@color/Grey700"
         android:gravity="center"
         android:textSize="15sp" />
 

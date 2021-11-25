@@ -220,5 +220,23 @@ public class Constant {
     // 超管查询角色全部信息
     public static final String ADMIN_SELECT_ALL_ROLE_INFO = BASE_URL + "/api/admin/role/adminSelectAllRoleInfo";
 
+    // 超管通过用户名查询该用户的对应的角色
+    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/role/adminSelectUserRoleByUserName";
+
+    // 超管通过角色自增ID查询拥有该角色全部的用户信息
+    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USERNAME = BASE_URL + "/api/admin/role/adminSelectHaveRoleUserInfoByRoleId";
+
+    // 超管通过角色ID和旧角色名称更新角色名称
+    public static final String ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME = BASE_URL + "/api/admin/role/adminUpdateRoleNameByRoleIdAndOldRoleName";
+
+    // 超管通过角色ID和旧角色描述更新角色描述
+    public static final String ADMIN_UPDATE_ROLE_DESCRIPTION_BY_ROLE_ID_AND_OLD_ROLE_DESCRIPTION = BASE_URL + "/api/admin/role/adminUpdateRoleDescriptionByRoleIdAndOldRoleDescription";
+
+    // 超管通过角色实体删除一条对应角色信息
+    public static final String ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY = BASE_URL + "/api/admin/role/adminDeleteOnceRoleInfoByRoleEntity";
+
+    // 超管通过角色ID批量删除角色信息
+    public static final String ADMIN_DELETE_BATCH_ROLE_INFO_BY_IDS = BASE_URL + "/api/admin/role/adminDeleteBatchRoleInfoByIds";
+
 }
 
