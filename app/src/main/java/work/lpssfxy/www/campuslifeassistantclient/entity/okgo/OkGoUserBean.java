@@ -1,6 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity.login;
-
-import java.io.Serializable;
+package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
 import lombok.Data;
 
@@ -13,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class UserBean implements Serializable {
+public class OkGoUserBean {
     /**
      * 请求状态
      */

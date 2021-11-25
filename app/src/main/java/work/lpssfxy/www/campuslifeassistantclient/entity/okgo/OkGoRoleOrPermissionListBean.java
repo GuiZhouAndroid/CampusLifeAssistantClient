@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import lombok.Data;
  */
 
 @Data
-public class RoleOrPermissionListBean {
+public class OkGoRoleOrPermissionListBean {
     private int code;
     private List<String> data;
     private String msg;

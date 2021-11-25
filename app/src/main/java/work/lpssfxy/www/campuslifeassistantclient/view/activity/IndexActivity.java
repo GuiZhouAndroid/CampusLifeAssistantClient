@@ -75,11 +75,11 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.RoleOrPermissionListBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
@@ -349,13 +349,13 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
+                                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
                                             CustomAlertDialogUtil.notification1(IndexActivity.this,"温馨提示","您还没有登录呀~","朕知道了");
                                             return;
                                         }
 
-                                        if (401 == responseBean.getCode() && "验证失败，禁止访问".equals(responseBean.getMsg()) && "已被系统强制下线".equals(responseBean.getData())) {
+                                        if (401 == OkGoResponseBean.getCode() && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg()) && "已被系统强制下线".equals(OkGoResponseBean.getData())) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
                                             builder.setTitle("超管提示")//这里设置标题
                                                     .setMessage("已被系统超管强制下线！")//这里设置提示信息
@@ -389,15 +389,15 @@ public class IndexActivity extends BaseActivity {
                                             mDialog.show();
                                             return;
                                         }
-                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前账户已登录".equals(responseBean.getMsg())) {
+                                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
                                             OkGo.<String>post(Constant.SELECT_NOW_USERNAME_ROLE_LIST)
                                                     .tag("当前登录会话角色集合")
                                                     .execute(new StringCallback() {
                                                         @Override
                                                         public void onSuccess(Response<String> response) {
-                                                            RoleOrPermissionListBean roleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), RoleOrPermissionListBean.class);
-                                                            Log.i(TAG, "RoleOrPermissionListBean: " + roleOrPermissionListBean.getData());
-                                                            if (roleOrPermissionListBean.getData().contains("超管")) {
+                                                            OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
+                                                            Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
+                                                            if (okGoRoleOrPermissionListBean.getData().contains("超管")) {
                                                                 //List<String> 集合中，包含角色"超级超管"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
                                                                 IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
                                                             } else {//无认证权限，提示信息
@@ -448,14 +448,14 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前登录账户注销成功".equals(responseBean.getMsg())) {
-                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前登录账户注销成功".equals(OkGoResponseBean.getMsg())) {
+                                            Snackbar snackbar = Snackbar.make(mDrawer_layout, OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                             snackbar.show();
                                             return;
                                         }
-                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "注销失败，未登录".equals(responseBean.getMsg())) {
+                                        if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "注销失败，未登录".equals(OkGoResponseBean.getMsg())) {
                                             Snackbar snackbar = Snackbar.make(mDrawer_layout, "您还未登录呢~请先登录！", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                             snackbar.show();
@@ -501,7 +501,7 @@ public class IndexActivity extends BaseActivity {
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
 //            /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
-//            UserQQSessionBean.Data.UserInfo userInfo = (UserQQSessionBean.Data.UserInfo) intent.getSerializableExtra("userInfo");
+//            OkGoSessionAndUserBean.Data.UserInfo userInfo = (OkGoSessionAndUserBean.Data.UserInfo) intent.getSerializableExtra("userInfo");
 //            Toast.makeText(IndexActivity.this,userInfo.toString(),Toast.LENGTH_SHORT).show();
 //        }
 //    };
@@ -509,29 +509,29 @@ public class IndexActivity extends BaseActivity {
      * 初始化QQSession并获取QQ个人信息
      * 有效：取出的持久化文件的Java对象参数，重组JSON的Session数据，调用QQ的initSessionCache(JSON)来使得会话有效+个人用户信息
      * 无效：使用默认头像+无登录相关信息展示
-     * 本地持久化文件与LoginActivity为同一xml文件---> UserQQSessionBean(并集信息的Java对象数据)
+     * 本地持久化文件与LoginActivity为同一xml文件---> OkGoSessionAndUserBean(并集信息的Java对象数据)
      */
     private void initQQSessionAndUserInfo() {
         /** 获取本地QQSession持久化Java对象数据*/
-        Constant.userQQSession = SharePreferenceUtil.getObject(IndexActivity.this, UserQQSessionBean.class);
-        Log.i(TAG, "首页UserQQSessionBean: " + Constant.userQQSession);
+        Constant.sessionAndUserBean = SharePreferenceUtil.getObject(IndexActivity.this, OkGoSessionAndUserBean.class);
+        Log.i(TAG, "首页UserQQSessionBean: " + Constant.sessionAndUserBean);
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
-        if (Constant.userQQSession != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
+        if (Constant.sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
             XPopupUtils.getInstance().setShowDialog(this,getString(R.string.indexLoadLoginInfo));
             try {
-                jsonObject.put("ret", Constant.userQQSession.getData().getRet());
-                jsonObject.put("openid", Constant.userQQSession.getData().getOpenid());
-                jsonObject.put("access_token", Constant.userQQSession.getData().getAccessToken());
-                jsonObject.put("pay_token",Constant.userQQSession.getData().getPayToken());
-                jsonObject.put("expires_in", Constant.userQQSession.getData().getExpiresIn());
-                jsonObject.put("pf", Constant.userQQSession.getData().getPf());
-                jsonObject.put("pfkey", Constant.userQQSession.getData().getPfkey());
-                jsonObject.put("msg", Constant.userQQSession.getData().getMsg());
-                jsonObject.put("login_cost",Constant.userQQSession.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", Constant.userQQSession.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", Constant.userQQSession.getData().getAuthorityCost());
-                jsonObject.put("expires_time", Constant.userQQSession.getData().getExpiresTime());
+                jsonObject.put("ret", Constant.sessionAndUserBean.getData().getRet());
+                jsonObject.put("openid", Constant.sessionAndUserBean.getData().getOpenid());
+                jsonObject.put("access_token", Constant.sessionAndUserBean.getData().getAccessToken());
+                jsonObject.put("pay_token",Constant.sessionAndUserBean.getData().getPayToken());
+                jsonObject.put("expires_in", Constant.sessionAndUserBean.getData().getExpiresIn());
+                jsonObject.put("pf", Constant.sessionAndUserBean.getData().getPf());
+                jsonObject.put("pfkey", Constant.sessionAndUserBean.getData().getPfkey());
+                jsonObject.put("msg", Constant.sessionAndUserBean.getData().getMsg());
+                jsonObject.put("login_cost",Constant.sessionAndUserBean.getData().getLoginCost());
+                jsonObject.put("query_authority_cost", Constant.sessionAndUserBean.getData().getQueryAuthorityCost());
+                jsonObject.put("authority_cost", Constant.sessionAndUserBean.getData().getAuthorityCost());
+                jsonObject.put("expires_time", Constant.sessionAndUserBean.getData().getExpiresTime());
                 /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
                 Constant.mTencent.initSessionCache(jsonObject);
                 Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
@@ -542,13 +542,13 @@ public class IndexActivity extends BaseActivity {
             if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
                 //1.发送用户全部信息到handler进行UI更新，包括上次登录时间
                 Message msg = new Message();
-                msg.obj = Constant.userQQSession.getData().getUserInfo();
+                msg.obj = Constant.sessionAndUserBean.getData().getUserInfo();
                 msg.what = 2;
                 QQHandler.sendMessage(msg);
 
                 //2.发送QQ上次授权时间到handler进行UI更新
                 Message msg1 = new Message();
-                msg1.obj = Constant.userQQSession.getData();
+                msg1.obj = Constant.sessionAndUserBean.getData();
                 msg1.what = 3;
                 QQHandler.sendMessage(msg1);
                 //3.初始化已登录持久化数据
@@ -689,10 +689,10 @@ public class IndexActivity extends BaseActivity {
             public void onComplete(final Object response) {
                 Log.d(TAG, "请求回调用户信息列表= " + response.toString());
                 /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-                Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
-                Log.i(TAG, "qqUser全部数据: " + Constant.qqUser);
+                Constant.onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
+                Log.i(TAG, "onlyQQUserInfo全部数据: " + Constant.onlyQQUserInfo);
                 Message msg = new Message();
-                msg.obj = Constant.qqUser;
+                msg.obj = Constant.onlyQQUserInfo;
                 msg.what = 0;
                 QQHandler.sendMessage(msg);
             }
@@ -722,11 +722,11 @@ public class IndexActivity extends BaseActivity {
     private void initSaveSessionDataToLocalFile(JSONObject jsonObject) {
         Log.i(TAG, "回调成功Gson解析Json前会话Session数据: " + jsonObject.toString());
         //Gson解析并序列号至Java对象中
-        SessionBean sessionBean = GsonUtil.gsonToBean(jsonObject.toString(), SessionBean.class);
-        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + sessionBean);
-        Log.i(TAG, "Access_token: " + sessionBean.getAccess_token());
+        OnlyQQSessionInfoBean onlyQQSessionInfoBean = GsonUtil.gsonToBean(jsonObject.toString(), OnlyQQSessionInfoBean.class);
+        Log.i(TAG, "回调成功Gson解析Json后会话Session数据(持久化存入此解析数据到xml): " + onlyQQSessionInfoBean);
+        Log.i(TAG, "Access_token: " + onlyQQSessionInfoBean.getAccess_token());
         /** Gson解析后Java对象持久化数据保存本地，IndexActivity首页调用JSONObject的put()方法重组顺序，提供给Constant.mTencent.initSessionCache(JSONObject实例) */
-        SharePreferenceUtil.putObject(IndexActivity.this, sessionBean);
+        SharePreferenceUtil.putObject(IndexActivity.this, onlyQQSessionInfoBean);
     }
 
     /**
@@ -738,12 +738,12 @@ public class IndexActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    /** 回调QQ授权用户的个人资料信息有数据时，通过UI展示信息，这里Constant.qqUser 不可能为null，不需要设置默认显示setNotLoginQQUserInfo(); */
-                    if (Constant.qqUser != null) {
-                        Constant.qqUser = (QQUserBean) msg.obj;
-                        Log.i(TAG, "实时回调的QQ用户信息=== " + Constant.qqUser);
-                        QQUserBeanIsValidSetTextAndGlideUserHead(Constant.qqUser);//加载在线动态QQ昵称和QQ头像
-                        startHaveDataQQUserInfoToMineFragment(Constant.qqUser);
+                    /** 回调QQ授权用户的个人资料信息有数据时，通过UI展示信息，这里Constant.onlyQQUserInfo 不可能为null，不需要设置默认显示setNotLoginQQUserInfo(); */
+                    if (Constant.onlyQQUserInfo != null) {
+                        Constant.onlyQQUserInfo = (OnlyQQUserInfoBean) msg.obj;
+                        Log.i(TAG, "实时回调的QQ用户信息=== " + Constant.onlyQQUserInfo);
+                        QQUserBeanIsValidSetTextAndGlideUserHead(Constant.onlyQQUserInfo);//加载在线动态QQ昵称和QQ头像
+                        startHaveDataQQUserInfoToMineFragment(Constant.onlyQQUserInfo);
                         /** 关闭正在加载登录信息友好进度条*/
                         XPopupUtils.getInstance().setSmartDisDialog();
                     }
@@ -762,7 +762,7 @@ public class IndexActivity extends BaseActivity {
                     }
                     break;
                 case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
-                    Constant.userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
+                    Constant.userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     //方式一：Activity与Fragment共享Handler--->生命周期问题，只能生效一次
                     startHaveDataUserInfoToMineFragment(Constant.userInfo);
                     Log.i(TAG, "用户登录成功信息: "+Constant.userInfo);
@@ -777,9 +777,9 @@ public class IndexActivity extends BaseActivity {
                     break;
                 case 3:
                     //UI更新QQ上次授权时间
-                    Constant.userQQSessionData = (UserQQSessionBean.Data) msg.obj;
-                    if (Constant.userQQSessionData != null) {
-                        tv_QQLastLoginTime.setText(Constant.userQQSessionData.getUpdateTime());
+                    Constant.sessionAndUserBeanData = (OkGoSessionAndUserBean.Data) msg.obj;
+                    if (Constant.sessionAndUserBeanData != null) {
+                        tv_QQLastLoginTime.setText(Constant.sessionAndUserBeanData.getUpdateTime());
                     }
                     break;
             }
@@ -809,7 +809,7 @@ public class IndexActivity extends BaseActivity {
      *
      * @param userInfo
      */
-    public void startHaveDataUserInfoToMineFragment(UserQQSessionBean.Data.UserInfo userInfo) {
+    public void startHaveDataUserInfoToMineFragment(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
         Log.i(TAG, "Hadnler用户信息: "+ userInfo);
         //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
         Message msg = new Message();
@@ -829,7 +829,7 @@ public class IndexActivity extends BaseActivity {
      *
      * @param qqUserInfo
      */
-    public void startHaveDataQQUserInfoToMineFragment(QQUserBean qqUserInfo) {
+    public void startHaveDataQQUserInfoToMineFragment(OnlyQQUserInfoBean qqUserInfo) {
         //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
         Message msg = new Message();
         //5.携带数据为输入框文本数据
@@ -856,7 +856,7 @@ public class IndexActivity extends BaseActivity {
      * 有数据获取时：加载在线动态QQ昵称和QQ头像（QQ相关信息）
      * @param qqUser
      */
-    private void QQUserBeanIsValidSetTextAndGlideUserHead(QQUserBean qqUser) {
+    private void QQUserBeanIsValidSetTextAndGlideUserHead(OnlyQQUserInfoBean qqUser) {
         /** 标题栏字体加粗 */
         Typeface font = Typer.set(IndexActivity.this).getFont(Font.ROBOTO_BOLD);
         /** 创建Glide圆形图像实例*/
@@ -930,9 +930,9 @@ public class IndexActivity extends BaseActivity {
      */
     private void setQQUserLoginLogout() {
         //清空持久化用户并集xml文件，使得QQ会话无法有效初始化，用户信息无法读取
-        Constant.userQQSession = null;//清空当前对象数据
-        SharePreferenceUtil.removeObject(IndexActivity.this, UserQQSessionBean.class);//清空持久化xml文件
-        Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.userQQSession);
+        Constant.sessionAndUserBean = null;//清空当前对象数据
+        SharePreferenceUtil.removeObject(IndexActivity.this, OkGoSessionAndUserBean.class);//清空持久化xml文件
+        Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.sessionAndUserBean);
         //注销mTencent
         Constant.mTencent.logout(IndexActivity.this);
         Log.i(TAG, "注销QQ登录的会话Tencent: " + Constant.mTencent.isSessionValid());
@@ -964,11 +964,11 @@ public class IndexActivity extends BaseActivity {
      * 判断检查QQ登录是否有效
      */
     private void checkQQLoginIfValid() {
-        if (Constant.userQQSession == null) {
+        if (Constant.sessionAndUserBean == null) {
             IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
             return;
         }
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.userQQSession != null) {
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionAndUserBean != null) {
             XPopupUtils.getInstance().setShowDialog(this,"请求跳转中...");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -1077,13 +1077,13 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "success".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, OkGoResponseBean.getData(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
-                                        if (200 == responseBean.getCode() && "false".equals(responseBean.getData()) && "error".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                        if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, OkGoResponseBean.getData(), Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                     }
@@ -1111,11 +1111,11 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onSuccess(Response<String> response) {
-                                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                        if (200 == responseBean.getCode() && "true".equals(responseBean.getData()) && "当前账户已登录".equals(responseBean.getMsg())) {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                            Toast.makeText(IndexActivity.this, OkGoResponseBean.getData(), Toast.LENGTH_SHORT).show();
                                         } else {
-                                            Toast.makeText(IndexActivity.this, responseBean.getData(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(IndexActivity.this, OkGoResponseBean.getData(), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }

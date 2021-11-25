@@ -20,6 +20,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
  * @create 2021-11-22-19:00
  */
 public class OkGoErrorUtil {
+
     /**
      * 自定义OkGo网络请求框架错误提示
      *

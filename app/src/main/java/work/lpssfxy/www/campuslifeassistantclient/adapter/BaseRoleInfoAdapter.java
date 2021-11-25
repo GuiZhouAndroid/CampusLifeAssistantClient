@@ -9,7 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import java.util.List;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.entity.role.RoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 
 /**
  * created by on 2021/11/24

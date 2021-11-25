@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
@@ -21,9 +20,8 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -118,25 +116,25 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         //失败(超管未登录)
-                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(下线失败)
-                        if (200 == responseBean.getCode() && "踢人下线失败，此真实姓名不存在".equals(responseBean.getMsg())) {
+                        if (200 == OkGoResponseBean.getCode() && "踢人下线失败，此真实姓名不存在".equals(OkGoResponseBean.getMsg())) {
                             mEditKickOffLineRealName.startShakeAnimation();//抖动输入框
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(下线成功)
-                        if (200 == responseBean.getCode() && "踢人下线成功".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "踢下线成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == OkGoResponseBean.getCode() && "踢人下线成功".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevKicOffRealName, "踢下线成功：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                         }

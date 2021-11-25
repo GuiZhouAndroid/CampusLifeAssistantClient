@@ -1,20 +1,17 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity.login;
+package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
 import lombok.Data;
 
 /**
  * created by on 2021/10/28
- * 描述：用户信息+QQ会话实体
+ * 描述：QQ会话表关联用户ID实体(对应MySQL数据库表《t_qq_oauth2_session》))
  *
  * @author ZSAndroid
  * @create 2021-10-28-20:28
  */
 @Data
-public class SessionUserBean {
+public class OkGoUserInTheSessionBean {
 
-    /**
-     * 请求状态
-     */
     private int code;
     private Data data;
     private String msg;

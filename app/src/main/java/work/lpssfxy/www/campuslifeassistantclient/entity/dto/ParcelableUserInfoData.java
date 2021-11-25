@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.dto;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,13 +7,13 @@ import lombok.Data;
 
 /**
  * created by on 2021/11/6
- * 描述：
+ * 描述：Bundle传递用户对象数据实体
  *
  * @author ZSAndroid
  * @create 2021-11-06-20:14
  */
 @Data
-public class ParcelableData implements Parcelable {
+public class ParcelableUserInfoData implements Parcelable {
 
     private String createTime;
     private String ulClass;
@@ -28,11 +28,11 @@ public class ParcelableData implements Parcelable {
     private String ulUsername;
     private String updateTime;
 
-    public ParcelableData() {
+    public ParcelableUserInfoData() {
 
     }
 
-    public ParcelableData(String createTime, String ulClass, String ulDept, String ulEmail, int ulId, String ulIdcard, String ulRealname, String ulSex, String ulStuno, String ulTel, String ulUsername, String updateTime) {
+    public ParcelableUserInfoData(String createTime, String ulClass, String ulDept, String ulEmail, int ulId, String ulIdcard, String ulRealname, String ulSex, String ulStuno, String ulTel, String ulUsername, String updateTime) {
         this.createTime = createTime;
         this.ulClass = ulClass;
         this.ulDept = ulDept;
@@ -55,9 +55,10 @@ public class ParcelableData implements Parcelable {
      * age = source.readInt();
      * 即调换了username和nickname的读取顺序，那么你会发现你拿到的username是nickname的数据，
      * 而你拿到的nickname是username的数据
+     *
      * @param in
      */
-    protected ParcelableData(Parcel in) {
+    protected ParcelableUserInfoData(Parcel in) {
         createTime = in.readString();
         ulClass = in.readString();
         ulDept = in.readString();
@@ -72,23 +73,23 @@ public class ParcelableData implements Parcelable {
         updateTime = in.readString();
     }
 
-    public static final Creator<ParcelableData> CREATOR = new Creator<ParcelableData>() {
+    public static final Creator<ParcelableUserInfoData> CREATOR = new Creator<ParcelableUserInfoData>() {
 
         /**
          * 从Parcel中读取数据
          */
 
         @Override
-        public ParcelableData createFromParcel(Parcel in) {
-            return new ParcelableData(in);
+        public ParcelableUserInfoData createFromParcel(Parcel in) {
+            return new ParcelableUserInfoData(in);
         }
 
         /**
          * 供外部类反序列化本类数组使用
          */
         @Override
-        public ParcelableData[] newArray(int size) {
-            return new ParcelableData[size];
+        public ParcelableUserInfoData[] newArray(int size) {
+            return new ParcelableUserInfoData[size];
         }
     };
 

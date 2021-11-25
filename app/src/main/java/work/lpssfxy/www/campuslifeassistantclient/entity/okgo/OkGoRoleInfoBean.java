@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity.role;
+package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
 import java.util.List;
 

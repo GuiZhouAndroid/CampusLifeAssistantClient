@@ -1,6 +1,6 @@
 package work.lpssfxy.www.campuslifeassistantclient.base.custominterface;
 
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 
 /**
  * created by on 2021/11/3
@@ -10,5 +10,5 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean
  * @create 2021-11-03-17:24
  */
 public interface FragmentInteraction {
-    void userInfoInfoPutMineMineActivity(UserQQSessionBean.Data.UserInfo userInfo);
+    void userInfoInfoPutMineMineActivity(OkGoSessionAndUserBean.Data.UserInfo userInfo);
 }

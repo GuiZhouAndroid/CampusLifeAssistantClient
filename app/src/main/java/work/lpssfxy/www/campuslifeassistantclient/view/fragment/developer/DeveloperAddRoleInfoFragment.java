@@ -21,7 +21,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -132,34 +132,34 @@ public class DeveloperAddRoleInfoFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         //失败(超管未登录)
-                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevAddRole, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevAddRole, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(角色存在)
-                        if (200 == responseBean.getCode() && "角色添加失败，此角色已被注册".equals(responseBean.getMsg())) {
+                        if (200 == OkGoResponseBean.getCode() && "角色添加失败，此角色已被注册".equals(OkGoResponseBean.getMsg())) {
                             mEditAddRoleName.startShakeAnimation();//抖动输入框
-                            Snackbar snackbar = Snackbar.make(mRlDevAddRole,"角色添加失败，此角色已被注册：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mRlDevAddRole,"角色添加失败，此角色已被注册：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(未添加)
-                        if (200 == responseBean.getCode() && "角色添加失败".equals(responseBean.getMsg())) {
+                        if (200 == OkGoResponseBean.getCode() && "角色添加失败".equals(OkGoResponseBean.getMsg())) {
                             mEditAddRoleName.startShakeAnimation();//抖动输入框
                             mEditAddRoleInfo.startShakeAnimation();//抖动输入框
-                            Snackbar snackbar = Snackbar.make(mRlDevAddRole,"角色添加失败：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mRlDevAddRole,"角色添加失败：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(已添加)
-                        if (200 == responseBean.getCode() && "角色添加成功".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevAddRole, "角色添加成功：" + responseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == OkGoResponseBean.getCode() && "角色添加成功".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevAddRole, "角色添加成功：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                         }

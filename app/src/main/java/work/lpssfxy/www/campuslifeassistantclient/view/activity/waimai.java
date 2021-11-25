@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 
 public class waimai extends BaseActivity {
@@ -61,23 +61,23 @@ public class waimai extends BaseActivity {
     @Override
     protected void prepareData() {
         showImg();
-        UserQQSessionBean userQQSessionBean = SharePreferenceUtil.getObject(waimai.this, UserQQSessionBean.class);
-        Log.i(TAG, "首页: " + userQQSessionBean);
+        OkGoSessionAndUserBean okGoSessionAndUserBean = SharePreferenceUtil.getObject(waimai.this, OkGoSessionAndUserBean.class);
+        Log.i(TAG, "首页: " + okGoSessionAndUserBean);
         JSONObject jsonObject = new JSONObject();
-        if (userQQSessionBean != null) {//本地持久化xml文件有数据时才满足重组条件
+        if (okGoSessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件
             try {
-                jsonObject.put("ret", userQQSessionBean.getData().getRet());
-                jsonObject.put("openid", userQQSessionBean.getData().getOpenid());
-                jsonObject.put("access_token", userQQSessionBean.getData().getAccessToken());
-                jsonObject.put("pay_token",userQQSessionBean.getData().getPayToken());
-                jsonObject.put("expires_in", userQQSessionBean.getData().getExpiresIn());
-                jsonObject.put("pf", userQQSessionBean.getData().getPf());
-                jsonObject.put("pfkey", userQQSessionBean.getData().getPfkey());
-                jsonObject.put("msg", userQQSessionBean.getData().getMsg());
-                jsonObject.put("login_cost",userQQSessionBean.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", userQQSessionBean.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", userQQSessionBean.getData().getAuthorityCost());
-                jsonObject.put("expires_time", userQQSessionBean.getData().getExpiresTime());
+                jsonObject.put("ret", okGoSessionAndUserBean.getData().getRet());
+                jsonObject.put("openid", okGoSessionAndUserBean.getData().getOpenid());
+                jsonObject.put("access_token", okGoSessionAndUserBean.getData().getAccessToken());
+                jsonObject.put("pay_token", okGoSessionAndUserBean.getData().getPayToken());
+                jsonObject.put("expires_in", okGoSessionAndUserBean.getData().getExpiresIn());
+                jsonObject.put("pf", okGoSessionAndUserBean.getData().getPf());
+                jsonObject.put("pfkey", okGoSessionAndUserBean.getData().getPfkey());
+                jsonObject.put("msg", okGoSessionAndUserBean.getData().getMsg());
+                jsonObject.put("login_cost", okGoSessionAndUserBean.getData().getLoginCost());
+                jsonObject.put("query_authority_cost", okGoSessionAndUserBean.getData().getQueryAuthorityCost());
+                jsonObject.put("authority_cost", okGoSessionAndUserBean.getData().getAuthorityCost());
+                jsonObject.put("expires_time", okGoSessionAndUserBean.getData().getExpiresTime());
                 /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
                 Constant.mTencent.initSessionCache(jsonObject);
                 Log.i(TAG, "mTencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
@@ -113,20 +113,20 @@ public class waimai extends BaseActivity {
                 public void onComplete(final Object response) {
                     Log.d(TAG, "请求回调用户信息列表= " + response.toString());
 //                    /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-//                    Constant.qqUser = GsonUtil.gsonToBean(response.toString(), QQUserBean.class);
+//                    Constant.onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
 //                    /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-//                    SharePreferenceUtil.putObject(LoginActivity.this, Constant.qqUser);
-//                    Log.i(TAG, "qqUser全部数据: " + Constant.qqUser);
+//                    SharePreferenceUtil.putObject(LoginActivity.this, Constant.onlyQQUserInfo);
+//                    Log.i(TAG, "qqUser全部数据: " + Constant.onlyQQUserInfo);
 //                    /** 通过Intent发送广播消息，*/
 //                    Intent intent = new Intent(action);
 //                    /**创建捆绑实例，Intent传递Java对象*/
 //                    Bundle bundle = new Bundle();
 //                    /** Java对象序列化存入Intent */
-//                    bundle.putSerializable("QQUserBean", Constant.qqUser);
+//                    bundle.putSerializable("OnlyQQUserInfoBean", Constant.onlyQQUserInfo);
 //                    /** 发送Intent序列化数据至Bundle捆绑对象*/
 //                    intent.putExtras(bundle);
 //                    Log.i(TAG, "bundle: " + bundle.toString());
-//                    /** 发送广播，接受者通过“QQUserBean”接收广播消息内容 */
+//                    /** 发送广播，接受者通过“OnlyQQUserInfoBean”接收广播消息内容 */
 //                    sendBroadcast(intent);
                 }
 
@@ -188,8 +188,8 @@ public class waimai extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
-            UserQQSessionBean userQQSessionBean = (UserQQSessionBean) intent.getSerializableExtra("UserQQSessionBean");
-            Log.i(TAG, "BroadcastReceiver的QQUserBean: " + userQQSessionBean);
+            OkGoSessionAndUserBean okGoSessionAndUserBean = (OkGoSessionAndUserBean) intent.getSerializableExtra("OkGoSessionAndUserBean");
+            Log.i(TAG, "BroadcastReceiver的QQUserBean: " + okGoSessionAndUserBean);
         }
     };
 }

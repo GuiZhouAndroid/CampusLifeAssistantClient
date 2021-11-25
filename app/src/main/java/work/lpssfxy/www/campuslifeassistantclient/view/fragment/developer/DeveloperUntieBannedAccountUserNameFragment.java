@@ -21,7 +21,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -118,25 +118,25 @@ public class DeveloperUntieBannedAccountUserNameFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         //失败(超管未登录)
-                        if (401 == responseBean.getCode() && "未提供Token".equals(responseBean.getData()) && "验证失败，禁止访问".equals(responseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevUnBanAccountRealName, "未登录：" + responseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mRlDevUnBanAccountRealName, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(未封禁)
-                        if (200 == responseBean.getCode() && "此账户未封禁".equals(responseBean.getMsg())) {
+                        if (200 == OkGoResponseBean.getCode() && "此账户未封禁".equals(OkGoResponseBean.getMsg())) {
                             mEditUnBanAccountRealName.startShakeAnimation();//抖动输入框
-                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户未封禁！" + responseBean.getData());
+                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户未封禁！" + OkGoResponseBean.getData());
                             dialogPrompt.show();
                             return;
                         }
                         //成功(已解封)
-                        if (200 == responseBean.getCode() && "此账户已解除封禁".equals(responseBean.getMsg())) {
+                        if (200 == OkGoResponseBean.getCode() && "此账户已解除封禁".equals(OkGoResponseBean.getMsg())) {
                             mEditUnBanAccountRealName.startShakeAnimation();//抖动输入框
-                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户已解除封禁！" + responseBean.getData());
+                            DialogPrompt dialogPrompt = new DialogPrompt(getActivity(), "此账户已解除封禁！" + OkGoResponseBean.getData());
                             dialogPrompt.show();
                         }
                     }

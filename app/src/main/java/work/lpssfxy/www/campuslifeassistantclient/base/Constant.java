@@ -2,10 +2,10 @@ package work.lpssfxy.www.campuslifeassistantclient.base;
 
 import com.tencent.tauth.Tencent;
 
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.SessionUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserInTheSessionBean;
 
 /**
  * created by on 2021/8/23
@@ -20,17 +20,17 @@ public class Constant {
      * 网络请求Gson解析常量类对象
      */
     // QQSession
-    public static SessionBean QQSession;
+    public static OnlyQQSessionInfoBean QQSession;
     // QQ个人资料
-    public static QQUserBean qqUser;
+    public static OnlyQQUserInfoBean onlyQQUserInfo;
     // QQSession+用户ID(用于判断账户是否授权QQ，对应MySQL数据库表《t_qq_oauth2_session》)
-    public static SessionUserBean sessionUser;
+    public static OkGoUserInTheSessionBean sessionUser;
     // QQSession+用户全部信息(并集信息)
-    public static UserQQSessionBean userQQSession;
+    public static OkGoSessionAndUserBean sessionAndUserBean;
     // QQSession+用户全部信息(并集信息中的QQSession)
-    public static UserQQSessionBean.Data userQQSessionData;
+    public static OkGoSessionAndUserBean.Data sessionAndUserBeanData;
     // QQSession+用户全部信息(并集信息中的用户全部信息)
-    public static UserQQSessionBean.Data.UserInfo userInfo;
+    public static OkGoSessionAndUserBean.Data.UserInfo userInfo;
 
     /**
      * Activity全局唯一请求码

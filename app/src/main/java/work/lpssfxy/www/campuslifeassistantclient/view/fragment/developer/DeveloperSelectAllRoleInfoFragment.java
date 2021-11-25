@@ -24,8 +24,8 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRoleInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.role.OkGoRoleInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.role.RoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -41,9 +41,10 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
+    private static final String TAG = "DeveloperSelectAllRoleInfoFragment";
+
     //父布局
     @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
-    private static final String TAG = "DeveloperSelectAllRoleInfoFragment";
     /* RecyclerView列表 */
     @BindView(R2.id.recyclerView_all_role_info) RecyclerView mRecyclerViewAllRoleInfo;
     /* 角色信息列表适配器 */
@@ -70,18 +71,6 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
         initSelectAllRoleInfoRecyclerView();
     }
 
-    /**
-     * 初始化RecyclerView列表控件
-     */
-    private void initSelectAllRoleInfoRecyclerView() {
-        // 1.创建布局管理实例对象
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // 2.设置RecyclerView布局方式为垂直方向
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
-        mRecyclerViewAllRoleInfo.setLayoutManager(layoutManager);
-    }
-
     @Override
     protected void initData(Bundle savedInstanceState) {
 
@@ -96,6 +85,18 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     protected void doBusiness(Context context) {
         //开始查询全部角色信息
         startSelectAllRoleInfo(context);
+    }
+
+    /**
+     * 初始化RecyclerView列表控件
+     */
+    private void initSelectAllRoleInfoRecyclerView() {
+        // 1.创建布局管理实例对象
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        // 2.设置RecyclerView布局方式为垂直方向
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
+        mRecyclerViewAllRoleInfo.setLayoutManager(layoutManager);
     }
 
     /**

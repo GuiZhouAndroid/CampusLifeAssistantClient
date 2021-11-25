@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.entity.CampusInformationBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.other.CampusInformationBean;
 
 /**
  * created by on 2021/9/2

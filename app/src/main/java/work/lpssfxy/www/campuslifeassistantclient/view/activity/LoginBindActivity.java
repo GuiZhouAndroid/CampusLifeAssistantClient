@@ -21,9 +21,9 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -48,7 +48,7 @@ public class LoginBindActivity extends BaseActivity {
     /** 立即绑定QQ */
     @BindView(R2.id.btn_start_bind) Button mBtn_start_bind;
     /** QQ会话数据 */
-    private SessionBean sessionBean;
+    private OnlyQQSessionInfoBean onlyQQSessionInfoBean;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -92,7 +92,7 @@ public class LoginBindActivity extends BaseActivity {
     @Override
     protected void prepareData() {
         //登录页拉起QQ授权传递QQ会话的Json数据，转为实体类对象，提供QQ信息绑定用户信息使用
-        sessionBean = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), SessionBean.class);
+        onlyQQSessionInfoBean = GsonUtil.gsonToBean(getIntent().getStringExtra("QQJsonData"), OnlyQQSessionInfoBean.class);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class LoginBindActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        textView.setText(sessionBean.toString());
+        textView.setText(onlyQQSessionInfoBean.toString());
     }
 
     @Override
@@ -180,16 +180,16 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<String> response) {
                         XPopupUtils.getInstance().setSmartDisDialog();
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        Log.i(TAG, "onSuccess==: " + responseBean);
-                        if (200 == responseBean.getCode() && "查询失败，此用户名不存在".equals(responseBean.getMsg())) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        Log.i(TAG, "onSuccess==: " + OkGoResponseBean);
+                        if (200 == OkGoResponseBean.getCode() && "查询失败，此用户名不存在".equals(OkGoResponseBean.getMsg())) {
                             Snackbar snackbar = Snackbar.make(mBtn_start_bind, "请您输入有效的用户名后重试~", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
-                        if (200 == responseBean.getCode() && "此账户处于封禁状态".equals(responseBean.getMsg())) {
-                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, responseBean.getData(), 10);
+                        if (200 == OkGoResponseBean.getCode() && "此账户处于封禁状态".equals(OkGoResponseBean.getMsg())) {
+                            DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, OkGoResponseBean.getData(), 10);
                             dialogPrompt.showAndFinish(LoginBindActivity.this);
                             Intent intent = new Intent();
                             intent.putExtra("BindBackName", strEditUsername);
@@ -204,65 +204,65 @@ public class LoginBindActivity extends BaseActivity {
                                     @Override
                                     public void onSuccess(Response<String> response) {
                                         //Json字符串解析转为实体类对象
-                                        UserBean userBeanData = GsonUtil.gsonToBean(response.body(), UserBean.class);
-                                        Log.i(TAG, "userBeanData=== " + userBeanData);
+                                        OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
+                                        Log.i(TAG, "okGoUserBeanData=== " + okGoUserBeanData);
                                         /** 用户名密码效验失败 */
-                                        if (200 == userBeanData.getCode() && null == userBeanData.getData() && "登录失败，用户名和密码不匹配".equals(userBeanData.getMsg())) {
+                                        if (200 == okGoUserBeanData.getCode() && null == okGoUserBeanData.getData() && "登录失败，用户名和密码不匹配".equals(okGoUserBeanData.getMsg())) {
                                             //QQ授权绑定用户失败
-                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, userBeanData.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                            Snackbar snackbar = Snackbar.make(mBtn_start_bind, okGoUserBeanData.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                             snackbar.show();
                                             return;
                                         }
                                         /** 用户名密码效验成功 */
-                                        if (200 == userBeanData.getCode() && null != userBeanData.getData() && "登录成功".equals(userBeanData.getMsg())) {
-                                            int userBindUserId = userBeanData.getData().getUlId();
+                                        if (200 == okGoUserBeanData.getCode() && null != okGoUserBeanData.getData() && "登录成功".equals(okGoUserBeanData.getMsg())) {
+                                            int userBindUserId = okGoUserBeanData.getData().getUlId();
                                             Log.i(TAG, "QQ授权绑定的用户ID=== " + userBindUserId);
-                                            Log.i(TAG, "QQ授权绑定的QQ会话=== " + sessionBean);
+                                            Log.i(TAG, "QQ授权绑定的QQ会话=== " + onlyQQSessionInfoBean);
                                             //以上2份数据准备就绪，调用绑定接口，执行授权业务
                                             /** 开始调用SpringBoot授权信息关联接口 */
                                             OkGo.<String>post(Constant.LOGIN_ADD_QQ_SESSION)
                                                     .tag("绑定QQ")
-                                                    .params("ret", sessionBean.getRet())
-                                                    .params("openid", sessionBean.getOpenid())
-                                                    .params("accessToken", sessionBean.getAccess_token())
-                                                    .params("payToken", sessionBean.getPay_token())
-                                                    .params("expiresIn", sessionBean.getExpires_in())
-                                                    .params("pf", sessionBean.getPf())
-                                                    .params("pfkey", sessionBean.getPfkey())
-                                                    .params("msg", sessionBean.getMsg())
-                                                    .params("loginCost", sessionBean.getLogin_cost())
-                                                    .params("queryAuthorityCost", sessionBean.getQuery_authority_cost())
-                                                    .params("authorityCost", sessionBean.getAuthority_cost())
-                                                    .params("expiresTime", sessionBean.getExpires_time())
+                                                    .params("ret", onlyQQSessionInfoBean.getRet())
+                                                    .params("openid", onlyQQSessionInfoBean.getOpenid())
+                                                    .params("accessToken", onlyQQSessionInfoBean.getAccess_token())
+                                                    .params("payToken", onlyQQSessionInfoBean.getPay_token())
+                                                    .params("expiresIn", onlyQQSessionInfoBean.getExpires_in())
+                                                    .params("pf", onlyQQSessionInfoBean.getPf())
+                                                    .params("pfkey", onlyQQSessionInfoBean.getPfkey())
+                                                    .params("msg", onlyQQSessionInfoBean.getMsg())
+                                                    .params("loginCost", onlyQQSessionInfoBean.getLogin_cost())
+                                                    .params("queryAuthorityCost", onlyQQSessionInfoBean.getQuery_authority_cost())
+                                                    .params("authorityCost", onlyQQSessionInfoBean.getAuthority_cost())
+                                                    .params("expiresTime", onlyQQSessionInfoBean.getExpires_time())
                                                     .params("ulId", userBindUserId) //此条是授权的用户自增ID，以上是拉起授权QQ会话数据
                                                     .execute(new StringCallback() {
                                                         @Override
                                                         public void onSuccess(Response<String> response) {
-                                                            ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                                                            Log.i(TAG, "onSuccess==: " + responseBean);
+                                                            OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                                            Log.i(TAG, "onSuccess==: " + OkGoResponseBean);
                                                             //QQ授权绑定成功
-                                                            if (200 == responseBean.getCode() && "success".equals(responseBean.getMsg()) && responseBean.getData().equals("true")) {
+                                                            if (200 == OkGoResponseBean.getCode() && "success".equals(OkGoResponseBean.getMsg()) && OkGoResponseBean.getData().equals("true")) {
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_success, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();
-                                                                intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
+                                                                intent.putExtra("BindBackName", okGoUserBeanData.getData().getUlRealname());
                                                                 LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_SUCCESS, intent);
                                                                 return;
                                                             }
                                                             //QQ授权绑定失败
-                                                            if (200 == responseBean.getCode() && "error".equals(responseBean.getMsg()) && responseBean.getData().equals("false")) {
+                                                            if (200 == OkGoResponseBean.getCode() && "error".equals(OkGoResponseBean.getMsg()) && OkGoResponseBean.getData().equals("false")) {
                                                                 DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, R.string.qq_bing_error, 3);
                                                                 dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                                 Intent intent = new Intent();
-                                                                intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
+                                                                intent.putExtra("BindBackName", okGoUserBeanData.getData().getUlRealname());
                                                                 LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_ERROR);
                                                                 return;
                                                             }
                                                             DialogPrompt dialogPrompt = new DialogPrompt(LoginBindActivity.this, "授权失败！未知错误", 3);
                                                             dialogPrompt.showAndFinish(LoginBindActivity.this);
                                                             Intent intent = new Intent();
-                                                            intent.putExtra("BindBackName", userBeanData.getData().getUlRealname());
+                                                            intent.putExtra("BindBackName", okGoUserBeanData.getData().getUlRealname());
                                                             LoginBindActivity.this.setResult(Constant.RESULT_CODE_BIND_ACCOUNT_ERROR);
                                                         }
 

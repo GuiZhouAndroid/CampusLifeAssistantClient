@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.other;
 
 import lombok.Data;
 

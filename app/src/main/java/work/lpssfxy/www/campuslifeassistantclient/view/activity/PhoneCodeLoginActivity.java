@@ -40,7 +40,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
@@ -336,27 +336,27 @@ public class PhoneCodeLoginActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        UserQQSessionBean userQQSessionBean = GsonUtil.gsonToBean(response.body(), UserQQSessionBean.class);
-                        Log.i(TAG, "onSuccessQQ一键登录==: " + userQQSessionBean);
-                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "此账户处于封禁状态".equals(userQQSessionBean.getMsg())) {
+                        OkGoSessionAndUserBean okGoSessionAndUserBean = GsonUtil.gsonToBean(response.body(), OkGoSessionAndUserBean.class);
+                        Log.i(TAG, "onSuccessQQ一键登录==: " + okGoSessionAndUserBean);
+                        if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "此账户处于封禁状态".equals(okGoSessionAndUserBean.getMsg())) {
                             CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号关联账户处于封禁状态，去主页查询封禁详情","朕知道了");
                             return;
                         }
-                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，此手机号未绑定账户".equals(userQQSessionBean.getMsg())) {
+                        if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "登录失败，此手机号未绑定账户".equals(okGoSessionAndUserBean.getMsg())) {
                             CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定账户~" + getString(R.string.please_bind_back_User_login),"朕知道了");
                             return;
                         }
-                        if (200 == userQQSessionBean.getCode() && null == userQQSessionBean.getData() && "登录失败，此手机号未绑定QQ".equals(userQQSessionBean.getMsg())) {
+                        if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "登录失败，此手机号未绑定QQ".equals(okGoSessionAndUserBean.getMsg())) {
                             CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定QQ~" + getString(R.string.please_bind_back_qq_login),"朕知道了");
                             return;
                         }
-                        if (200 == userQQSessionBean.getCode() && null != userQQSessionBean.getData() && "登录成功".equals(userQQSessionBean.getMsg())) {
+                        if (200 == okGoSessionAndUserBean.getCode() && null != okGoSessionAndUserBean.getData() && "登录成功".equals(okGoSessionAndUserBean.getMsg())) {
                             //拉去并联登录信息持久化
                             if (App.appActivity != null) {
                                 App.appActivity.finish();//销毁主页
                             }
                             LoginActivity.loginActivity.finish();//销毁未finish的登录主页
-                            SharePreferenceUtil.putObject(PhoneCodeLoginActivity.this, userQQSessionBean);
+                            SharePreferenceUtil.putObject(PhoneCodeLoginActivity.this, okGoSessionAndUserBean);
                             IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this,new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
                             PhoneCodeLoginActivity.this.finish();
                         }

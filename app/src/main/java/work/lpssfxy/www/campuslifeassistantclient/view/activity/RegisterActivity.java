@@ -41,7 +41,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.CustomAlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -802,43 +802,43 @@ public class RegisterActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        ResponseBean responseBean = GsonUtil.gsonToBean(response.body(), ResponseBean.class);
-                        Log.i(TAG, "注册账户: " + responseBean);
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        Log.i(TAG, "注册账户: " + OkGoResponseBean);
                         /* 1. 注册失败时*/
-                        if (200 == responseBean.getCode() && strUsername.equals(responseBean.getData()) && "注册失败，此用户名已被注册".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strUsername.equals(OkGoResponseBean.getData()) && "注册失败，此用户名已被注册".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"此用户名已被注册，那就重新取个好听吧~");
                             dialogPrompt.show();
                             return;
                         }
-                        if (200 == responseBean.getCode() && strIdCard.equals(responseBean.getData()) && "注册失败，此身份证已被注册".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strIdCard.equals(OkGoResponseBean.getData()) && "注册失败，此身份证已被注册".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"此身份证已被注册，请使用本人身份证号进行注册！");
                             dialogPrompt.show();
                             return;
                         }
-                        if (200 == responseBean.getCode() && strStuNo.equals(responseBean.getData()) && "注册失败，此学号已被注册".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strStuNo.equals(OkGoResponseBean.getData()) && "注册失败，此学号已被注册".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"此学号已被注册，请使用本人的学号！");
                             dialogPrompt.show();
                             return;
                         }
-                        if (200 == responseBean.getCode() && strTel.equals(responseBean.getData()) && "注册失败，此手机号已被注册".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strTel.equals(OkGoResponseBean.getData()) && "注册失败，此手机号已被注册".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"此手机号已被注册，请使用本人手机号进行注册！");
                             dialogPrompt.show();
                             return;
                         }
 
-                        if (200 == responseBean.getCode() && strEmail.equals(responseBean.getData()) && "注册失败，此邮箱已被注册".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strEmail.equals(OkGoResponseBean.getData()) && "注册失败，此邮箱已被注册".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"此QQ邮箱已被注册，请使用本人QQ邮箱进行注册！");
                             dialogPrompt.show();
                             return;
                         }
 
-                        if (200 == responseBean.getCode() && strUsername.equals(responseBean.getData()) && "注册失败".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strUsername.equals(OkGoResponseBean.getData()) && "注册失败".equals(OkGoResponseBean.getMsg())){
                             DialogPrompt dialogPrompt = new DialogPrompt(RegisterActivity.this,"注册失败，系统错误！请联系开发者解决~");
                             dialogPrompt.show();
                             return;
                         }
                         /* 2. 注册成功时*/
-                        if (200 == responseBean.getCode() && strUsername.equals(responseBean.getData()) && "注册成功".equals(responseBean.getMsg())){
+                        if (200 == OkGoResponseBean.getCode() && strUsername.equals(OkGoResponseBean.getData()) && "注册成功".equals(OkGoResponseBean.getMsg())){
                             dialogPrompt = new DialogPrompt(RegisterActivity.this, R.string.register_success, 3);
                             dialogPrompt.showAndFinish(RegisterActivity.this);
                             Intent intent = new Intent();

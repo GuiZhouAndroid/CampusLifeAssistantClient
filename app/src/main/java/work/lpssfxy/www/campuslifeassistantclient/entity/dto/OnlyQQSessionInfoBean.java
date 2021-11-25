@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity;
+package work.lpssfxy.www.campuslifeassistantclient.entity.dto;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class SessionBean {
+public class OnlyQQSessionInfoBean {
     public int ret;
     public String openid;
     public String access_token;

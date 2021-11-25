@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import work.lpssfxy.www.campuslifeassistantclient.adapter.QQUserTypeAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
 
 /**
  * created by on 2021/8/23
@@ -33,7 +33,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.SessionBean;
 public class GsonUtil {
     private static Gson sGson;
     private static GsonBuilder sBuilder = null;
-    public Gson gson = new GsonBuilder().registerTypeAdapter(SessionBean.class, new QQUserTypeAdapter())
+    public Gson gson = new GsonBuilder().registerTypeAdapter(OnlyQQSessionInfoBean.class, new QQUserTypeAdapter())
             //registerTypeAdapter可以重复使用
             .create();
 

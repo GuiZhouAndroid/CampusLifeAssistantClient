@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.entity.login;
+package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
 import java.io.Serializable;
 
@@ -6,18 +6,19 @@ import lombok.Data;
 
 /**
  * created by on 2021/10/31
- * 描述：
+ * 描述：QQ + 用户 = 登录并集信息实体
  *
  * @author ZSAndroid
  * @create 2021-10-31-14:06
  */
 @Data
-public class UserQQSessionBean{
+public class OkGoSessionAndUserBean {
 
     private int code;
     private Data data;
     private String msg;
     private String nowTime;
+
     @lombok.Data
     public static class Data {
         private String accessToken;
@@ -35,6 +36,7 @@ public class UserQQSessionBean{
         private int ret;
         private String updateTime;
         private UserInfo userInfo;
+
         @lombok.Data
         public static class UserInfo implements Serializable {
             private String createTime;

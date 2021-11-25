@@ -29,13 +29,13 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
-import work.lpssfxy.www.campuslifeassistantclient.entity.ParcelableData;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ParcelableUserInfoData;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
-import work.lpssfxy.www.campuslifeassistantclient.entity.QQUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.login.UserQQSessionBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -83,7 +83,7 @@ public class BottomMineFragment extends BaseFragment {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 1:
-                    UserQQSessionBean.Data.UserInfo userInfo = (UserQQSessionBean.Data.UserInfo) msg.obj;
+                    OkGoSessionAndUserBean.Data.UserInfo userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     if (userInfo !=null){
                         mAccountSafe.setRightDesc(userInfo.getCreateTime());//设置QQ信息的城市
                     }else {
@@ -92,19 +92,19 @@ public class BottomMineFragment extends BaseFragment {
                     Log.i(TAG, "Fragment用户信息: "+ userInfo);
                     break;
                 case 2://匹配成功，获取IndexActivity登录QQ用户信息
-                    Constant.qqUser = (QQUserBean) msg.obj;
-                    mQQProvince.setText(Constant.qqUser.getProvince() + "省");//设置QQ信息的省份
-                    mQQCity.setText(Constant.qqUser.getCity());//设置QQ信息的城市
-                    mQQNickname.setRightDesc(Constant.qqUser.getNickname());//设置QQ信息的城市
+                    Constant.onlyQQUserInfo = (OnlyQQUserInfoBean) msg.obj;
+                    mQQProvince.setText(Constant.onlyQQUserInfo.getProvince() + "省");//设置QQ信息的省份
+                    mQQCity.setText(Constant.onlyQQUserInfo.getCity());//设置QQ信息的城市
+                    mQQNickname.setRightDesc(Constant.onlyQQUserInfo.getNickname());//设置QQ信息的城市
                     //设置圆形图像
                     RequestOptions options = new RequestOptions();
                     options.circleCrop();
                     Glide.with(getActivity())
-                            .load(Constant.qqUser.getFigureurl_qq_2())
+                            .load(Constant.onlyQQUserInfo.getFigureurl_qq_2())
                             .apply(options)
                             .into(mQQHead);
                     //设置背景高斯模糊效果
-                    Glide.with(getActivity()).load(Constant.qqUser.getFigureurl_qq_2())
+                    Glide.with(getActivity()).load(Constant.onlyQQUserInfo.getFigureurl_qq_2())
                             .transform(new BlurTransformation(20, 3))
                             .into(mQQBack);
                     break;
@@ -142,7 +142,7 @@ public class BottomMineFragment extends BaseFragment {
         if (activity!=null){
             activity.setStartPushUserInfoListener(new ActivityInteraction() {
                 @Override
-                public void userAllInfoPutMineFragment(UserQQSessionBean.Data.UserInfo userInfo) {
+                public void userAllInfoPutMineFragment(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
                     onAttach(activity);
                     if (userInfo != null) {
                         Message msg = new Message();
@@ -212,17 +212,17 @@ public class BottomMineFragment extends BaseFragment {
                                 public void onSuccess(Response<String> response) {
                                     XPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
                                     //Json字符串解析转为实体类对象
-                                    UserBean userBeanData = GsonUtil.gsonToBean(response.body(), UserBean.class);
-                                    Log.i(TAG, "userBeanData=== " + userBeanData);
+                                    OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
+                                    Log.i(TAG, "okGoUserBeanData=== " + okGoUserBeanData);
                                     Intent thisIntentToMineActivity= new Intent();;
                                     thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
                                     Bundle bundle=new Bundle();
                                     //bundle.putString("userInfo",Constant.userInfo.toString());
-                                    bundle.putParcelable("userInfo", new ParcelableData(
-                                            userBeanData.getData().getCreateTime(),userBeanData.getData().getUlClass(), userBeanData.getData().getUlDept(),
-                                            userBeanData.getData().getUlEmail(),userBeanData.getData().getUlId(), userBeanData.getData().getUlIdcard(),
-                                            userBeanData.getData().getUlRealname(),userBeanData.getData().getUlSex(),userBeanData.getData().getUlStuno(),
-                                            userBeanData.getData().getUlTel(),userBeanData.getData().getUlUsername(),userBeanData.getData().getUpdateTime()));
+                                    bundle.putParcelable("userInfo", new ParcelableUserInfoData(
+                                            okGoUserBeanData.getData().getCreateTime(), okGoUserBeanData.getData().getUlClass(), okGoUserBeanData.getData().getUlDept(),
+                                            okGoUserBeanData.getData().getUlEmail(), okGoUserBeanData.getData().getUlId(), okGoUserBeanData.getData().getUlIdcard(),
+                                            okGoUserBeanData.getData().getUlRealname(), okGoUserBeanData.getData().getUlSex(), okGoUserBeanData.getData().getUlStuno(),
+                                            okGoUserBeanData.getData().getUlTel(), okGoUserBeanData.getData().getUlUsername(), okGoUserBeanData.getData().getUpdateTime()));
                                     thisIntentToMineActivity.putExtras(bundle);
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
