@@ -160,7 +160,6 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
         //TabLayout适配的Fragment集合
         fragments = new Fragment[]{
                 DeveloperSelectAllRoleInfoFragment.newInstance(),
-                DeveloperAddRoleInfoFragment.newInstance(),
                 DeveloperSelectUserRoleByUserNameFragment.newInstance(),
                 DeveloperSelectHaveRoleUserInfoByRoleIdFragment.newInstance()
         };

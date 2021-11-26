@@ -78,6 +78,7 @@
     <string name="KickOffLine_token">登录Token</string>
     <string name="KickOffLine_ok">确定执行</string>
     <string name="add_ok">确定添加</string>
+    <string name="new_add">新增角色</string>
     <string name="start_select">开始查询</string>
     <string name="start_un_ban">执行解封</string>
     <!--ViewPager欢迎页-->

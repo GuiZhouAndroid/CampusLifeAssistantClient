@@ -82,8 +82,8 @@ public class XPopupUtils {
     /**
      * 延时消失，有时候消失过快体验可能不好，可以延时一下
      */
-    public void setTimerDisDialog() {
-        popupView.delayDismiss(500);
+    public void setTimerDisDialog(long time) {
+        popupView.delayDismiss(time);
     }
 
     /**
@@ -139,6 +139,7 @@ public class XPopupUtils {
                             }
                         })
                 .show();
+
     }
 
     /**

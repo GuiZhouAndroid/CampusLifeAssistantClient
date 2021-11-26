@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,22 +18,29 @@ import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
+import com.xuexiang.xui.widget.dialog.materialdialog.GravityEnum;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
+import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListAdapter;
+import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListItem;
+import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
+import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRoleInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleInfoBean;
@@ -56,6 +63,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     /* 父布局 */
     @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
+    @BindView(R2.id.btn_add_role) ButtonView mBtnAddRole;
     /* 角色拥有数 */
     @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
     /* RecyclerView列表 */
@@ -100,6 +108,18 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     protected void doBusiness(Context context) {
         //开始查询全部角色信息
         startSelectAllRoleInfo(context);
+    }
+
+    /**
+     * @param view 视图View
+     */
+    @OnClick({R2.id.btn_add_role})
+    public void onSelectAllRoleInfoViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add_role://确定添加
+                startAddRoleInfo();
+                break;
+        }
     }
 
     /**
@@ -167,10 +187,22 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                     RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
                                     // 8.2 更新角色名称
                                     if (view.getId() == R.id.select_all_role_name) {
-                                        new XPopup.Builder(getActivity()).asInputConfirm("修改" + roleInfoBean.getTrName() + "角色名称", "请在下方输入新角色名称",roleInfoBean.getTrName(),roleInfoBean.getTrName(),
-                                                new OnInputConfirmListener() {
+                                        new MaterialDialog.Builder(getContext())
+                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_item, true)
+                                                .titleGravity(GravityEnum.CENTER)
+                                                .title("更新" + roleInfoBean.getTrName())
+                                                .titleColor(getResources().getColor(R.color.colorAccent))
+                                                .positiveText("更新")
+                                                .positiveColor(getResources().getColor(R.color.colorAccent))
+                                                .negativeText("取消")
+                                                .cancelable(false)
+                                                .onPositive(new MaterialDialog.SingleButtonCallback() {
                                                     @Override
-                                                    public void onConfirm(String newRoleName) {
+                                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                        //获取自定义布局中的控件id
+                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check);
+                                                        //新角色名称
+                                                        String newRoleName = materialEditText.getText().toString().trim();
                                                         OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName() + "/" + newRoleName)
                                                                 .tag("更新角色名称")
                                                                 .execute(new StringCallback() {
@@ -180,6 +212,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         XPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
                                                                     }
 
+                                                                    @SuppressLint("NotifyDataSetChanged")
                                                                     @Override
                                                                     public void onSuccess(Response<String> response) {
                                                                         OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
@@ -199,6 +232,8 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         }
                                                                         //更新成功
                                                                         if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                                            //再次调用查询全部角色接口，实现动态更新显示
+                                                                            startSelectAllRoleInfo(context);
                                                                             Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                                                             snackbar.show();
@@ -212,14 +247,28 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     }
                                                                 });
                                                     }
-                                                }).show();
+                                                })
+                                                .show();
                                     }
                                     // 8.2 更新角色描述
                                     if (view.getId() == R.id.select_all_role_info) {
-                                        new XPopup.Builder(getActivity()).asInputConfirm("修改" + roleInfoBean.getTrName() + "角色描述", "请在下方输入新角色描述",roleInfoBean.getTrDescription(),roleInfoBean.getTrDescription(),
-                                                new OnInputConfirmListener() {
+                                        new MaterialDialog.Builder(getContext())
+                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_item, true)
+                                                .titleGravity(GravityEnum.CENTER)
+                                                .title("更新" + roleInfoBean.getTrDescription())
+                                                .titleColor(getResources().getColor(R.color.colorAccent))
+                                                .positiveText("更新")
+                                                .positiveColor(getResources().getColor(R.color.colorAccent))
+                                                .negativeText("取消")
+                                                .cancelable(false)
+                                                .onPositive(new MaterialDialog.SingleButtonCallback() {
                                                     @Override
-                                                    public void onConfirm(String newRoleDescription) {
+                                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                        //获取自定义布局中的控件id
+                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check);
+                                                        //新角色描述
+                                                        String newRoleDescription = materialEditText.getText().toString().trim();
+
                                                         OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_DESCRIPTION_BY_ROLE_ID_AND_OLD_ROLE_DESCRIPTION + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrDescription() + "/" + newRoleDescription)
                                                                 .tag("更新角色描述")
                                                                 .execute(new StringCallback() {
@@ -248,6 +297,8 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         }
                                                                         //更新成功
                                                                         if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                                            //再次调用查询全部角色接口，实现动态更新显示
+                                                                            startSelectAllRoleInfo(context);
                                                                             Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                                                                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                                                                             snackbar.show();
@@ -266,122 +317,87 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
                                                                     }
                                                                 });
-
                                                     }
-                                                }).show();
+                                                })
+                                                .show();
                                     }
                                 }
                             });
-                            // 9.执行item长按事件业务逻辑--->删除一条角色信息
-                            roleInfoAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
-                                @Override
-                                public boolean onItemLongClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                                    adapter.setAnimationEnable(true);
-                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
-                                    OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName())
-                                            .tag("删除角色信息")
-                                            .execute(new StringCallback() {
-                                                @Override
-                                                public void onStart(Request<String, ? extends Request> request) {
-                                                    super.onStart(request);
-                                                    XPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
-                                                }
 
-                                                @Override
-                                                public void onSuccess(Response<String> response) {
-                                                    OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                    //失败(超管未登录)
-                                                    if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
-                                                        Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "未登录：" + okGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                        snackbar.show();
-                                                        return;
-                                                    }
-                                                    //删除失败
-                                                    if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
-                                                        Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                        snackbar.show();
-                                                        return;
-                                                    }
-                                                    //删除成功
-                                                    if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                        Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                                                        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                                        snackbar.show();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFinish() {
-                                                    super.onFinish();
-                                                    XPopupUtils.getInstance().setSmartDisDialog();
-                                                }
-
-                                                @Override
-                                                public void onError(Response<String> response) {
-                                                    super.onError(response);
-                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
-                                                }
-                                            });
-
-                                    return false;
-                                }
-                            });
-
-                            // 10.为item设置单击监听事件
+                            // 9.为item设置单击监听事件--->删除一条角色信息
                             roleInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
                                 @Override
                                 public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                                     RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
-                                    Toast.makeText(getContext(), "onItemClick" + roleInfoBean.getTrName() + roleInfoBean.getTrDescription(), Toast.LENGTH_SHORT).show();
-//                                    List<MaterialSimpleListItem> list = new ArrayList<>();
-//                                    list.add(new MaterialSimpleListItem.Builder(context)
-//                                            .content("查询")
-//                                            .icon(R.drawable.logo)
-//                                            .iconPaddingDp(8)
-//                                            .build());
-//                                    list.add(new MaterialSimpleListItem.Builder(context)
-//                                            .content("添加")
-//                                            .icon(R.drawable.logo)
-//                                            .build());
-//                                    list.add(new MaterialSimpleListItem.Builder(context)
-//                                            .content("更新")
-//                                            .icon(R.drawable.logo)
-//                                            .build());
-//                                    list.add(new MaterialSimpleListItem.Builder(context)
-//                                            .content("删除")
-//                                            .icon(R.drawable.logo)
-//                                            .iconPaddingDp(8)
-//                                            .build());
-//                                    final MaterialSimpleListAdapter simpleListAdapter = new MaterialSimpleListAdapter(list)
-//                                            .setOnItemClickListener(new MaterialSimpleListAdapter.OnItemClickListener() {
-//                                                @Override
-//                                                public void onMaterialListItemSelected(MaterialDialog dialog, int index, MaterialSimpleListItem item) {
-//
-//                                                    switch (item.getContent().toString()){
-//                                                        case "查询":
-//                                                            ToastUtils.toast("查询");
-//                                                            break;
-//                                                        case "添加":
-//                                                            ToastUtils.toast("添加");
-//                                                            break;
-//                                                        case "更新":
-//                                                            ToastUtils.toast("更新");
-//                                                            break;
-//                                                        case "删除":
-//                                                            ToastUtils.toast("删除");
-//                                                            break;
-//                                                    }
-//                                                }
-//                                            });
-//                                    new MaterialDialog.Builder(context).adapter(simpleListAdapter, null).show();
-                                    new MaterialDialog.Builder(getContext())
-                                            .customView(R.layout.xui_role_dialog_custom, true)
-                                            .title("自定义对话框")
-                                            .positiveText("确定")
-                                            .negativeText("取消")
-                                            .show();
+                                    List<MaterialSimpleListItem> list = new ArrayList<>();
+                                    list.add(new MaterialSimpleListItem.Builder(context)
+                                            .content("删除" + roleInfoBean.getTrName() + "角色信息")
+                                            .icon(R.drawable.logo)
+                                            .iconPaddingDp(8)
+                                            .build());
+                                    final MaterialSimpleListAdapter simpleListAdapter = new MaterialSimpleListAdapter(list)
+                                            .setOnItemClickListener(new MaterialSimpleListAdapter.OnItemClickListener() {
+                                                @SuppressLint("NotifyDataSetChanged")
+                                                @Override
+                                                public void onMaterialListItemSelected(MaterialDialog dialog, int index, MaterialSimpleListItem item) {
+                                                    //logo列表item内容匹配成功true时执行删除业务
+                                                    if (item.getContent().toString().equals("删除" + roleInfoBean.getTrName() + "角色信息")) {
+                                                        OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName())
+                                                                .tag("删除角色信息")
+                                                                .execute(new StringCallback() {
+                                                                    @Override
+                                                                    public void onStart(Request<String, ? extends Request> request) {
+                                                                        super.onStart(request);
+                                                                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
+                                                                    }
+
+                                                                    @SuppressLint("NotifyDataSetChanged")
+                                                                    @Override
+                                                                    public void onSuccess(Response<String> response) {
+                                                                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                                                        //失败(超管未登录)
+                                                                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                                                                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "未登录：" + okGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                                                            snackbar.show();
+                                                                            return;
+                                                                        }
+                                                                        //删除失败
+                                                                        if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
+                                                                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                                                            snackbar.show();
+                                                                            return;
+                                                                        }
+                                                                        //删除成功
+                                                                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                                            //删除成功移出当前对应的item对象数据
+                                                                            adapter.removeAt(position);
+                                                                            //移出成功同时刷新适配器
+                                                                            roleInfoAdapter.notifyDataSetChanged();
+                                                                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                                                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                                                                            snackbar.show();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFinish() {
+                                                                        super.onFinish();
+                                                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onError(Response<String> response) {
+                                                                        super.onError(response);
+                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                                                    }
+                                                                });
+                                                    }
+                                                }
+                                            });
+                                    new MaterialDialog.Builder(context).adapter(simpleListAdapter, null).show();
+
                                 }
                             });
                         }
@@ -401,6 +417,117 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     }
                 });
     }
+
+    /**
+     * 添加一条角色信息
+     */
+    private void startAddRoleInfo() {
+        new MaterialDialog.Builder(getContext())
+                .customView(R.layout.developer_fragment_select_all_role_info_add_role_info_item, true)
+                .titleGravity(GravityEnum.CENTER)
+                .title("新增角色")
+                .titleColor(getResources().getColor(R.color.colorAccent))
+                .positiveText("添加")
+                .positiveColor(getResources().getColor(R.color.colorAccent))
+                .negativeText("取消")
+                .cancelable(false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //点击添加按钮同时获取dialog中的控件
+                        PowerfulEditText mEditAddRoleName = dialog.findViewById(R.id.edit_add_role_name);
+                        PowerfulEditText mEditAddRoleInfo = dialog.findViewById(R.id.edit_add_role_info);
+                        //点击添加按钮同时获取dialog中的控件输入的文本内容
+                        String strEditAddRoleName = mEditAddRoleName.getText().toString().trim();
+                        String strAddRoleInfo = mEditAddRoleInfo.getText().toString().trim();
+                        //角色名称 + 角色描述 文本内容传递doAddRoleInfo()并开始添加
+                        doAddRoleInfo(strEditAddRoleName, strAddRoleInfo);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 开始添加角色信息
+     *
+     * @param strEditAddRoleName 角色名称
+     * @param strAddRoleInfo     角色描述
+     */
+    private void doAddRoleInfo(String strEditAddRoleName, String strAddRoleInfo) {
+        //判空处理
+        if (TextUtils.isEmpty(strEditAddRoleName)) {
+            ToastUtils.toast("请填入角色名称");
+            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "请填入角色名称", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        if (TextUtils.isEmpty(strAddRoleInfo)) {
+            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "请填入角色描述", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+            return;
+        }
+        //开始网络请求，访问后端服务器，执行封禁账户操作
+        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_ROLE_INFO)
+                .tag("超管添加用户角色")
+                .params("roleName", strEditAddRoleName)
+                .params("roleDescription", strAddRoleInfo)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在添加...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        //失败(超管未登录)
+                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            return;
+                        }
+                        //成功(角色存在)
+                        if (200 == OkGoResponseBean.getCode() && "角色添加失败，此角色已被注册".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败，此角色已被注册：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            return;
+                        }
+                        //成功(未添加)
+                        if (200 == OkGoResponseBean.getCode() && "角色添加失败".equals(OkGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                            return;
+                        }
+                        //成功(已添加)
+                        if (200 == OkGoResponseBean.getCode() && "角色添加成功".equals(OkGoResponseBean.getMsg())) {
+                            startSelectAllRoleInfo(context);
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加成功：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+                            snackbar.show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        XPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
+
 
     @Override
     public boolean onBackPressed() {

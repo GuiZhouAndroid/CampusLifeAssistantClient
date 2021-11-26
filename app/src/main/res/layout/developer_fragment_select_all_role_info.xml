@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_dev_select_all_role_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/ll_dev_select_all_role_info"
     tools:context=".view.activity.DeveloperSystemSafeActivity">
 
     <TextView
@@ -15,6 +16,19 @@
         android:paddingTop="30dp"
         android:text="角色拥有数量"
         android:textSize="18sp" />
+
+    <com.xuexiang.xui.widget.button.ButtonView
+        android:id="@+id/btn_add_role"
+        style="@style/ButtonView.Blue"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_40"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="@string/new_add"
+        android:textSize="@dimen/sp_14"
+        app:textNormalTextColor="@color/white"
+        app:textRadius="8dp"
+        app:textSelectedTextColor="#FF6565" />
 
     <LinearLayout
         android:layout_width="match_parent"
