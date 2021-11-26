@@ -15,7 +15,7 @@
         android:gravity="center"
         android:paddingTop="30dp"
         android:text="角色拥有数量"
-        android:textSize="18sp" />
+        android:textSize="17sp" />
 
     <com.xuexiang.xui.widget.button.ButtonView
         android:id="@+id/btn_add_role"

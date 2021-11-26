@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -29,7 +28,6 @@ import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListAdapter;
 import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListItem;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
-import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +61,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     /* 父布局 */
     @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
+    /* XUI按钮添加角色 */
     @BindView(R2.id.btn_add_role) ButtonView mBtnAddRole;
     /* 角色拥有数 */
     @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
@@ -188,7 +187,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                     // 8.2 更新角色名称
                                     if (view.getId() == R.id.select_all_role_name) {
                                         new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_item, true)
+                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
                                                 .titleGravity(GravityEnum.CENTER)
                                                 .title("更新" + roleInfoBean.getTrName())
                                                 .titleColor(getResources().getColor(R.color.colorAccent))
@@ -253,7 +252,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                     // 8.2 更新角色描述
                                     if (view.getId() == R.id.select_all_role_info) {
                                         new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_item, true)
+                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
                                                 .titleGravity(GravityEnum.CENTER)
                                                 .title("更新" + roleInfoBean.getTrDescription())
                                                 .titleColor(getResources().getColor(R.color.colorAccent))
@@ -423,7 +422,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
      */
     private void startAddRoleInfo() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_all_role_info_add_role_info_item, true)
+                .customView(R.layout.developer_fragment_select_all_role_info_add_role_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
                 .title("新增角色")
                 .titleColor(getResources().getColor(R.color.colorAccent))
@@ -456,7 +455,6 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     private void doAddRoleInfo(String strEditAddRoleName, String strAddRoleInfo) {
         //判空处理
         if (TextUtils.isEmpty(strEditAddRoleName)) {
-            ToastUtils.toast("请填入角色名称");
             Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "请填入角色名称", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
@@ -482,32 +480,32 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         //失败(超管未登录)
-                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "未登录：" + okGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(角色存在)
-                        if (200 == OkGoResponseBean.getCode() && "角色添加失败，此角色已被注册".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败，此角色已被注册：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == okGoResponseBean.getCode() && "角色添加失败，此角色已被注册".equals(okGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败，此角色已被注册：" + okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(未添加)
-                        if (200 == OkGoResponseBean.getCode() && "角色添加失败".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                        if (200 == okGoResponseBean.getCode() && "角色添加失败".equals(okGoResponseBean.getMsg())) {
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加失败：" + okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                             return;
                         }
                         //成功(已添加)
-                        if (200 == OkGoResponseBean.getCode() && "角色添加成功".equals(OkGoResponseBean.getMsg())) {
+                        if (200 == okGoResponseBean.getCode() && "角色添加成功".equals(okGoResponseBean.getMsg())) {
                             startSelectAllRoleInfo(context);
-                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加成功：" + OkGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+                            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "角色添加成功：" + okGoResponseBean.getData(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
                             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
                             snackbar.show();
                         }

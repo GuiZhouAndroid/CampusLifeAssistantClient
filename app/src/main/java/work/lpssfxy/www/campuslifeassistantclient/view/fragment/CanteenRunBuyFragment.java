@@ -28,10 +28,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import work.lpssfxy.www.campuslifeassistantclient.BaseRecyclerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.SmartViewHolder;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRecyclerAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.SmartViewHolder;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtil;
 
 /**

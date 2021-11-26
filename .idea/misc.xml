@@ -105,14 +105,18 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_banned_account_username.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_add_role_info.xml" value="0.33152173913043476" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_banned_account_real_name.xml" value="0.3098958333333333" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_have_role_user_info_role_id_recycler_view_item.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_kickoff_line_realname.xml" value="0.33152173913043476" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_kickoff_line_token.xml" value="0.33152173913043476" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_role_info_manager.xml" value="0.34193840579710144" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_info_recycler_view_item.xml" value="0.17806484295845998" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info.xml" value="0.29583333333333334" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_add_role_info_dialog_item.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_update_role_info_dialog_item.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_state_real_name.xml" value="0.33152173913043476" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_time_real_name.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_have_role_user_info_by_role_id.xml" value="0.3098958333333333" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_have_role_user_info_dialog_item.xml" value="0.3283514492753623" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_role_user_by_username.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_system_safe_activity.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_untie_banned_account_real_name.xml" value="0.32395833333333335" />
