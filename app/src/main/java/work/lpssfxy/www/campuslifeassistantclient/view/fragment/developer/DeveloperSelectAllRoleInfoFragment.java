@@ -1,7 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
 
-import static com.xuexiang.xutil.tip.ToastUtils.toast;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -26,6 +24,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +63,11 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     /* 角色信息列表适配器 */
     private BaseRoleInfoAdapter roleInfoAdapter;
 
-    @Override
-    public boolean onBackPressed() {
-        return false;
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperSelectAllRoleInfoFragment newInstance() {
+        return new DeveloperSelectAllRoleInfoFragment();
     }
 
     @Override
@@ -334,7 +335,53 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                                     RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
                                     Toast.makeText(getContext(), "onItemClick" + roleInfoBean.getTrName() + roleInfoBean.getTrDescription(), Toast.LENGTH_SHORT).show();
-
+//                                    List<MaterialSimpleListItem> list = new ArrayList<>();
+//                                    list.add(new MaterialSimpleListItem.Builder(context)
+//                                            .content("查询")
+//                                            .icon(R.drawable.logo)
+//                                            .iconPaddingDp(8)
+//                                            .build());
+//                                    list.add(new MaterialSimpleListItem.Builder(context)
+//                                            .content("添加")
+//                                            .icon(R.drawable.logo)
+//                                            .build());
+//                                    list.add(new MaterialSimpleListItem.Builder(context)
+//                                            .content("更新")
+//                                            .icon(R.drawable.logo)
+//                                            .build());
+//                                    list.add(new MaterialSimpleListItem.Builder(context)
+//                                            .content("删除")
+//                                            .icon(R.drawable.logo)
+//                                            .iconPaddingDp(8)
+//                                            .build());
+//                                    final MaterialSimpleListAdapter simpleListAdapter = new MaterialSimpleListAdapter(list)
+//                                            .setOnItemClickListener(new MaterialSimpleListAdapter.OnItemClickListener() {
+//                                                @Override
+//                                                public void onMaterialListItemSelected(MaterialDialog dialog, int index, MaterialSimpleListItem item) {
+//
+//                                                    switch (item.getContent().toString()){
+//                                                        case "查询":
+//                                                            ToastUtils.toast("查询");
+//                                                            break;
+//                                                        case "添加":
+//                                                            ToastUtils.toast("添加");
+//                                                            break;
+//                                                        case "更新":
+//                                                            ToastUtils.toast("更新");
+//                                                            break;
+//                                                        case "删除":
+//                                                            ToastUtils.toast("删除");
+//                                                            break;
+//                                                    }
+//                                                }
+//                                            });
+//                                    new MaterialDialog.Builder(context).adapter(simpleListAdapter, null).show();
+                                    new MaterialDialog.Builder(getContext())
+                                            .customView(R.layout.xui_role_dialog_custom, true)
+                                            .title("自定义对话框")
+                                            .positiveText("确定")
+                                            .negativeText("取消")
+                                            .show();
                                 }
                             });
                         }
@@ -353,5 +400,10 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                         OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
                     }
                 });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }

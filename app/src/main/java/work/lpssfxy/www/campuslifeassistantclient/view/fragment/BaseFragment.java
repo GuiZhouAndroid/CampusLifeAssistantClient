@@ -136,6 +136,11 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
         ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
     /**
      * 解绑ButterKnife
      */
@@ -146,5 +151,4 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
         }
         super.onDestroyView();
     }
-
 }

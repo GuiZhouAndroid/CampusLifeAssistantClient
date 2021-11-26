@@ -71,7 +71,7 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.MyViewPagerAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
@@ -581,7 +581,7 @@ public class IndexActivity extends BaseActivity {
         //fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomMineFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
-        mVp_content.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
+        mVp_content.setAdapter(new MyFragmentStateViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         mVp_content.setOffscreenPageLimit(fragmentList.size());//viewPager单次预加载Fragment页数
         //ViewPager滑动监听
         mVp_content.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

@@ -14,6 +14,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +46,14 @@ public class DeveloperUntieBannedAccountUserNameFragment extends BaseFragment {
     //待查讯真实姓名
     @BindView(R2.id.edit_un_ban_account_realname) PowerfulEditText mEditUnBanAccountRealName;
     //确定执行下线
-    @BindView(R2.id.btn_un_ban_account_realname) Button mBtnUnBanAccountRealName;
+    @BindView(R2.id.btn_un_ban_account_realname) ButtonView mBtnUnBanAccountRealName;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperUntieBannedAccountUserNameFragment newInstance() {
+        return new DeveloperUntieBannedAccountUserNameFragment();
+    }
 
     @Override
     protected int bindLayout() {

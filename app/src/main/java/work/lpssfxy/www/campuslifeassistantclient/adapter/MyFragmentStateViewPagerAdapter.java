@@ -15,7 +15,7 @@ import java.util.List;
  * @author ZSAndroid
  * @create 2021-08-23-23:49
  */
-public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
+public class MyFragmentStateViewPagerAdapter extends FragmentStatePagerAdapter {
     /**
      * 四个主功能Fragment界面
      */
@@ -25,11 +25,11 @@ public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
      */
     public List<Fragment> fragmentList = null;
 
-    public MyViewPagerAdapter(FragmentManager fm) {
+    public MyFragmentStateViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public MyViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
+    public MyFragmentStateViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
         super(fm);
         this.fragments = fragments;
         this.fragmentList = fragmentList;

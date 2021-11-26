@@ -14,6 +14,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +46,14 @@ public class DeveloperSelectBannedTimeRealNameFragment extends BaseFragment {
     //待查讯真实姓名
     @BindView(R2.id.edit_ban_account_time_realname) PowerfulEditText mEditBanAccountTimeRealName;
     //确定执行下线
-    @BindView(R2.id.btn_ban_account_time_realname) Button mBtnBanAccountTimeRealName;
+    @BindView(R2.id.btn_ban_account_time_realname) ButtonView mBtnBanAccountTimeRealName;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperSelectBannedTimeRealNameFragment newInstance() {
+        return new DeveloperSelectBannedTimeRealNameFragment();
+    }
 
     @Override
     protected int bindLayout() {

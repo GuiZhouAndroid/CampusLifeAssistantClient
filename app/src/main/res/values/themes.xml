@@ -21,6 +21,7 @@
 
     <!-- APP全透明沉浸式主题样式，提供item空属性，使用StatusBarUtils工具类 -->
     <style name="AppMainTranslucentTheme" parent="XUITheme.Phone">
+        <item name="colorPrimary">@color/xui_config_color_main_theme</item>
         <!--TextInputLayout的hint提示文字颜色-->
         <item name="android:textColorHint">@color/LoginInputBackground</item>
         <!--TextInputLayout的未选中状态颜色-->
@@ -126,4 +127,19 @@
 <!--        <item name="overlapAnchor">false</item>  &lt;!&ndash;把该属性改为false即可使menu位置位于toolbar之下&ndash;&gt;-->
 <!--    </style>-->
 
+    <!--TabLayout-->
+    <style name="TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/selector_tab_text_color</item>
+        <item name="android:textSize">?attr/xui_config_size_content_text</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabTextAppearance">@style/TabText</item>
+        <item name="tabSelectedTextColor">?attr/colorAccent</item>
+        <item name="tabTextColor">@color/xui_config_color_gray_6</item>
+    </style>
 </resources>

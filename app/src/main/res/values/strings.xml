@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">校园生活助手</string>
+    <string name="onclick_refresh">点击展开</string>
     <string-array name="city">
         <item>北京市</item>
         <item>天津市</item>

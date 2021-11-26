@@ -14,6 +14,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -44,7 +45,14 @@ public class DeveloperKickOffLineTokenFragment extends BaseFragment {
     //被下线真实姓名输入框
     @BindView(R2.id.edit_kick_offline_token) PowerfulEditText mEditKickOffLineToken;
     //确定执行下线
-    @BindView(R2.id.btn_kickoffLine_token) Button mBtnKickoffLineToken;
+    @BindView(R2.id.btn_kickoffLine_token) ButtonView mBtnKickoffLineToken;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperKickOffLineTokenFragment newInstance() {
+        return new DeveloperKickOffLineTokenFragment();
+    }
 
     @Override
     protected int bindLayout() {

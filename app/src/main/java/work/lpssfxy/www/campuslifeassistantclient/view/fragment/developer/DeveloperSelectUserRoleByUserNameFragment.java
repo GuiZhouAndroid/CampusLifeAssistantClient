@@ -15,6 +15,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import java.util.List;
 
@@ -47,13 +48,16 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
     //查询用户名
     @BindView(R2.id.edit_dev_role_user_username) PowerfulEditText mEditDevRoleUserUsername;
     //开始查询
-    @BindView(R2.id.btn_dev_role_user_username) Button mBtnDevRoleUserUsername;
+    @BindView(R2.id.btn_dev_role_user_username) ButtonView mBtnDevRoleUserUsername;
     //显示角色集合
     @BindView(R2.id.tv_role_user_list_show) TextView mTvRoleUserListShow;
 
-    @Override
-    public boolean onBackPressed() {
-        return false;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperSelectUserRoleByUserNameFragment newInstance() {
+        return new DeveloperSelectUserRoleByUserNameFragment();
     }
 
     @Override
@@ -162,5 +166,10 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
                         OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevRoleUserUsername, "请求错误，服务器连接失败！");
                     }
                 });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }

@@ -35,16 +35,8 @@ public class MyVerticalTabLayoutViewPagerAdapter extends FragmentStatePagerAdapt
     public MyVerticalTabLayoutViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
         super(fm);
         // 1.添加TabLayout标题到String的List集合中
-        TabLayoutTitleList.add("踢人下线(姓名)");
-        TabLayoutTitleList.add("踢人下线(Token)");
-        TabLayoutTitleList.add("封禁账户");
-        TabLayoutTitleList.add("封禁状态");
-        TabLayoutTitleList.add("封禁时间");
-        TabLayoutTitleList.add("账户解封");
-        TabLayoutTitleList.add("全部角色");
-        TabLayoutTitleList.add("添加角色");
-        TabLayoutTitleList.add("角色持有");
-        TabLayoutTitleList.add("角色用户");
+        TabLayoutTitleList.add("封禁管理");
+        TabLayoutTitleList.add("角色管理");
         this.fragments = fragments;
         this.fragmentList = fragmentList;
         //Fragment需要填充的Fragment页面对象，例如new oneFragment()、 new Two Fragment()，放进List集合中，进行自动适配填充

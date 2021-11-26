@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -14,6 +13,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,7 +43,14 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
     //被下线真实姓名输入框
     @BindView(R2.id.edit_kick_offline_realname) PowerfulEditText mEditKickOffLineRealName;
     //确定执行下线
-    @BindView(R2.id.btn_kickoffLine_realname) Button mBtnKickoffLineRealName;
+    @BindView(R2.id.btn_kickoffLine_realname) ButtonView mBtnKickoffLineRealName;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperKickOffLineRealNameFragment newInstance() {
+        return new DeveloperKickOffLineRealNameFragment();
+    }
 
     @Override
     protected int bindLayout() {

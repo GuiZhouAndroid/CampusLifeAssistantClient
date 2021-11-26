@@ -14,6 +14,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -44,7 +45,14 @@ public class DeveloperAddRoleInfoFragment extends BaseFragment {
     //角色描述
     @BindView(R2.id.edit_add_role_info) PowerfulEditText mEditAddRoleInfo;
     //确定添加
-    @BindView(R2.id.btn_add_role) Button mBtnAddRole;
+    @BindView(R2.id.btn_add_role) ButtonView mBtnAddRole;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperAddRoleInfoFragment newInstance() {
+        return new DeveloperAddRoleInfoFragment();
+    }
 
     @Override
     public boolean onBackPressed() {

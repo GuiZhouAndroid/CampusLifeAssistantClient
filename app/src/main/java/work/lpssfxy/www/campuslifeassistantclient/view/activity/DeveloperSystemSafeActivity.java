@@ -21,16 +21,8 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperAddRoleInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountRealNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineTokenFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperManagerBannedAccountInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperManagerRoleInfoFragment;
 
 /**
  * created by on 2021/11/16
@@ -55,8 +47,6 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
     @BindView(R2.id.vertical_viewpager_developer_safe) VerticalPager mDeveloperSafeVerticalViewPager;
     /** Fragment集合 */
     public Fragment[] fragments = null;
-    /** ViewPager适配器遍历绑定数组Fragment集合 */
-    private List<Fragment> fragmentList;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -132,11 +122,13 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
      * 初始化ViewPager + TabLayout + Fragment
      */
     private void initViewPager() {
-        fragmentList = new ArrayList<>();
+        /* ViewPager适配器遍历绑定数组Fragment集合 */
+        List<Fragment> fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        fragments = new Fragment[]{new DeveloperKickOffLineRealNameFragment(), new DeveloperKickOffLineTokenFragment(), new DeveloperBannedAccountRealNameFragment(),
-                new DeveloperSelectBannedStateRealNameFragment(), new DeveloperSelectBannedTimeRealNameFragment(), new DeveloperUntieBannedAccountUserNameFragment(),
-                new DeveloperSelectAllRoleInfoFragment(), new DeveloperAddRoleInfoFragment(),new DeveloperSelectUserRoleByUserNameFragment(),new DeveloperSelectHaveRoleUserInfoByRoleIdFragment()};
+        fragments = new Fragment[]{
+                DeveloperManagerBannedAccountInfoFragment.newInstance(),
+                DeveloperManagerRoleInfoFragment.newInstance()
+        };
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
         //进行TabLayout 关联 ViewPager

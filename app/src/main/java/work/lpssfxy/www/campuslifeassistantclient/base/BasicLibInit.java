@@ -70,8 +70,9 @@ public class BasicLibInit {
         initSkinCompatManager(application);
         /** 初始化QQ互联SDK实例 */
         initQQTencent(application);
-        /** 初始化UI框架 */
+        /** 初始化XUI框架 */
         XUI.init(application);
+        /** 开启XUI调试日志 */
         XUI.debug(true);
         /** 初始化工具类 */
         initUtils(application);

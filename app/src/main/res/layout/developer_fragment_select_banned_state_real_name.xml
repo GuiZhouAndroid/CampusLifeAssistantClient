@@ -38,15 +38,18 @@
             android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
 
-        <Button
+        <com.xuexiang.xui.widget.button.ButtonView
             android:id="@+id/btn_ban_account_state_realname"
+            style="@style/ButtonView.Blue"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/orderlist_refund_selector"
             android:text="@string/start_select"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/sp_14"
+            app:textNormalTextColor="@color/white"
+            app:textRadius="8dp"
+            app:textSelectedTextColor="#FF6565" />
     </LinearLayout>
 
 </RelativeLayout>

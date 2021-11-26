@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.xuexiang.xui.widget.button.ButtonView;
+
 import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
@@ -32,12 +34,15 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     //查询角色编号
     @BindView(R2.id.edit_dev_role_user_info_role_id) PowerfulEditText mEditDevRoleUserInfoRoleId;
     //开始查询
-    @BindView(R2.id.btn_dev_role_user_info_role_id) Button mBtnDevRoleUserInfoRoleId;
+    @BindView(R2.id.btn_dev_role_user_info_role_id) ButtonView mBtnDevRoleUserInfoRoleId;
     /* RecyclerView列表 */
     @BindView(R2.id.recyclerView_role_user_info_role_id) RecyclerView mRecyclerViewRoleUserInfoRoleId;
-    @Override
-    public boolean onBackPressed() {
-        return false;
+
+    /**
+     * @return 单例对象
+     */
+    public static DeveloperSelectHaveRoleUserInfoByRoleIdFragment newInstance() {
+        return new DeveloperSelectHaveRoleUserInfoByRoleIdFragment();
     }
 
     @Override
@@ -68,5 +73,10 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     @Override
     protected void doBusiness(Context context) {
 
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }
