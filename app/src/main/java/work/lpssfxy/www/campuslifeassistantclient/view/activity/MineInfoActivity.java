@@ -194,7 +194,7 @@ public class MineInfoActivity extends BaseActivity {
     @Override
     protected void doBusiness() {
         //设置默认主题
-        setThemeColor(this,mToolbarMyInfo,mRefreshLayoutMyInfo,R.color.boxBg, R.color.boxBg);
+        setThemeColor(this, mToolbarMyInfo, mRefreshLayoutMyInfo, R.color.boxBg, R.color.boxBg);
         //进入页面自动刷新调用查询API接口，拉取用户数据
         doRefresh();
     }
@@ -218,7 +218,7 @@ public class MineInfoActivity extends BaseActivity {
      */
     private void doRefresh() {
         //开启加载进度条
-        XPopupUtils.getInstance().setShowDialog(MineInfoActivity.this,"拉取信息中...");
+        XPopupUtils.getInstance().setShowDialog(MineInfoActivity.this, "拉取信息中...");
         //自动触发下拉刷新
         mRefreshLayoutMyInfo.autoRefresh();
         //开始下拉刷新，执行调用API接口业务
@@ -233,7 +233,7 @@ public class MineInfoActivity extends BaseActivity {
     /**
      * 通过用户ID开始查询全部信息
      */
-    public void startSelectLoginUserInfoByUserId(){
+    public void startSelectLoginUserInfoByUserId() {
         //查询当前已登录账号ID的Session信息，从Session中获取用户ID，提供此ID查询用户全部信息
         OkGo.<String>post(Constant.SA_TOKEN_GET_SESSION_INFO)
                 .tag("用户登录Session信息")
@@ -242,7 +242,7 @@ public class MineInfoActivity extends BaseActivity {
                     public void onSuccess(Response<String> response) {
                         //Json字符串解析转为实体类对象
                         OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
-                        if (200 == okGoUserBeanData.getCode() & null != okGoUserBeanData.getData() && "success".equals(okGoUserBeanData.getMsg())){
+                        if (200 == okGoUserBeanData.getCode() & null != okGoUserBeanData.getData() && "success".equals(okGoUserBeanData.getMsg())) {
                             // 通过Session中的ID查询用户全部信息
                             OkGo.<String>post(Constant.SELECT_USER_ALL_INFO_BY_USERID + "/" + okGoUserBeanData.getData().getUlId())
                                     .tag("用户ID查询个人信息")
@@ -275,6 +275,7 @@ public class MineInfoActivity extends BaseActivity {
                     }
                 });
     }
+
     public void managerMyUserInfo() {
         mUserNumber.setItemClickListener(new ItemView.itemClickListener() {
             @Override
@@ -314,7 +315,7 @@ public class MineInfoActivity extends BaseActivity {
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                                        ToastUtils.show("【" + oldUserName + "】" +"用户名换绑失败");
+                                                        ToastUtils.show("【" + oldUserName + "】" + "用户名换绑失败");
                                                     }
                                                 }
 
@@ -381,7 +382,7 @@ public class MineInfoActivity extends BaseActivity {
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                                        ToastUtils.show("【" + oldStuNo + "】" +"学号换绑失败");
+                                                        ToastUtils.show("【" + oldStuNo + "】" + "学号换绑失败");
                                                     }
                                                 }
 
@@ -430,7 +431,7 @@ public class MineInfoActivity extends BaseActivity {
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                                        ToastUtils.show("【" + oldTel + "】" +"手机号换绑失败");
+                                                        ToastUtils.show("【" + oldTel + "】" + "手机号换绑失败");
                                                     }
                                                 }
 
@@ -450,20 +451,26 @@ public class MineInfoActivity extends BaseActivity {
         mEmail.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String oldEmail) {
-                new MiddleDialogConfig().builder(MineInfoActivity.this)
-                        .setEditHint("输入新的QQ邮箱")
-                        .setEditHintColor("#FF4081")
-                        .setTitleColor("#FF4081")
-                        .setEditTextColor("#00bfff")
-                        .setTitle("更新QQ邮箱")
-                        .setDialogStyle(DialogEnum.EDIT)
-                        .setRightCallBack(new MiddleDialogConfig.RightCallBack() {
+                new MaterialDialog.Builder(MineInfoActivity.this)
+                        .customView(R.layout.mine_info_activity_update_user_qq_email_dialog_item, true)
+                        .titleGravity(GravityEnum.CENTER)
+                        .title("换绑QQ邮箱" + oldEmail)
+                        .titleColor(getResources().getColor(R.color.colorAccent))
+                        .positiveText("换绑")
+                        .positiveColor(getResources().getColor(R.color.colorAccent))
+                        .negativeText("取消")
+                        .cancelable(false)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void rightBtn(String newEmail) {
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                //获取自定义布局中的控件id
+                                MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_user_qq_email);
+                                //新角色名称
+                                String newEmail = materialEditText.getText().toString().trim();
                                 if (MyRegexUtils.checkEmail(newEmail)) {//正则表达式，判断QQ邮箱
                                     OkGo.<String>post(Constant.UPDATE_QQ_EMAIL + "/" + nowUserName + "/" + oldEmail + "/" + newEmail)
-                                            .tag("更新QQ邮箱")
-                                            .execute(new StringDialogCallback(MineInfoActivity.this) {
+                                            .tag("换绑QQ邮箱")
+                                            .execute(new StringCallback() {
                                                 @Override
                                                 public void onSuccess(Response<String> response) {
                                                     OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
@@ -473,13 +480,13 @@ public class MineInfoActivity extends BaseActivity {
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                                        ToastUtils.show("【" + oldEmail + "】"+"QQ邮箱换绑失败");
+                                                        ToastUtils.show("【" + oldEmail + "】" + "QQ邮箱换绑失败");
                                                     }
                                                 }
 
                                                 @Override
                                                 public void onError(Response<String> response) {
-                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, MineInfoActivity.this, mLlMineInfoShow, "换绑请求被系统拒绝！此QQ邮箱已被别人使用");
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, MineInfoActivity.this, mLlMineInfoShow, "换绑请求被系统拒绝！此学号已被别人使用");
                                                 }
                                             });
                                     return;
@@ -526,7 +533,7 @@ public class MineInfoActivity extends BaseActivity {
                                             return;
                                         }
                                         if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                            ToastUtils.show("【" + oldDept + "】"+"所属院系更新失败");
+                                            ToastUtils.show("【" + oldDept + "】" + "所属院系更新失败");
                                         }
                                     }
 
@@ -569,7 +576,7 @@ public class MineInfoActivity extends BaseActivity {
                                             return;
                                         }
                                         if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                                            ToastUtils.show("【" + oldClass + "】"+"专业班级更新失败");
+                                            ToastUtils.show("【" + oldClass + "】" + "专业班级更新失败");
                                         }
                                     }
 
@@ -588,13 +595,13 @@ public class MineInfoActivity extends BaseActivity {
         mCreateTime.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String registerTime) {
-                ToastUtils.show("您账号注册日期是："+registerTime);
+                ToastUtils.show("您账号注册日期是：" + registerTime);
             }
         });
         mUpdateTime.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String updateTime) {
-                ToastUtils.show("您上次修改信息时间是："+updateTime);
+                ToastUtils.show("您上次修改信息时间是：" + updateTime);
             }
         });
     }
