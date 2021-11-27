@@ -28,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageAccountSafeTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
@@ -49,16 +50,23 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
  */
 @SuppressLint("NonConstantResourceId")
 public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener{
-    @BindView(R.id.tab_layout_ban_account_info) TabLayout mTabLayoutBanAccountInfo;
-    @BindView(R.id.tv_onclick_open_ban_account_info) TextView mTvOnclickOpenBanAccountInfo;
-    @BindView(R.id.iv_switch_ban_account_info) AppCompatImageView mIvSwitchBanAccountInfo;
-    @BindView(R.id.view_pager_ban_account_info) ViewPager2 mViewPager2BanAccountInfo;
 
+    private static final String TAG = "DeveloperManagerBannedAccountInfoFragment";
+
+    //顶部TabLayout
+    @BindView(R2.id.tab_layout_ban_account_info) TabLayout mTabLayoutBanAccountInfo;
+    //TabLayout展开文本
+    @BindView(R2.id.tv_onclick_open_ban_account_info) TextView mTvOnclickOpenBanAccountInfo;
+    //TabLayout展开图标
+    @BindView(R2.id.iv_switch_ban_account_info) AppCompatImageView mIvSwitchBanAccountInfo;
+    //ViewPager2左右滑动
+    @BindView(R2.id.view_pager_ban_account_info) ViewPager2 mViewPager2BanAccountInfo;
+    //展开状态
     private boolean mNavigationIsShowBanAccountInfo;
     //ViewPager2动态加载适配器
-    private MyFragmentStateViewPager2Adapter mAdapter;
+    private MyFragmentStateViewPager2Adapter mBanAccountInfoAdapter;
     //TabLayout适配的Fragment集合
-    public Fragment[] fragments = null;
+    public Fragment[] banAccountInfoFragments = null;
 
     /**
      * @return 单例对象
@@ -102,13 +110,13 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
     }
 
     private void initTabLayout() {
-        mAdapter = new MyFragmentStateViewPager2Adapter(this);
+        mBanAccountInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
         mTabLayoutBanAccountInfo.setTabMode(MODE_SCROLLABLE);
         mTabLayoutBanAccountInfo.addOnTabSelectedListener(this);
-        mViewPager2BanAccountInfo.setAdapter(mAdapter);
+        mViewPager2BanAccountInfo.setAdapter(mBanAccountInfoAdapter);
         // 设置缓存的数量
         mViewPager2BanAccountInfo.setOffscreenPageLimit(1);
-        new TabLayoutMediator(mTabLayoutBanAccountInfo, mViewPager2BanAccountInfo, (tab, position) -> tab.setText(mAdapter.getPageTitle(position))).attach();
+        new TabLayoutMediator(mTabLayoutBanAccountInfo, mViewPager2BanAccountInfo, (tab, position) -> tab.setText(mBanAccountInfoAdapter.getPageTitle(position))).attach();
     }
 
 
@@ -168,7 +176,7 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
     @SuppressLint("NotifyDataSetChanged")
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
-        fragments = new Fragment[]{
+        banAccountInfoFragments = new Fragment[]{
                 DeveloperKickOffLineRealNameFragment.newInstance(),
                 DeveloperKickOffLineTokenFragment.newInstance(),
                 DeveloperSelectBannedStateRealNameFragment.newInstance(),
@@ -179,7 +187,7 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
         };
         //装载List集合，提供给ViewPager2适配器使用
         //装载List集合，提供给ViewPager2适配器使用
-        List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(fragments));
+        List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(banAccountInfoFragments));
         //装载TabLayout标题集合，提供给ViewPager2适配器使用
         //装载TabLayout标题集合，提供给ViewPager2适配器使用
         List<String> titleList = new ArrayList<>(Arrays.asList(MultiPageAccountSafeTitle.getPageNames()));
@@ -188,13 +196,13 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
         }
         if (isShow) { //打开按钮动态加载选项卡内容
             for (Fragment fragment: fragmentList) { //遍历Fragment集合，开始适配
-                mAdapter.addFragment(fragment, titleList);
+                mBanAccountInfoAdapter.addFragment(fragment, titleList);
             }
-            mAdapter.notifyDataSetChanged();
+            mBanAccountInfoAdapter.notifyDataSetChanged();
             mViewPager2BanAccountInfo.setCurrentItem(0, false);
             WidgetUtils.setTabLayoutTextFont(mTabLayoutBanAccountInfo);
         } else { // 清空适配全部数据
-            mAdapter.clear();
+            mBanAccountInfoAdapter.clear();
         }
     }
 

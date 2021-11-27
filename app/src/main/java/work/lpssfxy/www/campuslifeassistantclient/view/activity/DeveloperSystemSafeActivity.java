@@ -22,6 +22,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerBannedAccountInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerPermissionInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerRoleInfoFragment;
 
 /**
@@ -126,11 +127,14 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
         List<Fragment> fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
         fragments = new Fragment[]{
-                DeveloperManagerBannedAccountInfoFragment.newInstance(),
-                DeveloperManagerRoleInfoFragment.newInstance()
+                DeveloperManagerRoleInfoFragment.newInstance(), //角色管理
+                DeveloperManagerPermissionInfoFragment.newInstance(), //权限管理
+                DeveloperManagerBannedAccountInfoFragment.newInstance(),//封禁管理
         };
-        //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
+        //ViewPager2设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
+        //ViewPager2设置缓存页面
+        mDeveloperSafeVerticalViewPager.setOffscreenPageLimit(fragmentList.size());
         //进行TabLayout 关联 ViewPager
         mDeveloperSafeVerticalTabLayout.setupWithViewPager(mDeveloperSafeVerticalViewPager);
     }

@@ -19,12 +19,8 @@ public class Constant {
     /**
      * 网络请求Gson解析常量类对象
      */
-    // QQSession
-    public static OnlyQQSessionInfoBean QQSession;
     // QQ个人资料
     public static OnlyQQUserInfoBean onlyQQUserInfo;
-    // QQSession+用户ID(用于判断账户是否授权QQ，对应MySQL数据库表《t_qq_oauth2_session》)
-    public static OkGoUserInTheSessionBean sessionUser;
     // QQSession+用户全部信息(并集信息)
     public static OkGoSessionAndUserBean sessionAndUserBean;
     // QQSession+用户全部信息(并集信息中的QQSession)
@@ -127,6 +123,12 @@ public class Constant {
     // 当前登录会话的用户名，查询该用户的对应的角色集合
     public static final String SELECT_NOW_USERNAME_ROLE_LIST = BASE_URL + "/api/user/selectRoleListByRedisToUserName";
 
+    // 当前登录账户通过Sa-Token的redis缓存UserSession中的真实姓名(再MP查询用户名)对应的角色信息
+    public static final String SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME = BASE_URL + "/api/user/saTokenRedisUserSessionSelectRoleListByRealNameToUserName";
+
+    // 当前登录账户通过Sa-Token的redis缓存UserSession中的真实姓名(再MP查询用户名)对应的权限信息
+    public static final String SA_TOKEN_REDIS_USER_SESSION_SELECT_PERMISSION_LIST_BY_REAL_NAME_TO_USERNAME = BASE_URL + "/api/user/saTokenRedisUserSessionSelectPermissionListByRealNameToUserName";
+
     /**
      * 检测用户登录注销状态相关API接口
      */
@@ -187,7 +189,6 @@ public class Constant {
     /**
      * 超管后台中心
      */
-
     /* ************************ 1.账户封禁相关API接口 *************************/
 
     // 超管通过已登录账户真实姓名踢人下线
@@ -216,11 +217,8 @@ public class Constant {
     // 超管查询角色全部信息
     public static final String ADMIN_SELECT_ALL_ROLE_INFO = BASE_URL + "/api/admin/role/adminSelectAllRoleInfo";
 
-    // 超管通过用户名查询该用户的对应的角色
-    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/role/adminSelectUserRoleByUserName";
-
     // 超管通过角色自增ID查询拥有该角色全部用户的信息
-    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USERNAME = BASE_URL + "/api/admin/role/adminSelectHaveRoleUserInfoByRoleId";
+    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectHaveRoleUserInfoByRoleId";
 
     // 超管通过角色ID和旧角色名称更新角色名称
     public static final String ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME = BASE_URL + "/api/admin/role/adminUpdateRoleNameByRoleIdAndOldRoleName";
@@ -236,8 +234,33 @@ public class Constant {
 
     /* ************************ 2.用户角色管理相关API接口 *************************/
 
-    /* ************************ 3.权限管理管理相关API接口 *************************/
+    // 通过用户名查询该用户的对应的角色
+    public static final String SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserRoleByUserName";
+
+
+    /* ************************ 3.权限管理相关API接口 *************************/
+
+    // 超管添加一条权限信息
+    public static final String ADMIN_ADD_ONCE_PERMISSION_INFO = BASE_URL + "/api/admin/permission/adminAddOncePermissionInfo";
+
+    // 超管查询权限全部信息
+    public static final String ADMIN_SELECT_ALL_PERMISSION_INFO = BASE_URL + "/api/admin/permission/adminSelectAllPermissionInfo";
+
+    // 超管通过权限实体删除一条对应权限信息
+    public static final String ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY = BASE_URL + "/api/admin/permission/adminDeleteOncePermissionInfoByPermissionEntity";
+
+    // 超管通过权限ID和旧权限名称更新权限名称
+    public static final String ADMIN_UPDATE_PERMISSION_NAME_BY_PERMISSION_ID_AND_OLD_PERMISSION_NAME = BASE_URL + "/api/admin/permission/adminUpdatePermissionNameByPermissionIdAndOldPermissionName";
+
+    // 超管通过角色权限和旧权限描述更新权限描述
+    public static final String ADMIN_UPDATE_PERMISSION_DESCRIPTION_BY_PERMISSION_ID_AND_OLD_PERMISSION_DESCRIPTION = BASE_URL + "/api/admin/permission/adminUpdatePermissionDescriptionByPermissionIdAndOldPermissionDescription";
+
 
     /* ************************ 4.角色权限管理相关API接口 *************************/
+
+    /* ************************ 5.用户角色权限管理相关API接口 *************************/
+
+    // 通过用户名查询该用户的对应的权限
+    public static final String SELECT_USER_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserPermissionByUserName";
 }
 

@@ -6,14 +6,14 @@ import lombok.Data;
 
 /**
  * created by on 2021/11/24
- * 描述：OkGo网络请求返回角色信息的Json数据
+ * 描述：OkGo网络请求返回全部角色信息的Json数据
  *
  * @author ZSAndroid
  * @create 2021-11-24-22:11
  */
 
 @Data
-public class OkGoRoleInfoBean {
+public class OkGoAllRoleInfoBean {
 
     private int code;
     private List<Data> data;//角色对象数据集合

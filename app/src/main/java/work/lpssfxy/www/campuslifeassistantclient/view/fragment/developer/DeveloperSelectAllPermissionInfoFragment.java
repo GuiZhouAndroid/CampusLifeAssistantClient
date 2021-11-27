@@ -37,50 +37,51 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRoleInfoAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.BasePermissionInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.PermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllPermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllRoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 /**
- * created by on 2021/11/24
- * 描述：超管查询角色全部信息
+ * created by on 2021/11/27
+ * 描述：超管查询权限全部信息
  *
  * @author ZSAndroid
- * @create 2021-11-24-22:13
+ * @create 2021-11-27-13:59
  */
-
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
-    private static final String TAG = "DeveloperSelectAllRoleInfoFragment";
+public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
+
+    private static final String TAG = "DeveloperSelectAllPermissionInfoFragment";
 
     /* 父布局 */
-    @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
-    /* XUI按钮添加角色 */
-    @BindView(R2.id.btn_add_role) ButtonView mBtnAddRole;
-    /* 角色拥有数 */
-    @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
+    @BindView(R2.id.ll_dev_select_all_permission_info) LinearLayout mLlDevSelectAllPermissionInfo;
+    /* XUI按钮添加权限 */
+    @BindView(R2.id.btn_add_permission) ButtonView mBtnAddPermission;
+    /* 权限拥有数 */
+    @BindView(R2.id.tv_all_permission_info_show) TextView mTvAllPermissionInfoShow;
     /* RecyclerView列表 */
-    @BindView(R2.id.recyclerView_all_role_info) RecyclerView mRecyclerViewAllRoleInfo;
-    /* 角色信息列表适配器 */
-    private BaseRoleInfoAdapter roleInfoAdapter;
+    @BindView(R2.id.recyclerView_all_permission_info) RecyclerView mRecyclerViewAllPermissionInfo;
+    /* 权限信息列表适配器 */
+    private BasePermissionInfoAdapter permissionInfoAdapter;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperSelectAllRoleInfoFragment newInstance() {
-        return new DeveloperSelectAllRoleInfoFragment();
+    public static DeveloperSelectAllPermissionInfoFragment newInstance() {
+        return new DeveloperSelectAllPermissionInfoFragment();
     }
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_all_role_info;
+        return R.layout.developer_fragment_select_all_permission_info;
     }
 
     @Override
@@ -91,7 +92,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     @Override
     protected void initView(View rootView) {
         //初始化RecyclerView列表控件
-        initSelectAllRoleInfoRecyclerView();
+        initSelectAllPermissionInfoRecyclerView();
     }
 
     @Override
@@ -106,18 +107,18 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        //开始查询全部角色信息
-        startSelectAllRoleInfo(context);
+        //开始查询全部权限信息
+        startSelectAllPermissionInfo(context);
     }
 
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_add_role})
-    public void onSelectAllRoleInfoViewClick(View view) {
+    @OnClick({R2.id.btn_add_permission})
+    public void onSelectAllPermissionInfoViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_add_role://确定添加
-                startAddRoleInfo();
+            case R.id.btn_add_permission://确定添加
+                startAddPermissionInfo();
                 break;
         }
     }
@@ -125,68 +126,61 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     /**
      * 初始化RecyclerView列表控件
      */
-    private void initSelectAllRoleInfoRecyclerView() {
+    private void initSelectAllPermissionInfoRecyclerView() {
         // 1.创建布局管理实例对象
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 2.设置RecyclerView布局方式为垂直方向
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
-        mRecyclerViewAllRoleInfo.setLayoutManager(layoutManager);
+        mRecyclerViewAllPermissionInfo.setLayoutManager(layoutManager);
     }
 
     /**
-     * OkGo网络请求开始调用API接口开始查询全部角色信息
+     * OkGo网络请求开始调用API接口开始查询全部权限信息
      *
      * @param context 上下文
      */
-    private void startSelectAllRoleInfo(Context context) {
-        //开始网络请求，访问后端服务器，执行查询角色操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_ROLE_INFO)
-                .tag("查询全部角色信息")
+    private void startSelectAllPermissionInfo(Context context) {
+        //开始网络请求，访问后端服务器，执行查询权限操作
+        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_PERMISSION_INFO)
+                .tag("查询全部权限信息")
                 .execute(new StringCallback() {
-                    @Override
-                    public void onStart(Request<String, ? extends Request> request) {
-                        super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在加载信息...");
-                    }
-
-                    @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoAllRoleInfoBean okGoAllRoleInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllRoleInfoBean.class);
-                        //查询成功，取出getData，遍历集合并创建角色实体添加适配
-                        if (200 == okGoAllRoleInfoBean.getCode() && "success".equals(okGoAllRoleInfoBean.getMsg())) {
+                        OkGoAllPermissionInfoBean okGoAllPermissionInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllPermissionInfoBean.class);
+                        //查询成功，取出getData，遍历集合并创建权限实体添加适配
+                        if (200 == okGoAllPermissionInfoBean.getCode() && "success".equals(okGoAllPermissionInfoBean.getMsg())) {
                             // 1.提示信息
-                            ToastUtils.show("全部角色信息获取成功");
-                            // 2.取出角色对象集合对象数据
-                            List<OkGoAllRoleInfoBean.Data> okGoRoleInfoBeanDataList = okGoAllRoleInfoBean.getData();
-                            // 3.创建角色实体集合，为适配列表准备数据
-                            List<RoleInfoBean> roleInfoBeanList = new ArrayList<>();
-                            // 4.遍历getData集合，分离集合获取单个角色对象数据，同时遍历添加到适配列表角色实体
-                            for (OkGoAllRoleInfoBean.Data data : okGoRoleInfoBeanDataList) {
-                                // 4.1 循环遍历创建对象，动态添加角色数据
-                                RoleInfoBean roleInfoBean = new RoleInfoBean(data.getTrId(), data.getTrName(), data.getTrDescription(), data.getCreateTime(), data.getUpdateTime());
-                                // 4.2 携带角色对象数据，每次循环遍历都依次加载到RecyclerView列表适配需要集合中
-                                roleInfoBeanList.add(roleInfoBean);
+                            ToastUtils.show("全部权限信息获取成功");
+                            // 2.取出权限对象集合对象数据
+                            List<OkGoAllPermissionInfoBean.Data> okGoPermissionInfoBeanDataList = okGoAllPermissionInfoBean.getData();
+                            // 3.创建权限实体集合，为适配列表准备数据
+                            List<PermissionInfoBean> permissionInfoBeanList = new ArrayList<>();
+                            // 4.遍历getData集合，分离集合获取单个权限对象数据，同时遍历添加到适配列表权限实体
+                            for (OkGoAllPermissionInfoBean.Data data : okGoPermissionInfoBeanDataList) {
+                                // 4.1 循环遍历创建对象，动态添加权限数据
+                                PermissionInfoBean permissionInfoBean = new PermissionInfoBean(data.getTpId(), data.getTpName(), data.getTpDescription(), data.getCreateTime(), data.getUpdateTime());
+                                // 4.2 携带权限对象数据，每次循环遍历都依次加载到RecyclerView列表适配需要集合中
+                                permissionInfoBeanList.add(permissionInfoBean);
                             }
-                            // 5.创建角色适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带角色对象集合数据
-                            roleInfoAdapter = new BaseRoleInfoAdapter(R.layout.developer_fragment_select_all_role_info_recycler_view_item, roleInfoBeanList);
-                            // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
-                            mRecyclerViewAllRoleInfo.setAdapter(roleInfoAdapter);
-                            // 7.设置角色拥有数
-                            mTvAllRoleInfoShow.setText("校园帮APP已有：" + roleInfoBeanList.size() + "条角色信息");
-                            // 8.执行子View单击事件业务逻辑--->更新角色信息
-                            roleInfoAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+                            // 5.创建权限适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带权限对象集合数据
+                            permissionInfoAdapter = new BasePermissionInfoAdapter(R.layout.developer_fragment_select_all_permission_info_recycler_view_item, permissionInfoBeanList);
+                            mRecyclerViewAllPermissionInfo.setAdapter(permissionInfoAdapter);
+                            // 7.设置权限拥有数
+                            mTvAllPermissionInfoShow.setText("校园帮APP已有：" + permissionInfoBeanList.size() + "条权限信息");
+                            // 8.执行子View单击事件业务逻辑--->更新权限信息
+                            permissionInfoAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
                                 @Override
                                 public void onItemChildClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                                    // 8.1 通过位置索引，获取对应适配的角色实体对象数据
-                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
-                                    // 8.2 更新角色名称
-                                    if (view.getId() == R.id.select_all_role_name) {
+                                    // 8.1 通过位置索引，获取对应适配的权限实体对象数据
+                                    PermissionInfoBean permissionInfoBean = (PermissionInfoBean) adapter.getData().get(position);
+                                    // 8.2 更新权限名称
+                                    if (view.getId() == R.id.select_all_permission_name) {
                                         new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
+                                                .customView(R.layout.developer_fragment_select_all_permission_info_update_permission_info_dialog_item, true)
                                                 .titleGravity(GravityEnum.CENTER)
-                                                .title("更新" + roleInfoBean.getTrName())
+                                                .title("更新" + permissionInfoBean.getTpName())
                                                 .titleColor(getResources().getColor(R.color.colorAccent))
                                                 .positiveText("更新")
                                                 .positiveColor(getResources().getColor(R.color.colorAccent))
@@ -196,11 +190,11 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                     @Override
                                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                                         //获取自定义布局中的控件id
-                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_role_info);
+                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_permission_info);
                                                         //新角色名称
-                                                        String newRoleName = materialEditText.getText().toString().trim();
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName() + "/" + newRoleName)
-                                                                .tag("更新角色名称")
+                                                        String newPermissionName = materialEditText.getText().toString().trim();
+                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_PERMISSION_NAME_BY_PERMISSION_ID_AND_OLD_PERMISSION_NAME + "/" + permissionInfoBean.getTpId() + "/" + permissionInfoBean.getTpName() + "/" + newPermissionName)
+                                                                .tag("更新权限名称")
                                                                 .execute(new StringCallback() {
                                                                     @Override
                                                                     public void onStart(Request<String, ? extends Request> request) {
@@ -217,6 +211,10 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                             ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
                                                                             return;
                                                                         }
+                                                                        if (200 == okGoResponseBean.getCode() && "权限名更新失败，此权限名已存在".equals(okGoResponseBean.getMsg())) {
+                                                                            ToastUtils.show("【" + permissionInfoBean.getTpName() + "】" + okGoResponseBean.getMsg());
+                                                                            return;
+                                                                        }
                                                                         //更新失败
                                                                         if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
                                                                             ToastUtils.show(okGoResponseBean.getData());
@@ -225,7 +223,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         //更新成功
                                                                         if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
                                                                             //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
+                                                                            startSelectAllPermissionInfo(context);
                                                                             ToastUtils.show(okGoResponseBean.getData());
                                                                         }
                                                                     }
@@ -240,12 +238,12 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                 })
                                                 .show();
                                     }
-                                    // 8.2 更新角色描述
-                                    if (view.getId() == R.id.select_all_role_info) {
+                                    // 8.2 更新权限描述
+                                    if (view.getId() == R.id.select_all_permission_info) {
                                         new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
+                                                .customView(R.layout.developer_fragment_select_all_permission_info_update_permission_info_dialog_item, true)
                                                 .titleGravity(GravityEnum.CENTER)
-                                                .title("更新" + roleInfoBean.getTrDescription())
+                                                .title("更新" + permissionInfoBean.getTpDescription())
                                                 .titleColor(getResources().getColor(R.color.colorAccent))
                                                 .positiveText("更新")
                                                 .positiveColor(getResources().getColor(R.color.colorAccent))
@@ -255,11 +253,11 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                     @Override
                                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                                         //获取自定义布局中的控件id
-                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_role_info);
-                                                        //新角色描述
-                                                        String newRoleDescription = materialEditText.getText().toString().trim();
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_DESCRIPTION_BY_ROLE_ID_AND_OLD_ROLE_DESCRIPTION + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrDescription() + "/" + newRoleDescription)
-                                                                .tag("更新角色描述")
+                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_permission_info);
+                                                        //新权限描述
+                                                        String newPermissionDescription = materialEditText.getText().toString().trim();
+                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_PERMISSION_DESCRIPTION_BY_PERMISSION_ID_AND_OLD_PERMISSION_DESCRIPTION + "/" + permissionInfoBean.getTpId() + "/" + permissionInfoBean.getTpDescription() + "/" + newPermissionDescription)
+                                                                .tag("更新权限描述")
                                                                 .execute(new StringCallback() {
                                                                     @Override
                                                                     public void onStart(Request<String, ? extends Request> request) {
@@ -283,7 +281,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         //更新成功
                                                                         if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
                                                                             //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
+                                                                            startSelectAllPermissionInfo(context);
                                                                             ToastUtils.show(okGoResponseBean.getData());
                                                                         }
                                                                     }
@@ -297,7 +295,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onError(Response<String> response) {
                                                                         super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllPermissionInfo, "请求错误，服务器连接失败！");
                                                                     }
                                                                 });
                                                     }
@@ -307,14 +305,14 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 }
                             });
 
-                            // 9.为item设置单击监听事件--->删除一条角色信息
-                            roleInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
+                            // 9.为item设置单击监听事件--->删除一条权限信息
+                            permissionInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
                                 @Override
                                 public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
+                                    PermissionInfoBean permissionInfoBean = (PermissionInfoBean) adapter.getData().get(position);
                                     List<MaterialSimpleListItem> list = new ArrayList<>();
                                     list.add(new MaterialSimpleListItem.Builder(context)
-                                            .content("删除" + roleInfoBean.getTrName() + "角色信息")
+                                            .content("删除" + permissionInfoBean.getTpName() + "权限信息")
                                             .icon(R.drawable.logo)
                                             .iconPaddingDp(8)
                                             .build());
@@ -324,16 +322,10 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                 @Override
                                                 public void onMaterialListItemSelected(MaterialDialog dialog, int index, MaterialSimpleListItem item) {
                                                     //logo列表item内容匹配成功true时执行删除业务
-                                                    if (item.getContent().toString().equals("删除" + roleInfoBean.getTrName() + "角色信息")) {
-                                                        OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName())
-                                                                .tag("删除角色信息")
+                                                    if (item.getContent().toString().equals("删除" + permissionInfoBean.getTpName() + "权限信息")) {
+                                                        OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY + "/" + permissionInfoBean.getTpId() + "/" + permissionInfoBean.getTpName())
+                                                                .tag("删除权限信息")
                                                                 .execute(new StringCallback() {
-                                                                    @Override
-                                                                    public void onStart(Request<String, ? extends Request> request) {
-                                                                        super.onStart(request);
-                                                                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
-                                                                    }
-
                                                                     @SuppressLint("NotifyDataSetChanged")
                                                                     @Override
                                                                     public void onSuccess(Response<String> response) {
@@ -350,22 +342,16 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                         }
                                                                         //删除成功
                                                                         if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                                            //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
+                                                                            //再次调用查询全部权限接口，实现动态更新显示
+                                                                            startSelectAllPermissionInfo(context);
                                                                             ToastUtils.show(okGoResponseBean.getData());
                                                                         }
                                                                     }
 
                                                                     @Override
-                                                                    public void onFinish() {
-                                                                        super.onFinish();
-                                                                        XPopupUtils.getInstance().setSmartDisDialog();
-                                                                    }
-
-                                                                    @Override
                                                                     public void onError(Response<String> response) {
                                                                         super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllPermissionInfo, "请求错误，服务器连接失败！");
                                                                     }
                                                                 });
                                                     }
@@ -378,28 +364,24 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                         }
                     }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
-                    }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllPermissionInfo, "请求错误，服务器连接失败！");
                     }
                 });
+
     }
 
     /**
-     * 添加一条角色信息
+     * 添加一条权限信息
      */
-    private void startAddRoleInfo() {
+    private void startAddPermissionInfo() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_all_role_info_add_role_info_dialog_item, true)
+                .customView(R.layout.developer_fragment_select_all_permission_info_add_permission_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
-                .title("新增角色")
+                .title("新增权限")
                 .titleColor(getResources().getColor(R.color.colorAccent))
                 .positiveText("添加")
                 .positiveColor(getResources().getColor(R.color.colorAccent))
@@ -409,50 +391,44 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //点击添加按钮同时获取dialog中的控件
-                        PowerfulEditText mEditAddRoleName = dialog.findViewById(R.id.edit_add_role_name);
-                        PowerfulEditText mEditAddRoleInfo = dialog.findViewById(R.id.edit_add_role_info);
+                        PowerfulEditText mEditAddPermissionName = dialog.findViewById(R.id.edit_add_permission_name);
+                        PowerfulEditText mEditAddPermissionInfo = dialog.findViewById(R.id.edit_add_permission_info);
                         //点击添加按钮同时获取dialog中的控件输入的文本内容
-                        String strEditAddRoleName = mEditAddRoleName.getText().toString().trim();
-                        String strAddRoleInfo = mEditAddRoleInfo.getText().toString().trim();
-                        //角色名称 + 角色描述 文本内容传递doAddRoleInfo()并开始添加
-                        doAddRoleInfo(strEditAddRoleName, strAddRoleInfo);
+                        String strEditAddPermissionName = mEditAddPermissionName.getText().toString().trim();
+                        String strAddPermissionInfo = mEditAddPermissionInfo.getText().toString().trim();
+                        //权限名称 + 权限描述 文本内容传递doAddPermissionInfo()并开始添加
+                        doAddPermissionInfo(strEditAddPermissionName, strAddPermissionInfo);
                     }
                 })
                 .show();
     }
 
     /**
-     * 开始添加角色信息
+     * 开始添加权限信息
      *
-     * @param strEditAddRoleName 角色名称
-     * @param strAddRoleInfo     角色描述
+     * @param strEditAddPermissionName 权限名称
+     * @param strAddPermissionInfo     权限描述
      */
-    private void doAddRoleInfo(String strEditAddRoleName, String strAddRoleInfo) {
+    private void doAddPermissionInfo(String strEditAddPermissionName, String strAddPermissionInfo) {
         //判空处理
-        if (TextUtils.isEmpty(strEditAddRoleName)) {
-            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "请填入角色名称", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+        if (TextUtils.isEmpty(strEditAddPermissionName)) {
+            Snackbar snackbar = Snackbar.make(mLlDevSelectAllPermissionInfo, "请填入权限名称", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
             return;
         }
-        if (TextUtils.isEmpty(strAddRoleInfo)) {
-            Snackbar snackbar = Snackbar.make(mLlDevSelectAllRoleInfo, "请填入角色描述", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
+        if (TextUtils.isEmpty(strAddPermissionInfo)) {
+            Snackbar snackbar = Snackbar.make(mLlDevSelectAllPermissionInfo, "请填入权限描述", Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_ROLE_INFO)
+        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_PERMISSION_INFO)
                 .tag("超管添加用户角色")
-                .params("roleName", strEditAddRoleName)
-                .params("roleDescription", strAddRoleInfo)
+                .params("permissionName", strEditAddPermissionName)
+                .params("permissionDescription", strAddPermissionInfo)
                 .execute(new StringCallback() {
-                    @Override
-                    public void onStart(Request<String, ? extends Request> request) {
-                        super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在添加...");
-                    }
-
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
@@ -461,42 +437,30 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                             ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
                             return;
                         }
-                        //成功(角色存在)
-                        if (200 == okGoResponseBean.getCode() && "角色添加失败，此角色已被注册".equals(okGoResponseBean.getMsg())) {
-                            ToastUtils.show("添加失败，此角色已被注册：" + okGoResponseBean.getData());
+                        //成功(权限存在)
+                        if (200 == okGoResponseBean.getCode() && "权限添加失败，此权限已被注册".equals(okGoResponseBean.getMsg())) {
+                            ToastUtils.show("添加失败，此权限已被注册：" + okGoResponseBean.getData());
                             return;
                         }
                         //成功(未添加)
-                        if (200 == okGoResponseBean.getCode() && "角色添加失败".equals(okGoResponseBean.getMsg())) {
+                        if (200 == okGoResponseBean.getCode() && "权限添加失败".equals(okGoResponseBean.getMsg())) {
                             ToastUtils.show("添加失败：" + okGoResponseBean.getData());
                             return;
                         }
                         //成功(已添加)
-                        if (200 == okGoResponseBean.getCode() && "角色添加成功".equals(okGoResponseBean.getMsg())) {
-                            //再次调用查询全部角色接口，实现动态更新显示
-                            startSelectAllRoleInfo(context);
-                            ToastUtils.show("角色添加成功：" + okGoResponseBean.getData());
+                        if (200 == okGoResponseBean.getCode() && "权限添加成功".equals(okGoResponseBean.getMsg())) {
+                            //再次调用查询全部权限接口，实现动态更新显示
+                            startSelectAllPermissionInfo(context);
+                            ToastUtils.show("权限添加成功：" + okGoResponseBean.getData());
                         }
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllPermissionInfo, "请求错误，服务器连接失败！");
                     }
                 });
-    }
-
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 }

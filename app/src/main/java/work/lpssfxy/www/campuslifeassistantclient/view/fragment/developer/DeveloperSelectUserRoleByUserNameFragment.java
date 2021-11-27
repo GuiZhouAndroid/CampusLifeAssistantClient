@@ -119,7 +119,7 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME)
+        OkGo.<String>post(Constant.SELECT_USER_ROLE_INFO_BY_USERNAME)
                 .tag("用户持有的角色")
                 .params("userName", strRoleUserUsername)
                 .execute(new StringCallback() {

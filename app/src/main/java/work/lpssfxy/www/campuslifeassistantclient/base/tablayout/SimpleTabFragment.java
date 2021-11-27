@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.R2;
 
 /**
  * created by on 2021/11/26
@@ -34,8 +35,8 @@ public class SimpleTabFragment extends Fragment {
     private static final String KEY_TITLE = "title";
 
 
-    @BindView(R.id.tv_title) TextView tvTitle;
-    @BindView(R.id.tv_explain) TextView tvExplain;
+    @BindView(R2.id.tv_title) TextView tvTitle;
+    @BindView(R2.id.tv_explain) TextView tvExplain;
 
     private Unbinder mUnbinder;
 

@@ -72,14 +72,17 @@
     <string name="KickOffLine">踢人下线</string>
     <string name="KickOffLine_realname">真实姓名</string>
     <string name="role_name">角色名称</string>
+    <string name="permission_name">权限名称</string>
     <string name="role_info">角色描述</string>
+    <string name="permission_info">权限描述</string>
     <string name="role_id">角色编号</string>
     <string name="user_id">用户编号</string>
     <string name="banned_day">封禁时长/天</string>
     <string name="KickOffLine_token">登录Token</string>
     <string name="KickOffLine_ok">确定执行</string>
     <string name="add_ok">确定添加</string>
-    <string name="new_add">新增角色</string>
+    <string name="new_add_role">新增角色</string>
+    <string name="new_add_permission">新增权限</string>
     <string name="start_select">开始查询</string>
     <string name="start_un_ban">执行解封</string>
     <!--ViewPager欢迎页-->
