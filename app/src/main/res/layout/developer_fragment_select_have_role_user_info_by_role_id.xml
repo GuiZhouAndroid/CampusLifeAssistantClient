@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="30dp"
-        android:text="角色专属全部用户"
         android:textSize="17sp" />
     <com.xuexiang.xui.widget.button.ButtonView
         android:id="@+id/btn_select_have_role_user_info"
