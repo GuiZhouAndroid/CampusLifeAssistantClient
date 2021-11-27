@@ -37,11 +37,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.BasePermissionInfoAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.BasePermissionInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.PermissionInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllPermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
@@ -69,6 +68,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
     @BindView(R2.id.tv_all_permission_info_show) TextView mTvAllPermissionInfoShow;
     /* RecyclerView列表 */
     @BindView(R2.id.recyclerView_all_permission_info) RecyclerView mRecyclerViewAllPermissionInfo;
+
     /* 权限信息列表适配器 */
     private BasePermissionInfoAdapter permissionInfoAdapter;
 

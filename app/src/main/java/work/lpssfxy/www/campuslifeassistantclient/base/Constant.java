@@ -120,9 +120,6 @@ public class Constant {
     // 更新专业班级
     public static final String UPDATE_CLASS = BASE_URL + "/api/user/updateOldClassNewClassAndUserName";
 
-    // 当前登录会话的用户名，查询该用户的对应的角色集合
-    public static final String SELECT_NOW_USERNAME_ROLE_LIST = BASE_URL + "/api/user/selectRoleListByRedisToUserName";
-
     // 当前登录账户通过Sa-Token的redis缓存UserSession中的真实姓名(再MP查询用户名)对应的角色信息
     public static final String SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME = BASE_URL + "/api/user/saTokenRedisUserSessionSelectRoleListByRealNameToUserName";
 
@@ -235,7 +232,7 @@ public class Constant {
     /* ************************ 2.用户角色管理相关API接口 *************************/
 
     // 通过用户名查询该用户的对应的角色
-    public static final String SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserRoleByUserName";
+    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserRoleByUserName";
 
 
     /* ************************ 3.权限管理相关API接口 *************************/
@@ -261,6 +258,6 @@ public class Constant {
     /* ************************ 5.用户角色权限管理相关API接口 *************************/
 
     // 通过用户名查询该用户的对应的权限
-    public static final String SELECT_USER_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserPermissionByUserName";
+    public static final String ADMIN_SELECT_USER_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserPermissionByUserName";
 }
 

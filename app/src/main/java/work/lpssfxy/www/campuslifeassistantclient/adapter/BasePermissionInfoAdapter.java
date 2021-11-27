@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter.welcome;
+package work.lpssfxy.www.campuslifeassistantclient.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

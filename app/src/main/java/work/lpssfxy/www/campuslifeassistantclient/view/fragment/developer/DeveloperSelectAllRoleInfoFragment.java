@@ -58,6 +58,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
+
     private static final String TAG = "DeveloperSelectAllRoleInfoFragment";
 
     /* 父布局 */
@@ -68,6 +69,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
     /* RecyclerView列表 */
     @BindView(R2.id.recyclerView_all_role_info) RecyclerView mRecyclerViewAllRoleInfo;
+
     /* 角色信息列表适配器 */
     private BaseRoleInfoAdapter roleInfoAdapter;
 

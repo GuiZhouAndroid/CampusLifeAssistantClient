@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -41,6 +40,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 public class DeveloperSelectBannedStateRealNameFragment extends BaseFragment {
 
     private static final String TAG = "DeveloperSelectBannedStateRealNameFragment";
+
     //父布局
     @BindView(R2.id.rl_dev_ban_account_state_realname) RelativeLayout mRlDevBanAccountStateRealName;
     //待查讯真实姓名

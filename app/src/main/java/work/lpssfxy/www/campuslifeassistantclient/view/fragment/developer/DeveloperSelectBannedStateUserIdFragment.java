@@ -16,7 +16,6 @@ import com.lzy.okgo.request.base.Request;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.textview.MarqueeTextView;
 import com.xuexiang.xui.widget.textview.marqueen.DisplayEntity;
-import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +41,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 @SuppressLint("NonConstantResourceId")
 public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
+
     private static final String TAG = "DeveloperSelectBannedStateRealNameFragment";
     //父布局
     @BindView(R2.id.rl_dev_ban_account_state_user_id) RelativeLayout mRlDevSelectBannedStateUserId;
@@ -143,6 +143,7 @@ public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
                                     }
                                     return null;
                                 }
+
                                 @Override
                                 public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
                                     return displayDatas;
@@ -166,6 +167,7 @@ public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
                                     }
                                     return null;
                                 }
+
                                 @Override
                                 public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
                                     return displayDatas;
@@ -190,6 +192,7 @@ public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
                                     }
                                     return null;
                                 }
+
                                 @Override
                                 public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
                                     return displayDatas;
@@ -226,7 +229,7 @@ public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mMtvRoleUserListShow != null){
+        if (mMtvRoleUserListShow != null) {
             mMtvRoleUserListShow.clear();
         }
     }

@@ -9,8 +9,8 @@ package work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab;
  */
 public enum MultiPagePermissionTitle {
 
-    列表概况(0);
-//    专属角色(1),
+    列表概况(0),
+    专属权限(1);
 //    专属用户(2);
 
     private final int position;

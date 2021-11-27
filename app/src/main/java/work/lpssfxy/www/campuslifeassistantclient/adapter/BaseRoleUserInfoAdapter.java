@@ -40,7 +40,7 @@ public class BaseRoleUserInfoAdapter extends BaseQuickAdapter<RoleUserInfoBean, 
     protected void convert(@NonNull BaseViewHolder baseViewHolder, RoleUserInfoBean roleUserInfoBean) {
         //可链式调用赋值
         baseViewHolder
-                .setText(R.id.select_role_user_info_user_id, String.valueOf(roleUserInfoBean.getTrId()))
+                .setText(R.id.select_role_user_info_user_id, String.valueOf(roleUserInfoBean.getUlId()))
                 .setText(R.id.select_role_user_info_user_name, roleUserInfoBean.getUlUsername())
                 .setText(R.id.select_role_user_info_real_name, roleUserInfoBean.getUlRealname())
                 .setText(R.id.select_role_user_info_role_id, String.valueOf(roleUserInfoBean.getTrId()))

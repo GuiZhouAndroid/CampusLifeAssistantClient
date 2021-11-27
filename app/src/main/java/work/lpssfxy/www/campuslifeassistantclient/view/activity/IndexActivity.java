@@ -390,7 +390,7 @@ public class IndexActivity extends BaseActivity {
                                             return;
                                         }
                                         if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
-                                            OkGo.<String>post(Constant.SELECT_NOW_USERNAME_ROLE_LIST)
+                                            OkGo.<String>post(Constant.SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME)
                                                     .tag("当前登录会话角色集合")
                                                     .execute(new StringCallback() {
                                                         @Override

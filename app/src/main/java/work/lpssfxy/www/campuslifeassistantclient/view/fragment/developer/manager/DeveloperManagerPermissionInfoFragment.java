@@ -37,6 +37,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllPermissionInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 
 /**
@@ -60,13 +61,14 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
     @BindView(R2.id.iv_switch_permission_info) AppCompatImageView mIvSwitchPermissionInfo;
     //ViewPager2左右滑动
     @BindView(R2.id.view_pager_permission_info) ViewPager2 mViewPager2PermissionInfo;
+
     //展开状态
     private boolean mNavigationIsShowPermissionInfo;
     //ViewPager2动态加载适配器
     private MyFragmentStateViewPager2Adapter mPermissionInfoAdapter;
-
     //TabLayout适配的Fragment集合
     public Fragment[] permissionInfoFragments = null;
+
     /**
      * @return 单例对象
      */
@@ -114,11 +116,13 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
         mViewPager2PermissionInfo.setOffscreenPageLimit(1);
         new TabLayoutMediator(mTabLayoutPermissionInfo, mViewPager2PermissionInfo, (tab, position) -> tab.setText(mPermissionInfoAdapter.getPageTitle(position))).attach();
     }
+
     /**
      * 收缩 + 展开 刷新ViewPager2 实现动态加载
+     *
      * @param view 控件id
      */
-    @OnClick({R.id.iv_switch_permission_info,R.id.tv_onclick_open_permission_info})
+    @OnClick({R.id.iv_switch_permission_info, R.id.tv_onclick_open_permission_info})
     public void onViewPermissionInfoClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_switch_permission_info:
@@ -172,6 +176,7 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
         //TabLayout适配的Fragment集合
         permissionInfoFragments = new Fragment[]{
                 DeveloperSelectAllPermissionInfoFragment.newInstance(),
+                DeveloperSelectUserPermissionByUserNameFragment.newInstance()
         };
         //装载List集合，提供给ViewPager2适配器使用
         List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.permissionInfoFragments));
@@ -181,7 +186,7 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
             return;
         }
         if (isShow) { //打开按钮动态加载选项卡内容
-            for (Fragment fragment: fragmentList) { //遍历Fragment集合，开始适配
+            for (Fragment fragment : fragmentList) { //遍历Fragment集合，开始适配
                 mPermissionInfoAdapter.addFragment(fragment, titleList);
             }
             mPermissionInfoAdapter.notifyDataSetChanged();

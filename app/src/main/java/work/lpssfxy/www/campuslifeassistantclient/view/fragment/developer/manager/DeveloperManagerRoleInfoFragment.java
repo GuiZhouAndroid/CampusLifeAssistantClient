@@ -57,11 +57,11 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
     @BindView(R2.id.iv_switch_role_info) AppCompatImageView mIvSwitchRoleInfo;
     //ViewPager2左右滑动
     @BindView(R2.id.view_pager_role_info) ViewPager2 mViewPager2RoleInfo;
+
     //展开状态
     private boolean mNavigationIsShowRoleInfo;
     //ViewPager2动态加载适配器
     private MyFragmentStateViewPager2Adapter mRoleInfoAdapter;
-
     //TabLayout适配的Fragment集合
     public Fragment[] roleInfoFragments = null;
 
@@ -115,9 +115,10 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
 
     /**
      * 收缩 + 展开 刷新ViewPager2 实现动态加载
+     *
      * @param view 控件id
      */
-    @OnClick({R.id.iv_switch_role_info,R.id.tv_onclick_open_role_info})
+    @OnClick({R.id.iv_switch_role_info, R.id.tv_onclick_open_role_info})
     public void onViewRoleInfoClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_switch_role_info:
@@ -182,7 +183,7 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
             return;
         }
         if (isShow) { //打开按钮动态加载选项卡内容
-            for (Fragment fragment: fragmentList) { //遍历Fragment集合，开始适配
+            for (Fragment fragment : fragmentList) { //遍历Fragment集合，开始适配
                 mRoleInfoAdapter.addFragment(fragment, titleList);
             }
             mRoleInfoAdapter.notifyDataSetChanged();

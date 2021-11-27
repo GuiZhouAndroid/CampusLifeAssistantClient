@@ -30,36 +30,36 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 /**
- * created by on 2021/11/25
- * 描述：开发者通过用户名查询该用户的对应的角色
+ * created by on 2021/11/27
+ * 描述：开发者通过用户名查询该用户的对应的权限
  *
  * @author ZSAndroid
- * @create 2021-11-25-22:22
+ * @create 2021-11-27-19:50
  */
 
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
+public class DeveloperSelectUserPermissionByUserNameFragment extends BaseFragment {
 
     private static final String TAG = "DeveloperBannedAccountRealNameFragment";
     //父布局
-    @BindView(R2.id.rl_dev_select_user_role_username) RelativeLayout mRlDevSelectUserRoleUsername;
+    @BindView(R2.id.rl_dev_select_user_permission_username) RelativeLayout mRlDevSelectUserPermissionUserName;
     //查询用户名
-    @BindView(R2.id.edit_dev_select_user_role_username) PowerfulEditText mEditDevSelectUserRoleUsername;
+    @BindView(R2.id.edit_dev_select_user_permission_username) PowerfulEditText mEditDevSelectUserPermissionUserName;
     //开始查询
-    @BindView(R2.id.btn_dev_select_user_role_username) ButtonView mBtnDevSelectUserRoleUsername;
+    @BindView(R2.id.btn_dev_select_user_permission_username) ButtonView mBtnDevSelectUserPermissionUserName;
     //显示角色集合
-    @BindView(R2.id.tv_select_user_role_username_list_show) TextView mTvSelectUserRoleListShow;
+    @BindView(R2.id.tv_select_user_permission_username_list_show) TextView mTvSelectUserPermissionListShow;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperSelectUserRoleByUserNameFragment newInstance() {
-        return new DeveloperSelectUserRoleByUserNameFragment();
+    public static DeveloperSelectUserPermissionByUserNameFragment newInstance() {
+        return new DeveloperSelectUserPermissionByUserNameFragment();
     }
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_role_user_by_username;
+        return R.layout.developer_fragment_select_permission_user_by_username;
     }
 
     @Override
@@ -90,33 +90,33 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_dev_select_user_role_username})
-    public void onSelectUserRoleByUserNameViewClick(View view) {
+    @OnClick({R2.id.btn_dev_select_user_permission_username})
+    public void onSelectUserPermissionByUserNameViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_dev_select_user_role_username://开始查询
+            case R.id.btn_dev_select_user_permission_username://开始查询
                 //超管输入的用户名
-                String strRoleUserUsername = mEditDevSelectUserRoleUsername.getText().toString().trim();
-                doSelectRoleUserByUsername(strRoleUserUsername);
+                String strPermissionUserName = mEditDevSelectUserPermissionUserName.getText().toString().trim();
+                doSelectUserPermissionByUserName(strPermissionUserName);
                 break;
         }
     }
 
     /**
-     * 开始查询该用户的对应的角色
+     * 开始查询该用户的对应的权限
      *
-     * @param strRoleUserUsername 用户名
+     * @param strPermissionUserName 用户名
      */
-    private void doSelectRoleUserByUsername(String strRoleUserUsername) {
+    private void doSelectUserPermissionByUserName(String strPermissionUserName) {
         //判空处理
-        if (TextUtils.isEmpty(strRoleUserUsername)) {
-            mEditDevSelectUserRoleUsername.startShakeAnimation();//抖动输入框
+        if (TextUtils.isEmpty(strPermissionUserName)) {
+            mEditDevSelectUserPermissionUserName.startShakeAnimation();//抖动输入框
             ToastUtils.show("请填入用户名");
             return;
         }
-        //开始网络请求，访问后端服务器，执行查询该用户的对应的角色
-        OkGo.<String>post(Constant.ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME)
-                .tag("用户持有的角色")
-                .params("userName", strRoleUserUsername)
+        //开始网络请求，访问后端服务器，执行查询该用户的对应的权限
+        OkGo.<String>post(Constant.ADMIN_SELECT_USER_PERMISSION_INFO_BY_USERNAME)
+                .tag("用户持有的权限")
+                .params("userName", strPermissionUserName)
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -130,15 +130,15 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
                         OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
                         //成功(真实姓名不存在)
                         if (200 == okGoRoleOrPermissionListBean.getCode() && "success".equals(okGoRoleOrPermissionListBean.getMsg())) {
-                            List<String> roleList = okGoRoleOrPermissionListBean.getData();
-                            if (roleList.size() > 0) {
+                            List<String> permissionList = okGoRoleOrPermissionListBean.getData();
+                            if (permissionList.size() > 0) {
                                 StringBuilder stringBuffer = new StringBuilder();
-                                for (String onlyRole : roleList) {
-                                    stringBuffer.append(onlyRole + "、");
+                                for (String onlyPermission : permissionList) {
+                                    stringBuffer.append(onlyPermission + "、");
                                 }
-                                mTvSelectUserRoleListShow.setText("【" + strRoleUserUsername + "】" + "持有" + roleList.size() + "条角色信息" + "\n" + stringBuffer.substring(0, stringBuffer.length() - 1));
+                                mTvSelectUserPermissionListShow.setText("【" + strPermissionUserName + "】" + "持有" + permissionList.size() + "条权限信息" + "\n" + stringBuffer.substring(0, stringBuffer.length() - 1));
                             } else {
-                                mTvSelectUserRoleListShow.setText("【" + strRoleUserUsername + "】" + "无角色信息");
+                                mTvSelectUserPermissionListShow.setText("【" + strPermissionUserName + "】" + "无权限信息");
                             }
                             ToastUtils.show("查询成功");
                         }
@@ -153,13 +153,8 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevSelectUserRoleUsername, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRlDevSelectUserPermissionUserName, "请求错误，服务器连接失败！");
                     }
                 });
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 }

@@ -62,6 +62,7 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     @BindView(R2.id.recyclerView_select_have_role_user_info) RecyclerView mRecyclerViewSelectHaveRoleUserInfoRoleId;
     /* 角色信息列表适配器 */
     private BaseRoleUserInfoAdapter roleUserInfoAdapter;
+
     /**
      * @return 单例对象
      */
@@ -123,6 +124,7 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
         // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
         mRecyclerViewSelectHaveRoleUserInfoRoleId.setLayoutManager(layoutManager);
     }
+
     /**
      * 拉起对话框自定义布局
      */
@@ -191,11 +193,11 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
                             // 4.遍历getData集合，分离集合获取单个用户和角色对象数据，同时遍历添加到适配列表用户和角色实体
                             for (OkGoRoleUserInfoBean.Data data : okGoRoleUserInfoBeanDataList) {
                                 //4.1 循环遍历List角色对象数据
-                                List<OkGoRoleUserInfoBean.Data.RoleInfo> roleInfoList= data.getRoleInfo();
+                                List<OkGoRoleUserInfoBean.Data.RoleInfo> roleInfoList = data.getRoleInfo();
                                 //4.1 循环遍历取出单个角色对象
-                                for (OkGoRoleUserInfoBean.Data.RoleInfo roleInfo: roleInfoList) {
+                                for (OkGoRoleUserInfoBean.Data.RoleInfo roleInfo : roleInfoList) {
                                     // 4.2 循环遍历创建对象，动态添加用户和角色数据
-                                    RoleUserInfoBean roleUserInfoBean = new RoleUserInfoBean(data.getUlId(), data.getUlUsername(),data.getUlRealname(), roleInfo.getTrId() , roleInfo.getTrName());
+                                    RoleUserInfoBean roleUserInfoBean = new RoleUserInfoBean(data.getUlId(), data.getUlUsername(), data.getUlRealname(), roleInfo.getTrId(), roleInfo.getTrName());
                                     // 4.3 携带用户和角色对象数据，每次循环遍历都依次加载到RecyclerView列表适配需要集合中
                                     roleUserInfoBeans.add(roleUserInfoBean);
                                 }
@@ -206,7 +208,7 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
                             // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
                             mRecyclerViewSelectHaveRoleUserInfoRoleId.setAdapter(roleUserInfoAdapter);
                             // 7.设置用户和角色拥有数
-                            mTvSelectHaveRoleUserInfoRoleIdShow.setText("角色编号【"+strRoleId+"】+已有：" + roleUserInfoBeans.size() + "条用户信息");
+                            mTvSelectHaveRoleUserInfoRoleIdShow.setText("角色编号【" + strRoleId + "】+已有：" + roleUserInfoBeans.size() + "条用户信息");
                         }
                     }
 

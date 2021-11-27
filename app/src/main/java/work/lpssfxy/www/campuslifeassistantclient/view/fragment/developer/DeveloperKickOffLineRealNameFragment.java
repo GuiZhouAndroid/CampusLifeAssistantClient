@@ -37,7 +37,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 @SuppressLint("NonConstantResourceId")
 public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
+
     private static final String TAG = "DeveloperKickOffLineRealNameFragment";
+
     //父布局
     @BindView(R2.id.rl_dev_kickoff_realname) RelativeLayout mRlDevKicOffRealName;
     //被下线真实姓名输入框

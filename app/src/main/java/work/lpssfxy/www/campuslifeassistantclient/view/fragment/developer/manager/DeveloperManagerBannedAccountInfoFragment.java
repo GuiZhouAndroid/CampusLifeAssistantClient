@@ -61,6 +61,7 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
     @BindView(R2.id.iv_switch_ban_account_info) AppCompatImageView mIvSwitchBanAccountInfo;
     //ViewPager2左右滑动
     @BindView(R2.id.view_pager_ban_account_info) ViewPager2 mViewPager2BanAccountInfo;
+
     //展开状态
     private boolean mNavigationIsShowBanAccountInfo;
     //ViewPager2动态加载适配器
@@ -122,9 +123,10 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
 
     /**
      * 收缩 + 展开 刷新ViewPager2 实现动态加载
+     *
      * @param view 控件id
      */
-    @OnClick({R.id.iv_switch_ban_account_info,R.id.tv_onclick_open_ban_account_info})
+    @OnClick({R.id.iv_switch_ban_account_info, R.id.tv_onclick_open_ban_account_info})
     public void onViewBanAccountInfoClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_switch_ban_account_info:
@@ -195,7 +197,7 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
             return;
         }
         if (isShow) { //打开按钮动态加载选项卡内容
-            for (Fragment fragment: fragmentList) { //遍历Fragment集合，开始适配
+            for (Fragment fragment : fragmentList) { //遍历Fragment集合，开始适配
                 mBanAccountInfoAdapter.addFragment(fragment, titleList);
             }
             mBanAccountInfoAdapter.notifyDataSetChanged();
