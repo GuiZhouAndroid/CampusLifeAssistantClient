@@ -88,15 +88,6 @@ public class Constant {
     // 通过用户自增ID添加会话
     public static final String LOGIN_ADD_QQ_SESSION = BASE_URL + "/api/qq/oauth/session/addQQSessionInfoByUserId";
 
-    // 通过用户自增ID查询QQ会话和用户全部信息
-    public static final String LOGIN_SELECT_QQ_AND_USER_INFO = BASE_URL + "/api/qq/oauth/session/selectUserInfoAndQQInfoByUserId";
-
-    // 通过用户自增ID更新QQ会话全部信息
-    public static final String LOGIN_UPDATE_QQ_SESSION_ALL_INFO_BY_USERID = BASE_URL + "/api/qq/oauth/session/updateQQSessionInfoByUserIdToAll";
-
-    // 查询某用户与QQ登录会话信息
-    public static final String FIND_USER_AND_QQ_INFO_BY_USERID = BASE_URL + "/api/user/findUserAndQQInfoByUserId";
-
     /**
      * 用户个人信息管理相关API接口
      */
@@ -106,16 +97,16 @@ public class Constant {
     // 更新用户名
     public static final String UPDATE_USERNAME = BASE_URL + "/api/user/updateOldUserNameByNewUserNameAndUserName";
 
-    // 更新密码
+    // 更新密码(待使用)
     public static final String UPDATE_PASSWORD = BASE_URL + "/api/user/updateOldPasswordByNewPasswordAndUserName";
 
-    // 更新性别
+    // 更新性别(未使用)
     public static final String UPDATE_SEX = BASE_URL + "/api/user/updateOldSexByNewSexAndUserName";
 
-    // 更新真实姓名
+    // 更新真实姓名(未使用)
     public static final String UPDATE_REAL_NAME = BASE_URL + "/api/user/updateOldRealNameByNewRealNameAndUserName";
 
-    // 更新身份证号
+    // 更新身份证号(未使用)
     public static final String UPDATE_ID_CARD = BASE_URL + "/api/user/updateOldIdCardByNewIdCardAndUserName";
 
     // 更新学号
@@ -194,8 +185,11 @@ public class Constant {
     public static final String SA_TOKEN_GET_TOKEN_SESSION_BY_TOKEN = BASE_URL + "/api/login/state/saTokenGetTokenSessionByToken";
 
     /**
-     * 超管后台中心相关API接口
+     * 超管后台中心
      */
+
+    /* ************************ 1.账户封禁相关API接口 *************************/
+
     // 超管通过已登录账户真实姓名踢人下线
     public static final String ADMIN_KICK_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToKickOffLineByLoginRealName";
 
@@ -213,6 +207,8 @@ public class Constant {
 
     // 超管通过已登录账户真实姓名解除封禁
     public static final String ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToUntieBannedAccountByRealName";
+
+    /* ************************ 2.角色管理相关API接口 *************************/
 
     // 超管添加一条角色信息
     public static final String ADMIN_ADD_ONCE_ROLE_INFO = BASE_URL + "/api/admin/role/adminAddOnceRoleInfo";
@@ -235,8 +231,13 @@ public class Constant {
     // 超管通过角色实体删除一条对应角色信息
     public static final String ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY = BASE_URL + "/api/admin/role/adminDeleteOnceRoleInfoByRoleEntity";
 
-    // 超管通过角色ID批量删除角色信息
+    // 超管通过角色ID批量删除角色信息(定义接口，后端未实现，Android不使用)
     public static final String ADMIN_DELETE_BATCH_ROLE_INFO_BY_IDS = BASE_URL + "/api/admin/role/adminDeleteBatchRoleInfoByIds";
 
+    /* ************************ 2.用户角色管理相关API接口 *************************/
+
+    /* ************************ 3.权限管理管理相关API接口 *************************/
+
+    /* ************************ 4.角色权限管理相关API接口 *************************/
 }
 

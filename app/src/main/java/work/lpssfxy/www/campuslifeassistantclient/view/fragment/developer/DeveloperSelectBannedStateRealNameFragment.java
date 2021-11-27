@@ -45,7 +45,7 @@ public class DeveloperSelectBannedStateRealNameFragment extends BaseFragment {
     @BindView(R2.id.rl_dev_ban_account_state_realname) RelativeLayout mRlDevBanAccountStateRealName;
     //待查讯真实姓名
     @BindView(R2.id.edit_ban_account_state_realname) PowerfulEditText mEditBanAccountStateRealName;
-    //确定执行下线
+    //开始查询
     @BindView(R2.id.btn_ban_account_state_realname) ButtonView mBtnBanAccountStateRealName;
 
     /**

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -20,8 +21,11 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopupext.listener.CommonPickerListener;
 import com.lxj.xpopupext.popup.CommonPickerPopup;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
 import java.util.ArrayList;
@@ -33,9 +37,10 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.StringDialogCallback;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ParcelableUserInfoData;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -85,20 +90,20 @@ public class MineInfoActivity extends BaseActivity {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 1://匹配成功，获取IndexActivity个人用户信息
-                    ParcelableUserInfoData parcelableUserInfoData = (ParcelableUserInfoData) msg.obj;
-                    if (parcelableUserInfoData != null) {
-                        mUserNumber.setRightDesc(String.valueOf(parcelableUserInfoData.getUlId()));
-                        mUserName.setRightDesc(parcelableUserInfoData.getUlUsername());
-                        mSex.setRightDesc(parcelableUserInfoData.getUlSex());
-                        mRealName.setRightDesc(parcelableUserInfoData.getUlRealname());
-                        mIdCard.setRightDesc(parcelableUserInfoData.getUlIdcard());
-                        mStuNo.setRightDesc(parcelableUserInfoData.getUlStuno());
-                        mTel.setRightDesc(parcelableUserInfoData.getUlTel());
-                        mEmail.setRightDesc(parcelableUserInfoData.getUlEmail());
-                        mDept.setRightDesc(parcelableUserInfoData.getUlDept());
-                        mClass.setRightDesc(parcelableUserInfoData.getUlClass());
-                        mCreateTime.setRightDesc(parcelableUserInfoData.getCreateTime());
-                        mUpdateTime.setRightDesc(parcelableUserInfoData.getUpdateTime());
+                    OkGoUserBean.Data UserInfoData = (OkGoUserBean.Data) msg.obj;
+                    if ( UserInfoData!= null) {
+                        mUserNumber.setRightDesc(String.valueOf(UserInfoData.getUlId()));
+                        mUserName.setRightDesc(UserInfoData.getUlUsername());
+                        mSex.setRightDesc(UserInfoData.getUlSex());
+                        mRealName.setRightDesc(UserInfoData.getUlRealname());
+                        mIdCard.setRightDesc(UserInfoData.getUlIdcard());
+                        mStuNo.setRightDesc(UserInfoData.getUlStuno());
+                        mTel.setRightDesc(UserInfoData.getUlTel());
+                        mEmail.setRightDesc(UserInfoData.getUlEmail());
+                        mDept.setRightDesc(UserInfoData.getUlDept());
+                        mClass.setRightDesc(UserInfoData.getUlClass());
+                        mCreateTime.setRightDesc(UserInfoData.getCreateTime());
+                        mUpdateTime.setRightDesc(UserInfoData.getUpdateTime());
                     }
                     break;
             }
@@ -138,18 +143,9 @@ public class MineInfoActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-        initRefresh();
+
     }
 
-    /**
-     * 模拟自动刷新
-     */
-    private void initRefresh() {
-        //进入触发自动刷新，不做数据，只演示效果
-        mRefreshLayoutMyInfo.autoRefresh();
-        //延时2.5秒完成刷新
-        mRefreshLayoutMyInfo.finishRefresh(2500);
-    }
     @Override
     protected void initView() {
         /**判断Toolbar，开启主图标并显示title*/
@@ -166,18 +162,18 @@ public class MineInfoActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        Bundle bundle = getIntent().getExtras();
-        //String testBundleString = bundle.getString("userInfo");
-        if (bundle != null) {
-            ParcelableUserInfoData parcelableUserInfoData = bundle.getParcelable("userInfo");
-            Log.i("用户信息=", parcelableUserInfoData.toString());
-            //全局当前用户名，用于调用更新信息接口
-            nowUserName = parcelableUserInfoData.getUlUsername();
-            Message message = new Message();
-            message.obj = parcelableUserInfoData;
-            message.what = 1;
-            mHandler.sendMessage(message);
-        }
+//        Bundle bundle = getIntent().getExtras();
+//        //String testBundleString = bundle.getString("userInfo");
+//        if (bundle != null) {
+//            ParcelableUserInfoData parcelableUserInfoData = bundle.getParcelable("userInfo");
+//            Log.i("用户信息=", parcelableUserInfoData.toString());
+//            //全局当前用户名，用于调用更新信息接口
+//            nowUserName = parcelableUserInfoData.getUlUsername();
+//            Message message = new Message();
+//            message.obj = parcelableUserInfoData;
+//            message.what = 1;
+//            mHandler.sendMessage(message);
+//        }
     }
 
     @Override
@@ -194,7 +190,10 @@ public class MineInfoActivity extends BaseActivity {
     protected void doBusiness() {
         //设置默认主题
         setThemeColor(this,mToolbarMyInfo,mRefreshLayoutMyInfo,R.color.boxBg, R.color.boxBg);
+        //进入页面自动刷新调用查询API接口，拉取用户数据
+        doRefresh();
     }
+
     /**
      * 使用 ButterKnife注解式监听单击事件
      *
@@ -209,6 +208,73 @@ public class MineInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 进入页面自动刷新调用查询API接口，拉取用户数据
+     */
+    private void doRefresh() {
+        XPopupUtils.getInstance().setShowDialog(MineInfoActivity.this,"拉取信息中...");
+        //进入触发自动刷新
+        mRefreshLayoutMyInfo.autoRefresh();
+        //下拉刷新
+        mRefreshLayoutMyInfo.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                startSelectLoginUserInfoByUserId();
+            }
+        });
+    }
+
+    /**
+     * 通过用户ID开始查询全部信息
+     */
+    public void startSelectLoginUserInfoByUserId(){
+        //查询当前已登录账号ID的Session信息，从Session中获取用户ID，提供此ID查询用户全部信息
+        OkGo.<String>post(Constant.SA_TOKEN_GET_SESSION_INFO)
+                .tag("用户登录Session信息")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //Json字符串解析转为实体类对象
+                        OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
+                        if (200 == okGoUserBeanData.getCode() & null != okGoUserBeanData.getData() && "success".equals(okGoUserBeanData.getMsg())){
+                            // 通过Session中的ID查询用户全部信息
+                            OkGo.<String>post(Constant.SELECT_USER_ALL_INFO_BY_USERID + "/" + okGoUserBeanData.getData().getUlId())
+                                    .tag("用户ID查询个人信息")
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onSuccess(Response<String> response) {
+                                            //Json字符串解析转为实体类对象
+                                            OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
+                                            //全局当前用户名，用于调用更新信息接口
+                                            nowUserName = okGoUserBeanData.getData().getUlUsername();
+                                            Message message = new Message();
+                                            message.obj = okGoUserBeanData.getData();
+                                            message.what = 1;
+                                            mHandler.sendMessage(message);
+                                        }
+
+                                        @Override
+                                        public void onFinish() {
+                                            //延时2.5秒完成刷新
+                                            mRefreshLayoutMyInfo.finishRefresh(1000);
+                                            XPopupUtils.getInstance().setSmartDisDialog();
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                });
+    }
     public void managerMyUserInfo() {
         mUserNumber.setItemClickListener(new ItemView.itemClickListener() {
             @Override
@@ -237,13 +303,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                     if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                                        initRefresh();
-                                                        mUserName.setRightDesc(newUserName);//设置文本为新用户名
-                                                        //这句重要：当页面未销毁时，当前页首次更新成功，那么后端服务器用户名更改已生效
-                                                        // 再次更新时会使用原来的旧用户名作为更新依据，出现更新失败，只需把更新后新用户名值覆盖旧用户名值，即可解决
-                                                        nowUserName = newUserName;
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "用户名更新成功！", 3);
-                                                        dialogPrompt.show();
+                                                        doRefresh();
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
@@ -306,10 +366,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                     if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                                        initRefresh();
-                                                        mStuNo.setRightDesc(newStuNo);//设置文本为新用户名
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "学号更新成功！", 3);
-                                                        dialogPrompt.show();
+                                                        doRefresh();
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
@@ -353,10 +410,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                     if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                                        initRefresh();
-                                                        mTel.setRightDesc(newTel);//设置文本为新用户名
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "手机号更新成功！", 3);
-                                                        dialogPrompt.show();
+                                                        doRefresh();
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
@@ -400,10 +454,7 @@ public class MineInfoActivity extends BaseActivity {
                                                 public void onSuccess(Response<String> response) {
                                                     OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                     if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                                        initRefresh();
-                                                        mEmail.setRightDesc(newEmail);//设置文本为新QQ邮箱
-                                                        DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "QQ邮箱更新成功！", 3);
-                                                        dialogPrompt.show();
+                                                        doRefresh();
                                                         return;
                                                     }
                                                     if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
@@ -457,10 +508,7 @@ public class MineInfoActivity extends BaseActivity {
                                     public void onSuccess(Response<String> response) {
                                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                         if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                            initRefresh();
-                                            mDept.setRightDesc(newDept);//设置文本为新所属院系
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "所属院系更新成功！", 3);
-                                            dialogPrompt.show();
+                                            doRefresh();
                                             return;
                                         }
                                         if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
@@ -503,10 +551,7 @@ public class MineInfoActivity extends BaseActivity {
                                     public void onSuccess(Response<String> response) {
                                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                         if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                                            initRefresh();
-                                            mClass.setRightDesc(newClass);//设置文本为新所属专业班级
-                                            DialogPrompt dialogPrompt = new DialogPrompt(MineInfoActivity.this, "专业班级更新成功！", 3);
-                                            dialogPrompt.show();
+                                            doRefresh();
                                             return;
                                         }
                                         if (200 == OkGoResponseBean.getCode() && "false".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {

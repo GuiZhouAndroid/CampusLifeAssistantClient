@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
+package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager;
 
 import static com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE;
 
@@ -32,6 +32,9 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageRoleTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 
 /**
  * created by on 2021/11/26
@@ -42,6 +45,9 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
  */
 @SuppressLint("NonConstantResourceId")
 public class DeveloperManagerRoleInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener {
+
+    private static final String TAG = "DeveloperManagerRoleInfoFragment";
+
     @BindView(R.id.tab_layout_role_info) TabLayout mTabLayoutRoleInfo;
     @BindView(R.id.tv_onclick_open_role_info) TextView mTvOnclickOpenRoleInfo;
     @BindView(R.id.iv_switch_role_info) AppCompatImageView mIvSwitchRoleInfo;

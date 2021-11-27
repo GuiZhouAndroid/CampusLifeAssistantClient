@@ -11,10 +11,11 @@ public enum MultiPageAccountSafeTitle {
 
     踢人下线姓名(0),
     踢人下线Token(1),
-    封禁账户(2),
-    封禁状态(3),
-    封禁时间(4),
-    账户解封(5);
+    封禁状态姓名(2),
+    封禁状态ID(3),
+    封禁账户(4),
+    封禁时间(5),
+    账户解封(6);
     private final int position;
 
     MultiPageAccountSafeTitle(int pos) {

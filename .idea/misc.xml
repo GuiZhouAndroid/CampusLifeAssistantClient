@@ -114,9 +114,11 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_add_role_info_dialog_item.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_update_role_info_dialog_item.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_state_real_name.xml" value="0.33152173913043476" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_state_user_id.xml" value="0.24791666666666667" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_time_real_name.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_have_role_user_info_by_role_id.xml" value="0.3098958333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_have_role_user_info_dialog_item.xml" value="0.3283514492753623" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_have_role_user_info_role_id_recycler_view_item.xml" value="0.24479166666666666" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_role_user_by_username.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_system_safe_activity.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_untie_banned_account_real_name.xml" value="0.32395833333333335" />

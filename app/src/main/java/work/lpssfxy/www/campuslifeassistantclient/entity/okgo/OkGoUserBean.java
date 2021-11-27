@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * created by on 2021/10/28
- * 描述：用户实体
+ * 描述：学生用户实体
  *
  * @author ZSAndroid
  * @create 2021-10-28-6:06

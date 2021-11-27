@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
+package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager;
 
 import static com.google.android.material.tabs.TabLayout.MODE_SCROLLABLE;
 
@@ -32,6 +32,13 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageAccountSafeTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperBannedAccountRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperKickOffLineTokenFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedStateUserIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectBannedTimeRealNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperUntieBannedAccountUserNameFragment;
 
 /**
  * created by on 2021/11/26
@@ -164,8 +171,9 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
         fragments = new Fragment[]{
                 DeveloperKickOffLineRealNameFragment.newInstance(),
                 DeveloperKickOffLineTokenFragment.newInstance(),
-                DeveloperBannedAccountRealNameFragment.newInstance(),
                 DeveloperSelectBannedStateRealNameFragment.newInstance(),
+                DeveloperSelectBannedStateUserIdFragment.newInstance(),
+                DeveloperBannedAccountRealNameFragment.newInstance(),
                 DeveloperSelectBannedTimeRealNameFragment.newInstance(),
                 DeveloperUntieBannedAccountUserNameFragment.newInstance()
         };

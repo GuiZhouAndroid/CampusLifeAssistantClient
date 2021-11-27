@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import butterknife.BindBitmap;
 import butterknife.BindView;
@@ -29,17 +30,20 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
+import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ParcelableUserInfoData;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
@@ -57,7 +61,10 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 @SuppressLint("NonConstantResourceId")
 public class BottomMineFragment extends BaseFragment {
     private static final String TAG = "BottomMineFragment";
-    @BindBitmap(R.mipmap.index_not_login) Bitmap mIndex_not_login;//绑定资源文件中mipmap中的ic_launcher图片
+    //父布局
+    @BindView(R2.id.scrollview_mine_info) GoTopNestedScrollView mScrollviewMineInfo;//绑定资源文件中mipmap中的ic_launcher图片
+    //绑定资源文件中mipmap中的ic_launcher图片
+    @BindBitmap(R.mipmap.index_not_login) Bitmap mIndex_not_login;
     /** 原生View布局 */
     @BindView(R2.id.qq_head) ImageView mQQHead;//QQ头像
     @BindView(R2.id.qq_back) ImageView mQQBack;//QQ头像高斯模糊背景
@@ -202,47 +209,78 @@ public class BottomMineFragment extends BaseFragment {
         mMyInfo.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-                if (Constant.userInfo !=null){ //登录有数据
-                    int userId = Constant.userInfo.getUlId();
-                    // 实现 Android 自带的Parcelable接口，封装对象数据，通过Bundle键值对形式，传递参数到MineInfoActivity页面
-                    OkGo.<String>post(Constant.SELECT_USER_ALL_INFO_BY_USERID + "/" + userId)
-                            .tag("用户ID查询个人信息")
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onSuccess(Response<String> response) {
-                                    XPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
-                                    //Json字符串解析转为实体类对象
-                                    OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
-                                    Log.i(TAG, "okGoUserBeanData=== " + okGoUserBeanData);
-                                    Intent thisIntentToMineActivity= new Intent();;
-                                    thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
-                                    Bundle bundle=new Bundle();
-                                    //bundle.putString("userInfo",Constant.userInfo.toString());
-                                    bundle.putParcelable("userInfo", new ParcelableUserInfoData(
-                                            okGoUserBeanData.getData().getCreateTime(), okGoUserBeanData.getData().getUlClass(), okGoUserBeanData.getData().getUlDept(),
-                                            okGoUserBeanData.getData().getUlEmail(), okGoUserBeanData.getData().getUlId(), okGoUserBeanData.getData().getUlIdcard(),
-                                            okGoUserBeanData.getData().getUlRealname(), okGoUserBeanData.getData().getUlSex(), okGoUserBeanData.getData().getUlStuno(),
-                                            okGoUserBeanData.getData().getUlTel(), okGoUserBeanData.getData().getUlUsername(), okGoUserBeanData.getData().getUpdateTime()));
-                                    thisIntentToMineActivity.putExtras(bundle);
-                                    Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            IntentUtil.startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
-                                            OkGo.getInstance().cancelTag("用户ID查询个人信息");
-                                        }
-                                    }, 200);
-                                }
+//                //方式一：获取本地持久化文件，判断有无数据
+//                if (Constant.userInfo !=null){ //登录有数据
+//                    int userId = Constant.userInfo.getUlId();
+//                    // 实现 Android 自带的Parcelable接口，封装对象数据，通过Bundle键值对形式，传递参数到MineInfoActivity页面
+//                    OkGo.<String>post(Constant.SELECT_USER_ALL_INFO_BY_USERID + "/" + userId)
+//                            .tag("用户ID查询个人信息")
+//                            .execute(new StringCallback() {
+//                                @Override
+//                                public void onSuccess(Response<String> response) {
+//                                    XPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
+//                                    //Json字符串解析转为实体类对象
+//                                    OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
+//                                    Log.i(TAG, "okGoUserBeanData=== " + okGoUserBeanData);
+//                                    Intent thisIntentToMineActivity= new Intent();;
+//                                    thisIntentToMineActivity.setClass(getActivity(),MineInfoActivity.class);
+//                                    Bundle bundle=new Bundle();
+//                                    //bundle.putString("userInfo",Constant.userInfo.toString());
+//                                    bundle.putParcelable("userInfo", new ParcelableUserInfoData(
+//                                            okGoUserBeanData.getData().getCreateTime(), okGoUserBeanData.getData().getUlClass(), okGoUserBeanData.getData().getUlDept(),
+//                                            okGoUserBeanData.getData().getUlEmail(), okGoUserBeanData.getData().getUlId(), okGoUserBeanData.getData().getUlIdcard(),
+//                                            okGoUserBeanData.getData().getUlRealname(), okGoUserBeanData.getData().getUlSex(), okGoUserBeanData.getData().getUlStuno(),
+//                                            okGoUserBeanData.getData().getUlTel(), okGoUserBeanData.getData().getUlUsername(), okGoUserBeanData.getData().getUpdateTime()));
+//                                    thisIntentToMineActivity.putExtras(bundle);
+//                                    Handler handler = new Handler();
+//                                    handler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            IntentUtil.startActivityAnimLeftToRight(getActivity(),thisIntentToMineActivity);
+//                                            OkGo.getInstance().cancelTag("用户ID查询个人信息");
+//                                        }
+//                                    }, 200);
+//                                }
+//
+//                                @Override
+//                                public void onFinish() {
+//                                    XPopupUtils.getInstance().setSmartDisDialog();
+//                                }
+//                            });
+//                }else {
+//                    CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
+//                }
+                //方式二：调用sa-Token后端检查登录API接口
+                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                        .tag("检查登录")
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onStart(Request<String, ? extends Request> request) {
+                                XPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                            }
 
-                                @Override
-                                public void onFinish() {
-                                    XPopupUtils.getInstance().setSmartDisDialog();
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                    IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(),MineInfoActivity.class));
+                                    OkGo.getInstance().cancelTag("检查登录");
+                                } else {
+                                    CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
                                 }
-                            });
-                }else {
-                    //如果没有
-                    CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
-                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                XPopupUtils.getInstance().setSmartDisDialog();
+                            }
+
+                            @Override
+                            public void onError(Response<String> response) {
+                                OkGoErrorUtil.CustomFragmentOkGoError(response,getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                            }
+                        });
             }
         });
         mMyGoods.setItemClickListener(new ItemView.itemClickListener() {

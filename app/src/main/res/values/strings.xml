@@ -74,6 +74,7 @@
     <string name="role_name">角色名称</string>
     <string name="role_info">角色描述</string>
     <string name="role_id">角色编号</string>
+    <string name="user_id">用户编号</string>
     <string name="banned_day">封禁时长/天</string>
     <string name="KickOffLine_token">登录Token</string>
     <string name="KickOffLine_ok">确定执行</string>
