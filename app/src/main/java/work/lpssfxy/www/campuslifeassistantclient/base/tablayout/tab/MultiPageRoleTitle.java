@@ -9,9 +9,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab;
  */
 public enum MultiPageRoleTitle {
 
-    列表概况(0),
-    专属角色(1),
-    专属用户(2);
+    角色概况(0);
 
     private final int position;
 

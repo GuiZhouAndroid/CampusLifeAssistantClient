@@ -76,6 +76,7 @@
     <string name="role_info">角色描述</string>
     <string name="permission_info">权限描述</string>
     <string name="role_id">角色编号</string>
+    <string name="permission_id">权限编号</string>
     <string name="user_id">用户编号</string>
     <string name="banned_day">封禁时长/天</string>
     <string name="KickOffLine_token">登录Token</string>
@@ -85,6 +86,15 @@
     <string name="new_add_permission">新增权限</string>
     <string name="start_select">开始查询</string>
     <string name="start_un_ban">执行解封</string>
+    <string name="dev_user_permission_explain">功能说明：通过角色编号查询该角色专属全部用户的信息
+        \n(1 = 发布订单、2 = 接管订单、3 = 账户改密、4 = 举报账户)
+        \n(5 = 意见反馈、6 = 踢人下线、7 = 封禁账户、8 = 通知公告)
+        \n(9 = 角色管理、10 = 权限管理、11 = 用户管理、12 = 查看接口)
+        \n(13 = 解封账户、14 = 查封状态、15 = 用户角色管理、16 = 角色权限管理)
+        \n(17 = RSA密钥管理、18 = 用户角色权限管理)
+    </string>
+
+
     <!--ViewPager欢迎页-->
     <string name="welcome_guid_text_one_title">个&#8194;性&#8194;推&#8194;荐</string>
     <string name="welcome_guid_text_one_info">每&#8197;天&#8197;为&#8197;你&#8197;良&#8197;心&#8197;推&#8197;荐&#8197;最&#8197;合&#8197;口&#8197;味&#8197;的&#8197;好&#8197;音&#8197;乐</string>

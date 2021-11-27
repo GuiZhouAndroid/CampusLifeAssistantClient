@@ -31,14 +31,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPagePermissionTitle;
-import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageRoleTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllPermissionInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 
 /**
  * created by on 2021/11/27
@@ -175,8 +170,7 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
         permissionInfoFragments = new Fragment[]{
-                DeveloperSelectAllPermissionInfoFragment.newInstance(),
-                DeveloperSelectUserPermissionByUserNameFragment.newInstance()
+                DeveloperSelectAllPermissionInfoFragment.newInstance()
         };
         //装载List集合，提供给ViewPager2适配器使用
         List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.permissionInfoFragments));

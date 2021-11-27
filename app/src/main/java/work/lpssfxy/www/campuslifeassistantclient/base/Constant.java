@@ -243,8 +243,8 @@ public class Constant {
     // 超管查询权限全部信息
     public static final String ADMIN_SELECT_ALL_PERMISSION_INFO = BASE_URL + "/api/admin/permission/adminSelectAllPermissionInfo";
 
-    // 超管通过权限实体删除一条对应权限信息
-    public static final String ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY = BASE_URL + "/api/admin/permission/adminDeleteOncePermissionInfoByPermissionEntity";
+    // 超管通过权限自增ID查询拥有该权限全部用户的信息
+    public static final String ADMIN_SELECT_HAVE_PERMISSION_USER_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectHavePermissionUserInfoByPermissionId";
 
     // 超管通过权限ID和旧权限名称更新权限名称
     public static final String ADMIN_UPDATE_PERMISSION_NAME_BY_PERMISSION_ID_AND_OLD_PERMISSION_NAME = BASE_URL + "/api/admin/permission/adminUpdatePermissionNameByPermissionIdAndOldPermissionName";
@@ -252,6 +252,8 @@ public class Constant {
     // 超管通过角色权限和旧权限描述更新权限描述
     public static final String ADMIN_UPDATE_PERMISSION_DESCRIPTION_BY_PERMISSION_ID_AND_OLD_PERMISSION_DESCRIPTION = BASE_URL + "/api/admin/permission/adminUpdatePermissionDescriptionByPermissionIdAndOldPermissionDescription";
 
+    // 超管通过权限实体删除一条对应权限信息
+    public static final String ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY = BASE_URL + "/api/admin/permission/adminDeleteOncePermissionInfoByPermissionEntity";
 
     /* ************************ 4.角色权限管理相关API接口 *************************/
 

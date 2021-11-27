@@ -30,51 +30,53 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
-import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageRoleTitle;
+import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserPermissionTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllPermissionInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHavePermissionUserInfoByPermissionIdFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
 
 /**
- * created by on 2021/11/26
- * 描述：开发者管理角色模块
+ * created by on 2021/11/27
+ * 描述：开发者管理用户权限模块
  *
  * @author ZSAndroid
- * @create 2021-11-26-11:13
+ * @create 2021-11-27-21:30
  */
-@SuppressLint("NonConstantResourceId")
-public class DeveloperManagerRoleInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener {
 
-    private static final String TAG = "DeveloperManagerRoleInfoFragment";
+@SuppressLint("NonConstantResourceId")
+public class DeveloperManagerUserPermissionInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener{
+
+    private static final String TAG = "DeveloperManagerUserPermissionInfoFragment";
 
     //顶部TabLayout
-    @BindView(R2.id.tab_layout_role_info) TabLayout mTabLayoutRoleInfo;
+    @BindView(R2.id.tab_layout_user_permission_info) TabLayout mTabLayoutUserPermissionInfo;
     //TabLayout展开文本
-    @BindView(R2.id.tv_onclick_open_role_info) TextView mTvOnclickOpenRoleInfo;
+    @BindView(R2.id.tv_onclick_open_user_permission_info) TextView mTvOnclickOpenUserPermissionInfo;
     //TabLayout展开图标
-    @BindView(R2.id.iv_switch_role_info) AppCompatImageView mIvSwitchRoleInfo;
+    @BindView(R2.id.iv_switch_user_permission_info) AppCompatImageView mIvSwitchUserPermissionInfo;
     //ViewPager2左右滑动
-    @BindView(R2.id.view_pager_role_info) ViewPager2 mViewPager2RoleInfo;
+    @BindView(R2.id.view_pager_user_permission_info) ViewPager2 mViewPager2UserPermissionInfo;
 
     //展开状态
-    private boolean mNavigationIsShowRoleInfo;
+    private boolean mNavigationIsShowUserPermissionInfo;
     //ViewPager2动态加载适配器
-    private MyFragmentStateViewPager2Adapter mRoleInfoAdapter;
+    private MyFragmentStateViewPager2Adapter mUserPermissionInfoAdapter;
     //TabLayout适配的Fragment集合
-    public Fragment[] roleInfoFragments = null;
+    public Fragment[] userPermissionInfoFragments = null;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperManagerRoleInfoFragment newInstance() {
-        return new DeveloperManagerRoleInfoFragment();
+    public static DeveloperManagerUserPermissionInfoFragment newInstance() {
+        return new DeveloperManagerUserPermissionInfoFragment();
     }
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_role_info;
+        return R.layout.developer_manager_fragment_user_permission_info;
     }
 
     @Override
@@ -94,22 +96,23 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
 
     @Override
     protected void initEvent() {
+
     }
 
     @Override
     protected void doBusiness(Context context) {
         initTabLayout();
-        refreshStatus(mNavigationIsShowRoleInfo = !mNavigationIsShowRoleInfo);
+        refreshStatus(mNavigationIsShowUserPermissionInfo = !mNavigationIsShowUserPermissionInfo);
     }
 
     private void initTabLayout() {
-        mRoleInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
-        mTabLayoutRoleInfo.setTabMode(MODE_SCROLLABLE);
-        mTabLayoutRoleInfo.addOnTabSelectedListener(this);
-        mViewPager2RoleInfo.setAdapter(mRoleInfoAdapter);
+        mUserPermissionInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
+        mTabLayoutUserPermissionInfo.setTabMode(MODE_SCROLLABLE);
+        mTabLayoutUserPermissionInfo.addOnTabSelectedListener(this);
+        mViewPager2UserPermissionInfo.setAdapter(mUserPermissionInfoAdapter);
         // 设置缓存的数量
-        mViewPager2RoleInfo.setOffscreenPageLimit(1);
-        new TabLayoutMediator(mTabLayoutRoleInfo, mViewPager2RoleInfo, (tab, position) -> tab.setText(mRoleInfoAdapter.getPageTitle(position))).attach();
+        mViewPager2UserPermissionInfo.setOffscreenPageLimit(1);
+        new TabLayoutMediator(mTabLayoutUserPermissionInfo, mViewPager2UserPermissionInfo, (tab, position) -> tab.setText(mUserPermissionInfoAdapter.getPageTitle(position))).attach();
     }
 
     /**
@@ -117,12 +120,12 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
      *
      * @param view 控件id
      */
-    @OnClick({R.id.iv_switch_role_info, R.id.tv_onclick_open_role_info})
-    public void onViewRoleInfoClicked(View view) {
+    @OnClick({R.id.iv_switch_user_permission_info, R.id.view_pager_user_permission_info})
+    public void onViewUserPermissionInfoClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_switch_role_info:
-            case R.id.tv_onclick_open_role_info:
-                refreshStatus(mNavigationIsShowRoleInfo = !mNavigationIsShowRoleInfo);
+            case R.id.iv_switch_user_permission_info:
+            case R.id.view_pager_user_permission_info:
+                refreshStatus(mNavigationIsShowUserPermissionInfo = !mNavigationIsShowUserPermissionInfo);
                 break;
         }
     }
@@ -137,13 +140,13 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
         ObjectAnimator tabAlpha;
         ObjectAnimator textAlpha;
         if (isShow) {
-            rotation = ObjectAnimator.ofFloat(mIvSwitchRoleInfo, "rotation", 0, -45);
-            tabAlpha = ObjectAnimator.ofFloat(mTabLayoutRoleInfo, "alpha", 0, 1);
-            textAlpha = ObjectAnimator.ofFloat(mTvOnclickOpenRoleInfo, "alpha", 1, 0);
+            rotation = ObjectAnimator.ofFloat(mIvSwitchUserPermissionInfo, "rotation", 0, -45);
+            tabAlpha = ObjectAnimator.ofFloat(mTabLayoutUserPermissionInfo, "alpha", 0, 1);
+            textAlpha = ObjectAnimator.ofFloat(mTvOnclickOpenUserPermissionInfo, "alpha", 1, 0);
         } else {
-            rotation = ObjectAnimator.ofFloat(mIvSwitchRoleInfo, "rotation", -45, 0);
-            tabAlpha = ObjectAnimator.ofFloat(mTabLayoutRoleInfo, "alpha", 1, 0);
-            textAlpha = ObjectAnimator.ofFloat(mTvOnclickOpenRoleInfo, "alpha", 0, 1);
+            rotation = ObjectAnimator.ofFloat(mIvSwitchUserPermissionInfo, "rotation", -45, 0);
+            tabAlpha = ObjectAnimator.ofFloat(mTabLayoutUserPermissionInfo, "alpha", 1, 0);
+            textAlpha = ObjectAnimator.ofFloat(mTvOnclickOpenUserPermissionInfo, "alpha", 0, 1);
         }
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(rotation).with(tabAlpha).with(textAlpha);
@@ -162,32 +165,33 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
     }
 
     private void switchContainer(boolean isShow) {
-        ViewUtils.setVisibility(mTvOnclickOpenRoleInfo, !isShow);
-        ViewUtils.setVisibility(mViewPager2RoleInfo, isShow);
+        ViewUtils.setVisibility(mTvOnclickOpenUserPermissionInfo, !isShow);
+        ViewUtils.setVisibility(mViewPager2UserPermissionInfo, isShow);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
-        roleInfoFragments = new Fragment[]{
-                DeveloperSelectAllRoleInfoFragment.newInstance()
+        userPermissionInfoFragments = new Fragment[]{
+                DeveloperSelectUserPermissionByUserNameFragment.newInstance(),
+                DeveloperSelectHavePermissionUserInfoByPermissionIdFragment.newInstance()
         };
         //装载List集合，提供给ViewPager2适配器使用
-        List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.roleInfoFragments));
+        List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.userPermissionInfoFragments));
         //装载TabLayout标题集合，提供给ViewPager2适配器使用
-        List<String> titleList = new ArrayList<>(Arrays.asList(MultiPageRoleTitle.getPageNames()));
-        if (mViewPager2RoleInfo == null) {
+        List<String> titleList = new ArrayList<>(Arrays.asList(MultiPageUserPermissionTitle.getPageNames()));
+        if (mViewPager2UserPermissionInfo == null) {
             return;
         }
         if (isShow) { //打开按钮动态加载选项卡内容
             for (Fragment fragment : fragmentList) { //遍历Fragment集合，开始适配
-                mRoleInfoAdapter.addFragment(fragment, titleList);
+                mUserPermissionInfoAdapter.addFragment(fragment, titleList);
             }
-            mRoleInfoAdapter.notifyDataSetChanged();
-            mViewPager2RoleInfo.setCurrentItem(0, false);
-            WidgetUtils.setTabLayoutTextFont(mTabLayoutRoleInfo);
+            mUserPermissionInfoAdapter.notifyDataSetChanged();
+            mViewPager2UserPermissionInfo.setCurrentItem(0, false);
+            WidgetUtils.setTabLayoutTextFont(mTabLayoutUserPermissionInfo);
         } else { // 清空适配全部数据
-            mRoleInfoAdapter.clear();
+            mUserPermissionInfoAdapter.clear();
         }
     }
 
@@ -211,3 +215,4 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
         return false;
     }
 }
+

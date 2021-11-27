@@ -43,37 +43,38 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 /**
- * created by on 2021/11/25
- * 描述：开发者通过角色编号查询拥有该角色全部用户的信息
+ * created by on 2021/11/27
+ * 描述：开发者通过权限编号查询拥有该权限全部用户的信息
  *
  * @author ZSAndroid
- * @create 2021-11-25-23:40
+ * @create 2021-11-27-23:03
  */
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragment {
+public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperBannedAccountRealNameFragment";
+    private static final String TAG = "DeveloperSelectHavePermissionUserInfoByPermissionIdFragment";
+
     /* 父布局 */
-    @BindView(R2.id.ll_dev_select_have_role_user_info) LinearLayout mLlDevSelectHaveRoleUserInfoRoleId;
+    @BindView(R2.id.ll_dev_select_have_permission_user_info) LinearLayout mLlDevSelectHavePermissionUserInfoPermissionId;
     /* XUI按钮添加角色 */
-    @BindView(R2.id.btn_select_have_role_user_info) ButtonView mBtnSelectHaveRoleUserInfoRoleId;
+    @BindView(R2.id.btn_select_have_permission_user_info) ButtonView mBtnSelectHavePermissionUserInfoPermissionId;
     /* 用户和角色总数 */
-    @BindView(R2.id.tv_select_have_role_user_info) TextView mTvSelectHaveRoleUserInfoRoleIdShow;
+    @BindView(R2.id.tv_select_have_permission_user_info) TextView mTvSelectHavePermissionUserInfoPermissionIdShow;
     /* RecyclerView列表 */
-    @BindView(R2.id.recyclerView_select_have_role_user_info) RecyclerView mRecyclerViewSelectHaveRoleUserInfoRoleId;
+    @BindView(R2.id.recyclerView_select_have_permission_user_info) RecyclerView mRecyclerViewSelectHavePermissionUserInfoPermissionId;
     /* 角色信息列表适配器 */
     private BaseRoleUserInfoAdapter roleUserInfoAdapter;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperSelectHaveRoleUserInfoByRoleIdFragment newInstance() {
-        return new DeveloperSelectHaveRoleUserInfoByRoleIdFragment();
+    public static DeveloperSelectHavePermissionUserInfoByPermissionIdFragment newInstance() {
+        return new DeveloperSelectHavePermissionUserInfoByPermissionIdFragment();
     }
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_have_role_user_info_by_role_id;
+        return R.layout.developer_fragment_select_have_permission_user_info_by_permission_id;
     }
 
     @Override
@@ -84,7 +85,7 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     @Override
     protected void initView(View rootView) {
         //初始化RecyclerView列表控件
-        initSelectHaveRoleUserInfoByRoleIdRecyclerView();
+        initSelectHavePermissionUserInfoByPermissionIdRecyclerView();
     }
 
     @Override
@@ -105,11 +106,11 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_select_have_role_user_info})
-    public void onSelectHaveRoleUserInfoByRoleIdViewClick(View view) {
+    @OnClick({R2.id.btn_select_have_permission_user_info})
+    public void onSelectHavePermissionUserInfoByPermissionIdViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_select_have_role_user_info://开始查询
-                startSelectHaveRoleUserInfoByRoleId();
+            case R.id.btn_select_have_permission_user_info://开始查询
+                startSelectHavePermissionUserInfoByPermissionId();
                 break;
         }
     }
@@ -117,23 +118,23 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     /**
      * 初始化RecyclerView列表控件
      */
-    private void initSelectHaveRoleUserInfoByRoleIdRecyclerView() {
+    private void initSelectHavePermissionUserInfoByPermissionIdRecyclerView() {
         // 1.创建布局管理实例对象
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // 2.设置RecyclerView布局方式为垂直方向
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
-        mRecyclerViewSelectHaveRoleUserInfoRoleId.setLayoutManager(layoutManager);
+        mRecyclerViewSelectHavePermissionUserInfoPermissionId.setLayoutManager(layoutManager);
     }
 
     /**
      * 拉起对话框自定义布局
      */
-    private void startSelectHaveRoleUserInfoByRoleId() {
+    private void startSelectHavePermissionUserInfoByPermissionId() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_have_role_user_info_dialog_item, true)
+                .customView(R.layout.developer_fragment_select_have_permission_user_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
-                .title("查询角色专属用户")
+                .title("查询权限专属用户")
                 .titleColor(getResources().getColor(R.color.colorAccent))
                 .positiveText("查询")
                 .positiveColor(getResources().getColor(R.color.colorAccent))
@@ -143,11 +144,11 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //点击添加按钮同时获取dialog中的控件
-                        PowerfulEditText mEditRoleId = dialog.findViewById(R.id.edit_dev_role_user_info_role_id);
+                        PowerfulEditText mEditRoleId = dialog.findViewById(R.id.edit_dev_permission_user_info_permission_id);
                         //点击添加按钮同时获取dialog中的控件输入的文本内容
-                        String strRoleId = mEditRoleId.getText().toString().trim();
-                        //角色编号文本内容开始查询
-                        doSelectHaveRoleUserInfoByRoleId(strRoleId);
+                        String strPermissionId = mEditRoleId.getText().toString().trim();
+                        //权限编号文本内容开始查询
+                        doSelectHavePermissionUserInfoByPermissionId(strPermissionId);
                     }
                 })
                 .show();
@@ -156,17 +157,18 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     /**
      * 开始查询
      *
-     * @param strRoleId 角色编号
+     * @param strPermissionId 权限编号
      */
-    private void doSelectHaveRoleUserInfoByRoleId(String strRoleId) {
+    private void doSelectHavePermissionUserInfoByPermissionId(String strPermissionId) {
         //判空处理
-        if (TextUtils.isEmpty(strRoleId)) {
-            ToastUtils.show("请填入角色编号");
+        if (TextUtils.isEmpty(strPermissionId)) {
+            ToastUtils.show("请填入权限编号");
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USERNAME + "/" + Integer.parseInt(strRoleId))
-                .tag("拥有该角色全部用户")
+        OkGo.<String>post(Constant.ADMIN_SELECT_HAVE_PERMISSION_USER_INFO_BY_USERNAME)
+                .tag("拥有该权限全部用户")
+                .params("permissionId", Integer.parseInt(strPermissionId))
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -198,13 +200,13 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
                                     roleUserInfoBeans.add(roleUserInfoBean);
                                 }
                             }
-                            Log.i("拥有该角色全部用户", "拥有该角色全部用户: " + roleUserInfoBeans);
+                            Log.i("拥有该权限全部用户", "拥有该权限全部用户: " + roleUserInfoBeans);
                             // 5.创建用户和角色适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带用户和角色对象集合数据
                             roleUserInfoAdapter = new BaseRoleUserInfoAdapter(R.layout.developer_fragment_select_have_role_user_info_role_id_recycler_view_item, roleUserInfoBeans);
                             // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
-                            mRecyclerViewSelectHaveRoleUserInfoRoleId.setAdapter(roleUserInfoAdapter);
+                            mRecyclerViewSelectHavePermissionUserInfoPermissionId.setAdapter(roleUserInfoAdapter);
                             // 7.设置用户和角色拥有数
-                            mTvSelectHaveRoleUserInfoRoleIdShow.setText("角色编号【" + strRoleId + "】+已有：" + roleUserInfoBeans.size() + "条用户信息");
+                            mTvSelectHavePermissionUserInfoPermissionIdShow.setText("权限编号【" + strPermissionId + "】+已有：" + roleUserInfoBeans.size() + "条用户信息");
                         }
                     }
 
@@ -217,13 +219,8 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectHaveRoleUserInfoRoleId, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectHavePermissionUserInfoPermissionId, "请求错误，服务器连接失败！");
                     }
                 });
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 }
