@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.xuexiang.xui.widget.button.ButtonView;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -114,9 +116,8 @@ public class DeveloperSelectUserPermissionByUserNameFragment extends BaseFragmen
             return;
         }
         //开始网络请求，访问后端服务器，执行查询该用户的对应的权限
-        OkGo.<String>post(Constant.ADMIN_SELECT_USER_PERMISSION_INFO_BY_USERNAME)
+        OkGo.<String>post(Constant.ADMIN_SELECT_USER_THE_PERMISSION_INFO_BY_USERNAME + "/" + strPermissionUserName)
                 .tag("用户持有的权限")
-                .params("userName", strPermissionUserName)
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {

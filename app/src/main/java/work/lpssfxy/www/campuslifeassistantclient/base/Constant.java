@@ -214,12 +214,6 @@ public class Constant {
     // 超管查询角色全部信息
     public static final String ADMIN_SELECT_ALL_ROLE_INFO = BASE_URL + "/api/admin/role/adminSelectAllRoleInfo";
 
-    // 超管通过角色ID查询拥有该角色的全部用户角色并集信息
-    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_ID = BASE_URL + "/api/user/adminSelectAllInfoUserAndRoleByRoleId";
-
-    // 超管通过角色名查询拥有该角色的全部用户角色并集信息
-    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_NAME = BASE_URL + "/api/user/adminSelectAllInfoUserAndRoleByRoleName";
-
     // 超管通过角色ID和旧角色名称更新角色名称
     public static final String ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME = BASE_URL + "/api/admin/role/adminUpdateRoleNameByRoleIdAndOldRoleName";
 
@@ -260,10 +254,17 @@ public class Constant {
     // 超管通过用户ID查询该用户对应的角色集合
     public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERID = BASE_URL + "/api/admin/user/role/adminSelectOnlyUserToRoleListInfoByUserId";
 
-    // 超管通过用户名查询该用户对应的角色集合
-    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/adminSelectOnlyUserToRoleListInfoByUserName/root";
+    // 超管通过用户ID查询该用户拥有全部对应的用户角色并集信息
+    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USER_ID = BASE_URL + "/api/admin/user/role/adminSelectUserAndRoleInfoByUserId";
 
+    // 超管通过用户名查询该用户拥有全部对应的用户角色并集信息
+    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/adminSelectOnlyUserToRoleListInfoByUserName";
 
+    // 超管通过角色ID查询拥有该角色的全部用户角色并集信息
+    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_ID = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleId";
+
+    // 超管通过角色名查询拥有该角色的全部用户角色并集信息
+    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_NAME = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleName";
     /* ************************ 4.角色权限相关API接口 *************************/
 
     // 超管新增一条角色权限信息
@@ -286,16 +287,25 @@ public class Constant {
 
     /* ************************ 5.用户角色权限相关API接口 *************************/
 
-    // 超管通过用户名查询该用户拥有的权限信息
+    // 超管通过用户名查询该用户拥有的权限集合
     public static final String ADMIN_SELECT_USER_THE_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/permission/adminSelectUserThePermissionInfoByUserName";
-
-    // 超管查询全部用户角色权限对应的并集信息
-    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermission";
 
     // 超管查询全部用户角色权限对应的并集信息
     public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_AND_PERMISSION = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermission";
 
-    // 超管通过用户名查询该用户的对应的权限集合
-    public static final String ADMIN_SELECT_USER_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectOnlyUserToPermissionListInfoByUserName";
+    // 超管通过用户ID查询拥有该权限全部用户对应的用户角色权限并集信息
+    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_USER_ID = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByUserId";
+
+    // 超管通过用户名查询拥有该权限全部用户对应的用户角色权限并集信息
+    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_USER_NAME = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByUserName";
+
+    // 超管通过用户真实姓名查询拥有该权限全部用户对应的用户角色权限并集信息
+    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_REAL_NAME = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByRealName";
+
+    // 超管通过权限ID查询拥有该权限全部用户对应的用户角色权限并集信息
+    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_ID = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByPermissionId";
+
+    // 超管通过权限名查询拥有该权限全部用户对应的用户角色权限并集信息
+    public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_NAME = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByPermissionName";
 }
 
