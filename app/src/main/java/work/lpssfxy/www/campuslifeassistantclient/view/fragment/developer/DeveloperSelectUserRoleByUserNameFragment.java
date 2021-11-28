@@ -114,9 +114,8 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
             return;
         }
         //开始网络请求，访问后端服务器，执行查询该用户的对应的角色
-        OkGo.<String>post(Constant.ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME)
+        OkGo.<String>post(Constant.ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME + "/" +strRoleUserUsername)
                 .tag("用户持有的角色")
-                .params("userName", strRoleUserUsername)
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {

@@ -165,7 +165,7 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USERNAME + "/" + Integer.parseInt(strRoleId))
+        OkGo.<String>post(Constant.ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_ID + "/" + Integer.parseInt(strRoleId))
                 .tag("拥有该角色全部用户")
                 .execute(new StringCallback() {
                     @Override

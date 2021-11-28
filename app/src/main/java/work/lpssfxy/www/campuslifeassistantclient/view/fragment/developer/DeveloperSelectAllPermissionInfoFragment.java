@@ -424,10 +424,8 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_PERMISSION_INFO)
+        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_PERMISSION_INFO + "/" + strEditAddPermissionName + "/" + strAddPermissionInfo)
                 .tag("超管添加用户角色")
-                .params("permissionName", strEditAddPermissionName)
-                .params("permissionDescription", strAddPermissionInfo)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
