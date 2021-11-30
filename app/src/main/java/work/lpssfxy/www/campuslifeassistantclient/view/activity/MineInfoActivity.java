@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.helloworld.library.MiddleDialogConfig;
-import com.helloworld.library.utils.DialogEnum;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopupext.listener.CommonPickerListener;
@@ -43,8 +41,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 
@@ -218,7 +215,7 @@ public class MineInfoActivity extends BaseActivity {
      */
     private void doRefresh() {
         //开启加载进度条
-        XPopupUtils.getInstance().setShowDialog(MineInfoActivity.this, "拉取信息中...");
+        MyXPopupUtils.getInstance().setShowDialog(MineInfoActivity.this, "拉取信息中...");
         //自动触发下拉刷新
         mRefreshLayoutMyInfo.autoRefresh();
         //开始下拉刷新，执行调用API接口业务
@@ -263,7 +260,7 @@ public class MineInfoActivity extends BaseActivity {
                                         @Override
                                         public void onFinish() {
                                             mRefreshLayoutMyInfo.finishRefresh();//结束下拉刷新
-                                            XPopupUtils.getInstance().setNowDisDialog();//关闭加载进度条
+                                            MyXPopupUtils.getInstance().setNowDisDialog();//关闭加载进度条
                                         }
                                     });
                         }

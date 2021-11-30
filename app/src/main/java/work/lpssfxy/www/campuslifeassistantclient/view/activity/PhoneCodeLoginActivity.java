@@ -42,12 +42,12 @@ import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
 /**
@@ -331,7 +331,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        XPopupUtils.getInstance().setShowDialog(PhoneCodeLoginActivity.this, "正在验证账户...");
+                        MyXPopupUtils.getInstance().setShowDialog(PhoneCodeLoginActivity.this, "正在验证账户...");
                     }
 
                     @Override
@@ -371,7 +371,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
                 });
     }

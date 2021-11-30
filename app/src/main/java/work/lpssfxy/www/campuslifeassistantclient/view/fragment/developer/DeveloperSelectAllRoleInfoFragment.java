@@ -43,7 +43,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllRoleInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -149,7 +149,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在加载信息...");
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在加载信息...");
                     }
 
                     @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
@@ -207,7 +207,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onStart(Request<String, ? extends Request> request) {
                                                                         super.onStart(request);
-                                                                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
+                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
                                                                     }
 
                                                                     @SuppressLint("NotifyDataSetChanged")
@@ -235,7 +235,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onFinish() {
                                                                         super.onFinish();
-                                                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                                                     }
                                                                 });
                                                     }
@@ -266,7 +266,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onStart(Request<String, ? extends Request> request) {
                                                                         super.onStart(request);
-                                                                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
+                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
                                                                     }
 
                                                                     @Override
@@ -293,7 +293,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onFinish() {
                                                                         super.onFinish();
-                                                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                                                     }
 
                                                                     @Override
@@ -333,7 +333,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onStart(Request<String, ? extends Request> request) {
                                                                         super.onStart(request);
-                                                                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
+                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
                                                                     }
 
                                                                     @SuppressLint("NotifyDataSetChanged")
@@ -361,7 +361,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onFinish() {
                                                                         super.onFinish();
-                                                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                                                     }
 
                                                                     @Override
@@ -383,7 +383,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override
@@ -450,7 +450,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在添加...");
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在添加...");
                     }
 
                     @Override
@@ -483,7 +483,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override

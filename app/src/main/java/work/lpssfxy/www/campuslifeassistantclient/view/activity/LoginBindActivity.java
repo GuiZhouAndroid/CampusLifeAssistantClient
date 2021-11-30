@@ -26,7 +26,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
@@ -174,12 +174,12 @@ public class LoginBindActivity extends BaseActivity {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(LoginBindActivity.this,"正在验证账户...");
+                        MyXPopupUtils.getInstance().setShowDialog(LoginBindActivity.this,"正在验证账户...");
                     }
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         Log.i(TAG, "onSuccess==: " + OkGoResponseBean);
                         if (200 == OkGoResponseBean.getCode() && "查询失败，此用户名不存在".equals(OkGoResponseBean.getMsg())) {
@@ -276,7 +276,7 @@ public class LoginBindActivity extends BaseActivity {
 
                                     @Override
                                     public void onFinish() {
-                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override

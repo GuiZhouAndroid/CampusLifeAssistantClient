@@ -22,7 +22,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -120,7 +120,7 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在执行...");
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在执行...");
                     }
 
                     @Override
@@ -153,7 +153,7 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -14,6 +13,7 @@ import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.lxj.xpopup.interfaces.OnSelectListener;
+import com.lxj.xpopup.util.XPopupUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -36,11 +36,9 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserInfoPageBean;
+import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.CallUserTelPopup;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.okGoAllUserInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -67,8 +65,6 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     //顶部标题数组
     private String[] topTitleArrays;
 
-
-
     /**
      * @return 单例对象
      */
@@ -84,7 +80,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     @Override
     protected void prepareData(Bundle savedInstanceState) {
         //准备表的顶部标题数据
-        topTitleArrays = new String[]{"用户ID","用户名","真实姓名","性别","身份证号","学号","手机号","QQ邮箱","班级","院系","注册时间","修改时间"};
+        topTitleArrays = new String[]{"用户ID", "用户名", "真实姓名", "性别", "身份证号", "学号", "手机号", "QQ邮箱", "班级", "院系", "注册时间", "修改时间"};
     }
 
     @Override
@@ -167,7 +163,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户便编号",
+                .asInputConfirm("搜索用户信息", null, null, "请输入用户编号",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strUserId) {
@@ -178,7 +174,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
                                                 super.onStart(request);
-                                                XPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
                                             }
 
                                             @SuppressLint("SetTextI18n")
@@ -190,7 +186,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onFinish() {
                                                 super.onFinish();
-                                                XPopupUtils.getInstance().setSmartDisDialog();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
                                             }
 
                                             @Override
@@ -225,7 +221,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
                                                 super.onStart(request);
-                                                XPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
                                             }
 
                                             @SuppressLint("SetTextI18n")
@@ -237,7 +233,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onFinish() {
                                                 super.onFinish();
-                                                XPopupUtils.getInstance().setSmartDisDialog();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
                                             }
 
                                             @Override
@@ -272,7 +268,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
                                                 super.onStart(request);
-                                                XPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
                                             }
 
                                             @SuppressLint("SetTextI18n")
@@ -284,7 +280,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onFinish() {
                                                 super.onFinish();
-                                                XPopupUtils.getInstance().setSmartDisDialog();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
                                             }
 
                                             @Override
@@ -325,6 +321,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
 
     /**
      * 开始设置表数据
+     *
      * @param response okGo响应返回的Json字符串
      */
     private void starSetTabData(Response<String> response) {
@@ -356,13 +353,13 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             // 4.设置文本滚动显示用户条数
             if (!tableData.isEmpty()) {
                 //4.1设置滚动文本
-                mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("        已成功查询出" + (tableData.size()-1) + "条用户数据"        ));
+                mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("        已成功查询出" + (tableData.size() - 1) + "条用户数据"));
                 //4.2监听文本是否匹配--->匹配相同，执行循环滚动
                 mMtvCountUserNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                     @Override
                     public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                         //4.3滚动开始
-                        if (displayMsg.toString().equals("        已成功查询出" + (tableData.size()-1) + "条用户数据"        )) {
+                        if (displayMsg.toString().equals("        已成功查询出" + (tableData.size() - 1) + "条用户数据")) {
                             return displayMsg;//匹配相同，继续滚动
                         }
                         return null;
@@ -382,8 +379,8 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                     .setLockFristRow(true) //是否锁定第一行
                     .setMaxColumnWidth(150) //列最大宽度
                     .setMinColumnWidth(50) //列最小宽度
-                    .setColumnWidth(4,120) //设置指定列文本宽度
-                    .setColumnWidth(9,120) //设置指定列文本宽度
+                    .setColumnWidth(4, 120) //设置指定列文本宽度
+                    .setColumnWidth(9, 120) //设置指定列文本宽度
                     .setMinRowHeight(20)//行最小高度
                     .setMaxRowHeight(20)//行最大高度
                     .setTextViewSize(12) //单元格字体大小
@@ -423,6 +420,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 }
                             }, 1000);
                         }
+
                         @Override
                         public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
                             //上拉加载刷新，分页功能待开发
@@ -469,8 +467,19 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                     .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
                         @Override
                         public void onItemClick(View item, int position) {
-                            Log.i("选择用户信息------",tableData.get(position).toString());
                             ToastUtils.show("您点击了第" + position + "行用户信息");
+                            String strUserId = tableData.get(position).get(0); //当前item用户ID
+                            String strUserName = tableData.get(position).get(1); //当前item用户名
+                            String strUserRealName = tableData.get(position).get(2); //当前item姓名
+                            String strUserTel = tableData.get(position).get(6); //当前item手机号
+
+                            new XPopup.Builder(getContext())
+                                    .isCenterHorizontal(true)
+                                    .isDestroyOnDismiss(true)
+                                    .atView(mContentView)
+                                    .hasShadowBg(false) //去掉半透明背景
+                                    .asCustom(new CallUserTelPopup(getContext(), strUserTel, strUserRealName).setArrowRadius(XPopupUtils.dp2px(getContext(), 3)))
+                                    .show();
 
                         }
                     })
@@ -485,7 +494,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
-        }else {
+        } else {
             //空集合表数据
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             //设置顶部第一列标题
@@ -499,8 +508,8 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                     .setLockFristRow(true) //是否锁定第一行
                     .setMaxColumnWidth(150) //列最大宽度
                     .setMinColumnWidth(50) //列最小宽度
-                    .setColumnWidth(4,120) //设置指定列文本宽度
-                    .setColumnWidth(9,120) //设置指定列文本宽度
+                    .setColumnWidth(4, 120) //设置指定列文本宽度
+                    .setColumnWidth(9, 120) //设置指定列文本宽度
                     .setMinRowHeight(20)//行最小高度
                     .setMaxRowHeight(20)//行最大高度
                     .setTextViewSize(12) //单元格字体大小
@@ -540,6 +549,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 }
                             }, 1000);
                         }
+
                         @Override
                         public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
                             //上拉加载刷新，分页功能待开发

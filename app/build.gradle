@@ -127,7 +127,7 @@ dependencies {
     // 轮子哥权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:13.0'
     // 轮子哥吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:9.5'
+    implementation 'com.github.getActivity:ToastUtils:10.0'
     // 轮子哥标题栏框架：https://github.com/getActivity/TitleBar
     implementation 'com.github.getActivity:TitleBar:9.2'
     // 轮子哥悬浮窗框架：https://github.com/getActivity/XToast

@@ -9,7 +9,7 @@
         <package android:name="com.autonavi.minimap" />
         <package android:name="com.tencent.map" />
     </queries>
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

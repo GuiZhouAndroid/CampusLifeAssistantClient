@@ -31,17 +31,15 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ParcelableUserInfoData;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
@@ -218,7 +216,7 @@ public class BottomMineFragment extends BaseFragment {
 //                            .execute(new StringCallback() {
 //                                @Override
 //                                public void onSuccess(Response<String> response) {
-//                                    XPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
+//                                    MyXPopupUtils.getInstance().setShowDialog(getActivity(),"请求信息中...");
 //                                    //Json字符串解析转为实体类对象
 //                                    OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
 //                                    Log.i(TAG, "okGoUserBeanData=== " + okGoUserBeanData);
@@ -244,7 +242,7 @@ public class BottomMineFragment extends BaseFragment {
 //
 //                                @Override
 //                                public void onFinish() {
-//                                    XPopupUtils.getInstance().setSmartDisDialog();
+//                                    MyXPopupUtils.getInstance().setSmartDisDialog();
 //                                }
 //                            });
 //                }else {
@@ -256,7 +254,7 @@ public class BottomMineFragment extends BaseFragment {
                         .execute(new StringCallback() {
                             @Override
                             public void onStart(Request<String, ? extends Request> request) {
-                                XPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
                             }
 
                             @Override
@@ -273,7 +271,7 @@ public class BottomMineFragment extends BaseFragment {
                             @Override
                             public void onFinish() {
                                 super.onFinish();
-                                XPopupUtils.getInstance().setSmartDisDialog();
+                                MyXPopupUtils.getInstance().setSmartDisDialog();
                             }
 
                             @Override
@@ -304,12 +302,12 @@ public class BottomMineFragment extends BaseFragment {
         mAccountSafe.setItemClickListener(new ItemView.itemClickListener() {
             @Override
             public void itemClick(String text) {
-                XPopupUtils.getInstance().setShowDialog(getActivity(),"请求跳转中...");
+                MyXPopupUtils.getInstance().setShowDialog(getActivity(),"请求跳转中...");
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                         IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
                     }
                 }, 500);

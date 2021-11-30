@@ -81,9 +81,9 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUser
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
@@ -344,7 +344,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
+                                        MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
 
                                     @Override
@@ -416,7 +416,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -443,7 +443,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在注销...");
+                                        MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在注销...");
                                     }
 
                                     @Override
@@ -466,7 +466,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -518,7 +518,7 @@ public class IndexActivity extends BaseActivity {
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
         if (Constant.sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
-            XPopupUtils.getInstance().setShowDialog(this,getString(R.string.indexLoadLoginInfo));
+            MyXPopupUtils.getInstance().setShowDialog(this,getString(R.string.indexLoadLoginInfo));
             try {
                 jsonObject.put("ret", Constant.sessionAndUserBean.getData().getRet());
                 jsonObject.put("openid", Constant.sessionAndUserBean.getData().getOpenid());
@@ -745,7 +745,7 @@ public class IndexActivity extends BaseActivity {
                         QQUserBeanIsValidSetTextAndGlideUserHead(Constant.onlyQQUserInfo);//加载在线动态QQ昵称和QQ头像
                         startHaveDataQQUserInfoToMineFragment(Constant.onlyQQUserInfo);
                         /** 关闭正在加载登录信息友好进度条*/
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
                     break;
                 case 1: //未登录
@@ -969,12 +969,12 @@ public class IndexActivity extends BaseActivity {
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionAndUserBean != null) {
-            XPopupUtils.getInstance().setShowDialog(this,"请求跳转中...");
+            MyXPopupUtils.getInstance().setShowDialog(this,"请求跳转中...");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    XPopupUtils.getInstance().setSmartDisDialog();
+                    MyXPopupUtils.getInstance().setSmartDisDialog();
                     IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this,MineInfoActivity.class));
                 }
             }, 500);
@@ -1072,7 +1072,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
+                                        MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在验证身份...");
                                     }
 
                                     @Override
@@ -1091,7 +1091,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override
@@ -1106,7 +1106,7 @@ public class IndexActivity extends BaseActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onStart(Request<String, ? extends Request> request) {
-                                        XPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在检查登录...");
+                                        MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, "正在检查登录...");
                                     }
 
                                     @Override
@@ -1123,7 +1123,7 @@ public class IndexActivity extends BaseActivity {
                                     @Override
                                     public void onFinish() {
                                         super.onFinish();
-                                        XPopupUtils.getInstance().setSmartDisDialog();
+                                        MyXPopupUtils.getInstance().setSmartDisDialog();
                                     }
 
                                     @Override

@@ -3,7 +3,6 @@ package work.lpssfxy.www.campuslifeassistantclient.utils;
 import static com.xuexiang.xutil.tip.ToastUtils.toast;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +18,6 @@ import com.lxj.xpopup.util.SmartGlideImageLoader;
 
 import java.util.List;
 
-import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
-
 /**
  * created by on 2021/11/5
  * 描述： XPopup自定义工具类，请求进度条的延迟关闭，仿真网络请求
@@ -29,12 +25,12 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
  * @author ZSAndroid
  * @create 2021-11-05-23:25
  */
-public class XPopupUtils {
+public class MyXPopupUtils {
 
     /**
      * 单例模式全局静态变量
      */
-    private static XPopupUtils xPopupUtils;
+    private static MyXPopupUtils xPopupUtils;
 
     /**
      * XPopup全局变量
@@ -44,10 +40,10 @@ public class XPopupUtils {
     /**
      * @return XPopupUtils单例实例
      */
-    public static XPopupUtils getInstance() {
+    public static MyXPopupUtils getInstance() {
         //实例为空时就创建对象，java垃圾回收机制，回收之前，一直生效
         if (xPopupUtils == null) {
-            xPopupUtils = new XPopupUtils();
+            xPopupUtils = new MyXPopupUtils();
         }
         //不为空返回XPopupUtils对象实例
         return xPopupUtils;

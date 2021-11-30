@@ -2,7 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -37,7 +35,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleUserInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -173,7 +171,7 @@ public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        XPopupUtils.getInstance().setShowDialog(getActivity(), "正在查询...");
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在查询...");
                     }
 
                     @SuppressLint("SetTextI18n")
@@ -213,7 +211,7 @@ public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        XPopupUtils.getInstance().setSmartDisDialog();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override

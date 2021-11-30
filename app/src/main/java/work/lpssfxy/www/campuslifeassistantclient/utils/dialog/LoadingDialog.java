@@ -50,7 +50,7 @@ public class LoadingDialog {
 
     public static String getTime() {
         data = new Date(System.currentTimeMillis());
-        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:CallUserTelPopup");
         String string = format.format(data);
         return string;
     }
