@@ -34,7 +34,7 @@ public class BasePermissionInfoAdapter extends BaseQuickAdapter<PermissionInfoBe
     /**
      * 有参实例，有集合数据
      *
-     * @param layoutResId 数据需要自动适配的developer_fragment_select_all_role_info_recycler_view_item.xml视图布局的id
+     * @param layoutResId 数据需要自动适配的developer_fragment_select_all_permission_info_recycler_view_item.xml视图布局的id
      * @param data        OkGo网络请求SpringBoot后端接口，服务器返回的List<Permission>对象数据集合
      */
     public BasePermissionInfoAdapter(int layoutResId, @Nullable List<PermissionInfoBean> data) {

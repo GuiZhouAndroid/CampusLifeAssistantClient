@@ -35,6 +35,7 @@ public class MyVerticalTabLayoutViewPagerAdapter extends FragmentStatePagerAdapt
     public MyVerticalTabLayoutViewPagerAdapter(@NonNull FragmentManager fm, Fragment[] fragments, List<Fragment> fragmentList) {
         super(fm);
         // 1.添加TabLayout标题到String的List集合中
+        TabLayoutTitleList.add("用户管理");
         TabLayoutTitleList.add("角色管理");
         TabLayoutTitleList.add("权限管理");
         TabLayoutTitleList.add("用户角色");

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_dev_select_all_user_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.activity.DeveloperSystemSafeActivity">
+
+    <com.xuexiang.xui.widget.textview.MarqueeTextView
+        android:id="@+id/mtv_count_user_number"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold" />
+
+    <com.xuexiang.xui.widget.button.ButtonView
+        android:id="@+id/btn_search_user_info"
+        style="@style/ButtonView.Blue"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_40"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="@string/search_user"
+        android:textSize="@dimen/sp_13"
+        app:textNormalTextColor="@color/white"
+        app:textRadius="8dp"
+        app:textSelectedTextColor="#FF6565" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical"
+        android:id="@+id/contentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </LinearLayout>
+
+</LinearLayout>

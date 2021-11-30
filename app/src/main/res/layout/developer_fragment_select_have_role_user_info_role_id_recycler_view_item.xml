@@ -15,10 +15,10 @@
             android:id="@+id/select_role_user_info_user_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="用户ID"
             android:textSize="@dimen/sp_15" />
 
@@ -26,10 +26,10 @@
             android:id="@+id/select_role_user_info_user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1.5"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="用户名"
             android:textSize="@dimen/sp_15" />
 
@@ -37,10 +37,10 @@
             android:id="@+id/select_role_user_info_real_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="真实姓名"
             android:textSize="@dimen/sp_15" />
 
@@ -48,10 +48,10 @@
             android:id="@+id/select_role_user_info_role_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="角色ID"
             android:textSize="@dimen/sp_15" />
 
@@ -59,10 +59,10 @@
             android:id="@+id/select_role_user_info_role_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="角色名"
             android:textSize="@dimen/sp_15" />
     </LinearLayout>

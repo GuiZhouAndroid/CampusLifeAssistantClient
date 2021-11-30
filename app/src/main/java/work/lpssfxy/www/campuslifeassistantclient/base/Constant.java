@@ -206,7 +206,24 @@ public class Constant {
     // 超管通过已登录账户真实姓名解除封禁
     public static final String ADMIN_TO_UNTIE_BANNED_ACCOUNT_BY_REAL_NAME = BASE_URL + "/api/admin/kickOffLine/adminToUntieBannedAccountByRealName";
 
-    /* ************************ 2.角色相关API接口 *************************/
+    /* ************************ 2.用户相关API接口 *************************/
+
+    // 超管查询用户表全部信息
+    public static final String ADMIN_SELECT_ALL_USER_INFO = BASE_URL + "/api/user/adminSelectAllUserInfo";
+
+    // 超管分页查询用户表信息
+    public static final String ADMIN_SELECT_ALL_USER_INFO_BY_PAGE = BASE_URL + "/api/user/adminSelectUserInfoByPage";
+
+    // 超管通过用户ID查询用户信息
+    public static final String ADMIN_SELECT_USER_INFO_BY_USER_ID = BASE_URL + "/api/user/adminSelectUserInfoByUserId";
+
+    // 超管通过用户名查询用户信息
+    public static final String ADMIN_SELECT_USER_INFO_BY_USERNAME = BASE_URL + "/api/user/adminSelectUserInfoByUserName";
+
+    // 超管通过真实姓名查询用户信息
+    public static final String ADMIN_SELECT_USER_INFO_BY_USER_REAL_NAME = BASE_URL + "/api/user/adminSelectUserInfoByRealName";
+
+    /* ************************ 3.角色相关API接口 *************************/
 
     // 超管添加一条角色信息
     public static final String ADMIN_ADD_ONCE_ROLE_INFO = BASE_URL + "/api/admin/role/adminAddOnceRoleInfo";
@@ -223,7 +240,7 @@ public class Constant {
     // 超管通过角色实体删除一条对应角色信息
     public static final String ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY = BASE_URL + "/api/admin/role/adminDeleteOnceRoleInfoByRoleEntity";
 
-    /* ************************ 3.权限相关API接口 *************************/
+    /* ************************ 4.权限相关API接口 *************************/
 
     // 超管添加一条权限信息
     public static final String ADMIN_ADD_ONCE_PERMISSION_INFO = BASE_URL + "/api/admin/permission/adminAddOncePermissionInfo";
@@ -243,7 +260,7 @@ public class Constant {
     // 超管通过权限实体删除一条对应权限信息
     public static final String ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY = BASE_URL + "/api/admin/permission/adminDeleteOncePermissionInfoByPermissionEntity";
 
-    /* ************************ 2.用户角色相关API接口 *************************/
+    /* ************************ 5.用户角色相关API接口 *************************/
 
     // 超管通过用户ID和角色ID添加一条用户角色信息
     public static final String ADMIN_ADD_ONCE_USER_ROLE_INFO_BY_USERID_AND_ROLE_ID = BASE_URL + "/api/admin/user/role/adminAddOnceUserRoleInfoByUserIdAndRoleId";
@@ -265,7 +282,7 @@ public class Constant {
 
     // 超管通过角色名查询拥有该角色的全部用户角色并集信息
     public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_NAME = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleName";
-    /* ************************ 4.角色权限相关API接口 *************************/
+    /* ************************ 6.角色权限相关API接口 *************************/
 
     // 超管新增一条角色权限信息
     public static final String ADMIN_ADD_ONCE_ROLE_PERMISSION_INFO_BY_ROLE_ID_AND_PERMISSION_ID = BASE_URL + "/api/admin/role/permission/adminAddOnceRolePermissionInfoByRoleIdAndPermissionId";
@@ -285,7 +302,7 @@ public class Constant {
     // 超管通过角色名查询拥有该角色全部的权限信息
     public static final String ADMIN_SELECT_PERMISSION_INFO_BY_ROLE_NAME = BASE_URL + "/api/admin/role/permission/adminSelectPermissionInfoByRoleName";
 
-    /* ************************ 5.用户角色权限相关API接口 *************************/
+    /* ************************ 7.用户角色权限相关API接口 *************************/
 
     // 超管通过用户名查询该用户拥有的权限集合
     public static final String ADMIN_SELECT_USER_THE_PERMISSION_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/permission/adminSelectUserThePermissionInfoByUserName";

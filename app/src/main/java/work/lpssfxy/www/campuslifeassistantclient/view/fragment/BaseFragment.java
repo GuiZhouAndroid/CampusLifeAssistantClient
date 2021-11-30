@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
+import com.lzy.okgo.OkGo;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -150,5 +151,6 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
             mUnbinder.unbind();
         }
         super.onDestroyView();
+        OkGo.getInstance().cancelAll();
     }
 }

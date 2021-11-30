@@ -15,10 +15,10 @@
             android:id="@+id/select_all_permission_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="编号"
             android:textSize="@dimen/sp_15" />
 
@@ -26,10 +26,10 @@
             android:id="@+id/select_all_permission_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="名称"
             android:textSize="@dimen/sp_15" />
 
@@ -37,10 +37,10 @@
             android:id="@+id/select_all_permission_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="描述"
             android:textSize="@dimen/sp_15" />
 
@@ -48,10 +48,10 @@
             android:id="@+id/select_all_permission_create_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="添加"
             android:textSize="@dimen/sp_15" />
 
@@ -59,10 +59,10 @@
             android:id="@+id/select_all_permission_update_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:text="更新"
             android:textSize="@dimen/sp_15" />
     </LinearLayout>

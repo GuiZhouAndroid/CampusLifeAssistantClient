@@ -57,7 +57,7 @@
     <color name="Indigo">#3f51b5</color>
     <color name="Blue">#2196f3</color>
     <color name="boxBg">#33aaff</color>
-
+    <color name="xui_btn_blue_normal_color">#3E99D2</color>
     <color name="Light_Blue">#03a9f4</color>
     <color name="Cyan">#00bcd4</color>
     <color name="Teal">#009688</color>

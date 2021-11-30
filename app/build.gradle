@@ -155,4 +155,6 @@ dependencies {
     implementation 'q.rorbin:VerticalTabLayout:1.2.5'
     //强大的RecyclerAdapter框架BaseRecyclerView https://github.com/CymChad/BaseRecyclerViewAdapterHelper 简书：https://www.jianshu.com/p/b343fcff51b0
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
+    //自动生成表格框架 https://github.com/huangyanbin/smartTable
+    implementation 'com.github.RmondJone:LockTableView:1.1.2'
 }

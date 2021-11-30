@@ -96,6 +96,8 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/canteen_run_buy_activity.xml" value="0.3098958333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/canteen_run_buy_fragment_second_floor.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_ency_appbar.xml" value="0.36231884057971014" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_fll_popup_user_info.xml" value="0.2677083333333333" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_fullscreen_popup_user_info.xml" value="0.16032608695652173" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_homepage_nestedscrollview.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_mine_nestedscrollview.xml" value="0.35208333333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_toolbar.xml" value="0.36614583333333334" />
@@ -118,6 +120,8 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_add_role_info_dialog_item.xml" value="0.2921195652173913" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_recycler_view_item.xml" value="0.3098958333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_role_info_update_role_info_dialog_item.xml" value="0.2921195652173913" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_user_info.xml" value="0.3098958333333333" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_all_user_info_recycler_view_item.xml" value="0.28177083333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_state_real_name.xml" value="0.33152173913043476" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_state_user_id.xml" value="0.24791666666666667" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_fragment_select_banned_time_real_name.xml" value="0.32395833333333335" />
@@ -137,6 +141,7 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_ban_account_info.xml" value="0.21979166666666666" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_permission_info.xml" value="0.3138586956521739" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_role_info.xml" value="0.29010416666666666" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_user_info.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_user_permission_info.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_manager_fragment_user_role_info.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_select_banned_state_real_name.xml" value="0.36614583333333334" />
