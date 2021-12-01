@@ -4,46 +4,49 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemChildClickListener;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
+import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.rmondjone.locktableview.LockTableView;
+import com.rmondjone.xrecyclerview.ProgressStyle;
+import com.rmondjone.xrecyclerview.XRecyclerView;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.DialogLoader;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.GravityEnum;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
-import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListAdapter;
-import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListItem;
-import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
+import com.xuexiang.xui.widget.textview.MarqueeTextView;
+import com.xuexiang.xui.widget.textview.marqueen.DisplayEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRoleInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllRoleInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -63,15 +66,17 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     /* 父布局 */
     @BindView(R2.id.ll_dev_select_all_role_info) LinearLayout mLlDevSelectAllRoleInfo;
+    /* XUI按钮搜索角色 */
+    @BindView(R2.id.btn_search_role) ButtonView mBtnSearchRole;
     /* XUI按钮添加角色 */
     @BindView(R2.id.btn_add_role) ButtonView mBtnAddRole;
-    /* 角色拥有数 */
-    @BindView(R2.id.tv_all_role_info_show) TextView mTvAllRoleInfoShow;
-    /* RecyclerView列表 */
-    @BindView(R2.id.recyclerView_all_role_info) RecyclerView mRecyclerViewAllRoleInfo;
+    /* 填充表格视图 */
+    @BindView(R2.id.ll_role_info_table_content_view) LinearLayout mLlRoleInfoTableContentView;
+    //跑马灯滚动显示角色总条数
+    @BindView(R2.id.mtv_count_role_number) MarqueeTextView mMtvCountRoleNumber;
 
-    /* 角色信息列表适配器 */
-    private BaseRoleInfoAdapter roleInfoAdapter;
+    //顶部标题数组
+    private String[] topTitleArrays;
 
     /**
      * @return 单例对象
@@ -87,13 +92,13 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     @Override
     protected void prepareData(Bundle savedInstanceState) {
-
+        //准备表的顶部标题数据
+        topTitleArrays = new String[]{"角色ID", "角色名称", "角色描述", "创建时间", "修改时间"};
     }
 
     @Override
     protected void initView(View rootView) {
-        //初始化RecyclerView列表控件
-        initSelectAllRoleInfoRecyclerView();
+
     }
 
     @Override
@@ -115,25 +120,16 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_add_role})
+    @OnClick({R2.id.btn_add_role, R2.id.btn_search_role})
     public void onSelectAllRoleInfoViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_add_role://确定添加
+            case R.id.btn_search_role://搜索角色
+                startSearchRoleInfo();
+                break;
+            case R.id.btn_add_role://添加角色
                 startAddRoleInfo();
                 break;
         }
-    }
-
-    /**
-     * 初始化RecyclerView列表控件
-     */
-    private void initSelectAllRoleInfoRecyclerView() {
-        // 1.创建布局管理实例对象
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // 2.设置RecyclerView布局方式为垂直方向
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
-        mRecyclerViewAllRoleInfo.setLayoutManager(layoutManager);
     }
 
     /**
@@ -146,244 +142,10 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
         OkGo.<String>post(Constant.ADMIN_SELECT_ALL_ROLE_INFO)
                 .tag("查询全部角色信息")
                 .execute(new StringCallback() {
-                    @Override
-                    public void onStart(Request<String, ? extends Request> request) {
-                        super.onStart(request);
-                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在加载信息...");
-                    }
-
                     @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoAllRoleInfoBean okGoAllRoleInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllRoleInfoBean.class);
-                        //查询成功，取出getData，遍历集合并创建角色实体添加适配
-                        if (200 == okGoAllRoleInfoBean.getCode() && "success".equals(okGoAllRoleInfoBean.getMsg())) {
-                            // 1.提示信息
-                            ToastUtils.show("全部角色信息获取成功");
-                            // 2.取出角色对象集合对象数据
-                            List<OkGoAllRoleInfoBean.Data> okGoRoleInfoBeanDataList = okGoAllRoleInfoBean.getData();
-                            // 3.创建角色实体集合，为适配列表准备数据
-                            List<RoleInfoBean> roleInfoBeanList = new ArrayList<>();
-                            // 4.遍历getData集合，分离集合获取单个角色对象数据，同时遍历添加到适配列表角色实体
-                            for (OkGoAllRoleInfoBean.Data data : okGoRoleInfoBeanDataList) {
-                                // 4.1 循环遍历创建对象，动态添加角色数据
-                                RoleInfoBean roleInfoBean = new RoleInfoBean(data.getTrId(), data.getTrName(), data.getTrDescription(), data.getCreateTime(), data.getUpdateTime());
-                                // 4.2 携带角色对象数据，每次循环遍历都依次加载到RecyclerView列表适配需要集合中
-                                roleInfoBeanList.add(roleInfoBean);
-                            }
-                            // 5.创建角色适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带角色对象集合数据
-                            roleInfoAdapter = new BaseRoleInfoAdapter(R.layout.developer_fragment_select_all_role_info_recycler_view_item, roleInfoBeanList);
-                            // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
-                            mRecyclerViewAllRoleInfo.setAdapter(roleInfoAdapter);
-                            // 7.设置角色拥有数
-                            mTvAllRoleInfoShow.setText("校园帮APP已有：" + roleInfoBeanList.size() + "条角色信息");
-                            // 8.执行子View单击事件业务逻辑--->更新角色信息
-                            roleInfoAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
-                                @Override
-                                public void onItemChildClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                                    // 8.1 通过位置索引，获取对应适配的角色实体对象数据
-                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
-                                    // 8.2 更新角色名称
-                                    if (view.getId() == R.id.select_all_role_name) {
-                                        new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
-                                                .titleGravity(GravityEnum.CENTER)
-                                                .title("更新" + roleInfoBean.getTrName())
-                                                .titleColor(getResources().getColor(R.color.colorAccent))
-                                                .positiveText("更新")
-                                                .positiveColor(getResources().getColor(R.color.colorAccent))
-                                                .negativeText("取消")
-                                                .cancelable(false)
-                                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                                    @Override
-                                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                        //获取自定义布局中的控件id
-                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_role_info);
-                                                        //新角色名称
-                                                        String newRoleName = materialEditText.getText().toString().trim();
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName() + "/" + newRoleName)
-                                                                .tag("更新角色名称")
-                                                                .execute(new StringCallback() {
-                                                                    @Override
-                                                                    public void onStart(Request<String, ? extends Request> request) {
-                                                                        super.onStart(request);
-                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
-                                                                    }
-
-                                                                    @SuppressLint("NotifyDataSetChanged")
-                                                                    @Override
-                                                                    public void onSuccess(Response<String> response) {
-                                                                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                                        //失败(超管未登录)
-                                                                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
-                                                                            return;
-                                                                        }
-                                                                        //更新失败
-                                                                        if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                            return;
-                                                                        }
-                                                                        //更新成功
-                                                                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                                            //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFinish() {
-                                                                        super.onFinish();
-                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
-                                                                    }
-                                                                });
-                                                    }
-                                                })
-                                                .show();
-                                    }
-                                    // 8.2 更新角色描述
-                                    if (view.getId() == R.id.select_all_role_info) {
-                                        new MaterialDialog.Builder(getContext())
-                                                .customView(R.layout.developer_fragment_select_all_role_info_update_role_info_dialog_item, true)
-                                                .titleGravity(GravityEnum.CENTER)
-                                                .title("更新" + roleInfoBean.getTrDescription())
-                                                .titleColor(getResources().getColor(R.color.colorAccent))
-                                                .positiveText("更新")
-                                                .positiveColor(getResources().getColor(R.color.colorAccent))
-                                                .negativeText("取消")
-                                                .cancelable(false)
-                                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                                    @Override
-                                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                        //获取自定义布局中的控件id
-                                                        MaterialEditText materialEditText = dialog.findViewById(R.id.et_auto_check_update_role_info);
-                                                        //新角色描述
-                                                        String newRoleDescription = materialEditText.getText().toString().trim();
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_DESCRIPTION_BY_ROLE_ID_AND_OLD_ROLE_DESCRIPTION + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrDescription() + "/" + newRoleDescription)
-                                                                .tag("更新角色描述")
-                                                                .execute(new StringCallback() {
-                                                                    @Override
-                                                                    public void onStart(Request<String, ? extends Request> request) {
-                                                                        super.onStart(request);
-                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onSuccess(Response<String> response) {
-                                                                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                                        //失败(超管未登录)
-                                                                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
-                                                                            return;
-                                                                        }
-                                                                        //更新失败
-                                                                        if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                            return;
-                                                                        }
-                                                                        //更新成功
-                                                                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                                            //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFinish() {
-                                                                        super.onFinish();
-                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError(Response<String> response) {
-                                                                        super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
-                                                                    }
-                                                                });
-                                                    }
-                                                })
-                                                .show();
-                                    }
-                                }
-                            });
-
-                            // 9.为item设置单击监听事件--->删除一条角色信息
-                            roleInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
-                                @Override
-                                public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                                    RoleInfoBean roleInfoBean = (RoleInfoBean) adapter.getData().get(position);
-                                    List<MaterialSimpleListItem> list = new ArrayList<>();
-                                    list.add(new MaterialSimpleListItem.Builder(context)
-                                            .content("删除" + roleInfoBean.getTrName() + "角色信息")
-                                            .icon(R.drawable.logo)
-                                            .iconPaddingDp(8)
-                                            .build());
-                                    final MaterialSimpleListAdapter simpleListAdapter = new MaterialSimpleListAdapter(list)
-                                            .setOnItemClickListener(new MaterialSimpleListAdapter.OnItemClickListener() {
-                                                @SuppressLint("NotifyDataSetChanged")
-                                                @Override
-                                                public void onMaterialListItemSelected(MaterialDialog dialog, int index, MaterialSimpleListItem item) {
-                                                    //logo列表item内容匹配成功true时执行删除业务
-                                                    if (item.getContent().toString().equals("删除" + roleInfoBean.getTrName() + "角色信息")) {
-                                                        OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY + "/" + roleInfoBean.getTrId() + "/" + roleInfoBean.getTrName())
-                                                                .tag("删除角色信息")
-                                                                .execute(new StringCallback() {
-                                                                    @Override
-                                                                    public void onStart(Request<String, ? extends Request> request) {
-                                                                        super.onStart(request);
-                                                                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
-                                                                    }
-
-                                                                    @SuppressLint("NotifyDataSetChanged")
-                                                                    @Override
-                                                                    public void onSuccess(Response<String> response) {
-                                                                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                                        //失败(超管未登录)
-                                                                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
-                                                                            return;
-                                                                        }
-                                                                        //删除失败
-                                                                        if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                            return;
-                                                                        }
-                                                                        //删除成功
-                                                                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                                            //再次调用查询全部角色接口，实现动态更新显示
-                                                                            startSelectAllRoleInfo(context);
-                                                                            ToastUtils.show(okGoResponseBean.getData());
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFinish() {
-                                                                        super.onFinish();
-                                                                        MyXPopupUtils.getInstance().setSmartDisDialog();
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError(Response<String> response) {
-                                                                        super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            });
-                                    new MaterialDialog.Builder(context).adapter(simpleListAdapter, null).show();
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        MyXPopupUtils.getInstance().setSmartDisDialog();
+                        starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                     }
 
                     @Override
@@ -444,7 +206,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
             return;
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
-        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_ROLE_INFO +  "/" + strEditAddRoleName + "/" + strAddRoleInfo )
+        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_ROLE_INFO + "/" + strEditAddRoleName + "/" + strAddRoleInfo)
                 .tag("超管添加用户角色")
                 .execute(new StringCallback() {
                     @Override
@@ -494,6 +256,470 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                 });
     }
 
+    /**
+     * 开始设置表数据
+     *
+     * @param response okGo响应返回的Json字符串
+     */
+    private void starSetTabData(Response<String> response) {
+        OkGoAllRoleInfoBean okGoAllRoleInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllRoleInfoBean.class);
+        //查询成功，取出getData，遍历集合并创建角色实体添加适配
+        if (200 == okGoAllRoleInfoBean.getCode() && okGoAllRoleInfoBean.getData().size() > 0 && "success".equals(okGoAllRoleInfoBean.getMsg())) {
+            //1.创建集合，用于显示表格
+            ArrayList<ArrayList<String>> tableData = new ArrayList<>();
+            //2.顶部标题数组，绑定表第一列标题
+            tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
+            //3.遍历角色集合，绑定表格内容
+            for (OkGoAllRoleInfoBean.Data data : okGoAllRoleInfoBean.getData()) {
+                //3.1 创建集合，装载表格内容
+                ArrayList<String> rowData = new ArrayList<>();
+                rowData.add(String.valueOf(data.getTrId()));
+                rowData.add(data.getTrName());
+                rowData.add(data.getTrDescription());
+                rowData.add(data.getCreateTime());
+                rowData.add(data.getUpdateTime());
+                //3.2 单个角色信息遍历后，设置进表格总集合
+                tableData.add(rowData);
+            }
+            // 4.设置文本滚动显示角色条数
+            if (!tableData.isEmpty()) {
+                //4.1设置滚动文本
+                mMtvCountRoleNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前已有" + (tableData.size() - 1) + "条角色信息"));
+                //4.2监听文本是否匹配--->匹配相同，执行循环滚动
+                mMtvCountRoleNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                    @Override
+                    public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
+                        //4.3滚动开始
+                        if (displayMsg.toString().equals("        校园帮APP当前已有" + (tableData.size() - 1) + "条角色信息")) {
+                            return displayMsg;//匹配相同，继续滚动
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
+                        //4.4滚动结束
+                        return displayDatas;
+                    }
+                });
+            }
+            //5.携带全部用户信息的表格总集合，开始适配绘制表格
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlRoleInfoTableContentView, tableData);
+            //6.表格UI设置
+            mLockTableView.setLockFristColumn(true) //是否锁定第一列
+                    .setLockFristRow(true) //是否锁定第一行
+                    .setMaxColumnWidth(150) //列最大宽度
+                    .setMinColumnWidth(50) //列最小宽度
+                    .setColumnWidth(2, 120) //角色描述宽度指定
+                    .setMinRowHeight(20)//行最小高度
+                    .setMaxRowHeight(20)//行最大高度
+                    .setTextViewSize(12) //单元格字体大小
+                    .setFristRowBackGroudColor(R.color.xui_btn_blue_normal_color)//表头背景色
+                    .setTableHeadTextColor(R.color.White)//表头字体颜色
+                    .setTableContentTextColor(R.color.colorAccent)//单元格字体颜色
+                    .setCellPadding(15)//设置单元格内边距(dp)
+                    .setNullableString("暂无") //空值替换值
+                    .setTableViewListener(new LockTableView.OnTableViewListener() {
+                        @Override
+                        public void onTableViewScrollChange(int x, int y) {
+                            //手指在表格中滑动的X轴、Y轴的实时数据值
+                        }
+                    })
+                    //设置横向滚动回调监听
+                    .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                        @Override
+                        public void onLeft(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最左边了");
+                        }
+
+                        @Override
+                        public void onRight(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最右边了");
+                        }
+                    })
+                    //设置竖向滚动边界监听
+                    .setOnLoadingListener(new LockTableView.OnLoadingListener() {
+                        @Override
+                        public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //下拉刷新，再次获取用户全部数据
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startSelectAllRoleInfo(context);
+                                    ToastUtils.show("信息重新加载完成");
+                                }
+                            }, 1000);
+                        }
+
+                        @Override
+                        public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //上拉加载刷新，分页功能待开发
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mXRecyclerView.setNoMore(true);
+                                }
+                            }, 1000);
+                        }
+                    })
+                    .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
+                        @Override
+                        public void onItemClick(View item, int position) {
+                            //获取索引对应的用户信息
+                            String strRoleId = tableData.get(position).get(0); //当前item角色ID
+                            String strOldRoleName = tableData.get(position).get(1); //当前item角色名称
+                            String strOldRoleDescription = tableData.get(position).get(2); //当前item角色描述
+                            //弹出更新角色对话框
+                            new XPopup.Builder(getContext())
+                                    .maxHeight(800)
+                                    .isDarkTheme(true)
+                                    .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                                    .asCenterList("选择操作方式", new String[]{"修改[" + strOldRoleName + "]的角色名", "修改[" + strOldRoleName + "]的描述信息"}, new OnSelectListener() {
+                                        @Override
+                                        public void onSelect(int position, String searchMode) {
+                                            switch (position) {
+                                                case 0:
+                                                    chooseUpdateRoleName(strRoleId, strOldRoleName); //修改角色名称
+                                                    break;
+                                                case 1:
+                                                    chooseUpdateRoleDescription(strRoleId, strOldRoleDescription);//修改描述信息
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+                    })
+                    //长按删除角色信息
+                    .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
+                        @Override
+                        public void onItemLongClick(View item, int position) {
+                            String strRoleId = tableData.get(position).get(0); //当前item角色ID
+                            String strOldRoleName = tableData.get(position).get(1); //当前item角色名称
+                            new MaterialDialog.Builder(getContext())
+                                    .title("是否删除[" + strOldRoleName + "]角色")
+                                    .titleGravity(GravityEnum.CENTER)
+                                    .titleColor(getResources().getColor(R.color.colorAccent))
+                                    .content("须知：删除此角色可能会造成部分用户无权访问相关功能，并无法正常使用校园帮APP！如已核实清楚，请忽略此提醒~")
+                                    .cancelable(false)
+                                    .positiveText(R.string.yes)
+                                    .negativeText(R.string.no)
+                                    .onPositive((dialog, which) -> startDeleteRoleInfo(strRoleId, strOldRoleName)) //是-->删除角色
+                                    .show();
+                        }
+                    })
+                    .setOnItemSeletor(R.color.Grey300)//设置Item被选中颜色
+                    .show(); //显示表格
+            mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
+            mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
+            mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
+        }
+    }
+
+    /**
+     * 弹出角色信息搜索方式选择框
+     */
+    private void startSearchRoleInfo() {
+        new XPopup.Builder(getContext())
+                .maxHeight(800)
+                .isDarkTheme(true)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                .asCenterList("选择搜索信息方式", new String[]{"角色ID", "角色名称"}, new OnSelectListener() {
+                    @Override
+                    public void onSelect(int position, String searchMode) {
+                        switch (position) {
+                            case 0:
+                                chooseRoleId(); //选择角色ID
+                                break;
+                            case 1:
+                                chooseRoleName();//选择角色名称
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 通过角色ID查询对应信息
+     */
+    private void chooseRoleId() {
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("搜索角色信息", null, null, "请输入角色ID",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strRoleId) {
+                                //开始网络请求，访问后端服务器，执行查询角色操作
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ROLE_INFO_BY_ROLE_ID + "/" + strRoleId)
+                                        .tag("角色ID查询信息")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                            }
+
+                                            @SuppressLint("SetTextI18n")
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                starSetTabData(response);//Json字符串Gson解析使用，绘制表格
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+                            }
+                        })
+                .show();
+    }
+
+    /**
+     * 通过角色名称查询对应信息
+     */
+    private void chooseRoleName() {
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("搜索角色信息", null, null, "请输入角色名称",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strRoleName) {
+                                //开始网络请求，访问后端服务器，执行查询用户操作
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ROLE_INFO_BY_ROLE_NAME + "/" + strRoleName)
+                                        .tag("角色名称查询信息")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                            }
+
+                                            @SuppressLint("SetTextI18n")
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                starSetTabData(response);//Json字符串Gson解析使用，绘制表格
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+                            }
+                        })
+                .show();
+    }
+
+    /**
+     * 修改角色名称
+     *
+     * @param strRoleId      唯一角色ID
+     * @param strOldRoleName 旧角色名称
+     */
+    private void chooseUpdateRoleName(String strRoleId, String strOldRoleName) {
+        //1.弹出输入对话框
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true)
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("修改角色名称", null, null, "请输入新的角色名称",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strNewRoleName) {
+                                //准备好更新参数，执行更新
+                                OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME + "/" + strRoleId + "/" + strOldRoleName + "/" + strNewRoleName)
+                                        .tag("更新角色名称")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
+                                            }
+
+                                            @SuppressLint("NotifyDataSetChanged")
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                                //失败(超管未登录)
+                                                if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                                                    ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
+                                                    return;
+                                                }
+                                                //更新失败
+                                                if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
+                                                    ToastUtils.show(okGoResponseBean.getData());
+                                                    return;
+                                                }
+                                                //更新成功
+                                                if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                    //再次调用查询全部角色接口，实现动态更新显示
+                                                    startSelectAllRoleInfo(context);
+                                                    ToastUtils.show(okGoResponseBean.getData());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+                            }
+                        })
+                .show();
+    }
+
+    /**
+     * 修改角色描述
+     *
+     * @param strRoleId             唯一角色ID
+     * @param strOldRoleDescription 旧角色描述
+     */
+    private void chooseUpdateRoleDescription(String strRoleId, String strOldRoleDescription) {
+        //1.弹出输入对话框
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true)
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("修改角色描述", null, null, "请输入新的角色描述信息",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strNewRoleDescription) {
+                                //准备好更新参数，执行更新
+                                OkGo.<String>post(Constant.ADMIN_UPDATE_ROLE_DESCRIPTION_BY_ROLE_ID_AND_OLD_ROLE_DESCRIPTION + "/" + strRoleId + "/" + strOldRoleDescription + "/" + strNewRoleDescription)
+                                        .tag("更新角色描述")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在更新...");
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                                //失败(超管未登录)
+                                                if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                                                    ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
+                                                    return;
+                                                }
+                                                //更新失败
+                                                if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
+                                                    ToastUtils.show(okGoResponseBean.getData());
+                                                    return;
+                                                }
+                                                //更新成功
+                                                if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                    //再次调用查询全部角色接口，实现动态更新显示
+                                                    startSelectAllRoleInfo(context);
+                                                    ToastUtils.show(okGoResponseBean.getData());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+
+                            }
+                        })
+                .show();
+    }
+
+    /**
+     * 删除角色名称
+     *
+     * @param strRoleId      唯一角色ID
+     * @param strOldRoleName 旧角色名称
+     */
+    private void startDeleteRoleInfo(String strRoleId, String strOldRoleName) {
+        OkGo.<String>post(Constant.ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY + "/" + strRoleId + "/" + strOldRoleName)
+                .tag("删除角色信息")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在删除...");
+                    }
+
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        //失败(超管未登录)
+                        if (401 == okGoResponseBean.getCode() && "未提供Token".equals(okGoResponseBean.getData()) && "验证失败，禁止访问".equals(okGoResponseBean.getMsg())) {
+                            ToastUtils.show("未登录：" + okGoResponseBean.getMsg());
+                            return;
+                        }
+                        //删除失败
+                        if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
+                            ToastUtils.show(okGoResponseBean.getData());
+                            return;
+                        }
+                        //删除成功
+                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                            //再次调用查询全部角色接口，实现动态更新显示
+                            startSelectAllRoleInfo(context);
+                            ToastUtils.show(okGoResponseBean.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllRoleInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
 
     @Override
     public boolean onBackPressed() {

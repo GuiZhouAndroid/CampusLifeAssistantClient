@@ -10,7 +10,6 @@ import java.util.List;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.PermissionInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.RoleInfoBean;
 
 /**
  * created by on 2021/11/24

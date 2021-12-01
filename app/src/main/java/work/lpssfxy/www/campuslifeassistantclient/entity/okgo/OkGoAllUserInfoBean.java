@@ -12,7 +12,7 @@ import lombok.Data;
  * @create 2021-11-29-12:37
  */
 @Data
-public class okGoAllUserInfoBean {
+public class OkGoAllUserInfoBean {
 
     private int code;
     private List<Data> data;

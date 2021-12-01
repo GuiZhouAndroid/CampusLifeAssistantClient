@@ -37,7 +37,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.CallUserTelPopup;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.okGoAllUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
@@ -53,14 +53,16 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 @SuppressLint("NonConstantResourceId")
 public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
+
     private static final String TAG = "DeveloperSelectAllUserInfoFragment";
+
     /* 父布局 */
     @BindView(R2.id.ll_dev_select_all_user_info) LinearLayout mLlDevSelectAllUserInfo;
-    /* 列表控件 */
-    @BindView(R2.id.contentView) LinearLayout mContentView;
     /* XUI按钮搜索用户 */
     @BindView(R2.id.btn_search_user_info) ButtonView mBtnSearchUserInfo;
-    //XUI跑马灯
+    /* 填充表格视图 */
+    @BindView(R2.id.ll_user_info_table_content_view) LinearLayout mLlUserInfoTableContentView;
+    //跑马灯滚动显示用户总条数
     @BindView(R2.id.mtv_count_user_number) MarqueeTextView mMtvCountUserNumber;
     //顶部标题数组
     private String[] topTitleArrays;
@@ -127,25 +129,25 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 弹出搜索界面
+     * 弹出用户信息搜索方式选择框
      */
     private void startSearchUserInfo() {
         new XPopup.Builder(getContext())
                 .maxHeight(800)
                 .isDarkTheme(true)
                 .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                .asCenterList("选择搜索信息方式", new String[]{"编号", "姓名", "用户名"}, new OnSelectListener() {
+                .asCenterList("选择搜索信息方式", new String[]{"用户ID", "用户名", "真实姓名"}, new OnSelectListener() {
                     @Override
                     public void onSelect(int position, String searchMode) {
                         switch (position) {
                             case 0:
-                                chooseUserId(); //选择编号
+                                chooseUserId(); //选择用户ID
                                 break;
                             case 1:
-                                chooseRealName();//选择用户姓名
+                                chooseUserName();//选择用户名
                                 break;
                             case 2:
-                                chooseUserName();//选择用户名
+                                chooseRealName();//选择真实姓名
                                 break;
                         }
                     }
@@ -154,7 +156,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过ID查询对应信息
+     * 通过用户ID查询对应信息
      */
     private void chooseUserId() {
         new XPopup.Builder(getContext())
@@ -163,7 +165,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户编号",
+                .asInputConfirm("搜索用户信息", null, null, "请输入用户ID",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strUserId) {
@@ -201,7 +203,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过姓名查询对应信息
+     * 通过真实姓名查询对应信息
      */
     private void chooseRealName() {
         new XPopup.Builder(getContext())
@@ -210,7 +212,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户姓名",
+                .asInputConfirm("搜索用户信息", null, null, "请输入用户真实姓名",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strRealName) {
@@ -304,7 +306,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
         OkGo.<String>post(Constant.ADMIN_SELECT_ALL_USER_INFO)
                 .tag("查询全部用户信息")
                 .execute(new StringCallback() {
-                    @SuppressLint("SetTextI18n")
+                    @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
                     @Override
                     public void onSuccess(Response<String> response) {
                         starSetTabData(response);//Json字符串Gson解析使用，绘制表格
@@ -325,14 +327,14 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
      * @param response okGo响应返回的Json字符串
      */
     private void starSetTabData(Response<String> response) {
-        okGoAllUserInfoBean okGoAllUserInfoBean = GsonUtil.gsonToBean(response.body(), okGoAllUserInfoBean.class);
+        OkGoAllUserInfoBean okGoAllUserInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllUserInfoBean.class);
         if (200 == okGoAllUserInfoBean.getCode() && okGoAllUserInfoBean.getData().size() > 0 && "success".equals(okGoAllUserInfoBean.getMsg())) {
             //1.创建集合，用于显示表格
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             //2.顶部标题数组，绑定表第一列标题
             tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
             //3.遍历用户集合，绑定表格内容
-            for (okGoAllUserInfoBean.Data data : okGoAllUserInfoBean.getData()) {
+            for (OkGoAllUserInfoBean.Data data : okGoAllUserInfoBean.getData()) {
                 //3.1 创建集合，装载表格内容
                 ArrayList<String> rowData = new ArrayList<>();
                 rowData.add(String.valueOf(data.getUlId()));
@@ -353,13 +355,13 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             // 4.设置文本滚动显示用户条数
             if (!tableData.isEmpty()) {
                 //4.1设置滚动文本
-                mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("        已成功查询出" + (tableData.size() - 1) + "条用户数据"));
+                mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前拥有" + (tableData.size() - 1) + "个用户注册使用"));
                 //4.2监听文本是否匹配--->匹配相同，执行循环滚动
                 mMtvCountUserNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                     @Override
                     public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                         //4.3滚动开始
-                        if (displayMsg.toString().equals("        已成功查询出" + (tableData.size() - 1) + "条用户数据")) {
+                        if (displayMsg.toString().equals("        校园帮APP当前拥有" + (tableData.size() - 1) + "个用户注册使用")) {
                             return displayMsg;//匹配相同，继续滚动
                         }
                         return null;
@@ -373,7 +375,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 });
             }
             //5.携带全部用户信息的表格总集合，开始适配绘制表格
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserInfoTableContentView, tableData);
             //6.表格UI设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行
@@ -394,7 +396,8 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                         public void onTableViewScrollChange(int x, int y) {
                             //手指在表格中滑动的X轴、Y轴的实时数据值
                         }
-                    })//设置横向滚动回调监听
+                    })
+                    //设置横向滚动回调监听
                     .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
                         @Override
                         public void onLeft(HorizontalScrollView view) {
@@ -416,7 +419,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllUserInfo(context);
-                                    ToastUtils.show("全部用户信息重新加载完毕");
+                                    ToastUtils.show("信息重新加载完成");
                                 }
                             }, 1000);
                         }
@@ -427,39 +430,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtils.show("分页功能待实现");
                                     mXRecyclerView.setNoMore(true);
-//                                                    Log.i("现有表格数据", mTableDatas.toString());
-//                                                    OkGo.<String>post(Constant.ADMIN_SELECT_ALL_USER_INFO_BY_PAGE + "/" +1+"/" +4)
-//                                                            .tag("查询全部用户信息")
-//                                                            .execute(new StringCallback() {
-//                                                                @Override
-//                                                                public void onSuccess(Response<String> response) {
-//                                                                    OkGoUserInfoPageBean okGoUserInfoPageBean = GsonUtil.gsonToBean(response.body(), OkGoUserInfoPageBean.class);
-//                                                                    if (200 == okGoUserInfoPageBean.getCode() && okGoUserInfoPageBean.getData().getRecords().size() > 0 && "success".equals(okGoUserInfoPageBean.getMsg())) {
-//                                                                        //5.遍历添加表数据
-//                                                                        for (OkGoUserInfoPageBean.Data.Records records : okGoUserInfoPageBean.getData().getRecords()) {
-//                                                                            ArrayList<String> rowData = new ArrayList<>();
-//                                                                            rowData.add(String.valueOf(records.getUlId()));
-//                                                                            rowData.add(records.getUlUsername());
-//                                                                            rowData.add(records.getUlRealname());
-//                                                                            rowData.add(records.getUlSex());
-//                                                                            rowData.add(records.getUlIdcard());
-//                                                                            rowData.add(records.getUlStuno());
-//                                                                            rowData.add(records.getUlTel());
-//                                                                            rowData.add(records.getUlEmail());
-//                                                                            rowData.add(records.getUlClass());
-//                                                                            rowData.add(records.getUlDept());
-//                                                                            rowData.add(records.getCreateTime());
-//                                                                            rowData.add(records.getUpdateTime());
-//                                                                            mTableDatas.add(rowData);
-//                                                                        } mLockTableView.setTableDatas(mTableDatas);
-//                                                                    } else {
-//                                                                        mXRecyclerView.setNoMore(true);
-//                                                                    }
-//                                                                    mXRecyclerView.loadMoreComplete();
-//                                                                }
-//                                                            });
                                 }
                             }, 1000);
                         }
@@ -467,20 +438,20 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                     .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
                         @Override
                         public void onItemClick(View item, int position) {
-                            ToastUtils.show("您点击了第" + position + "行用户信息");
+                            //获取索引对应的用户信息
                             String strUserId = tableData.get(position).get(0); //当前item用户ID
                             String strUserName = tableData.get(position).get(1); //当前item用户名
                             String strUserRealName = tableData.get(position).get(2); //当前item姓名
                             String strUserTel = tableData.get(position).get(6); //当前item手机号
-
+                            //弹出联系对话框
                             new XPopup.Builder(getContext())
                                     .isCenterHorizontal(true)
                                     .isDestroyOnDismiss(true)
-                                    .atView(mContentView)
+                                    .atView(mLlUserInfoTableContentView)
                                     .hasShadowBg(false) //去掉半透明背景
                                     .asCustom(new CallUserTelPopup(getContext(), strUserTel, strUserRealName).setArrowRadius(XPopupUtils.dp2px(getContext(), 3)))
                                     .show();
-
+                            ToastUtils.show("您已选中" + strUserRealName + "的用户信息");
                         }
                     })
                     .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
@@ -495,6 +466,24 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
         } else {
+            mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("无此用户相关信息"));
+            //4.2监听文本是否匹配--->匹配相同，执行循环滚动
+            mMtvCountUserNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                @Override
+                public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
+                    //4.3滚动开始
+                    if (displayMsg.toString().equals("无此用户相关信息")) {
+                        return displayMsg;//匹配相同，继续滚动
+                    }
+                    return null;
+                }
+
+                @Override
+                public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
+                    //4.4滚动结束
+                    return displayDatas;
+                }
+            });
             //空集合表数据
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             //设置顶部第一列标题
@@ -502,7 +491,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             //空数据其它列字段
             tableData.add(new ArrayList<>());
             //表格绑定空数据
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserInfoTableContentView, tableData);
             //表格UI参数设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行

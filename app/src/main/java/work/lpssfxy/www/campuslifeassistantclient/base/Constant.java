@@ -127,6 +127,21 @@ public class Constant {
     public static final String SA_TOKEN_REDIS_USER_SESSION_SELECT_PERMISSION_LIST_BY_REAL_NAME_TO_USERNAME = BASE_URL + "/api/user/saTokenRedisUserSessionSelectOnlyUserToPermissionListInfoByUserName";
 
     /**
+     * 用户个人信息实名认证相关API接口
+     */
+    // 通过用户ID+真实姓名+性别查询对应用户+实名并集信息+进行实名认证
+    public static final String SELECT_CER_ALL_INFO_BY_OCR_DATA_IF_DO_CER = BASE_URL + "/api/user/certification/userSelectUserCerAllInfoByUserIdAndRealNameAndSex";
+
+    // 通过真实姓名查询对应用户实名状态
+    public static final String SELECT_CER_STATE_BY_USER_REAL_NAME = BASE_URL + "/api/user/certification/userSelectUserCerStateByUserRealName";
+
+    // 通过身份证号查询对应用户实名状态
+    public static final String SELECT_CER_STATE_BY_USER_ID_CARD = BASE_URL + "/api/user/certification/userSelectUserCerStateByUserIdCard";
+
+    // 通过Sa-Token的UserSession查询当前用户实名状态
+    public static final String SELECT_NOW_CER_STATE_BY_SA_TOKEN_LOGIN_REAL_NAME = BASE_URL + "/api/user/certification/userSelectNowUserCerState";
+
+    /**
      * 检测用户登录注销状态相关API接口
      */
     // 查询当前已登录会话状态
@@ -228,9 +243,6 @@ public class Constant {
     // 超管添加一条角色信息
     public static final String ADMIN_ADD_ONCE_ROLE_INFO = BASE_URL + "/api/admin/role/adminAddOnceRoleInfo";
 
-    // 超管查询角色全部信息
-    public static final String ADMIN_SELECT_ALL_ROLE_INFO = BASE_URL + "/api/admin/role/adminSelectAllRoleInfo";
-
     // 超管通过角色ID和旧角色名称更新角色名称
     public static final String ADMIN_UPDATE_ROLE_NAME_BY_ROLE_ID_AND_OLD_ROLE_NAME = BASE_URL + "/api/admin/role/adminUpdateRoleNameByRoleIdAndOldRoleName";
 
@@ -239,6 +251,15 @@ public class Constant {
 
     // 超管通过角色实体删除一条对应角色信息
     public static final String ADMIN_DELETE_ONCE_ROLE_INFO_BY_ROLE_ENTITY = BASE_URL + "/api/admin/role/adminDeleteOnceRoleInfoByRoleEntity";
+
+    // 超管查询角色全部信息
+    public static final String ADMIN_SELECT_ALL_ROLE_INFO = BASE_URL + "/api/admin/role/adminSelectAllRoleInfo";
+
+    // 超管通过角色ID查询角色信息
+    public static final String ADMIN_SELECT_ROLE_INFO_BY_ROLE_ID = BASE_URL + "/api/admin/role/adminSelectRoleInfoByRoleId";
+
+    // 超管通过角色名称查询角色信息
+    public static final String ADMIN_SELECT_ROLE_INFO_BY_ROLE_NAME = BASE_URL + "/api/admin/role/adminSelectRoleInfoByRoleName";
 
     /* ************************ 4.权限相关API接口 *************************/
 
@@ -324,5 +345,19 @@ public class Constant {
 
     // 超管通过权限名查询拥有该权限全部用户对应的用户角色权限并集信息
     public static final String ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_NAME = BASE_URL + "/api/admin/user/role/permission/adminSelectAllInfoUserAndRoleAndPermissionByPermissionName";
+
+    /* ************************ 8.用户实名认证相关API接口 *************************/
+
+    // 超管通过用户ID查询对应用户+实名并集信息
+    public static final String ADMIN_SELECT_CER_ALL_INFO_BY_USERID = BASE_URL + "/api/user/certification/adminSelectUserCerAllInfoByUserId";
+
+    // 超管通过真实姓名查询对应用户+实名并集信息
+    public static final String ADMIN_SELECT_CER_ALL_INFO_BY_USER_REAL_NAME = BASE_URL + "/api/user/certification/adminSelectUserCerAllInfoByUserRealName";
+
+    // 超管通过身份证号查询对应用户+实名并集信息
+    public static final String ADMIN_SELECT_CER_ALL_INFO_BY_USER_ID_CARD = BASE_URL + "/api/user/certification/adminSelectUserCerAllInfoByByUserIdCard";
+
+    // 超管查询已实名用户全部信息
+    public static final String ADMIN_SELECT_ALL_USER_CER_INFO = BASE_URL + "/api/user/certification/adminSelectAllUserCerInfo";
 }
 

@@ -10,9 +10,9 @@
 
     <com.xuexiang.xui.widget.textview.MarqueeTextView
         android:id="@+id/mtv_count_user_number"
-        android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_10"
         android:textSize="@dimen/sp_18"
         android:textStyle="bold" />
 
@@ -30,11 +30,10 @@
         app:textSelectedTextColor="#FF6565" />
 
     <LinearLayout
-        android:layout_marginTop="@dimen/dp_10"
-        android:orientation="vertical"
-        android:id="@+id/contentView"
+        android:id="@+id/ll_user_info_table_content_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical" />
 
 </LinearLayout>
