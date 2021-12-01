@@ -414,6 +414,97 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
+        } else {
+            mMtvCountRoleNumber.startSimpleRoll(Collections.singletonList("无此角色相关信息"));
+            //4.2监听文本是否匹配--->匹配相同，执行循环滚动
+            mMtvCountRoleNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                @Override
+                public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
+                    //4.3滚动开始
+                    if (displayMsg.toString().equals("无此角色相关信息")) {
+                        return displayMsg;//匹配相同，继续滚动
+                    }
+                    return null;
+                }
+
+                @Override
+                public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
+                    //4.4滚动结束
+                    return displayDatas;
+                }
+            });
+            //空集合表数据
+            ArrayList<ArrayList<String>> tableData = new ArrayList<>();
+            //设置顶部第一列标题
+            tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
+            //空数据其它列字段
+            tableData.add(new ArrayList<>());
+            //表格绑定空数据
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlRoleInfoTableContentView, tableData);
+            //表格UI参数设置
+            mLockTableView.setLockFristColumn(true) //是否锁定第一列
+                    .setLockFristRow(true) //是否锁定第一行
+                    .setMaxColumnWidth(150) //列最大宽度
+                    .setMinColumnWidth(50) //列最小宽度
+                    .setColumnWidth(4, 120) //设置指定列文本宽度
+                    .setColumnWidth(9, 120) //设置指定列文本宽度
+                    .setMinRowHeight(20)//行最小高度
+                    .setMaxRowHeight(20)//行最大高度
+                    .setTextViewSize(12) //单元格字体大小
+                    .setFristRowBackGroudColor(R.color.xui_btn_blue_normal_color)//表头背景色
+                    .setTableHeadTextColor(R.color.White)//表头字体颜色
+                    .setTableContentTextColor(R.color.colorAccent)//单元格字体颜色
+                    .setCellPadding(15)//设置单元格内边距(dp)
+                    .setNullableString("无此角色") //空值替换值
+                    .setTableViewListener(new LockTableView.OnTableViewListener() {
+                        @Override
+                        public void onTableViewScrollChange(int x, int y) {
+                            //手指在表格中滑动的X轴、Y轴的实时数据值
+                        }
+                    })//设置横向滚动回调监听
+                    .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                        @Override
+                        public void onLeft(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最左边了");
+                        }
+
+                        @Override
+                        public void onRight(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最右边了");
+                        }
+                    })
+                    //设置竖向滚动边界监听
+                    .setOnLoadingListener(new LockTableView.OnLoadingListener() {
+                        @Override
+                        public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //下拉刷新，再次获取角色全部数据
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startSelectAllRoleInfo(context);
+                                    ToastUtils.show("全部角色信息重新加载完毕");
+                                }
+                            }, 1000);
+                        }
+
+                        @Override
+                        public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //上拉加载刷新，分页功能待开发
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mXRecyclerView.setNoMore(true);
+                                    ToastUtils.show("分页功能待实现");
+                                }
+                            }, 1000);
+                        }
+                    })
+                    .setOnItemSeletor(R.color.Grey300)//设置Item被选中颜色
+                    .show(); //显示表格
+            mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
+            mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
+            mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
         }
     }
 

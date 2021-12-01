@@ -328,7 +328,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                             String strPermissionId = tableData.get(position).get(0); //当前item权限ID
                             String strOldPermissionName = tableData.get(position).get(1); //当前item权限名称
                             new MaterialDialog.Builder(getContext())
-                                    .title("是否删除[" + strPermissionId + "]权限")
+                                    .title("是否删除[" + strOldPermissionName + "]权限")
                                     .titleGravity(GravityEnum.CENTER)
                                     .titleColor(getResources().getColor(R.color.colorAccent))
                                     .content("须知：删除此权限可能会造成部分用户无权访问相关功能，并无法正常使用校园帮APP！如已核实清楚，请忽略此提醒~")
@@ -337,6 +337,97 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                     .negativeText(R.string.no)
                                     .onPositive((dialog, which) -> startDeletePermissionInfo(strPermissionId, strOldPermissionName)) //是-->删除权限
                                     .show();
+                        }
+                    })
+                    .setOnItemSeletor(R.color.Grey300)//设置Item被选中颜色
+                    .show(); //显示表格
+            mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
+            mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
+            mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
+        }else {
+            mMtvCountPermissionNumber.startSimpleRoll(Collections.singletonList("无此权限相关信息"));
+            //4.2监听文本是否匹配--->匹配相同，执行循环滚动
+            mMtvCountPermissionNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                @Override
+                public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
+                    //4.3滚动开始
+                    if (displayMsg.toString().equals("无此权限相关信息")) {
+                        return displayMsg;//匹配相同，继续滚动
+                    }
+                    return null;
+                }
+
+                @Override
+                public List<DisplayEntity> onMarqueeFinished(List<DisplayEntity> displayDatas) {
+                    //4.4滚动结束
+                    return displayDatas;
+                }
+            });
+            //空集合表数据
+            ArrayList<ArrayList<String>> tableData = new ArrayList<>();
+            //设置顶部第一列标题
+            tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
+            //空数据其它列字段
+            tableData.add(new ArrayList<>());
+            //表格绑定空数据
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlPermissionInfoTableContentView, tableData);
+            //表格UI参数设置
+            mLockTableView.setLockFristColumn(true) //是否锁定第一列
+                    .setLockFristRow(true) //是否锁定第一行
+                    .setMaxColumnWidth(150) //列最大宽度
+                    .setMinColumnWidth(50) //列最小宽度
+                    .setColumnWidth(4, 120) //设置指定列文本宽度
+                    .setColumnWidth(9, 120) //设置指定列文本宽度
+                    .setMinRowHeight(20)//行最小高度
+                    .setMaxRowHeight(20)//行最大高度
+                    .setTextViewSize(12) //单元格字体大小
+                    .setFristRowBackGroudColor(R.color.xui_btn_blue_normal_color)//表头背景色
+                    .setTableHeadTextColor(R.color.White)//表头字体颜色
+                    .setTableContentTextColor(R.color.colorAccent)//单元格字体颜色
+                    .setCellPadding(15)//设置单元格内边距(dp)
+                    .setNullableString("无此权限") //空值替换值
+                    .setTableViewListener(new LockTableView.OnTableViewListener() {
+                        @Override
+                        public void onTableViewScrollChange(int x, int y) {
+                            //手指在表格中滑动的X轴、Y轴的实时数据值
+                        }
+                    })//设置横向滚动回调监听
+                    .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                        @Override
+                        public void onLeft(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最左边了");
+                        }
+
+                        @Override
+                        public void onRight(HorizontalScrollView view) {
+                            ToastUtils.show("哦豁~已经滑到最右边了");
+                        }
+                    })
+                    //设置竖向滚动边界监听
+                    .setOnLoadingListener(new LockTableView.OnLoadingListener() {
+                        @Override
+                        public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //下拉刷新，再次获取权限全部数据
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startSelectAllPermissionInfo(context);
+                                    ToastUtils.show("全部权限信息重新加载完毕");
+                                }
+                            }, 1000);
+                        }
+
+                        @Override
+                        public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                            //上拉加载刷新，分页功能待开发
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mXRecyclerView.setNoMore(true);
+                                    ToastUtils.show("分页功能待实现");
+                                }
+                            }, 1000);
                         }
                     })
                     .setOnItemSeletor(R.color.Grey300)//设置Item被选中颜色
@@ -384,9 +475,9 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                 .asInputConfirm("搜索权限信息", null, null, "请输入权限ID",
                         new OnInputConfirmListener() {
                             @Override
-                            public void onConfirm(String strRoleId) {
+                            public void onConfirm(String strPermissionId) {
                                 //开始网络请求，访问后端服务器，执行查询权限操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_ROLE_INFO_BY_ROLE_ID + "/" + strRoleId)
+                                OkGo.<String>post(Constant.ADMIN_SELECT_PERMISSION_INFO_BY_PERMISSION_ID + "/" + strPermissionId)
                                         .tag("权限ID查询信息")
                                         .execute(new StringCallback() {
                                             @Override
@@ -431,9 +522,9 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                 .asInputConfirm("搜索权限信息", null, null, "请输入权限名称",
                         new OnInputConfirmListener() {
                             @Override
-                            public void onConfirm(String strRoleName) {
+                            public void onConfirm(String strPermissionName) {
                                 //开始网络请求，访问后端服务器，执行查询用户操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_ROLE_INFO_BY_ROLE_NAME + "/" + strRoleName)
+                                OkGo.<String>post(Constant.ADMIN_SELECT_PERMISSION_INFO_BY_PERMISSION_NAME + "/" + strPermissionName)
                                         .tag("权限名称查询信息")
                                         .execute(new StringCallback() {
                                             @Override
@@ -654,7 +745,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
         OkGo.<String>post(Constant.ADMIN_ADD_ONCE_PERMISSION_INFO + "/" + strEditAddPermissionName + "/" + strAddPermissionInfo)
-                .tag("超管添加角色权限")
+                .tag("超管添加权限权限")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

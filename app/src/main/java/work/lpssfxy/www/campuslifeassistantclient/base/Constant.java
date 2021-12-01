@@ -281,6 +281,12 @@ public class Constant {
     // 超管通过权限实体删除一条对应权限信息
     public static final String ADMIN_DELETE_ONCE_PERMISSION_INFO_BY_PERMISSION_ENTITY = BASE_URL + "/api/admin/permission/adminDeleteOncePermissionInfoByPermissionEntity";
 
+    // 超管通过权限ID查询权限信息
+    public static final String ADMIN_SELECT_PERMISSION_INFO_BY_PERMISSION_ID = BASE_URL + "/api/admin/permission/adminSelectPermissionInfoByPermissionId";
+
+    // 超管通过权限名称查询权限信息
+    public static final String ADMIN_SELECT_PERMISSION_INFO_BY_PERMISSION_NAME = BASE_URL + "/api/admin/permission/adminSelectPermissionInfoByPermissionName";
+
     /* ************************ 5.用户角色相关API接口 *************************/
 
     // 超管通过用户ID和角色ID添加一条用户角色信息
