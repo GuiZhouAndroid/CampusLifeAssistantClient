@@ -122,7 +122,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     @OnClick({R2.id.btn_search_user_info})
     public void onSelectAllUserInfoViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_search_user_info://确定查询
+            case R.id.btn_search_user_info://确定搜索
                 startSearchUserInfo();
                 break;
         }
