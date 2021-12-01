@@ -207,7 +207,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
         }
         //开始网络请求，访问后端服务器，执行封禁账户操作
         OkGo.<String>post(Constant.ADMIN_ADD_ONCE_ROLE_INFO + "/" + strEditAddRoleName + "/" + strAddRoleInfo)
-                .tag("超管添加用户角色")
+                .tag("超管添加角色信息")
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -303,7 +303,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     }
                 });
             }
-            //5.携带全部用户信息的表格总集合，开始适配绘制表格
+            //5.携带全部角色信息的表格总集合，开始适配绘制表格
             final LockTableView mLockTableView = new LockTableView(getActivity(), mLlRoleInfoTableContentView, tableData);
             //6.表格UI设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
@@ -341,7 +341,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     .setOnLoadingListener(new LockTableView.OnLoadingListener() {
                         @Override
                         public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
-                            //下拉刷新，再次获取用户全部数据
+                            //下拉刷新，再次获取角色全部数据
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -366,7 +366,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
                         @Override
                         public void onItemClick(View item, int position) {
-                            //获取索引对应的用户信息
+                            //获取索引对应的角色信息
                             String strRoleId = tableData.get(position).get(0); //当前item角色ID
                             String strOldRoleName = tableData.get(position).get(1); //当前item角色名称
                             String strOldRoleDescription = tableData.get(position).get(2); //当前item角色描述
@@ -502,7 +502,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strRoleName) {
-                                //开始网络请求，访问后端服务器，执行查询用户操作
+                                //开始网络请求，访问后端服务器，执行查询角色操作
                                 OkGo.<String>post(Constant.ADMIN_SELECT_ROLE_INFO_BY_ROLE_NAME + "/" + strRoleName)
                                         .tag("角色名称查询信息")
                                         .execute(new StringCallback() {

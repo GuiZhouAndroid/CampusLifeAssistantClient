@@ -84,6 +84,7 @@
     <string name="add_ok">确定添加</string>
     <string name="new_add_role">新增角色</string>
     <string name="search_role">搜索角色</string>
+    <string name="search_permission">搜索权限</string>
     <string name="search_user">搜索用户</string>
     <string name="if_delete_now_role">是否删除此角色</string>
     <string name="yes">是</string>
