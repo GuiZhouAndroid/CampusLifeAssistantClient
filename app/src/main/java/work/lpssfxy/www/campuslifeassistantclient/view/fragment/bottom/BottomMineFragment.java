@@ -93,9 +93,9 @@ public class BottomMineFragment extends BaseFragment {
                     if (userInfo !=null){
                         initUserNowCerInfo();//初始化已登录实名信息
                     }else {
-                        mStvMyCer.setRightString("未登录");
                         mStvMyCer.setLeftTopString("未登录");
                         mStvMyCer.setLeftBottomString("未登录");
+                        mStvMyCer.setRightString("未登录");
                     }
                     Log.i(TAG, "Fragment用户信息: "+ userInfo);
                     break;
@@ -133,6 +133,9 @@ public class BottomMineFragment extends BaseFragment {
                     mQQProvince.setText("请先");//设置QQ省份
                     mQQCity.setText("登录");//设置QQ城市
                     mStvQQNickname.setRightString("未登录");//设置QQ昵称
+                    mStvMyInfo.setRightString("未登录");//我的资料
+                    mStvAccountSafe.setRightString("未登录");//账户与安全文本
+                    mStvAccountSafe.setRightTvDrawableLeft(null);//账户与安全图标
                     initUserNowCerInfo();//初始化未登录实名信息
                     break;
             }
@@ -162,7 +165,8 @@ public class BottomMineFragment extends BaseFragment {
                         //5.开始发送消息
                         mHandler.sendMessage(msg);
                     } else {
-                        mHandler.sendEmptyMessage(3);
+                        mHandler.sendEmptyMessage(1); //实名认证动态设置登录状态信息
+                        mHandler.sendEmptyMessage(3); //其它未登录信息 (QQ未登录+用户未登录等头像文本的信息设置)
                     }
                 }
 

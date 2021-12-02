@@ -243,7 +243,25 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        /** 获取本地QQSession持久化Java对象数据 + 首次判断是否已登录，进行相应信息提示 */
+        Constant.sessionAndUserBean = SharePreferenceUtil.getObject(IndexActivity.this, OkGoSessionAndUserBean.class);
+        if (Constant.sessionAndUserBean !=null){
+            Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent));
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }else {
+            Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
+                    .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
+                        @Override
+                        public void onClick(View v) {
+                            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, LoginActivity.class));
+                        }
+                    });
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }
     }
 
     /**
@@ -358,17 +376,17 @@ public class IndexActivity extends BaseActivity {
             @Override
 
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // mDrawer_layout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()) {
                     case R.id.drawer_menu_school:
+                        mDrawer_layout.closeDrawer(GravityCompat.START);
                         Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
                         IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, waimai.class));
                         return true;
                     case R.id.drawer_menu_setting:
+                        mDrawer_layout.closeDrawer(GravityCompat.START);
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_developer_system_safe: //开发者后台安全中心
-
                         OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
                                 .tag("检查登录")
                                 .execute(new StringCallback() {
@@ -456,9 +474,11 @@ public class IndexActivity extends BaseActivity {
                                 });
                         return true;
                     case R.id.drawer_menu_about_author:
+                        mDrawer_layout.closeDrawer(GravityCompat.START);
                         Snackbar.make(mDrawer_layout, "点宝宝1干啥", Snackbar.LENGTH_SHORT).show();
                         return true;
                     case R.id.drawer_menu_logout://注销账户：本地持久数据 + 服务器Session数据
+                        mDrawer_layout.closeDrawer(GravityCompat.START);
                         /** 1.开启一个子线程注销QQ登录 + 清空UI数据 + 本地持久化文件 */
                         new Thread(new Runnable() {
                             @Override
@@ -543,9 +563,6 @@ public class IndexActivity extends BaseActivity {
      * 本地持久化文件与LoginActivity为同一xml文件---> OkGoSessionAndUserBean(并集信息的Java对象数据)
      */
     private void initQQSessionAndUserInfo() {
-        /** 获取本地QQSession持久化Java对象数据*/
-        Constant.sessionAndUserBean = SharePreferenceUtil.getObject(IndexActivity.this, OkGoSessionAndUserBean.class);
-        Log.i(TAG, "首页UserQQSessionBean: " + Constant.sessionAndUserBean);
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
         if (Constant.sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
@@ -586,17 +603,6 @@ public class IndexActivity extends BaseActivity {
             }
         } else {//未登录无持久化数据
             Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//false
-            Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
-                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
-                    .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
-                        @Override
-                        public void onClick(View v) {
-                            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, LoginActivity.class));
-                        }
-                    });
-            //设置Snackbar上提示的字体颜色
-            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-            snackbar.show();
             //发送方式一 直接发送一个空的Message，
             QQHandler.sendEmptyMessage(1);
         }
@@ -611,7 +617,7 @@ public class IndexActivity extends BaseActivity {
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomMineFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mVp_content.setAdapter(new MyFragmentStateViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
-        mVp_content.setOffscreenPageLimit(0);//viewPager单次预加载Fragment页数
+        mVp_content.setOffscreenPageLimit(fragmentList.size());//viewPager单次预加载Fragment页数
         //ViewPager滑动监听
         mVp_content.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -650,11 +656,9 @@ public class IndexActivity extends BaseActivity {
                 switch (tabId) {
                     case R.id.tab1:
                         mVp_content.setCurrentItem(0);
-                        Toast.makeText(IndexActivity.this, "首页", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.tab2:
-                        mVp_content.setCurrentItem(3);
-                        Toast.makeText(IndexActivity.this, "我的", Toast.LENGTH_SHORT).show();
+                        mVp_content.setCurrentItem(1);
                         break;
                 }
             }
@@ -665,14 +669,33 @@ public class IndexActivity extends BaseActivity {
             @SuppressLint("NonConstantResourceId")
             @Override
             public void onTabReSelected(@IdRes int tabId) {
+                mRefreshLayoutIndex.autoRefresh();
+                //进入首页模拟实时刷新
+                MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexInt));
+                //延时0.8秒关闭进度条
+                MyXPopupUtils.getInstance().setTimerDisDialog(800);
                 switch (tabId) {
                     case R.id.tab1:
-                        //viewPager.setCurrentItem(0);
-                        Toast.makeText(IndexActivity.this, "再次滑到首页", Toast.LENGTH_SHORT).show();
+                        mRefreshLayoutIndex.setOnRefreshListener(new OnRefreshListener() {
+                            @Override
+                            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                                initQQSessionAndUserInfo();
+                                ToastUtils.show("主页已刷新完成");
+                                MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexRefresh));
+                            }
+                        });
+
                         break;
                     case R.id.tab2:
-                        //viewPager.setCurrentItem(1);
-                        Toast.makeText(IndexActivity.this, "再次滑到我的", Toast.LENGTH_SHORT).show();
+                        mRefreshLayoutIndex.setOnRefreshListener(new OnRefreshListener() {
+                            @Override
+                            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                                initQQSessionAndUserInfo();
+                                MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexMine));
+                                ToastUtils.show("信息已刷新完成");
+                            }
+                        });
+
                         break;
                 }
             }
@@ -919,10 +942,6 @@ public class IndexActivity extends BaseActivity {
                 .apply(options)
                 .into(ivNavHeaderIcon);
         /** 温馨提示 */
-        Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
-                .setActionTextColor(getResources().getColor(R.color.colorAccent));
-        setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-        snackbar.show();
     }
 
     /**
@@ -1015,11 +1034,6 @@ public class IndexActivity extends BaseActivity {
                     IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, MineInfoActivity.class));
                 }
             }, 500);
-            Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
-            //设置Snackbar上提示的字体颜色
-            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-            snackbar.show();
-            return;
         }
     }
 

@@ -48,7 +48,6 @@
     <string name="please_input_phone_code">请输入6位数的短信验证码</string>
     <string name="please_input_bind_user_name">请输入绑定的用户名</string>
     <string name="please_input_bind_password">请输入密码</string>
-    <string name="index_already_login_qq">哎哟~戳我干嘛！您已经登录啦~</string>
     <string name="i_kown">我知道了</string>
     <string name="please_bind_User_login">，请您绑定账户后重试</string>
     <string name="please_bind_back_User_login">，请您返回登录主页绑定账户后重试</string>
