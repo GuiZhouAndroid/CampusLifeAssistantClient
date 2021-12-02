@@ -808,12 +808,13 @@ public class IndexActivity extends BaseActivity {
                     /** 清空本机持久化--->QQ会话失效 */
                     setQQUserLoginLogout();
                     /** 无数据时点击开始传递数据到Fragment《我的》 */
+                    /* 接口回调方式没有使用，可以实现效果 */
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
                     startNotHaveDataAllUserInfoToMineFragment();
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
-                    if (mActivityInteraction != null) {
-                        mActivityInteraction.userAllInfoPutMineFragment(null);
-                    }
+//                    if (mActivityInteraction != null) {
+//                        mActivityInteraction.userAllInfoPutMineFragment(null);
+//                    }
                     /** 关闭正在加载登录信息友好进度条*/
                     MyXPopupUtils.getInstance().setSmartDisDialog();
                     /** 关闭下拉刷新 */
@@ -826,9 +827,10 @@ public class IndexActivity extends BaseActivity {
                     startHaveDataUserInfoToMineFragment(Constant.userInfo);
                     Log.i(TAG, "用户登录成功信息: " + Constant.userInfo);
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
-                    if (mActivityInteraction != null) {
-                        mActivityInteraction.userAllInfoPutMineFragment(Constant.userInfo);
-                    }
+                    /* 接口回调方式没有使用，可以实现效果 */
+//                    if (mActivityInteraction != null) {
+//                        mActivityInteraction.userAllInfoPutMineFragment(Constant.userInfo);
+//                    }
                     //UI更新用户上次登录时间
                     tv_userLastLoginTime.setText(Constant.userInfo.getLastLoginTime());
                     /** 设置Toolbar的真实名字 */

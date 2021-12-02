@@ -141,6 +141,9 @@ public class Constant {
     // 通过Sa-Token的UserSession查询当前用户实名状态
     public static final String SELECT_NOW_CER_STATE_BY_SA_TOKEN_LOGIN_REAL_NAME = BASE_URL + "/api/user/certification/userSelectNowUserCerState";
 
+    // 通过Sa-Token的UserSession查询当前用户+实名并集信息
+    public static final String SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME = BASE_URL + "/api/user/certification/userSelectNowUserCerAllInfoByUserRealName";
+
     /**
      * 检测用户登录注销状态相关API接口
      */

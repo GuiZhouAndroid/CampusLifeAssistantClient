@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -84,6 +85,8 @@ public class BasicLibInit {
         MobSDK.init(application, "m340e99eda0074", "a9f4ede8c508728294751f9f67749c08");
         /** 初始化轮子哥吐司框架 */
         ToastUtils.init(application);
+        /** 全局设置轮子哥权限申请拦截器 */
+        XXPermissions.setInterceptor(new PermissionInterceptor());
     }
 
     /**

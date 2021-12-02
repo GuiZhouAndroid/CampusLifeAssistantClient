@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.shouzhong.scanner.ScannerView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="1080px"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sv"
+        android:text="识别结果："
+        android:textColor="#333333"
+        android:textSize="16sp" />
+<androidx.core.widget.NestedScrollView
+    android:layout_below="@id/tv_result"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/ll_card_head_face"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:enabled="false"
+            android:textSize="@dimen/sp_15"
+            android:id="@+id/edit_bind_card_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:enabled="false"
+            android:id="@+id/edit_bind_card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:enabled="false"
+            android:id="@+id/edit_bind_card_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:enabled="false"
+            android:id="@+id/edit_bind_card_nation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:enabled="false"
+            android:id="@+id/edit_bind_card_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:enabled="false"
+            android:id="@+id/edit_bind_card_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

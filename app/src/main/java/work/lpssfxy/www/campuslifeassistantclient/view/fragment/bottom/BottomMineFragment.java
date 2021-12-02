@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +18,6 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -39,6 +37,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScr
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserCerBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
@@ -47,6 +46,8 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerSelectIdCardActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -165,7 +166,7 @@ public class BottomMineFragment extends BaseFragment {
                         //5.开始发送消息
                         mHandler.sendMessage(msg);
                     } else {
-                        mHandler.sendEmptyMessage(1); //实名认证动态设置登录状态信息
+                        //mHandler.sendEmptyMessage(1); //实名认证动态设置登录状态信息
                         mHandler.sendEmptyMessage(3); //其它未登录信息 (QQ未登录+用户未登录等头像文本的信息设置)
                     }
                 }
@@ -295,15 +296,6 @@ public class BottomMineFragment extends BaseFragment {
             }
         });
 
-        //实名认证
-        mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView myCer) {
-                String strMyCer = myCer.getRightTextView().getText().toString();
-                ToastUtils.show(strMyCer);
-            }
-        });
-
         //账户与安全
         mStvAccountSafe.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
@@ -367,26 +359,34 @@ public class BottomMineFragment extends BaseFragment {
      * 初始化用户当前实名信息
      */
     private void initUserNowCerInfo(){
-        OkGo.<String>post(Constant.SELECT_NOW_CER_STATE_BY_SA_TOKEN_LOGIN_REAL_NAME)
+        OkGo.<String>post(Constant.SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME)
                 .tag("查询当前用户实名状态")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                        Log.i(TAG, "查询当前用户实名状态: " + response.body());
-                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                        OkGoUserCerBean okGoUserCerBean = GsonUtil.gsonToBean(response.body(), OkGoUserCerBean.class);
+                        Log.i(TAG, "查询当前用户实名状态: " + okGoUserCerBean);
+                        if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "未登录".equals(okGoUserCerBean.getMsg())) {
                             //设置未登录状态
                             mStvMyCer.setRightString("未登录");
                             mStvMyCer.setLeftTopString("未登录");
                             mStvMyCer.setLeftBottomString("未登录");
                             return;
                         }
-                        if (200 == OkGoResponseBean.getCode() && "已实名认证".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
-                            mStvMyCer.setRightString(OkGoResponseBean.getData());//设置实名状态
+                        if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "error".equals(okGoUserCerBean.getMsg())) {
+                            mStvMyCer.setRightString("未实名认证");//设置实名状态
+                            mStvMyCer.setLeftTopString(okGoUserCerBean.getData().getUlRealname());//认证真实姓名
+                            mStvMyCer.setLeftBottomString("未绑定身份证");//认证身份证号
+                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData());
                             return;
                         }
-                        if (200 == OkGoResponseBean.getCode() && "未实名认证".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
-                            mStvMyCer.setRightString(OkGoResponseBean.getData());//设置实名状态
+                        if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
+                            mStvMyCer.setRightString("已实名认证");//设置实名状态
+                            mStvMyCer.setLeftTopString(okGoUserCerBean.getData().getUlRealname());//认证真实姓名
+                            //认证安全显示处理过的身份证号
+                            String strCerIdCard = okGoUserCerBean.getData().getUserCertificationBean().getTucIdcard().replaceAll("(\\d{4})\\d{8}(\\w{6})", "$1*****$2");
+                            mStvMyCer.setLeftBottomString(strCerIdCard);
+                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData());
                         }
                     }
 
@@ -396,6 +396,28 @@ public class BottomMineFragment extends BaseFragment {
                     }
                 });
     }
+
+    /**
+     * 设置监听事件：根据实名认证状态布尔值执行相应的：查看已实名认证相关信息 + 跳转绑定身份证号
+     * @param data 当前用户实名认证信息
+     */
+    private void userDoToBindOrSelectCerIdCard(OkGoUserCerBean.Data data) {
+        //实名认证
+        mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+            @Override
+            public void onClick(SuperTextView myCer) {
+                if (data.getUserCertificationBean().isTucState()){ //已实名，跳转实名详情页
+                    IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserCerSelectIdCardActivity.class));
+                }else { //未实名，跳转OCR绑定界面
+                    Intent thisToCerBindOCRIdCard = new Intent(getActivity(), UserCerBindOCRIdCardActivity.class);
+                    thisToCerBindOCRIdCard.putExtra("NowDoCerUserId",String.valueOf(data.getUlId()));
+                    IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(thisToCerBindOCRIdCard));
+                }
+            }
+        });
+
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

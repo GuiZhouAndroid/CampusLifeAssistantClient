@@ -59,7 +59,7 @@ public class GsonUtil {
         if (sBuilder == null) {
             sBuilder = new GsonBuilder();
         }
-        gson = sBuilder.setDateFormat("yyyy-MM-dd HH:mm:CallUserTelPopup").create();
+        gson = sBuilder.setDateFormat("yyyy-MM-OkGoUserCerBean HH:mm:CallUserTelPopup").create();
         return gson;
     }
 

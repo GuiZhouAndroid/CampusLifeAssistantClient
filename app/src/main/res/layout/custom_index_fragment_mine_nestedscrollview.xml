@@ -96,20 +96,17 @@
             app:sRightTextString="去修改" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
             android:id="@+id/stv_my_cer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            app:sLeftBottomTextString="522527****1337"
             app:sLeftIconHeight="25dp"
             app:sLeftIconRes="@mipmap/cer"
             app:sLeftIconWidth="25dp"
             app:sLeftTextSize="@dimen/sp_15"
-            app:sLeftTopTextString="张松"
             app:sLeftViewGravity="left_center"
             app:sRightTextColor="@color/Grey500"
-            app:sRightTextSize="@dimen/sp_15"
-            app:sRightTextString="已实名"
-            app:sRightViewMarginRight="@dimen/dp_32" />
+            app:sRightTextSize="@dimen/sp_15" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
             android:id="@+id/stv_my_account_safe"

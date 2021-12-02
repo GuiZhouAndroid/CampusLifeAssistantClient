@@ -63,4 +63,21 @@ public class XXPermissionsAction {
                     }
                 });
     }
+
+    /**
+     * 相机
+     *
+     */
+    public void camera(Context context) {
+        XXPermissions.with(context)
+                .permission(Permission.CAMERA)
+                .request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                        if (all) {
+                            ToastUtils.show("获取拍照权限成功");
+                        }
+                    }
+                });
+    }
 }
