@@ -123,6 +123,7 @@
     <string name="userLastLoginTime">账户验证：</string>
     <string name="drawer_menu_info_school">进入官网</string>
     <string name="drawer_menu_developer_system_safe">后台中心</string>
+    <string name="drawer_menu_check_update">检查更新</string>
     <string name="drawer_menu_night_mode">夜间模式</string>
     <string name="drawer_menu_about_author">关于作者</string>
     <string name="drawer_menu_logout_title">退出登录</string>
@@ -139,6 +140,9 @@
     <string name="loading">正在加载...</string>
     <string name="loading_request_service">正在请求服务器...</string>
     <string name="indexLoadLoginInfo">正在加载登录信息...</string>
+    <string name="indexRefresh">正在加载主页信息...</string>
+    <string name="indexMine">正在加载我的信息...</string>
+    <string name="indexInt">正在请求数据...</string>
     <string name="logoutIng">正在注销...</string>
     <string name="notLogin">未登录</string>
     <!--behavior-->

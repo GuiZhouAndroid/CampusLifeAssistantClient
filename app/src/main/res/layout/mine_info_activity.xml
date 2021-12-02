@@ -60,15 +60,6 @@
             android:layout_height="wrap_content" />
 
 
-        <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
-            android:id="@+id/ll_user_number"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_50"
-            app:left_icon="@drawable/ic_nick_name"
-            app:left_text="用户编号"
-            app:show_right_arrow="false" />
-
-
         <work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -77,6 +68,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+
+                <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
+                    android:id="@+id/ll_user_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_50"
+                    app:left_icon="@drawable/ic_nick_name"
+                    app:left_text="用户编号"
+                    app:show_right_arrow="false" />
 
                 <work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView
                     android:id="@+id/ll_username"

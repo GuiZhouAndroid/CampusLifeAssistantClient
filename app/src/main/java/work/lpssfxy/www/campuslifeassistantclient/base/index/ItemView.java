@@ -71,17 +71,17 @@ public class ItemView extends LinearLayout {
 
         //设置点击事件
         //给整个item设置点击事件
-        rootView.setOnClickListener(new NotFastButton.NotFastClickListener() {
+        rootView.setOnClickListener(new OnClickListener() {
             @Override
-            public void onNotFastClick(View v) {
+            public void onClick(View view) {
                 listener.itemClick(rightDesc.getText().toString());
             }
         });
 
         //给最右侧的小箭头设置点击事件
-        rightArrow.setOnClickListener(new NotFastButton.NotFastClickListener() {
+        rightArrow.setOnClickListener(new OnClickListener() {
             @Override
-            public void onNotFastClick(View v) {
+            public void onClick(View view) {
                 listener.itemClick(rightDesc.getText().toString());
             }
         });

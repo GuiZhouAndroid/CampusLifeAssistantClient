@@ -83,7 +83,7 @@ public class DeveloperSelectAllCertificationInfoFragment extends BaseFragment {
     @Override
     protected void doBusiness(Context context) {
         //开始查询实名认证信息
-        startSelectAllCertificationInfo(context);
+        //startSelectAllCertificationInfo(context);
     }
 
     private void initDisplayOpinion() {

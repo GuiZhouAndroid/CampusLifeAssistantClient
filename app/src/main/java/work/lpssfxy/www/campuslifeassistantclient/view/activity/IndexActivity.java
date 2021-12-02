@@ -53,6 +53,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.connect.UserInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
@@ -77,15 +78,15 @@ import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityI
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomHomeFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom.BottomMineFragment;
 
@@ -204,11 +205,6 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void prepareData() {
-        setThemeColor(mRefreshLayoutIndex, android.R.color.holo_blue_light);
-        //进入触发自动刷新，不做数据，只演示效果
-        mRefreshLayoutIndex.autoRefresh();
-        //延时2.5秒完成刷新
-        mRefreshLayoutIndex.finishRefresh(2500);
         /** 初始化DrawerLayout侧滑抽屉 */
         initDrawerLayout();
         initViewPager();
@@ -223,6 +219,8 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initView() {
+        //设置下拉刷新主题颜色
+        setThemeColor(mRefreshLayoutIndex, android.R.color.holo_blue_light);
         /** IndexActivity赋值单例静态全局变量，此处用于LoginActivity指定销毁当前IndexActivity*/
         App.appActivity = this;
         /**判断Toolbar，开启主图标并显示title*/
@@ -245,8 +243,7 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void initData(Bundle savedInstanceState) {
-        /** 获取本地QQSession+用户个人信息持久化Java对象数据 */
-        initQQSessionAndUserInfo();
+
     }
 
     /**
@@ -272,6 +269,39 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void doBusiness() {
+        //动态刷新+加载信息
+        initRefreshIndexActivityInfo();
+    }
+
+    /**
+     * 进入首页 + 刷新首页 + 刷新我的 + 模拟实时 + 动态刷新实名认证信息和QQ登录信息
+     */
+    private void initRefreshIndexActivityInfo() {
+        //刷新之前，显示未登录状态信息
+        setNotLoginQQUserInfo();
+        //进入首页模拟实时刷新
+        MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexInt));
+        //延时0.8秒关闭进度条
+        MyXPopupUtils.getInstance().setTimerDisDialog(800);
+        //执行自动刷新
+        mRefreshLayoutIndex.autoRefresh();
+        //开始执行下拉刷新
+        mRefreshLayoutIndex.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initQQSessionAndUserInfo();//获取本地QQSession+用户个人信息持久化Java对象数据
+                //判断当前所在页数，进行对应的刷新操作
+                if (mVp_content.getCurrentItem() == 0) { //在第一页刷新
+                    mVp_content.setCurrentItem(0);//刷新后依旧显示第1页
+                    MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexRefresh));
+                    ToastUtils.show("主页已刷新完成");
+                } else if (mVp_content.getCurrentItem() == 1) { //在第二页刷新
+                    MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, getString(R.string.indexMine));
+                    mVp_content.setCurrentItem(1);//刷新后依旧显示第2页
+                    ToastUtils.show("信息已刷新完成");
+                }
+            }
+        });
     }
 
     /**
@@ -332,7 +362,7 @@ public class IndexActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.drawer_menu_school:
                         Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, waimai.class));
+                        IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, waimai.class));
                         return true;
                     case R.id.drawer_menu_setting:
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();
@@ -351,7 +381,7 @@ public class IndexActivity extends BaseActivity {
                                     public void onSuccess(Response<String> response) {
                                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                         if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
-                                            CustomAlertDialogUtil.notification1(IndexActivity.this,"温馨提示","您还没有登录呀~","朕知道了");
+                                            CustomAlertDialogUtil.notification1(IndexActivity.this, "温馨提示", "您还没有登录呀~", "朕知道了");
                                             return;
                                         }
 
@@ -399,15 +429,15 @@ public class IndexActivity extends BaseActivity {
                                                             Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
                                                             if (okGoRoleOrPermissionListBean.getData().contains("超管")) {
                                                                 //List<String> 集合中，包含角色"超级超管"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
-                                                                IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
+                                                                IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
                                                             } else {//无认证权限，提示信息
-                                                                CustomAlertDialogUtil.notification1(IndexActivity.this,"超管提示","《后台安全》仅开发者使用，您无权访问！谢谢合作~","朕知道了");
+                                                                CustomAlertDialogUtil.notification1(IndexActivity.this, "超管提示", "《后台安全》仅开发者使用，您无权访问！谢谢合作~", "朕知道了");
                                                             }
                                                         }
 
                                                         @Override
                                                         public void onError(Response<String> response) {
-                                                            OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                                                            OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                                         }
                                                     });
                                         }
@@ -421,7 +451,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         return true;
@@ -471,7 +501,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         return true;
@@ -505,6 +535,7 @@ public class IndexActivity extends BaseActivity {
 //            Toast.makeText(IndexActivity.this,userInfo.toString(),Toast.LENGTH_SHORT).show();
 //        }
 //    };
+
     /**
      * 初始化QQSession并获取QQ个人信息
      * 有效：取出的持久化文件的Java对象参数，重组JSON的Session数据，调用QQ的initSessionCache(JSON)来使得会话有效+个人用户信息
@@ -518,17 +549,16 @@ public class IndexActivity extends BaseActivity {
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
         if (Constant.sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
-            MyXPopupUtils.getInstance().setShowDialog(this,getString(R.string.indexLoadLoginInfo));
             try {
                 jsonObject.put("ret", Constant.sessionAndUserBean.getData().getRet());
                 jsonObject.put("openid", Constant.sessionAndUserBean.getData().getOpenid());
                 jsonObject.put("access_token", Constant.sessionAndUserBean.getData().getAccessToken());
-                jsonObject.put("pay_token",Constant.sessionAndUserBean.getData().getPayToken());
+                jsonObject.put("pay_token", Constant.sessionAndUserBean.getData().getPayToken());
                 jsonObject.put("expires_in", Constant.sessionAndUserBean.getData().getExpiresIn());
                 jsonObject.put("pf", Constant.sessionAndUserBean.getData().getPf());
                 jsonObject.put("pfkey", Constant.sessionAndUserBean.getData().getPfkey());
                 jsonObject.put("msg", Constant.sessionAndUserBean.getData().getMsg());
-                jsonObject.put("login_cost",Constant.sessionAndUserBean.getData().getLoginCost());
+                jsonObject.put("login_cost", Constant.sessionAndUserBean.getData().getLoginCost());
                 jsonObject.put("query_authority_cost", Constant.sessionAndUserBean.getData().getQueryAuthorityCost());
                 jsonObject.put("authority_cost", Constant.sessionAndUserBean.getData().getAuthorityCost());
                 jsonObject.put("expires_time", Constant.sessionAndUserBean.getData().getExpiresTime());
@@ -561,7 +591,7 @@ public class IndexActivity extends BaseActivity {
                     .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
                         @Override
                         public void onClick(View v) {
-                            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, LoginActivity.class));
+                            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, LoginActivity.class));
                         }
                     });
             //设置Snackbar上提示的字体颜色
@@ -578,22 +608,21 @@ public class IndexActivity extends BaseActivity {
     private void initViewPager() {
         fragmentList = new ArrayList<>();
         //创建Fragment类型的数组，适配ViewPager，添加四个功能页
-        //fragments = new Fragment[]{new BottomHomeFragment(), new BottomCategoryFragment(), new BottomShopFragment(), new BottomMineFragment()};
         fragments = new Fragment[]{new BottomHomeFragment(), new BottomMineFragment()};
         //ViewPager设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mVp_content.setAdapter(new MyFragmentStateViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));
-        mVp_content.setOffscreenPageLimit(fragmentList.size());//viewPager单次预加载Fragment页数
+        mVp_content.setOffscreenPageLimit(0);//viewPager单次预加载Fragment页数
         //ViewPager滑动监听
         mVp_content.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             //选择新页面时调用
             @Override
             public void onPageSelected(int position) {
                 mBottomBar.selectTabAtPosition(position, true);
+                initQQSessionAndUserInfo();//左右滑动页面时，动态刷新本地持久化文件 + 实时动态刷新实名认证信息
             }
 
             //当滚动状态改变时调用，用于发现用户何时开始拖动
@@ -746,6 +775,8 @@ public class IndexActivity extends BaseActivity {
                         startHaveDataQQUserInfoToMineFragment(Constant.onlyQQUserInfo);
                         /** 关闭正在加载登录信息友好进度条*/
                         MyXPopupUtils.getInstance().setSmartDisDialog();
+                        /** 关闭下拉刷新 */
+                        mRefreshLayoutIndex.finishRefresh();
                     }
                     break;
                 case 1: //未登录
@@ -757,17 +788,22 @@ public class IndexActivity extends BaseActivity {
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
                     startNotHaveDataAllUserInfoToMineFragment();
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
-                    if (mActivityInteraction != null){
+                    if (mActivityInteraction != null) {
                         mActivityInteraction.userAllInfoPutMineFragment(null);
                     }
+                    /** 关闭正在加载登录信息友好进度条*/
+                    MyXPopupUtils.getInstance().setSmartDisDialog();
+                    /** 关闭下拉刷新 */
+                    mRefreshLayoutIndex.finishRefresh();
+                    ToastUtils.show("校园帮系统自动检测到您还没有登录");
                     break;
                 case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
                     Constant.userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     //方式一：Activity与Fragment共享Handler--->生命周期问题，只能生效一次
                     startHaveDataUserInfoToMineFragment(Constant.userInfo);
-                    Log.i(TAG, "用户登录成功信息: "+Constant.userInfo);
+                    Log.i(TAG, "用户登录成功信息: " + Constant.userInfo);
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
-                    if (mActivityInteraction != null){
+                    if (mActivityInteraction != null) {
                         mActivityInteraction.userAllInfoPutMineFragment(Constant.userInfo);
                     }
                     //UI更新用户上次登录时间
@@ -798,9 +834,10 @@ public class IndexActivity extends BaseActivity {
 
     /**
      * 写一个对外公开的方法，传递数据
+     *
      * @param interaction
      */
-    public void setStartPushUserInfoListener(ActivityInteraction interaction){
+    public void setStartPushUserInfoListener(ActivityInteraction interaction) {
         this.mActivityInteraction = interaction;
     }
 
@@ -810,16 +847,16 @@ public class IndexActivity extends BaseActivity {
      * @param userInfo
      */
     public void startHaveDataUserInfoToMineFragment(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
-        Log.i(TAG, "Hadnler用户信息: "+ userInfo);
+        Log.i(TAG, "Hadnler用户信息: " + userInfo);
         //4.创建发送消息实例，在HandlerFragment中接收此消息，即可得到传输的数据信息
         Message msg = new Message();
         //5.携带数据为输入框文本数据
         msg.obj = userInfo;
         //5.消息标记为1
         msg.what = 1;
-        Log.i(TAG, "mHandler:== "+ mHandler);
+        Log.i(TAG, "mHandler:== " + mHandler);
         //5.开始发送消息
-        if (mHandler!=null){
+        if (mHandler != null) {
             mHandler.sendMessage(msg);
         }
     }
@@ -837,14 +874,13 @@ public class IndexActivity extends BaseActivity {
         //5.消息标记为1
         msg.what = 2;
         //5.开始发送消息
-        if (mHandler!=null){
+        if (mHandler != null) {
             mHandler.sendMessage(msg);
         }
     }
 
     /**
      * 无数据时点击开始传递数据到Fragment《我的》
-     *
      */
     public void startNotHaveDataAllUserInfoToMineFragment() {
         if (mHandler != null) {
@@ -854,6 +890,7 @@ public class IndexActivity extends BaseActivity {
 
     /**
      * 有数据获取时：加载在线动态QQ昵称和QQ头像（QQ相关信息）
+     *
      * @param qqUser
      */
     private void QQUserBeanIsValidSetTextAndGlideUserHead(OnlyQQUserInfoBean qqUser) {
@@ -965,17 +1002,17 @@ public class IndexActivity extends BaseActivity {
      */
     private void checkQQLoginIfValid() {
         if (Constant.sessionAndUserBean == null) {
-            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
+            IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
             return;
         }
         if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionAndUserBean != null) {
-            MyXPopupUtils.getInstance().setShowDialog(this,"请求跳转中...");
+            MyXPopupUtils.getInstance().setShowDialog(this, "请求跳转中...");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     MyXPopupUtils.getInstance().setSmartDisDialog();
-                    IntentUtil.startActivityAnimLeftToRight(IndexActivity.this,new Intent(IndexActivity.this,MineInfoActivity.class));
+                    IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, MineInfoActivity.class));
                 }
             }, 500);
             Snackbar snackbar = Snackbar.make(mDrawer_layout, R.string.index_already_login_qq, Snackbar.LENGTH_LONG);
@@ -1096,7 +1133,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         break;
@@ -1128,7 +1165,7 @@ public class IndexActivity extends BaseActivity {
 
                                     @Override
                                     public void onError(Response<String> response) {
-                                        OkGoErrorUtil.CustomFragmentOkGoError(response,IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                                        OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
                                     }
                                 });
                         break;
@@ -1202,10 +1239,10 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (QQHandler != null){
+        if (QQHandler != null) {
             QQHandler.removeCallbacksAndMessages(null);
         }
-        if (mHandler!=null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
     }

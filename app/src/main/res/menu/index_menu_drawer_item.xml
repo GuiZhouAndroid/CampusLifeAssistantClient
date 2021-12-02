@@ -8,11 +8,15 @@
         <item
             android:id="@+id/drawer_menu_setting"
             android:title="@string/drawer_menu_setting_title"
-            android:icon="@drawable/ic_settings_black_24dp"/>
+            android:icon="@mipmap/softsetting"/>
         <item
             android:id="@+id/drawer_menu_developer_system_safe"
             android:title="@string/drawer_menu_developer_system_safe"
             android:icon="@drawable/ic_perm_contact_calendar_black_24dp"/>
+        <item
+            android:id="@+id/drawer_menu_check_update"
+            android:title="@string/drawer_menu_check_update"
+            android:icon="@mipmap/checkupdate"/>
         <item
             android:id="@+id/drawer_menu_about_author"
             android:title="@string/drawer_menu_about_author"

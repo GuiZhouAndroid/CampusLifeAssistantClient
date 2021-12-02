@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,34 +13,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.snackbar.Snackbar;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import butterknife.BindBitmap;
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
-import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
 import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
-import work.lpssfxy.www.campuslifeassistantclient.base.index.ItemView;
+import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
@@ -68,17 +70,16 @@ public class BottomMineFragment extends BaseFragment {
     @BindView(R2.id.qq_back) ImageView mQQBack;//QQ头像高斯模糊背景
     @BindView(R2.id.qq_province) TextView mQQProvince;//QQ省份
     @BindView(R2.id.qq_city) TextView mQQCity;//QQ城市
-    //@BindView(R2.id.btn_logout_login) Button mLogoutLogin;//注销登录
 
     /** item控件--->用户信息 */
-    @BindView(R2.id.qq_nickname) ItemView mQQNickname;//QQ昵称
-    @BindView(R2.id.ll_my_info) ItemView mMyInfo;//我的信息
-    @BindView(R2.id.ll_my_goods) ItemView mMyGoods;//我的订单
-    @BindView(R2.id.ll_feedback) ItemView mFeedback;//意见反馈
-    @BindView(R2.id.ll_report_center) ItemView mReportCenter;//举报中心
-    @BindView(R2.id.ll_account_safe) ItemView mAccountSafe;//账户安全
-    @BindView(R2.id.ll_check_update) ItemView mCheckUpdate;//检查更新
-    @BindView(R2.id.ll_system_set) ItemView mSystemSet;//系统设置
+    @BindView(R2.id.stv_my_qq_nickname) SuperTextView mStvQQNickname;//QQ昵称
+    @BindView(R2.id.stv_my_info) SuperTextView mStvMyInfo;//我的资料
+    @BindView(R2.id.stv_my_cer) SuperTextView mStvMyCer;//实名认证
+    @BindView(R2.id.stv_my_account_safe) SuperTextView mStvAccountSafe;//账户与安全
+    @BindView(R2.id.stv_my_order) SuperTextView mStvMyOrder;//我的订单
+    @BindView(R2.id.stv_my_feed_back) SuperTextView mStvFeedBack;//意见反馈
+    @BindView(R2.id.stv_my_report) SuperTextView mStvReport;//违规举报
+    @BindView(R2.id.stv_my_contact_us) SuperTextView mStvContactUs;//联系我们
 
     /** 自定义对话框 */
     private AlertDialog mDialog;
@@ -90,9 +91,11 @@ public class BottomMineFragment extends BaseFragment {
                 case 1:
                     OkGoSessionAndUserBean.Data.UserInfo userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     if (userInfo !=null){
-                        mAccountSafe.setRightDesc(userInfo.getCreateTime());//设置QQ信息的城市
+                        initUserNowCerInfo();//初始化已登录实名信息
                     }else {
-                        mAccountSafe.setRightDesc("未登录");//设置QQ信息的城市
+                        mStvMyCer.setRightString("未登录");
+                        mStvMyCer.setLeftTopString("未登录");
+                        mStvMyCer.setLeftBottomString("未登录");
                     }
                     Log.i(TAG, "Fragment用户信息: "+ userInfo);
                     break;
@@ -100,7 +103,7 @@ public class BottomMineFragment extends BaseFragment {
                     Constant.onlyQQUserInfo = (OnlyQQUserInfoBean) msg.obj;
                     mQQProvince.setText(Constant.onlyQQUserInfo.getProvince() + "省");//设置QQ信息的省份
                     mQQCity.setText(Constant.onlyQQUserInfo.getCity());//设置QQ信息的城市
-                    mQQNickname.setRightDesc(Constant.onlyQQUserInfo.getNickname());//设置QQ信息的城市
+                    mStvQQNickname.setRightString(Constant.onlyQQUserInfo.getNickname());//设置QQ信息的城市
                     //设置圆形图像
                     RequestOptions options = new RequestOptions();
                     options.circleCrop();
@@ -127,9 +130,10 @@ public class BottomMineFragment extends BaseFragment {
                             .load(mIndex_not_login)
                             .transform(new BlurTransformation(20, 3))
                             .into(mQQBack);
-                    mQQProvince.setText("请先");//设置QQ信息的省份
-                    mQQCity.setText("登录");//设置QQ信息的城市
-                    mQQNickname.setRightDesc("未登录");//设置QQ信息的城市
+                    mQQProvince.setText("请先");//设置QQ省份
+                    mQQCity.setText("登录");//设置QQ城市
+                    mStvQQNickname.setRightString("未登录");//设置QQ昵称
+                    initUserNowCerInfo();//初始化未登录实名信息
                     break;
             }
         }
@@ -157,7 +161,6 @@ public class BottomMineFragment extends BaseFragment {
                         msg.what = 1;
                         //5.开始发送消息
                         mHandler.sendMessage(msg);
-                        //Toast.makeText(getActivity(), userInfo.toString(), Toast.LENGTH_SHORT).show();
                     } else {
                         mHandler.sendEmptyMessage(3);
                     }
@@ -195,18 +198,24 @@ public class BottomMineFragment extends BaseFragment {
 
     }
 
+    /**
+     * 为我的信息item设置监听事件
+     */
     @Override
     protected void initEvent() {
-        mQQNickname.setItemClickListener(new ItemView.itemClickListener() {
+        //QQ昵称
+        mStvQQNickname.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView QQNickname) {
+                String strQQName = QQNickname.getRightTextView().getText().toString();
+                ToastUtils.show(strQQName);
             }
         });
-        //点击我的信息跳转详情页，提供完善信息功能
-        mMyInfo.setItemClickListener(new ItemView.itemClickListener() {
+
+        //点击我的资料跳转详情页，提供完善信息功能
+        mStvMyInfo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
+            public void onClick(SuperTextView superTextView) {
 //                //方式一：获取本地持久化文件，判断有无数据
 //                if (Constant.userInfo !=null){ //登录有数据
 //                    int userId = Constant.userInfo.getUlId();
@@ -261,7 +270,7 @@ public class BottomMineFragment extends BaseFragment {
                             public void onSuccess(Response<String> response) {
                                 OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                 if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
-                                    IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(),MineInfoActivity.class));
+                                    IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), MineInfoActivity.class));
                                     OkGo.getInstance().cancelTag("检查登录");
                                 } else {
                                     CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
@@ -281,57 +290,108 @@ public class BottomMineFragment extends BaseFragment {
                         });
             }
         });
-        mMyGoods.setItemClickListener(new ItemView.itemClickListener() {
+
+        //实名认证
+        mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView myCer) {
+                String strMyCer = myCer.getRightTextView().getText().toString();
+                ToastUtils.show(strMyCer);
             }
         });
-        mFeedback.setItemClickListener(new ItemView.itemClickListener() {
+
+        //账户与安全
+        mStvAccountSafe.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView accountSafe) {
+                String strAccountSafe = accountSafe.getRightTextView().getText().toString();
+                ToastUtils.show(strAccountSafe);
             }
         });
-        mReportCenter.setItemClickListener(new ItemView.itemClickListener() {
+
+        //我的订单
+        mStvMyOrder.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView MyOrder) {
+                String strMyOrder = MyOrder.getLeftTextView().getText().toString();
+                ToastUtils.show(strMyOrder);
             }
         });
-        mAccountSafe.setItemClickListener(new ItemView.itemClickListener() {
+
+        //意见反馈
+        mStvFeedBack.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                MyXPopupUtils.getInstance().setShowDialog(getActivity(),"请求跳转中...");
+            public void onClick(SuperTextView superTextView) {
+                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求跳转中...");
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         MyXPopupUtils.getInstance().setSmartDisDialog();
-                        IntentUtil.startActivityAnimLeftToRight(getActivity(),new Intent(getActivity(), UserApplyUntieActivity.class));
+                        IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserApplyUntieActivity.class));
                     }
                 }, 500);
             }
         });
-        mCheckUpdate.setItemClickListener(new ItemView.itemClickListener() {
+
+        //违规举报
+        mStvReport.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView report) {
+                String strReport = report.getLeftTextView().getText().toString();
+                ToastUtils.show(strReport);
             }
         });
-        mSystemSet.setItemClickListener(new ItemView.itemClickListener() {
+
+        //联系我们
+        mStvContactUs.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void itemClick(String text) {
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            public void onClick(SuperTextView contactUs) {
+                String strContactUs = contactUs.getLeftTextView().getText().toString();
+                ToastUtils.show(strContactUs);
             }
         });
     }
 
     @Override
     protected void doBusiness(Context context) {
-
+        //initUserNowCerInfo(); //初始化用户当前实名信息
     }
 
+
+    /**
+     * 初始化用户当前实名信息
+     */
+    private void initUserNowCerInfo(){
+        OkGo.<String>post(Constant.SELECT_NOW_CER_STATE_BY_SA_TOKEN_LOGIN_REAL_NAME)
+                .tag("查询当前用户实名状态")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        Log.i(TAG, "查询当前用户实名状态: " + response.body());
+                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
+                            //设置未登录状态
+                            mStvMyCer.setRightString("未登录");
+                            mStvMyCer.setLeftTopString("未登录");
+                            mStvMyCer.setLeftBottomString("未登录");
+                            return;
+                        }
+                        if (200 == OkGoResponseBean.getCode() && "已实名认证".equals(OkGoResponseBean.getData()) && "success".equals(OkGoResponseBean.getMsg())) {
+                            mStvMyCer.setRightString(OkGoResponseBean.getData());//设置实名状态
+                            return;
+                        }
+                        if (200 == OkGoResponseBean.getCode() && "未实名认证".equals(OkGoResponseBean.getData()) && "error".equals(OkGoResponseBean.getMsg())) {
+                            mStvMyCer.setRightString(OkGoResponseBean.getData());//设置实名状态
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response,getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -354,4 +414,5 @@ public class BottomMineFragment extends BaseFragment {
     public boolean onBackPressed() {
         return false;
     }
+
 }
