@@ -72,4 +72,17 @@ public class LaunchActivity extends AppCompatActivity {
             handler.removeCallbacksAndMessages(null);
         }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            // 是否退出App的标识
+            boolean isExitApp = intent.getBooleanExtra("exit", false);
+            if (isExitApp) {
+                // 关闭自身
+                this.finish();
+            }
+        }
+    }
 }

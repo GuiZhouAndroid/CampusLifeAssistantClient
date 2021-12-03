@@ -108,15 +108,18 @@
         <!-- 主页 -->
         <activity
             android:name=".view.activity.IndexActivity"
+            android:launchMode="singleTask"
             android:exported="true"
             android:screenOrientation="portrait" />
         <!-- 登录主界面 -->
         <activity
+            android:launchMode="singleTask"
             android:name=".view.activity.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <!-- 手机号登录 -->
         <activity
+            android:launchMode="singleTask"
             android:name=".view.activity.PhoneCodeLoginActivity"
             android:exported="true"
             android:screenOrientation="portrait" />

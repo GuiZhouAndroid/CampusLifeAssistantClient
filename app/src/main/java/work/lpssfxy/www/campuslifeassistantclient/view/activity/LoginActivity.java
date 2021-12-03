@@ -115,7 +115,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -143,9 +143,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         return R.layout.login_activity;
     }
 
-    @SuppressLint("StaticFieldLeak")
-    public static LoginActivity loginActivity;
-
     @Override
     protected void prepareData() {
         /** QQ登录权限申请*/
@@ -157,7 +154,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     @Override
     protected void initView() {
-        loginActivity = this;//静态方式提供给手机快捷登录，调用finish，直接从手机验证码登录界面跳转到首页，并更新用户数据
         Log.i(TAG, "进入登录" + Constant.mTencent.isSessionValid());//true
         /** 默认不勾选✓授权同意 */
         mCheck_if_authorizer.setChecked(false);
@@ -313,7 +309,8 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      * 手机号快捷登录
      */
     private void userGoTelNumberLogin() {
-        IntentUtil.startActivityAnimLeftToRight(LoginActivity.this,new Intent(LoginActivity.this, PhoneCodeLoginActivity.class));
+        IntentUtil.startActivityAnimLeftToRight(LoginActivity.this, new Intent(LoginActivity.this, PhoneCodeLoginActivity.class));
+        finish();
     }
 
     /**
@@ -325,13 +322,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
         popup.setCityPickerListener(new CityPickerListener() {
             @Override
             public void onCityConfirm(String province, String city, String area, View v) {
-                Log.e("tag", province +" - " +city+" - " +area);
-                Toast.makeText(LoginActivity.this, province +" - " +city+" - " +area, Toast.LENGTH_SHORT).show();
+                Log.e("tag", province + " - " + city + " - " + area);
+                Toast.makeText(LoginActivity.this, province + " - " + city + " - " + area, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onCityChange(String province, String city, String area) {
-                Log.e("tag", province +" - " +city+" - " +area);
-                Toast.makeText(LoginActivity.this, province +" - " +city+" - " +area, Toast.LENGTH_SHORT).show();
+                Log.e("tag", province + " - " + city + " - " + area);
+                Toast.makeText(LoginActivity.this, province + " - " + city + " - " + area, Toast.LENGTH_SHORT).show();
             }
         });
         new XPopup.Builder(LoginActivity.this)
@@ -369,30 +367,14 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 //                .asCustom(popup)
 //                .show();
 
-        IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,new Intent(LoginActivity.this,RegisterActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
+        IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this, new Intent(LoginActivity.this, RegisterActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
     }
 
     /**
      * 微信登录
      */
     private void weChatLogin() {
-        CustomAlertDialogUtil.notification4(this,"提示","这个就是自定义的提示框","确定","取消");
-//        OkGo.<String>post(Constant.LOGIN_USERNAME_PASSWORD)
-//                .tag(this)
-//                .params("ulUsername", "ZSAndroid").params("ulPassword", "ZSAndroid1998")
-//                .execute(new StringDialogCallback(this) {
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        //注意这里已经是在主线程了
-//                        String data = response.body();//这个就是返回来的结果
-//                        Log.i(TAG, "onSuccess: " + data);
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//                        super.onFinish();
-//                    }
-//                });
+        CustomAlertDialogUtil.notification4(this, "提示", "这个就是自定义的提示框", "确定", "取消");
     }
 
     /**
@@ -434,8 +416,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     .execute(new StringCallback() {
                         @Override
                         public void onStart(Request<String, ? extends Request> request) {
-                            MyXPopupUtils.getInstance().setShowDialog(LoginActivity.this,"正在验证账户...");
+                            MyXPopupUtils.getInstance().setShowDialog(LoginActivity.this, "正在验证账户...");
                         }
+
                         @Override
                         public void onSuccess(Response<String> response) {
                             //Json字符串解析转为实体类对象
@@ -457,7 +440,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 thisIntentToBindUser.setClass(LoginActivity.this, LoginBindActivity.class);
                                                 //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                                                 thisIntentToBindUser.putExtra("QQJsonData", values.toString());
-                                                IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                                                IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this, thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
                                             }
                                         });
                                 mDialog = builder.create();
@@ -492,7 +475,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                 OkGoSessionAndUserBean okGoSessionAndUserBean = GsonUtil.gsonToBean(response.body(), OkGoSessionAndUserBean.class);
                                                 Log.i(TAG, "onSuccessQQ一键登录==: " + okGoSessionAndUserBean);
                                                 if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "此账户处于封禁状态".equals(okGoSessionAndUserBean.getMsg())) {
-                                                    CustomAlertDialogUtil.notification1(LoginActivity.this, "超管提示", "此账户处于封禁状态！", "我知道了");
+                                                    CustomAlertDialogUtil.notification1(LoginActivity.this, "超管提示", "此账户涉嫌违规，已处于封禁状态", "我知道了");
                                                     return;
                                                 }
                                                 if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "error".equals(okGoSessionAndUserBean.getMsg())) {
@@ -513,18 +496,19 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                                     SharePreferenceUtil.putObject(LoginActivity.this, okGoSessionAndUserBean);
                                                     /** 初始化传入OPENID+TOKEN值,使得Session有效，最终解析后得到登录用户信息 */
                                                     initOpenidAndTokenAndGsonGetParseQQUserInfo(values);
-                                                    IntentUtil.startActivityAnimRightToLeft(LoginActivity.this,new Intent(LoginActivity.this, IndexActivity.class));
+                                                    IntentUtil.startActivityAnimRightToLeft(LoginActivity.this, new Intent(LoginActivity.this, IndexActivity.class));
                                                     LoginActivity.this.finish();
                                                 }
                                             }
 
                                             @Override
                                             public void onError(Response<String> response) {
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
                         }
+
                         @Override
                         public void onFinish() {
                             super.onFinish();
@@ -533,7 +517,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
                         @Override
                         public void onError(Response<String> response) {
-                            OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
+                            OkGoErrorUtil.CustomFragmentOkGoError(response, LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                         }
                     });
         }
@@ -644,7 +628,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                             thisIntentToBindUser.setClass(LoginActivity.this, UserApplyUntieActivity.class);
                             //Gson解析Json，通过Activity传递QQ会话解析Json数据到LoginBindActivity页面
                             thisIntentToBindUser.putExtra("UntieBannedName", data.getStringExtra("BindBackName"));
-                            IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this,thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
+                            IntentUtil.startActivityForResultAnimLeftToRight(LoginActivity.this, thisIntentToBindUser, Constant.REQUEST_CODE_VALUE);//执行动画跳转
                         }
                     });
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
@@ -676,7 +660,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     strUserName = mLogin_edit_username.getText().toString();
                     strPassword = mLogin_edit_password.getText().toString();
                     //用户名和密码登录
-                    StartUserNameAndPassWordByLogin(strUserName ,strPassword);
+                    StartUserNameAndPassWordByLogin(strUserName, strPassword);
                 }
             });
 
@@ -684,7 +668,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     };
 
     /**
-     *
      * @param strUserName 用户名
      * @param strPassword 密码
      */
@@ -697,8 +680,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
                         super.onStart(request);
-                        MyXPopupUtils.getInstance().setShowDialog(LoginActivity.this,"正在验证账户...");
+                        MyXPopupUtils.getInstance().setShowDialog(LoginActivity.this, "正在验证账户...");
                     }
+
                     @Override
                     public void onSuccess(Response<String> response) {
                         //等待对话框
@@ -745,7 +729,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
                                 App.appActivity.finish();//销毁主页
                             }
                             SharePreferenceUtil.putObject(LoginActivity.this, okGoSessionAndUserBean);
-                            IntentUtil.startActivityAnimRightToLeft(LoginActivity.this,new Intent(LoginActivity.this, IndexActivity.class));
+                            IntentUtil.startActivityAnimRightToLeft(LoginActivity.this, new Intent(LoginActivity.this, IndexActivity.class));
                             finish();
                         }
                     }
@@ -758,7 +742,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
                     @Override
                     public void onError(Response<String> response) {
-                        OkGoErrorUtil.CustomFragmentOkGoError(response,LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, LoginActivity.this, mLogin_rl_show, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -825,6 +809,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+        IntentUtil.startActivityAnimRightToLeft(LoginActivity.this, new Intent(LoginActivity.this, IndexActivity.class));
         LoginActivity.this.finish();
     }
 
@@ -834,7 +819,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mHandler !=null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }

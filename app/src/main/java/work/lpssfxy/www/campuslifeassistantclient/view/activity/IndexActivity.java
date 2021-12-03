@@ -133,10 +133,18 @@ public class IndexActivity extends BaseActivity {
     private LinearLayout ll_drawer_bg;
     /** 自定义对话框 */
     private AlertDialog mDialog;
-    //用于数据传递到底部导航第四个页面--->用户管理信息
+    /** 用于数据传递到底部导航第四个页面--->用户管理信息 */
     private Handler mHandler;
-    //接口传递用户信息数据
+    /** 接口传递用户信息数据 */
     private ActivityInteraction mActivityInteraction;
+    /** QQSession+用户全部信息(并集信息) */
+    private OkGoSessionAndUserBean sessionAndUserBean;
+    /** QQ个人资料 */
+    private OnlyQQUserInfoBean onlyQQUserInfo;
+    /** QQSession+用户全部信息(并集信息中的用户全部信息) */
+    private OkGoSessionAndUserBean.Data.UserInfo userInfo;
+    /** QQSession+用户全部信息(并集信息中的QQSession) */
+    private OkGoSessionAndUserBean.Data sessionAndUserBeanData;
 
     /**
      * 关闭滑动返回
@@ -244,13 +252,13 @@ public class IndexActivity extends BaseActivity {
     @Override
     protected void initData(Bundle savedInstanceState) {
         /** 获取本地QQSession持久化Java对象数据 + 首次判断是否已登录，进行相应信息提示 */
-        Constant.sessionAndUserBean = SharePreferenceUtil.getObject(IndexActivity.this, OkGoSessionAndUserBean.class);
-        if (Constant.sessionAndUserBean !=null){
+        sessionAndUserBean = SharePreferenceUtil.getObject(IndexActivity.this, OkGoSessionAndUserBean.class);
+        if (sessionAndUserBean != null) {
             Snackbar snackbar = Snackbar.make(mDrawer_layout, "已为您自动登录~", Snackbar.LENGTH_SHORT)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent));
             setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
             snackbar.show();
-        }else {
+        } else {
             Snackbar snackbar = Snackbar.make(mDrawer_layout, "温馨提示：您没有登录哟~", Snackbar.LENGTH_INDEFINITE)
                     .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
                     .setAction("去登录", new View.OnClickListener() {  //设置点击按钮
@@ -565,20 +573,20 @@ public class IndexActivity extends BaseActivity {
     private void initQQSessionAndUserInfo() {
         /** 创建JSONObject实例，重组Json数据顺序，提供给initSessionCache(jsonObject)，实现QQSession有效*/
         JSONObject jsonObject = new JSONObject();
-        if (Constant.sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
+        if (sessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件 + 已登录有持久化数据
             try {
-                jsonObject.put("ret", Constant.sessionAndUserBean.getData().getRet());
-                jsonObject.put("openid", Constant.sessionAndUserBean.getData().getOpenid());
-                jsonObject.put("access_token", Constant.sessionAndUserBean.getData().getAccessToken());
-                jsonObject.put("pay_token", Constant.sessionAndUserBean.getData().getPayToken());
-                jsonObject.put("expires_in", Constant.sessionAndUserBean.getData().getExpiresIn());
-                jsonObject.put("pf", Constant.sessionAndUserBean.getData().getPf());
-                jsonObject.put("pfkey", Constant.sessionAndUserBean.getData().getPfkey());
-                jsonObject.put("msg", Constant.sessionAndUserBean.getData().getMsg());
-                jsonObject.put("login_cost", Constant.sessionAndUserBean.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", Constant.sessionAndUserBean.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", Constant.sessionAndUserBean.getData().getAuthorityCost());
-                jsonObject.put("expires_time", Constant.sessionAndUserBean.getData().getExpiresTime());
+                jsonObject.put("ret", sessionAndUserBean.getData().getRet());
+                jsonObject.put("openid", sessionAndUserBean.getData().getOpenid());
+                jsonObject.put("access_token", sessionAndUserBean.getData().getAccessToken());
+                jsonObject.put("pay_token", sessionAndUserBean.getData().getPayToken());
+                jsonObject.put("expires_in", sessionAndUserBean.getData().getExpiresIn());
+                jsonObject.put("pf", sessionAndUserBean.getData().getPf());
+                jsonObject.put("pfkey", sessionAndUserBean.getData().getPfkey());
+                jsonObject.put("msg", sessionAndUserBean.getData().getMsg());
+                jsonObject.put("login_cost", sessionAndUserBean.getData().getLoginCost());
+                jsonObject.put("query_authority_cost", sessionAndUserBean.getData().getQueryAuthorityCost());
+                jsonObject.put("authority_cost", sessionAndUserBean.getData().getAuthorityCost());
+                jsonObject.put("expires_time", sessionAndUserBean.getData().getExpiresTime());
                 /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
                 Constant.mTencent.initSessionCache(jsonObject);
                 Log.i(TAG, "首页Tencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
@@ -589,13 +597,13 @@ public class IndexActivity extends BaseActivity {
             if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) {
                 //1.发送用户全部信息到handler进行UI更新，包括上次登录时间
                 Message msg = new Message();
-                msg.obj = Constant.sessionAndUserBean.getData().getUserInfo();
+                msg.obj = sessionAndUserBean.getData().getUserInfo();
                 msg.what = 2;
                 QQHandler.sendMessage(msg);
 
                 //2.发送QQ上次授权时间到handler进行UI更新
                 Message msg1 = new Message();
-                msg1.obj = Constant.sessionAndUserBean.getData();
+                msg1.obj = sessionAndUserBean.getData();
                 msg1.what = 3;
                 QQHandler.sendMessage(msg1);
                 //3.初始化已登录持久化数据
@@ -741,10 +749,10 @@ public class IndexActivity extends BaseActivity {
             public void onComplete(final Object response) {
                 Log.d(TAG, "请求回调用户信息列表= " + response.toString());
                 /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-                Constant.onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
-                Log.i(TAG, "onlyQQUserInfo全部数据: " + Constant.onlyQQUserInfo);
+                onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
+                Log.i(TAG, "onlyQQUserInfo全部数据: " + onlyQQUserInfo);
                 Message msg = new Message();
-                msg.obj = Constant.onlyQQUserInfo;
+                msg.obj = onlyQQUserInfo;
                 msg.what = 0;
                 QQHandler.sendMessage(msg);
             }
@@ -790,12 +798,12 @@ public class IndexActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    /** 回调QQ授权用户的个人资料信息有数据时，通过UI展示信息，这里Constant.onlyQQUserInfo 不可能为null，不需要设置默认显示setNotLoginQQUserInfo(); */
-                    if (Constant.onlyQQUserInfo != null) {
-                        Constant.onlyQQUserInfo = (OnlyQQUserInfoBean) msg.obj;
-                        Log.i(TAG, "实时回调的QQ用户信息=== " + Constant.onlyQQUserInfo);
-                        QQUserBeanIsValidSetTextAndGlideUserHead(Constant.onlyQQUserInfo);//加载在线动态QQ昵称和QQ头像
-                        startHaveDataQQUserInfoToMineFragment(Constant.onlyQQUserInfo);
+                    /** 回调QQ授权用户的个人资料信息有数据时，通过UI展示信息，这里onlyQQUserInfo 不可能为null，不需要设置默认显示setNotLoginQQUserInfo(); */
+                    if (onlyQQUserInfo != null) {
+                        onlyQQUserInfo = (OnlyQQUserInfoBean) msg.obj;
+                        Log.i(TAG, "实时回调的QQ用户信息=== " + onlyQQUserInfo);
+                        QQUserBeanIsValidSetTextAndGlideUserHead(onlyQQUserInfo);//加载在线动态QQ昵称和QQ头像
+                        startHaveDataQQUserInfoToMineFragment(onlyQQUserInfo);
                         /** 关闭正在加载登录信息友好进度条*/
                         MyXPopupUtils.getInstance().setSmartDisDialog();
                         /** 关闭下拉刷新 */
@@ -822,25 +830,25 @@ public class IndexActivity extends BaseActivity {
                     ToastUtils.show("校园帮系统自动检测到您还没有登录");
                     break;
                 case 2: //用户登录成功信息，开始传递数据到Fragment《我的》
-                    Constant.userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
+                    userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     //方式一：Activity与Fragment共享Handler--->生命周期问题，只能生效一次
-                    startHaveDataUserInfoToMineFragment(Constant.userInfo);
-                    Log.i(TAG, "用户登录成功信息: " + Constant.userInfo);
+                    startHaveDataUserInfoToMineFragment(userInfo);
+                    Log.i(TAG, "用户登录成功信息: " + userInfo);
                     //方式一：Activity与Fragment接口回调--->生命周期问题，只能生效一次
                     /* 接口回调方式没有使用，可以实现效果 */
 //                    if (mActivityInteraction != null) {
-//                        mActivityInteraction.userAllInfoPutMineFragment(Constant.userInfo);
+//                        mActivityInteraction.userAllInfoPutMineFragment(userInfo);
 //                    }
                     //UI更新用户上次登录时间
-                    tv_userLastLoginTime.setText(Constant.userInfo.getLastLoginTime());
+                    tv_userLastLoginTime.setText(userInfo.getLastLoginTime());
                     /** 设置Toolbar的真实名字 */
-                    mCollapsing_toolbar_layout.setTitle(Constant.userInfo.getUlRealname());
+                    mCollapsing_toolbar_layout.setTitle(userInfo.getUlRealname());
                     break;
                 case 3:
                     //UI更新QQ上次授权时间
-                    Constant.sessionAndUserBeanData = (OkGoSessionAndUserBean.Data) msg.obj;
-                    if (Constant.sessionAndUserBeanData != null) {
-                        tv_QQLastLoginTime.setText(Constant.sessionAndUserBeanData.getUpdateTime());
+                    sessionAndUserBeanData = (OkGoSessionAndUserBean.Data) msg.obj;
+                    if (sessionAndUserBeanData != null) {
+                        tv_QQLastLoginTime.setText(sessionAndUserBeanData.getUpdateTime());
                     }
                     break;
             }
@@ -988,12 +996,12 @@ public class IndexActivity extends BaseActivity {
      */
     private void setQQUserLoginLogout() {
         //清空持久化用户并集xml文件，使得QQ会话无法有效初始化，用户信息无法读取
-        Constant.sessionAndUserBean = null;//清空当前对象数据
+        sessionAndUserBean = null;//清空当前对象数据
         SharePreferenceUtil.removeObject(IndexActivity.this, OkGoSessionAndUserBean.class);//清空持久化xml文件
-        Log.i(TAG, "注销登录的UserQQSessionBean: " + Constant.sessionAndUserBean);
+        Log.i(TAG, "注销登录的UserQQSessionBean: " + sessionAndUserBean);
         //注销mTencent
         Constant.mTencent.logout(IndexActivity.this);
-        Log.i(TAG, "注销QQ登录的会话Tencent: " + Constant.mTencent.isSessionValid());
+        Log.i(TAG, "注销QQ登录的会话Tencent: " + sessionAndUserBean);
     }
 
     /**
@@ -1022,20 +1030,42 @@ public class IndexActivity extends BaseActivity {
      * 判断检查QQ登录是否有效
      */
     private void checkQQLoginIfValid() {
-        if (Constant.sessionAndUserBean == null) {
+        if (sessionAndUserBean == null) {
             IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, LoginActivity.class));//执行动画跳转
+            finish();
             return;
         }
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && Constant.sessionAndUserBean != null) {
-            MyXPopupUtils.getInstance().setShowDialog(this, "请求跳转中...");
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MyXPopupUtils.getInstance().setSmartDisDialog();
-                    IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, MineInfoActivity.class));
-                }
-            }, 500);
+        if (Constant.mTencent != null && Constant.mTencent.isSessionValid() && sessionAndUserBean != null) {
+            OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                    .tag("检查登录")
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onStart(Request<String, ? extends Request> request) {
+                            MyXPopupUtils.getInstance().setShowDialog(IndexActivity.this, "请求信息中...");
+                        }
+
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                            if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, MineInfoActivity.class));
+                                OkGo.getInstance().cancelTag("检查登录");
+                            } else {
+                                CustomAlertDialogUtil.notification1(IndexActivity.this, "温馨提示", "您还没有登录呀~", "朕知道了");
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            MyXPopupUtils.getInstance().setSmartDisDialog();
+                        }
+
+                        @Override
+                        public void onError(Response<String> response) {
+                            OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");
+                        }
+                    });
         }
     }
 
@@ -1226,7 +1256,15 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "-->onActivityResult " + requestCode + " resultCode=" + resultCode);
+        //实名认证完成回调真实姓名显示
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_OCR_BIND_ACCOUNT_SUCCESS) {
+            mRefreshLayoutIndex.autoRefresh();//实名认证完成，执行刷新信息
+            Snackbar snackbar = Snackbar.make(mDrawer_layout, data.getStringExtra("BindOCRRealName") + "同学！系统检测出您的账户已完成实名认证！如有疑问，请联系我们！", Snackbar.LENGTH_INDEFINITE)
+                    .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                    .setDuration(5000);
+            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
+            snackbar.show();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 

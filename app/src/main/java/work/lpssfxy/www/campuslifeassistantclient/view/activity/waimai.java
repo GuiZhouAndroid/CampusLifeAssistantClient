@@ -113,16 +113,16 @@ public class waimai extends BaseActivity {
                 public void onComplete(final Object response) {
                     Log.d(TAG, "请求回调用户信息列表= " + response.toString());
 //                    /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-//                    Constant.onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
+//                    onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
 //                    /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-//                    SharePreferenceUtil.putObject(LoginActivity.this, Constant.onlyQQUserInfo);
-//                    Log.i(TAG, "qqUser全部数据: " + Constant.onlyQQUserInfo);
+//                    SharePreferenceUtil.putObject(LoginActivity.this, onlyQQUserInfo);
+//                    Log.i(TAG, "qqUser全部数据: " + onlyQQUserInfo);
 //                    /** 通过Intent发送广播消息，*/
 //                    Intent intent = new Intent(action);
 //                    /**创建捆绑实例，Intent传递Java对象*/
 //                    Bundle bundle = new Bundle();
 //                    /** Java对象序列化存入Intent */
-//                    bundle.putSerializable("OnlyQQUserInfoBean", Constant.onlyQQUserInfo);
+//                    bundle.putSerializable("OnlyQQUserInfoBean", onlyQQUserInfo);
 //                    /** 发送Intent序列化数据至Bundle捆绑对象*/
 //                    intent.putExtras(bundle);
 //                    Log.i(TAG, "bundle: " + bundle.toString());

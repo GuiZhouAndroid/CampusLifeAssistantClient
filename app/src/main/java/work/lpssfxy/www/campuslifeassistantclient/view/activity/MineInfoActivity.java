@@ -258,6 +258,12 @@ public class MineInfoActivity extends BaseActivity {
                                         }
 
                                         @Override
+                                        public void onError(Response<String> response) {
+                                            super.onError(response);
+                                            OkGoErrorUtil.CustomFragmentOkGoError(response, MineInfoActivity.this, mLlMineInfoShow, "请求错误，服务器连接失败！");
+                                        }
+
+                                        @Override
                                         public void onFinish() {
                                             mRefreshLayoutMyInfo.finishRefresh();//结束下拉刷新
                                             MyXPopupUtils.getInstance().setNowDisDialog();//关闭加载进度条

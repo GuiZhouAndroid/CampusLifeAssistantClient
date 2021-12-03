@@ -84,12 +84,10 @@ public class PhoneCodeLoginActivity extends BaseActivity {
     private String strPhoneNumber,strPhoneCode;
     /** XUI倒计时Button帮助类 */
     private CountDownButtonHelper buttonHelper;
-    /** 自定义对话框 */
-    private AlertDialog mDialog;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -188,6 +186,8 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                 RegexVerifySMSPhoneCodeToLogin(strPhoneNumber, strPhoneCode);
                 break;
             case R.id.iv_phone_login_back://点击返回
+                overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+                IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this, new Intent(PhoneCodeLoginActivity.this, LoginActivity.class));
                 PhoneCodeLoginActivity.this.finish();
                 break;
         }
@@ -339,25 +339,25 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                         OkGoSessionAndUserBean okGoSessionAndUserBean = GsonUtil.gsonToBean(response.body(), OkGoSessionAndUserBean.class);
                         Log.i(TAG, "onSuccessQQ一键登录==: " + okGoSessionAndUserBean);
                         if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "此账户处于封禁状态".equals(okGoSessionAndUserBean.getMsg())) {
-                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号关联账户处于封禁状态，去主页查询封禁详情","朕知道了");
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this, "超管提示", "当前手机号关联账户处于封禁状态，去主页查询封禁详情", "朕知道了");
                             return;
                         }
                         if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "登录失败，此手机号未绑定账户".equals(okGoSessionAndUserBean.getMsg())) {
-                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定账户~" + getString(R.string.please_bind_back_User_login),"朕知道了");
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this, "超管提示", "当前手机号还未绑定账户~" + getString(R.string.please_bind_back_User_login), "朕知道了");
                             return;
                         }
                         if (200 == okGoSessionAndUserBean.getCode() && null == okGoSessionAndUserBean.getData() && "登录失败，此手机号未绑定QQ".equals(okGoSessionAndUserBean.getMsg())) {
-                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this,"超管提示","当前手机号还未绑定QQ~" + getString(R.string.please_bind_back_qq_login),"朕知道了");
+                            CustomAlertDialogUtil.notification1(PhoneCodeLoginActivity.this, "超管提示", "当前手机号还未绑定QQ~" + getString(R.string.please_bind_back_qq_login), "朕知道了");
                             return;
                         }
                         if (200 == okGoSessionAndUserBean.getCode() && null != okGoSessionAndUserBean.getData() && "登录成功".equals(okGoSessionAndUserBean.getMsg())) {
                             //拉去并联登录信息持久化
-                            if (App.appActivity != null) {
-                                App.appActivity.finish();//销毁主页
-                            }
-                            LoginActivity.loginActivity.finish();//销毁未finish的登录主页
+//                            if (App.appActivity != null) {
+//                                App.appActivity.finish();//销毁主页
+//                            }
+//                            LoginActivity.loginActivity.finish();//销毁未finish的登录主页
                             SharePreferenceUtil.putObject(PhoneCodeLoginActivity.this, okGoSessionAndUserBean);
-                            IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this,new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
+                            IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this, new Intent(PhoneCodeLoginActivity.this, IndexActivity.class));
                             PhoneCodeLoginActivity.this.finish();
                         }
                     }
@@ -365,7 +365,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response,PhoneCodeLoginActivity.this, mRlLoginShow, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, PhoneCodeLoginActivity.this, mRlLoginShow, "请求错误，服务器连接失败！");
                     }
 
                     @Override
@@ -446,6 +446,17 @@ public class PhoneCodeLoginActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 按下返回键，销毁当前页面
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+        IntentUtil.startActivityAnimRightToLeft(PhoneCodeLoginActivity.this, new Intent(PhoneCodeLoginActivity.this, LoginActivity.class));
+        PhoneCodeLoginActivity.this.finish();
     }
 
     /**

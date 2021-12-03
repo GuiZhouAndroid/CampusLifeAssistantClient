@@ -17,18 +17,6 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserInTheSessi
 public class Constant {
 
     /**
-     * 网络请求Gson解析常量类对象
-     */
-    // QQ个人资料
-    public static OnlyQQUserInfoBean onlyQQUserInfo;
-    // QQSession+用户全部信息(并集信息)
-    public static OkGoSessionAndUserBean sessionAndUserBean;
-    // QQSession+用户全部信息(并集信息中的QQSession)
-    public static OkGoSessionAndUserBean.Data sessionAndUserBeanData;
-    // QQSession+用户全部信息(并集信息中的用户全部信息)
-    public static OkGoSessionAndUserBean.Data.UserInfo userInfo;
-
-    /**
      * Activity全局唯一请求码
      */
     public static final int REQUEST_CODE_VALUE = 100;//Activity请求码---> startActivityForResult(new Intent(this,xxx.class),REQUEST_CODE_UPDATE);
@@ -41,6 +29,7 @@ public class Constant {
     public static final int RESULT_CODE_BIND_ACCOUNT_ERROR = 103;//绑定账户失败
     public static final int RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION = 104;//QQ会话一键登录 Gson解析的实体对象数据
     public static final int RESULT_CODE_REGISTER_ACCOUNT_SUCCESS = 105;//注册账户成功
+    public static final int RESULT_CODE_OCR_BIND_ACCOUNT_SUCCESS = 106;//实名认证绑定账户成功
 
     /**
      * 腾讯QQ第三方登录
