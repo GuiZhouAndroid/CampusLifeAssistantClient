@@ -174,4 +174,13 @@
         <item name="sRightViewMarginRight">10dp</item>
         <item name="sRightIconRes">@mipmap/icon_arrow_right_red</item>
     </style>
+
+    <!-- XUI - SwitchButton -->
+    <style name="SwitchButtonStyle">
+        <item name="android:background">@color/White</item>
+        <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingTop">?attr/xui_config_content_spacing_vertical</item>
+        <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
+    </style>
 </resources>

@@ -9,20 +9,27 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.hjq.toast.ToastUtils;
 import com.shouzhong.scanner.Callback;
 import com.shouzhong.scanner.IViewFinder;
 import com.shouzhong.scanner.Result;
 import com.shouzhong.scanner.ScannerView;
+import com.xuexiang.xui.widget.button.ButtonView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OCRIdCardBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OCRFrontIdCardBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OCRRearIdCardBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XXPermissionsAction;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
@@ -34,24 +41,36 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
  * @create 2021-12-02-22:22
  */
 @SuppressLint("NonConstantResourceId")
-public class UserCerBindOCRIdCardActivity extends BaseActivity {
+public class UserCerBindOCRIdCardActivity extends BaseActivity{
 
     private static final String TAG = "UserCerBindOCRIdCardActivity";
 
-    @BindView(R2.id.sv) ScannerView scannerView;
-    @BindView(R2.id.tv_result) TextView tvResult;
-
-    @BindView(R2.id.edit_bind_card_number) EditText edit_bind_card_number;
-    @BindView(R2.id.edit_bind_card_name) EditText edit_bind_card_name;
-    @BindView(R2.id.edit_bind_card_sex) EditText edit_bind_card_sex;
-    @BindView(R2.id.edit_bind_card_nation) EditText edit_bind_card_nation;
-    @BindView(R2.id.edit_bind_card_birth) EditText edit_bind_card_birth;
-    @BindView(R2.id.edit_bind_card_address) EditText edit_bind_card_address;
-
-
+    //ORC扫描框
+    @BindView(R2.id.sv_ocr_id_card) ScannerView mScannerOCRIdCardView;
+    //识别身份证前后类型
+    @BindView(R2.id.tv_ocr_type) TextView tvOcrType;
+    //OCR身份证号
+    @BindView(R2.id.edit_bind_card_number) EditText mEditBindCardNumber;
+    //OCR姓名
+    @BindView(R2.id.edit_bind_card_name) EditText mEditBindCardName;
+    //OCR性别
+    @BindView(R2.id.edit_bind_card_sex) EditText mEditBindCardSex;
+    //OCR民族
+    @BindView(R2.id.edit_bind_card_nation) EditText mEditBindCardNation;
+    //OCR出生日期
+    @BindView(R2.id.edit_bind_card_birth) EditText mEditBindCardBirth;
+    //OCR家庭住址
+    @BindView(R2.id.edit_bind_card_address) EditText mEditBindCardAddress;
+    //OCR公安局
+    @BindView(R2.id.edit_bind_card_psb) EditText mEditBindCardPsd;
+    //OCR身份证有效日期
+    @BindView(R2.id.edit_bind_card_valid_data) EditText mEditBindCardValidData;
+    //执行认证
+    @BindView(R2.id.btn_start_yes_do_cer) ButtonView mBtnStartYesDoCer;
+    //Android振动绘制扫码诓
     private Vibrator vibrator;
-    //实名认证用户ID
-    private String strNowDoCerUserId;
+    //实名认证提交参数
+    private String strNowDoCerUserId,strCardNumber,strCardName,strCardSex,strCardNation,strCardBirth,strCardAddress,strCardPsd,strCardValidData;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -79,16 +98,21 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity {
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        XXPermissionsAction.getInstance().camera(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public int bindLayout() {
         return R.layout.user_cer_bind_ocr_idcard_activity;
     }
 
     @Override
     protected void prepareData() {
-        XXPermissionsAction.getInstance().camera(this);
         //当前登录需要绑定身份证进行实名认证的校园帮注册用户的自增ID
         strNowDoCerUserId = getIntent().getStringExtra("NowDoCerUserId");
-        Log.i("当前登录需要绑定身份证进行实用户的自增ID: ",strNowDoCerUserId);
+        Log.i("当前登录需要绑定身份证进行实用户的自增ID: ", strNowDoCerUserId);
     }
 
     @Override
@@ -103,7 +127,6 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity {
 
     @Override
     protected void initEvent() {
-
     }
 
     @Override
@@ -113,52 +136,128 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity {
 
     @Override
     protected void doBusiness() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setParamOcrIdCard();
-                oCRResult();
-            }
-        }).start();
+        setParamOcrIdCard();
+        oCRResult();
+    }
+
+    /**
+     * @param view 视图View
+     */
+    @OnClick({R2.id.btn_start_yes_do_cer, R2.id.edit_bind_card_address})
+    public void onStartYesDoCerViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_start_yes_do_cer://执行认证
+                getEditCerInfo();//获取OCR自动填入输入框的文本参数
+                StartYesDoCerInfo();//调用SpringBoot后端接口
+                break;
+        }
+    }
+
+    /**
+     * 获取OCR自动填入输入框的文本参数
+     */
+    private void getEditCerInfo() {
+        strCardNumber = mEditBindCardNumber.getText().toString().trim();
+        strCardName = mEditBindCardName.getText().toString().trim();//OCR姓名
+        strCardSex = mEditBindCardSex.getText().toString().trim();//OCR性别
+        strCardNation = mEditBindCardNation.getText().toString().trim(); //OCR民族
+        strCardBirth = mEditBindCardBirth.getText().toString().trim();  //OCR出生日期
+        strCardAddress = mEditBindCardAddress.getText().toString().trim();  //OCR家庭住址
+        strCardPsd = mEditBindCardPsd.getText().toString().trim();//OCR公安局
+        strCardValidData = mEditBindCardValidData.getText().toString().trim();//OCR身份证有效日期
+    }
+
+    /**
+     * 调用SpringBoot后端接口，开始执行实名认证
+     */
+    private void StartYesDoCerInfo() {
+        //OCR信息判空
+        if (TextUtils.isEmpty(strCardNumber)) {
+            ToastUtils.show("身份证号无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardName)) {
+            ToastUtils.show("真实姓名无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardSex)) {
+            ToastUtils.show("性别无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardNation)) {
+            ToastUtils.show("民族无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardBirth)) {
+            ToastUtils.show("出生日期无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardAddress)) {
+            ToastUtils.show("家庭住址无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardPsd)) {
+            ToastUtils.show("签发机关无参数，请识别获取后重试");
+            return;
+        }
+        if (TextUtils.isEmpty(strCardValidData)) {
+            ToastUtils.show("有效期限无参数，请识别获取后重试");
+            return;
+        }
     }
 
     /**
      * 设置身份证识别参数
      */
     private void setParamOcrIdCard() {
-        scannerView.setEnableIdCard2(true);
-        scannerView.setShouldAdjustFocusArea(true);
-        scannerView.setSaveBmp(false);
-        scannerView.setRotateDegree90Recognition(true);
-        scannerView.setViewFinder(new ViewFinder(UserCerBindOCRIdCardActivity.this));
-        scannerView.setRotateDegree90Recognition(true);
+        mScannerOCRIdCardView.setEnableIdCard2(true);
+        mScannerOCRIdCardView.setShouldAdjustFocusArea(true);
+        mScannerOCRIdCardView.setSaveBmp(false);
+        mScannerOCRIdCardView.setRotateDegree90Recognition(true);
+        mScannerOCRIdCardView.setViewFinder(new ViewFinder(UserCerBindOCRIdCardActivity.this));
+        mScannerOCRIdCardView.setRotateDegree90Recognition(true);
     }
 
     /**
      * OCR识别结果
      */
     private void oCRResult() {
-        scannerView.setCallback(new Callback() {
+        mScannerOCRIdCardView.onResume();
+        mScannerOCRIdCardView.setCallback(new Callback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void result(Result result) {
                 String strOcrResult = result.toString();
-                tvResult.setText(strOcrResult);
+                String strTypeOcrIdCard = strOcrResult.substring(strOcrResult.indexOf("身"), strOcrResult.lastIndexOf("面") + 1);
                 //切割字符串，为Gson解析进行字符串格式化
-                String strJsonOcrIdCard = strOcrResult.substring(strOcrResult.indexOf("{"), strOcrResult.lastIndexOf("}") + 1);
-                //识别后的Json字符串使用Gson转为对象数据
-                OCRIdCardBean ocrIdCardBean = GsonUtil.gsonToBean(strJsonOcrIdCard, OCRIdCardBean.class);
-                edit_bind_card_number.setText(ocrIdCardBean.getCardNumber());
-                edit_bind_card_name.setText(ocrIdCardBean.getName());
-                edit_bind_card_sex.setText(ocrIdCardBean.getSex());
-                edit_bind_card_nation.setText(ocrIdCardBean.getNation());
-                edit_bind_card_birth.setText(ocrIdCardBean.getBirth());
-                edit_bind_card_address.setText(ocrIdCardBean.getAddress());
+                if (strTypeOcrIdCard.equals("身份证人头面")) {
+                    String strFrontJsonOcrIdCard = strOcrResult.substring(strOcrResult.indexOf("{"), strOcrResult.lastIndexOf("}") + 1);
+                    //识别后的Json字符串使用Gson转为对象数据
+                    OCRFrontIdCardBean ocrFrontIdCardBean = GsonUtil.gsonToBean(strFrontJsonOcrIdCard, OCRFrontIdCardBean.class);
+                    mEditBindCardNumber.setText(ocrFrontIdCardBean.getCardNumber());//设置身份证号
+                    mEditBindCardName.setText(ocrFrontIdCardBean.getName());//设置姓名
+                    mEditBindCardSex.setText(ocrFrontIdCardBean.getSex());//设置性别
+                    mEditBindCardNation.setText(ocrFrontIdCardBean.getNation());//设置民族
+                    mEditBindCardBirth.setText(ocrFrontIdCardBean.getBirth());//设置出生日期
+                    mEditBindCardAddress.setText(ocrFrontIdCardBean.getAddress());//设置家庭住址
+                    tvOcrType.setText("识别结果：已成功识别人像面信息");
+                } else if (strTypeOcrIdCard.equals("身份证国徽面")) {
+                    String strRearJsonOcrIdCard = strOcrResult.substring(strOcrResult.indexOf("{"), strOcrResult.lastIndexOf("}") + 1);
+                    //识别后的Json字符串使用Gson转为对象数据
+                    OCRRearIdCardBean ocrRearIdCardBean = GsonUtil.gsonToBean(strRearJsonOcrIdCard, OCRRearIdCardBean.class);
+                    mEditBindCardPsd.setText(ocrRearIdCardBean.getOrganization());//设置签发机关
+                    String strStartData = ocrRearIdCardBean.getValidPeriod().substring(0, 10);//期限有效时间
+                    String strEndData = ocrRearIdCardBean.getValidPeriod().substring(10, 20);//期限无效时间
+                    mEditBindCardValidData.setText(strStartData + "—" + strEndData);//设置有效期限
+                    tvOcrType.setText("识别结果：已成功识别国徽面信息");
+                }
                 startVibrator();
-                scannerView.restartPreviewAfterDelay(2000);
+                mScannerOCRIdCardView.restartPreviewAfterDelay(500);
 
             }
         });
     }
+
     private void startVibrator() {
         if (vibrator == null)
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -309,13 +408,13 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        scannerView.onResume();
+        mScannerOCRIdCardView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        scannerView.onPause();
+        mScannerOCRIdCardView.onPause();
     }
 
     @Override
@@ -325,5 +424,12 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity {
             vibrator = null;
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mScannerOCRIdCardView.onPause();
+        UserCerBindOCRIdCardActivity.this.finish();
     }
 }

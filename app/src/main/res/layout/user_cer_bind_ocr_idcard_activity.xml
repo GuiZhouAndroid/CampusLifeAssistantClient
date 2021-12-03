@@ -1,63 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/Grey900">
 
     <com.shouzhong.scanner.ScannerView
-        android:id="@+id/sv"
+        android:id="@+id/sv_ocr_id_card"
         android:layout_width="match_parent"
         android:layout_height="1080px"
         android:background="#000000" />
 
     <TextView
-        android:id="@+id/tv_result"
+        android:id="@+id/tv_ocr_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sv_ocr_id_card"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_10"
+        android:textColor="@color/Deep_Orange"
+        android:textSize="13sp" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sv"
-        android:text="识别结果："
-        android:textColor="#333333"
-        android:textSize="16sp" />
-<androidx.core.widget.NestedScrollView
-    android:layout_below="@id/tv_result"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:id="@+id/ll_card_head_face"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:enabled="false"
-            android:textSize="@dimen/sp_15"
-            android:id="@+id/edit_bind_card_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:enabled="false"
-            android:id="@+id/edit_bind_card_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:enabled="false"
-            android:id="@+id/edit_bind_card_sex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:enabled="false"
-            android:id="@+id/edit_bind_card_nation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:enabled="false"
-            android:id="@+id/edit_bind_card_birth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:enabled="false"
-            android:id="@+id/edit_bind_card_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_below="@id/tv_ocr_type"
+        android:layout_marginTop="@dimen/dp_10">
 
-</androidx.core.widget.NestedScrollView>
+        <LinearLayout
+            android:id="@+id/ll_card_head_face"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="身份证号："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="真实姓名："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="  性 别  ："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="  民 族  ："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_nation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="出生日期："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_birth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="家庭住址："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="textMultiLine"
+                    android:singleLine="true"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="签发机关："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_psb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="有效期限："
+                    android:textColor="@color/White"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edit_bind_card_valid_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:textColor="@color/selector_color"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <com.xuexiang.xui.widget.button.ButtonView
+                android:id="@+id/btn_start_yes_do_cer"
+                style="@style/ButtonView.Blue"
+                android:layout_width="@dimen/dp_200"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="@string/start_yes_cer"
+                android:textSize="@dimen/sp_15"
+                app:textNormalTextColor="@color/white"
+                app:textRadius="8dp"
+                app:textSelectedTextColor="#FF6565" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 </RelativeLayout>
