@@ -140,7 +140,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     public int bindLayout() {
-        return R.layout.login_activity;
+        return R.layout.activity_login;
     }
 
     @Override

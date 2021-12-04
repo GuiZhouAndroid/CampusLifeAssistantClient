@@ -60,7 +60,7 @@ public class DeveloperBannedAccountRealNameFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_banned_account_real_name;
+        return R.layout.fragment_developer_banned_account_real_name;
     }
 
     @Override

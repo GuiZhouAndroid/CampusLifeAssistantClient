@@ -56,7 +56,7 @@ public class DeveloperUntieBannedAccountUserNameFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_untie_banned_account_real_name;
+        return R.layout.fragment_developer_untie_banned_account_real_name;
     }
 
     @Override

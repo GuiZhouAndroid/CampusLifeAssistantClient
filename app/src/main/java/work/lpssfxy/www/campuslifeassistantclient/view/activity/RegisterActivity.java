@@ -140,7 +140,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.register_activity;
+        return R.layout.activity_register;
     }
 
     @Override

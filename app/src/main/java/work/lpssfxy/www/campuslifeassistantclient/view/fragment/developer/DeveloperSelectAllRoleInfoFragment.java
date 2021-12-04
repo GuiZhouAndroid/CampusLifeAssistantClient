@@ -27,7 +27,6 @@ import com.rmondjone.locktableview.LockTableView;
 import com.rmondjone.xrecyclerview.ProgressStyle;
 import com.rmondjone.xrecyclerview.XRecyclerView;
 import com.xuexiang.xui.widget.button.ButtonView;
-import com.xuexiang.xui.widget.dialog.DialogLoader;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.GravityEnum;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
@@ -48,7 +47,6 @@ import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllRoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
@@ -89,7 +87,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_all_role_info;
+        return R.layout.fragment_developer_select_all_role_info;
     }
 
     @Override
@@ -173,7 +171,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
      */
     private void startAddRoleInfo() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_all_role_info_add_role_info_dialog_item, true)
+                .customView(R.layout.fragment_developer_select_all_role_info_add_role_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
                 .title("新增角色")
                 .titleColor(getResources().getColor(R.color.colorAccent))

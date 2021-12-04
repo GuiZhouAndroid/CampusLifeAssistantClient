@@ -24,7 +24,6 @@ import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
@@ -83,7 +82,7 @@ public class LoginBindActivity extends BaseActivity {
      */
     @Override
     public int bindLayout() {
-        return R.layout.login_activity_bind;
+        return R.layout.activity_login_bind;
     }
 
 

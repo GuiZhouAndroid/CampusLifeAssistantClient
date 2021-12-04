@@ -56,7 +56,7 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_kickoff_line_realname;
+        return R.layout.fragment_developer_kickoff_line_realname;
     }
 
     @Override

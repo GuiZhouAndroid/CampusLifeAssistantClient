@@ -31,11 +31,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageCertificationTitle;
-import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllCertificationInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllUserInfoFragment;
 
 /**
  * created by on 2021/12/1
@@ -72,7 +70,7 @@ public class DeveloperManagerCertificationInfoFragment extends BaseFragment impl
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_certification_info;
+        return R.layout.fragment_developer_manager_certification_info;
     }
 
     @Override

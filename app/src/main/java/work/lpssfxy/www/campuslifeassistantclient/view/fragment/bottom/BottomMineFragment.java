@@ -3,10 +3,8 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.bottom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,14 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -29,8 +25,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.List;
 
 import butterknife.BindBitmap;
 import butterknife.BindView;
@@ -43,6 +38,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserCerBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
@@ -51,11 +47,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.BaseActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.GuideActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LaunchActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
@@ -97,8 +89,7 @@ public class BottomMineFragment extends BaseFragment {
     private OnlyQQUserInfoBean onlyQQUserInfo;
     /** 自定义对话框 */
     private AlertDialog mDialog;
-    /** QQSession+用户全部信息(并集信息中的用户全部信息) */
-    private OkGoSessionAndUserBean.Data.UserInfo userInfo;
+    private String strNowRole;
 
     public static BottomMineFragment newInstance() {
         //GlobalBus.getBus().register(fragment);
@@ -143,7 +134,7 @@ public class BottomMineFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.index_fragment_bottom_mine;
+        return R.layout.fragment_index_bottom_mine;
     }
 
     @Override
@@ -178,6 +169,12 @@ public class BottomMineFragment extends BaseFragment {
         mStvMyInfo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClick(SuperTextView superTextView) {
+                superTextView.setRightTvClickListener(new SuperTextView.OnRightTvClickListener() {
+                    @Override
+                    public void onClick(TextView textView) {
+                        ToastUtils.show(strNowRole);
+                    }
+                });
 //                //方式一：获取本地持久化文件，判断有无数据
 //                if (userInfo !=null){ //登录有数据
 //                    int userId = userInfo.getUlId();
@@ -308,14 +305,15 @@ public class BottomMineFragment extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        //initUserNowCerInfo(); //初始化用户当前实名信息
+
     }
 
 
     /**
      * 初始化用户当前实名信息
+     * @param userInfo
      */
-    private void initUserNowCerInfo() {
+    private void initUserNowCerInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
         OkGo.<String>post(Constant.SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME)
                 .tag("查询当前用户实名状态")
                 .execute(new StringCallback() {
@@ -328,24 +326,25 @@ public class BottomMineFragment extends BaseFragment {
                             mStvMyCer.setRightString("未登录");
                             mStvMyCer.setLeftTopString("未登录");
                             mStvMyCer.setLeftBottomString("未登录");
+                            mStvMyCer.setRightTvDrawableLeft(null);
                             return;
                         }
                         if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
-                            mStvMyCer.setRightString("未实名");//设置实名状态
+                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.notcer));
                             //组装未实名状态假数据，用于判断true或false进入绑定或查看详情页面
                             OkGoUserCerBean.Data customFalseCerState = new OkGoUserCerBean.Data(new OkGoUserCerBean.Data.UserCertificationBean(false));
                             mStvMyCer.setLeftTopString("您暂未认证");//认证真实姓名
                             mStvMyCer.setLeftBottomString("请绑定身份证");//认证身份证号
-                            userDoToBindOrSelectCerIdCard(customFalseCerState);
+                            userDoToBindOrSelectCerIdCard(customFalseCerState, userInfo);
                             return;
                         }
                         if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
-                            mStvMyCer.setRightString("已实名");//设置实名状态
+                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.alreadycer));
                             mStvMyCer.setLeftTopString(okGoUserCerBean.getData().getUlRealname());//认证真实姓名
                             //认证安全显示处理过的身份证号
                             String strCerIdCard = okGoUserCerBean.getData().getUserCertificationBean().getTucIdcard().replaceAll("(\\d{4})\\d{8}(\\w{6})", "$1*****$2");
                             mStvMyCer.setLeftBottomString(strCerIdCard);
-                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData());
+                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData(),userInfo);
                         }
                     }
 
@@ -358,8 +357,9 @@ public class BottomMineFragment extends BaseFragment {
 
     /**
      * 初始化账户封禁信息
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
      */
-    private void initUserAccountBannedInfo() {
+    private void initUserAccountBannedInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
         OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID + "/" + userInfo.getUlId())
                 .tag("当前账户封禁状态")
                 .execute(new StringCallback() {
@@ -377,7 +377,6 @@ public class BottomMineFragment extends BaseFragment {
                         }
                         if (200 == okGoResponseBean.getCode() && "此账户处于封禁状态".equals(okGoResponseBean.getMsg())) {
                             SharePreferenceUtil.removeObject(getActivity(), OkGoSessionAndUserBean.class);//清空持久化xml文件
-                            userInfo = null;
                             mHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -393,11 +392,57 @@ public class BottomMineFragment extends BaseFragment {
     }
 
     /**
+     * 初始化我的信息
+     *
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     */
+    private void initUserMyInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
+        OkGo.<String>post(Constant.SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME)
+                .tag("当前登录会话角色集合")
+                .execute(new StringCallback() {
+                    @SuppressLint("UseCompatLoadingForDrawables")
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
+                        Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "未登录".equals(okGoRoleOrPermissionListBean.getMsg())){
+                            mStvMyInfo.setRightString("未登录");//我的资料
+                            mStvMyInfo.setRightTvDrawableLeft(null);
+                            return;
+                        }
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "success".equals(okGoRoleOrPermissionListBean.getMsg())){
+                            List<String> roleStringList =  okGoRoleOrPermissionListBean.getData();
+                            if (roleStringList.contains("超管") && roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.supermanager));//设置管理员角色图片
+                                strNowRole = "您目前身份是尊贵的超管开发者";
+                            } else if(roleStringList.contains("学生") && roleStringList.contains("跑腿")){
+                                strNowRole = "您已成为跑腿认证学生，欢迎您的加入";
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.run));//设置跑腿角色图片
+                            } else if(roleStringList.contains("学生")){
+                                strNowRole = "您目前是普通用户，无资格兼职接单，快去申请加入跑腿大家庭吧";
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.ordinary));//设置普通用户角色图片
+                            }
+                            return;
+                        }
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "error".equals(okGoRoleOrPermissionListBean.getMsg())){
+                            mStvMyInfo.setRightString("无资格");
+                            mStvMyInfo.setRightTvDrawableLeft(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
+    /**
      * 设置监听事件：根据实名认证状态布尔值执行相应的：查看已实名认证相关信息 + 跳转绑定身份证号
      *
      * @param data 当前用户实名认证信息
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
      */
-    private void userDoToBindOrSelectCerIdCard(OkGoUserCerBean.Data data) {
+    private void userDoToBindOrSelectCerIdCard(OkGoUserCerBean.Data data, OkGoSessionAndUserBean.Data.UserInfo userInfo) {
         //实名认证
         mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
@@ -420,16 +465,19 @@ public class BottomMineFragment extends BaseFragment {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 1:
-                    userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
+                    OkGoSessionAndUserBean.Data.UserInfo userInfo = (OkGoSessionAndUserBean.Data.UserInfo) msg.obj;
                     if (userInfo != null) {
-                        initUserNowCerInfo();//初始化已登录实名信息
-                        initUserAccountBannedInfo();//初始化账户安全
+                        initUserNowCerInfo(userInfo);//初始化已登录实名信息
+                        initUserAccountBannedInfo(userInfo);//初始化账户安全
+                        initUserMyInfo(userInfo);//初始化我的信息
                     } else {
-                        mStvMyCer.setLeftTopString("未登录");
-                        mStvMyCer.setLeftBottomString("未登录");
-                        mStvMyCer.setRightString("未登录");
-                        mStvAccountSafe.setRightString("未登录");//账户与安全文本
-                        mStvAccountSafe.setRightTvDrawableLeft(null);//账户与安全图标
+//                        mStvMyCer.setLeftTopString("未登录");
+//                        mStvMyCer.setLeftBottomString("未登录");
+//                        mStvMyCer.setRightString("未登录");
+//                        mStvMyCer.setRightTvDrawableLeft(null);
+//                        mStvMyInfo.setRightTvDrawableLeft(null);
+//                        mStvAccountSafe.setRightString("未登录");//账户与安全文本
+//                        mStvAccountSafe.setRightTvDrawableLeft(null);//账户与安全图标
                     }
                     Log.i(TAG, "Fragment用户信息: " + userInfo);
                     break;
@@ -454,7 +502,6 @@ public class BottomMineFragment extends BaseFragment {
                     break;
                 case 3://匹配成功，接收IndexActivity发来的空消息--->未登录设置默认值
                     //设置圆形图像
-                    userInfo = null;
                     RequestOptions options1 = new RequestOptions();
                     options1.circleCrop();
                     Glide.with(getActivity())
@@ -469,10 +516,13 @@ public class BottomMineFragment extends BaseFragment {
                     mQQProvince.setText("请先");//设置QQ省份
                     mQQCity.setText("登录");//设置QQ城市
                     mStvQQNickname.setRightString("未登录");//设置QQ昵称
+
                     mStvMyInfo.setRightString("未登录");//我的资料
+                    mStvMyInfo.setRightTvDrawableLeft(null);
+
                     mStvAccountSafe.setRightString("未登录");//账户与安全文本
                     mStvAccountSafe.setRightTvDrawableLeft(null);//账户与安全图标
-                    initUserNowCerInfo();//初始化未登录实名信息
+                    initUserNowCerInfo(null);//初始化未登录实名信息
                     break;
             }
         }

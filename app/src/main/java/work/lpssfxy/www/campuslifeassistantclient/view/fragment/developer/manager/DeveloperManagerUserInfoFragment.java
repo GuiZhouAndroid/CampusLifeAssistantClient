@@ -30,11 +30,9 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
-import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageRoleTitle;
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllUserInfoFragment;
 
 /**
@@ -75,7 +73,7 @@ public class DeveloperManagerUserInfoFragment extends BaseFragment implements Ta
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_user_info;
+        return R.layout.fragment_developer_manager_user_info;
     }
 
     @Override

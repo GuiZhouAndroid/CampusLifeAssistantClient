@@ -39,7 +39,7 @@ public class LoadingDialog {
     public static void showDialog(Context context) {
         dialog = new Dialog(context, R.style.dialog);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.login_dialog_item);
+        dialog.setContentView(R.layout.dialog_login_item);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }

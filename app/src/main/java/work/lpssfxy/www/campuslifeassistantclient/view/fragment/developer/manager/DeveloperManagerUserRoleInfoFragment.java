@@ -74,7 +74,7 @@ public class DeveloperManagerUserRoleInfoFragment extends BaseFragment implement
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_user_role_info;
+        return R.layout.fragment_developer_manager_user_role_info;
     }
 
     @Override

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--顶部标题栏-->
-        <include layout="@layout/index_custom_appbar" />
+        <include layout="@layout/custom_index_appbar" />
         <!--刷新核心-->
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout_index"
@@ -68,7 +68,7 @@
         android:layout_gravity="start"
         android:background="@color/drawer_item_bg_n"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/index_drawer_header_item"
+        app:headerLayout="@layout/custom_index_drawer_header_item"
         app:insetForeground="@android:color/transparent"
         app:itemBackground="@drawable/drawer_item_bg"
         app:menu="@menu/index_menu_drawer_item" />

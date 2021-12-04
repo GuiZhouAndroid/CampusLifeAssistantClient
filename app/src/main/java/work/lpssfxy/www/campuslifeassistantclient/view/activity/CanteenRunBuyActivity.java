@@ -49,7 +49,7 @@ public class CanteenRunBuyActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.canteen_run_buy_activity;
+        return R.layout.activity_canteen_run_buy;
     }
 
     @Override

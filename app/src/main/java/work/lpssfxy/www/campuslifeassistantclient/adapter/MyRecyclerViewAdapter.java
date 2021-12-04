@@ -40,7 +40,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public myViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
         //创建自定义布局
-        View itemView = View.inflate(context, R.layout.index_fragment_recyclerview_item, null);
+        View itemView = View.inflate(context, R.layout.fragment_index_recyclerview_item, null);
         return new myViewHodler(itemView);
     }
 

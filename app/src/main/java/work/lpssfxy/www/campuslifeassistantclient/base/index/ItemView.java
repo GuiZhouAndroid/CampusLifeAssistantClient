@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.base.button.NotFastButton;
 
 /**
  * created by on 2021/11/4
@@ -45,7 +44,7 @@ public class ItemView extends LinearLayout {
     public ItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         //添加布局文件
-        View view = LayoutInflater.from(context).inflate(R.layout.index_fragment_bottom_mine_item_view_layout, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.fragment_index_bottom_mine_item_view_layout, null);
         addView(view);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ItemView);
         //找到控件

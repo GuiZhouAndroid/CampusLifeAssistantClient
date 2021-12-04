@@ -5,14 +5,13 @@ import android.os.Bundle;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 
 /**
- * created by on 2021/12/2
- * 描述：用户已实名认证，查看实名详情
+ * created by on 2021/12/4
+ * 描述：申请跑腿资格
  *
  * @author ZSAndroid
- * @create 2021-12-02-22:32
+ * @create 2021-12-04-20:38
  */
-public class UserCerSelectIdCardActivity extends BaseActivity{
-
+public class ApplyRunCerActivity extends BaseActivity{
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -40,7 +39,7 @@ public class UserCerSelectIdCardActivity extends BaseActivity{
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_user_cer_select_idcard;
+        return R.layout.activity_apply_run_cer;
     }
 
     @Override

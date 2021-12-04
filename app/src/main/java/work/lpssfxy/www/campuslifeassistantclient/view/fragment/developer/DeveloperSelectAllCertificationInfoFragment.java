@@ -56,7 +56,7 @@ public class DeveloperSelectAllCertificationInfoFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_all_certification_info;
+        return R.layout.fragment_developer_select_all_certification_info;
     }
 
     @Override

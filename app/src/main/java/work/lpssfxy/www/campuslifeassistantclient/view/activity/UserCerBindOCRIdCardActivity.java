@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -122,7 +121,7 @@ public class UserCerBindOCRIdCardActivity extends BaseActivity{
 
     @Override
     public int bindLayout() {
-        return R.layout.user_cer_bind_ocr_idcard_activity;
+        return R.layout.activity_user_cer_bind_ocr_idcard;
     }
 
     @Override

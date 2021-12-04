@@ -80,7 +80,7 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.developer_activity_system_safe;
+        return R.layout.activity_developer_system_safe;
     }
 
     @Override

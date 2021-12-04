@@ -13,9 +13,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemChildClickListener;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
@@ -33,9 +30,6 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.GravityEnum;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
-import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListAdapter;
-import com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListItem;
-import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.textview.MarqueeTextView;
 import com.xuexiang.xui.widget.textview.marqueen.DisplayEntity;
 
@@ -50,7 +44,6 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.PermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllPermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
@@ -97,7 +90,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_all_permission_info;
+        return R.layout.fragment_developer_select_all_permission_info;
     }
 
     @Override
@@ -712,7 +705,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
      */
     private void startAddPermissionInfo() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_all_permission_info_add_permission_info_dialog_item, true)
+                .customView(R.layout.fragment_developer_select_all_permission_info_add_permission_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
                 .title("新增权限")
                 .titleColor(getResources().getColor(R.color.colorAccent))

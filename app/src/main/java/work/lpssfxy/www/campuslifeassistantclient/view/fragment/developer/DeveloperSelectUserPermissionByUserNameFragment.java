@@ -59,7 +59,7 @@ public class DeveloperSelectUserPermissionByUserNameFragment extends BaseFragmen
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_permission_user_by_username;
+        return R.layout.fragment_developer_select_permission_user_by_username;
     }
 
     @Override

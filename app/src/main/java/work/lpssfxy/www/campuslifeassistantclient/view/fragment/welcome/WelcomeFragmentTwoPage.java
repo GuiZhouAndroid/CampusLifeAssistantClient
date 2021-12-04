@@ -41,7 +41,7 @@ public class WelcomeFragmentTwoPage extends LazyLoadFragment {
 
     @Override
     protected int setContentView() {
-        return R.layout.welcome_frgament_two_page;
+        return R.layout.frgament_welcome_two_page;
     }
 
     @Override

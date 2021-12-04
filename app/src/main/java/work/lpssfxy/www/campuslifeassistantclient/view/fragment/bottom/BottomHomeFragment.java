@@ -97,8 +97,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     //private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_own_food,R.mipmap.index_other_people_server,
     //R.mipmap.index_express, R.mipmap.index_second_hand,R.mipmap.index_lost_and_found,R.mipmap.index_horoscope,
     //R.mipmap.index_joke_encyclopedia, R.mipmap.index_weather,R.mipmap.index_map,R.mipmap.index_into_school};
-    private static final String[] Grid_Tv_Data = new String[]{"食堂代取","快递代取","笑话百科","星座运势","六师官网"};
-    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_other_people_server, R.mipmap.index_express, R.mipmap.index_joke_encyclopedia,R.mipmap.index_horoscope,R.mipmap.index_into_school};
+    private static final String[] Grid_Tv_Data = new String[]{"食堂代取","快递代取","笑话百科","星座运势","六师官网","跑腿认证"};
+    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_other_people_server, R.mipmap.index_express, R.mipmap.index_joke_encyclopedia,R.mipmap.index_horoscope,R.mipmap.index_into_school,R.mipmap.cerrun};
     /** 底部弹出——第三方地图 */
     private BottomSheetPop mBottomSheetPop;
     private View openBottomView;
@@ -120,7 +120,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
 
     @Override
     protected int bindLayout() {
-        return R.layout.index_fragment_bottom_home;
+        return R.layout.fragment_index_bottom_home;
     }
 
     @Override
@@ -143,7 +143,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     @Override
     protected void initData(Bundle savedInstanceState) {
         //3个地图id
-        openBottomView = LayoutInflater.from(getActivity()).inflate(R.layout.index_fragment_open_bottom_map_navagation, null);
+        openBottomView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_index_open_bottom_map_navagation, null);
         mLl_bottom_baidu = openBottomView.findViewById(R.id.ll_bottom_baidu);//底部百度
         mLl_bottom_gaode = openBottomView.findViewById(R.id.ll_bottom_gaode);//底部高德
         mLl_bottom_tencent = openBottomView.findViewById(R.id.ll_bottom_tencent);//底部腾讯
@@ -249,7 +249,14 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 openBottomMapNaviCation();
                 Toast.makeText(getActivity(), "六师官网", Toast.LENGTH_SHORT).show();
                 break;
+            case 5://跑腿认证
+                openBottomMapNaviCation();
+                startApplyRunCer();
+                break;
         }
+    }
+
+    private void startApplyRunCer() {
     }
 
     /**
@@ -314,7 +321,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         mAuto_grid_layout.setAdapter(new FlowAdapter(Arrays.asList(Grid_Tv_Data)) {
             @Override
             public View getView(int position) {
-                View item = mLayoutInflater.inflate(R.layout.index_fragment_homepage_grid_item, null);
+                View item = mLayoutInflater.inflate(R.layout.fragment_index_homepage_grid_item, null);
                 TextView tv_gird_tab = item.findViewById(R.id.tv_gird_tab);
                 tv_gird_tab.setText(Grid_Tv_Data[position]);
                 ImageView iv_grid_show = item.findViewById(R.id.iv_grid_show);

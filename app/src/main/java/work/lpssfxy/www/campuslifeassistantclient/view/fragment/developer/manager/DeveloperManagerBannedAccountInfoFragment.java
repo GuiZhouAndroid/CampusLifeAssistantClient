@@ -78,7 +78,7 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment impl
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_ban_account_info;
+        return R.layout.fragment_manager_developer_ban_account_info;
     }
 
     /**

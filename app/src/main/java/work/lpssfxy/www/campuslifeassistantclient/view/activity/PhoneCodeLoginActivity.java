@@ -34,11 +34,9 @@ import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
-import work.lpssfxy.www.campuslifeassistantclient.App;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.login.ProgressButton;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.KeyboardUtil;
@@ -112,7 +110,7 @@ public class PhoneCodeLoginActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.login_activity_phone_code;
+        return R.layout.activity_login_phone_code;
     }
 
     @Override

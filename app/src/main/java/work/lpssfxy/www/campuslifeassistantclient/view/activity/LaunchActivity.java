@@ -29,7 +29,7 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         /** 自动固定隐藏底部导航栏 :监听手势——上滑弹出=不失效*/
         StatusBarUtils.setAutoFixHideNaviCation(this);
-        setContentView(R.layout.launch_activity);
+        setContentView(R.layout.activity_launch);
         LaunchOneSecondCountDown();//开启线程
     }
 

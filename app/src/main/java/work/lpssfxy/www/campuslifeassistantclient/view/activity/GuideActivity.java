@@ -93,7 +93,7 @@ public class GuideActivity extends BaseActivity implements MediaPlayer.OnComplet
      */
     @Override
     public int bindLayout() {
-        return R.layout.guide_activity;
+        return R.layout.activity_guide;
     }
 
     /**

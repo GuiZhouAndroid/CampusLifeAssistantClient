@@ -204,7 +204,7 @@ public class IndexActivity extends BaseActivity {
      */
     @Override
     public int bindLayout() {
-        return R.layout.index_activity;
+        return R.layout.activity_index;
     }
 
 
@@ -454,13 +454,12 @@ public class IndexActivity extends BaseActivity {
                                                             OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
                                                             Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
                                                             if (okGoRoleOrPermissionListBean.getData().contains("超管")) {
-                                                                //List<String> 集合中，包含角色"超级超管"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
+                                                                //List<String> 集合中，包含角色"超管"即当前登录账户为开发者认证账户。然后执行认证通过，跳转后台安全页面
                                                                 IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, DeveloperSystemSafeActivity.class));
                                                             } else {//无认证权限，提示信息
                                                                 CustomAlertDialogUtil.notification1(IndexActivity.this, "超管提示", "《后台安全》仅开发者使用，您无权访问！谢谢合作~", "朕知道了");
                                                             }
                                                         }
-
                                                         @Override
                                                         public void onError(Response<String> response) {
                                                             OkGoErrorUtil.CustomFragmentOkGoError(response, IndexActivity.this, mDrawer_layout, "请求错误，服务器连接失败！");

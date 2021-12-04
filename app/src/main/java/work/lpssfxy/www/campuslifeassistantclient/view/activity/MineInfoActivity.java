@@ -140,7 +140,7 @@ public class MineInfoActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.mine_info_activity;
+        return R.layout.activity_mine_info;
     }
 
     @Override
@@ -290,7 +290,7 @@ public class MineInfoActivity extends BaseActivity {
             @Override
             public void itemClick(String oldUserName) {
                 new MaterialDialog.Builder(MineInfoActivity.this)
-                        .customView(R.layout.mine_info_activity_update_user_username_dialog_item, true)
+                        .customView(R.layout.activity_mine_info_update_user_username_dialog_item, true)
                         .titleGravity(GravityEnum.CENTER)
                         .title("换绑用户名" + oldUserName)
                         .titleColor(getResources().getColor(R.color.colorAccent))
@@ -357,7 +357,7 @@ public class MineInfoActivity extends BaseActivity {
             @Override
             public void itemClick(String oldStuNo) {
                 new MaterialDialog.Builder(MineInfoActivity.this)
-                        .customView(R.layout.mine_info_activity_update_user_stu_no_dialog_item, true)
+                        .customView(R.layout.activity_mine_info_update_user_stu_no_dialog_item, true)
                         .titleGravity(GravityEnum.CENTER)
                         .title("换绑学号" + oldStuNo)
                         .titleColor(getResources().getColor(R.color.colorAccent))
@@ -406,7 +406,7 @@ public class MineInfoActivity extends BaseActivity {
             @Override
             public void itemClick(String oldTel) {
                 new MaterialDialog.Builder(MineInfoActivity.this)
-                        .customView(R.layout.mine_info_activity_update_user_tel_dialog_item, true)
+                        .customView(R.layout.activity_mine_info_update_user_tel_dialog_item, true)
                         .titleGravity(GravityEnum.CENTER)
                         .title("换绑手机号" + oldTel)
                         .titleColor(getResources().getColor(R.color.colorAccent))
@@ -455,7 +455,7 @@ public class MineInfoActivity extends BaseActivity {
             @Override
             public void itemClick(String oldEmail) {
                 new MaterialDialog.Builder(MineInfoActivity.this)
-                        .customView(R.layout.mine_info_activity_update_user_qq_email_dialog_item, true)
+                        .customView(R.layout.activity_mine_info_update_user_qq_email_dialog_item, true)
                         .titleGravity(GravityEnum.CENTER)
                         .title("换绑QQ邮箱" + oldEmail)
                         .titleColor(getResources().getColor(R.color.colorAccent))

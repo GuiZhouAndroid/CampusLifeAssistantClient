@@ -73,7 +73,7 @@ public class UserApplyUntieActivity extends BaseActivity implements View.OnClick
 
     @Override
     public int bindLayout() {
-        return R.layout.user_apply_untie_activity;
+        return R.layout.activity_user_apply_untie;
     }
 
 

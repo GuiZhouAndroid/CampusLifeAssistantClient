@@ -137,7 +137,7 @@ public class WelcomeActivity extends BaseActivity implements ViewPager.OnPageCha
      */
     @Override
     public int bindLayout() {
-        return R.layout.welcome_activity;
+        return R.layout.activity_welcome;
     }
 
 

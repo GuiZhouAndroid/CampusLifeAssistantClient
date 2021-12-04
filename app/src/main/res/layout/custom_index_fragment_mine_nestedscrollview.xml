@@ -77,7 +77,6 @@
             app:sLeftViewGravity="left_center"
             app:sRightTextColor="@color/Grey500"
             app:sRightTextSize="@dimen/sp_15"
-            app:sRightTextString="密码斯蒂芬"
             app:sRightViewMarginRight="@dimen/dp_32" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
@@ -85,18 +84,17 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             app:sLeftTextSize="@dimen/sp_15"
-            app:sLeftTextString="我的资料"
+            app:sLeftTextString="我的信息"
             app:sLeftTvDrawableHeight="25dp"
             app:sLeftTvDrawableLeft="@mipmap/mine"
             app:sLeftTvDrawableWidth="25dp"
             app:sLeftViewGravity="left_center"
             app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="20dp"
             app:sRightTextColor="@color/Grey500"
-            app:sRightTextSize="@dimen/sp_15"
-            app:sRightTextString="去修改" />
+            app:sRightTvDrawableWidth="45dp" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            app:sRightIconRes="@mipmap/icon_arrow_right_red"
             android:id="@+id/stv_my_cer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -105,6 +103,10 @@
             app:sLeftIconWidth="25dp"
             app:sLeftTextSize="@dimen/sp_15"
             app:sLeftViewGravity="left_center"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="20dp"
+            app:sRightTvDrawableLeft="@mipmap/alreadycer"
+            app:sRightTvDrawableWidth="50dp"
             app:sRightTextColor="@color/Grey500"
             app:sRightTextSize="@dimen/sp_15" />
 

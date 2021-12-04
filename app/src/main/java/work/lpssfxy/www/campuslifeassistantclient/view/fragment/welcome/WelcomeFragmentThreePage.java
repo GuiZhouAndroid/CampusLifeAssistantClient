@@ -42,7 +42,7 @@ public class WelcomeFragmentThreePage extends LazyLoadFragment {
 
     @Override
     protected int setContentView() {
-        return R.layout.welcome_frgament_three_page;
+        return R.layout.frgament_welcome_three_page;
     }
 
     @Override

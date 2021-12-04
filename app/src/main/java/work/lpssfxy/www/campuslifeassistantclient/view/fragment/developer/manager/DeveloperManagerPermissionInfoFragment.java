@@ -73,7 +73,7 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_permission_info;
+        return R.layout.fragment_developer_manager_permission_info;
     }
 
     @Override

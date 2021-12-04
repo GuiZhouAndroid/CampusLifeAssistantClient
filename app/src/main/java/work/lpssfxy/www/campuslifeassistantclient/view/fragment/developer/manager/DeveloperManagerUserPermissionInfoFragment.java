@@ -33,9 +33,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserPermissionTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllPermissionInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHavePermissionUserInfoByPermissionIdFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
 
 /**
@@ -76,7 +74,7 @@ public class DeveloperManagerUserPermissionInfoFragment extends BaseFragment imp
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_user_permission_info;
+        return R.layout.fragment_developer_manager_user_permission_info;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class DeveloperKickOffLineTokenFragment extends BaseFragment {
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_kickoff_line_token;
+        return R.layout.fragment_developer_kickoff_line_token;
     }
 
     @Override

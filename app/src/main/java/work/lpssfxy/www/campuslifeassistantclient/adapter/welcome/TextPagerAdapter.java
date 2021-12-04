@@ -24,7 +24,7 @@ public class TextPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        view = LayoutInflater.from(container.getContext()).inflate(R.layout.welcome_adapter_item_page_text, null);
+        view = LayoutInflater.from(container.getContext()).inflate(R.layout.custom_welcome_page_text_adapter_item, null);
         TextView mTitle = view.findViewById(R.id.pager_text_title);
         TextView mInfo = view.findViewById(R.id.pager_text_info);
         switch (position) {

@@ -34,8 +34,6 @@ import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageRo
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 
 /**
  * created by on 2021/11/26
@@ -74,7 +72,7 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment implements Ta
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_manager_fragment_role_info;
+        return R.layout.fragment_developer_manager_role_info;
     }
 
     @Override

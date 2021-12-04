@@ -72,7 +72,7 @@ public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends
 
     @Override
     protected int bindLayout() {
-        return R.layout.developer_fragment_select_have_permission_user_info_by_permission_id;
+        return R.layout.fragment_developer_select_have_permission_user_info_by_permission_id;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends
      */
     private void startSelectHavePermissionUserInfoByPermissionId() {
         new MaterialDialog.Builder(getContext())
-                .customView(R.layout.developer_fragment_select_have_permission_user_info_dialog_item, true)
+                .customView(R.layout.fragment_developer_select_have_permission_user_info_dialog_item, true)
                 .titleGravity(GravityEnum.CENTER)
                 .title("查询权限专属用户")
                 .titleColor(getResources().getColor(R.color.colorAccent))
@@ -200,7 +200,7 @@ public class DeveloperSelectHavePermissionUserInfoByPermissionIdFragment extends
                             }
                             Log.i("拥有该权限全部用户", "拥有该权限全部用户: " + roleUserInfoBeans);
                             // 5.创建用户和角色适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带用户和角色对象集合数据
-                            roleUserInfoAdapter = new BaseRoleUserInfoAdapter(R.layout.developer_fragment_select_have_role_user_info_role_id_recycler_view_item, roleUserInfoBeans);
+                            roleUserInfoAdapter = new BaseRoleUserInfoAdapter(R.layout.fragment_developer_select_have_role_user_info_role_id_recycler_view_item, roleUserInfoBeans);
                             // 6.为RecyclerView列表控件设置适配器，并为执行适配操作
                             mRecyclerViewSelectHavePermissionUserInfoPermissionId.setAdapter(roleUserInfoAdapter);
                             // 7.设置用户和角色拥有数
