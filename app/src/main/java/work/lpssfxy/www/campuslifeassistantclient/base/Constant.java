@@ -16,6 +16,27 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserInTheSessi
  */
 public class Constant {
 
+    /***
+     *  进度条全局值
+     */
+    public static final boolean ANTI_ALIAS = true;
+
+    public static final int DEFAULT_SIZE = 150;
+    public static final int DEFAULT_START_ANGLE = 270;
+    public static final int DEFAULT_SWEEP_ANGLE = 360;
+
+    public static final int DEFAULT_ANIM_TIME = 1000;
+
+    public static final int DEFAULT_MAX_VALUE = 100;
+    public static final int DEFAULT_VALUE = 50;
+
+    public static final int DEFAULT_HINT_SIZE = 15;
+    public static final int DEFAULT_UNIT_SIZE = 30;
+    public static final int DEFAULT_VALUE_SIZE = 15;
+
+    public static final int DEFAULT_ARC_WIDTH = 15;
+
+    public static final int DEFAULT_WAVE_HEIGHT = 40;
     /**
      * Activity全局唯一请求码
      */
@@ -132,6 +153,15 @@ public class Constant {
 
     // 通过Sa-Token的UserSession查询当前用户+实名并集信息
     public static final String SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME = BASE_URL + "/api/user/certification/userSelectNowUserCerAllInfoByUserRealName";
+
+    /**
+     * 用户个人信息申请跑腿认证相关API接口
+     */
+    // 普通用户上传个人信息申请跑腿资格
+    public static final String USER_DO_APPLY_RUN_BY_MY_INFO = BASE_URL + "/api/apply/run/userDoApplyRunByMyInfo";
+
+    // 普通用户查询历史申请信息
+    public static final String USER_SELECT_APPLY_RUN_BY_SA_TOKEN_SESSION = BASE_URL + "/api/apply/run/userSelectApplyRunInfoBySaTokenSession";
 
     /**
      * 检测用户登录注销状态相关API接口
@@ -357,5 +387,14 @@ public class Constant {
 
     // 超管查询已实名用户全部信息
     public static final String ADMIN_SELECT_ALL_USER_CER_INFO = BASE_URL + "/api/user/certification/adminSelectAllUserCerInfo";
+
+    /* ************************ 8.申请跑腿认证相关API接口 *************************/
+
+    // 超管通过用户ID查询跑腿认证学生用户信息
+    public static final String ADMIN_SELECT_ALL_APPLY_RUN_INFO = BASE_URL + "/api/apply/run/adminSelectAllApplyRunInfo";
+
+    // 超管通过用户ID查询跑腿认证学生用户信息
+    public static final String ADMIN_SELECT_APPLY_RUN_INFO_BY_USERID = BASE_URL + "/api/apply/run/adminSelectApplyRunInfoByUserId";
+
 }
 

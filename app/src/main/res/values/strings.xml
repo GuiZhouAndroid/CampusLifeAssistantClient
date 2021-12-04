@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">校园生活助手</string>
     <string name="onclick_refresh">点击展开</string>
+    <string name="app_drag_delete">拖动到此处删除</string>
+    <string name="app_let_go_drag_delete">松手即可删除</string>
     <string-array name="city">
         <item>北京市</item>
         <item>天津市</item>

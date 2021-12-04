@@ -64,6 +64,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppMainTranslucentTheme"
         tools:ignore="AllowBackup,LockedOrientationActivity,UnusedAttribute">
+        <!-- 图片视频选择器——>全面屏-->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1"/>
         <activity
             android:name=".view.activity.waimai"
             android:exported="true" />

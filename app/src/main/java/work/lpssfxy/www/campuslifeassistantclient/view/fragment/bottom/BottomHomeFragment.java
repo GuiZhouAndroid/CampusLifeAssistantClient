@@ -29,6 +29,10 @@ import com.example.library.FlowAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.tencent.connect.UnionInfo;
 import com.tencent.tauth.DefaultUiListener;
 import com.tencent.tauth.IUiListener;
@@ -56,11 +60,20 @@ import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.AddressInfo;
 import work.lpssfxy.www.campuslifeassistantclient.base.openmap.BottomSheetPop;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.other.CampusInformationBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.QQUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
 
 
@@ -250,13 +263,42 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Toast.makeText(getActivity(), "六师官网", Toast.LENGTH_SHORT).show();
                 break;
             case 5://跑腿认证
-                openBottomMapNaviCation();
                 startApplyRunCer();
                 break;
         }
     }
 
     private void startApplyRunCer() {
+        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                .tag("检查登录")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), ApplyRunCerActivity.class));//执行动画跳转
+                        } else {
+                            CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), goTopNestedScrollView, "请求错误，服务器连接失败！");
+                    }
+                });
+
     }
 
     /**
