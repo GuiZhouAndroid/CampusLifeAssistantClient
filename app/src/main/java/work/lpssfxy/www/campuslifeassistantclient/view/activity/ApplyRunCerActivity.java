@@ -329,9 +329,10 @@ public class ApplyRunCerActivity extends BaseActivity {
         }
         // (4)定义Glide加载模式 (占位图 + 无缓存)
         RequestOptions options = new RequestOptions().placeholder(R.mipmap.placeholder).diskCacheStrategy(DiskCacheStrategy.NONE);
-        // (5)Glide加载OSS网络图片
 
-        // 加载申请类型跑腿本机图片
+        // (5)Glide加载OSS网络图片 + 本机图片
+
+        // 申请类型：加载跑腿本机图片
         if (data.getArType() == 1) {
             Glide.with(this).load(R.mipmap.run).apply(options).into(new SimpleTarget<Drawable>() {
                 @Override
