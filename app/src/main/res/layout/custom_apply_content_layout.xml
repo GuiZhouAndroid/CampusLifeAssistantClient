@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--标题控件-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_apply_run_detail_info"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/Light_Blue"
+        android:fitsSystemWindows="true"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:id="@+id/fl_layout_detail_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_apply_run_back_detail_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <TextView
+                android:id="@+id/tv_title_detail_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/apply_run_detail_info"
+                android:textColor="@color/White"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_apply_run_detail_info"
+        android:orientation="vertical">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_apply_user"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:sLeftTextString="申请人"
+            app:sCenterTopTextSize="@dimen/sp_13"
+            app:sCenterTopTextColor="@color/Grey600"
+            app:sCenterBottomTextColor="@color/Grey600"
+            app:sCenterBottomTextSize="@dimen/sp_13"
+            app:sCenterViewGravity="left_center"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightTvDrawableHeight="20dp"
+            app:sRightTvDrawableWidth="45dp"
+            app:sRightViewMarginRight="@dimen/dp_50" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_apply_type"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:sLeftTextString="申请类型"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightTvDrawableHeight="20dp"
+            app:sRightTvDrawableWidth="45dp"
+            app:sRightViewMarginRight="@dimen/dp_50" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_apply_state"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:sLeftTextString="申请状态"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightTvDrawableHeight="40dp"
+            app:sRightTvDrawableWidth="70dp"
+            app:sRightViewMarginRight="@dimen/dp_40" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_nucleic_pic"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:sLeftTextString="核酸检测"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="60dp"
+            app:sRightTvDrawableWidth="40dp"
+            app:sRightViewMarginRight="@dimen/dp_30" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_heal_code"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:sLeftTextString="健康码"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="70dp"
+            app:sRightTvDrawableWidth="40dp"
+            app:sRightViewMarginRight="@dimen/dp_30" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_run_code"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:sLeftTextString="行程码"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="70dp"
+            app:sRightTvDrawableWidth="40dp"
+            app:sRightViewMarginRight="@dimen/dp_30" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_stu_card"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:sLeftTextString="学生证"
+            app:sLeftViewGravity="left_center"
+            app:sLeftViewMarginLeft="@dimen/dp_20"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red"
+            app:sRightTvDrawableHeight="70dp"
+            app:sRightTvDrawableWidth="40dp"
+            app:sRightViewMarginRight="@dimen/dp_30" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/super_apply_run_detail_info"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            app:sCenterViewGravity="left_center"
+            app:sDividerLineType="both"
+            app:sLeftBottomTextString="招商银行（8888）"
+            app:sLeftIconRes="@mipmap/go_apply"
+            app:sLeftTopTextString="银行卡支付"
+            app:sLeftViewGravity="left_center"
+            app:sRightViewType="checkbox" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -84,18 +84,24 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/selector_color.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/selector_tab_text_color.xml" value="0.29791666666666666" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/shape_dialog_message.xml" value="0.3487179487179487" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/shape_gradient_titlebar_background.xml" value="0.36256410256410254" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/sss.xml" value="0.33487179487179486" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/status_gradient.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/toolbar_pop_more_vert_black_24dp.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/ulz_white_selector.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/drawable/welcome_circle_gray.xml" value="0.3764102564102564" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout-v26/index_activity.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_apply_commit.xml" value="1.2598684210526316" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_apply_run_cer.xml" value="0.35190217391304346" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_canteen_run_buy.xml" value="0.3380208333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_fly_refresh_item.xml" value="0.35208333333333336" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_index.xml" value="0.171225937183384" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_login_phone_code.xml" value="0.3380208333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_lottie_demo.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_mine_info.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_practice_second_floor.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_register.xml" value="0.16438703140830802" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_user_apply_untie.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/activity_waimai.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/apply_run_cer_activity.xml" value="0.22083333333333333" />
@@ -106,11 +112,13 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_ency_appbar.xml" value="0.36231884057971014" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_fll_popup_user_info.xml" value="0.2677083333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_fullscreen_popup_user_info.xml" value="0.16032608695652173" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_appbar.xml" value="0.3380208333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_homepage_nestedscrollview.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_mine2_nestedscrollview.xml" value="0.3170289855072464" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_index_fragment_mine_nestedscrollview.xml" value="0.35208333333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_toolbar_pop_menu.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/custom_xui_empty_view.xml" value="0.32395833333333335" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_activity_system_safe.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_banned_account_real_name.xml" value="0.35208333333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/developer_banned_account_username.xml" value="0.36614583333333334" />
@@ -168,6 +176,7 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/fragment.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/fragment_cateen_run_buy_second_floor.xml" value="0.35208333333333336" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/fragment_index_bottom_home.xml" value="0.35190217391304346" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/fragment_index_bottom_mine.xml" value="0.34692028985507245" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/fragment_simple_tab.xml" value="0.29583333333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/guide_activity.xml" value="0.33" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/gv_filter_image.xml" value="0.3380208333333333" />
@@ -189,6 +198,7 @@
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/item_view_layout.xml" value="0.3380208333333333" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/launch_activity.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/layout_content_view.xml" value="0.35190217391304346" />
+        <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/layout_null_view.xml" value="0.34692028985507245" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/login.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/login_activi.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ZSAndroid/Desktop/CampusLifeAssistantClient/app/src/main/res/layout/login_activity.xml" value="0.25" />

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/rl_empty_apply_info"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
+            android:layout_gravity="center"
+            android:src="@mipmap/empty_info" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:text="您暂无历史认证"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:textColor="@color/bbl_ff0000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:text="轻触屏幕去认证"
+            android:textSize="@dimen/sp_13" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_empty_apply_run_state"
+        android:layout_width="@dimen/dp_90"
+        android:layout_height="@dimen/dp_100"
+        android:layout_below="@+id/ll_empty"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/go_apply"/>
+
+</RelativeLayout>

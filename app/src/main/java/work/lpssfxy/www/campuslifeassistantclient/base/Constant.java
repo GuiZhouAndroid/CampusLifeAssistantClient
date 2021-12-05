@@ -136,6 +136,8 @@ public class Constant {
     // 当前登录账户通过Sa-Token的redis缓存UserSession中的真实姓名(再MP查询用户名)对应的权限信息
     public static final String SA_TOKEN_REDIS_USER_SESSION_SELECT_PERMISSION_LIST_BY_REAL_NAME_TO_USERNAME = BASE_URL + "/api/user/saTokenRedisUserSessionSelectOnlyUserToPermissionListInfoByUserName";
 
+    // 用户通过ID查询自己的全部用户信息
+    public static final String USER_SELECT_USER_INFO_BY_USER_ID = BASE_URL + "/api/user/userSelectUserInfoByUserId";
     /**
      * 用户个人信息实名认证相关API接口
      */

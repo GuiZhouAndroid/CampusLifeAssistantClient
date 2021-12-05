@@ -9,6 +9,7 @@
         <package android:name="com.autonavi.minimap" />
         <package android:name="com.tencent.map" />
     </queries>
+
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
@@ -34,7 +35,9 @@
     <!-- 访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- SD卡读取权限，用户写入离线定位数据-->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
     <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -51,7 +54,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--日历-->
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".App"
@@ -67,7 +72,7 @@
         <!-- 图片视频选择器——>全面屏-->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.1"/>
+            android:value="2.1" />
         <activity
             android:name=".view.activity.waimai"
             android:exported="true" />
@@ -81,7 +86,7 @@
         <!--百度地图ak码-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="YNWsEQ3Qrd1aDlQOPWfWmaRqM563zbHK"/>
+            android:value="YNWsEQ3Qrd1aDlQOPWfWmaRqM563zbHK" />
         <!-- 程序主入口：你好同学 -->
         <activity
             android:name=".view.activity.LaunchActivity"
@@ -112,20 +117,20 @@
         <!-- 主页 -->
         <activity
             android:name=".view.activity.IndexActivity"
-            android:launchMode="singleTask"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 登录主界面 -->
         <activity
-            android:launchMode="singleTask"
             android:name=".view.activity.LoginActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 手机号登录 -->
         <activity
-            android:launchMode="singleTask"
             android:name=".view.activity.PhoneCodeLoginActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- QQ信息绑定用户信息 -->
         <activity
@@ -145,8 +150,10 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tencent101965703" />
             </intent-filter>
         </activity>
@@ -200,6 +207,12 @@
         <activity
             android:name=".view.activity.ApplyRunCerActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 申请认证跑腿信息提交 -->
+        <activity
+            android:name=".view.activity.ApplyRunCommitActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->
@@ -215,10 +228,11 @@
         <!--        </provider>-->
 
         <!-- Bomb消息接收器，在这里进行注册 -->
-        <receiver android:name="work.lpssfxy.www.campuslifeassistantclient.base.MyPushMessageReceiver"
+        <receiver
+            android:name="work.lpssfxy.www.campuslifeassistantclient.base.MyPushMessageReceiver"
             android:exported="true">
-            <intent-filter >
-                <action android:name="cn.bmob.push.action.MESSAGE"/>
+            <intent-filter>
+                <action android:name="cn.bmob.push.action.MESSAGE" />
             </intent-filter>
         </receiver>
     </application>
