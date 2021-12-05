@@ -98,7 +98,7 @@ public class ApplyRunCerActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-        ToastUtils.show("重新加载了");
+
     }
 
     @Override
@@ -250,7 +250,6 @@ public class ApplyRunCerActivity extends BaseActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ToastUtils.show("申请信息");
                 IntentUtil.startActivityAnimLeftToRight(ApplyRunCerActivity.this, new Intent(ApplyRunCerActivity.this, ApplyRunCommitActivity.class));//执行动画跳转
             }
         });
@@ -260,7 +259,6 @@ public class ApplyRunCerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 IntentUtil.startActivityAnimLeftToRight(ApplyRunCerActivity.this, new Intent(ApplyRunCerActivity.this, ApplyRunCommitActivity.class));//执行动画跳转
-                //mMultipleEmptyStatusView.showLoading();
             }
         });
     }
@@ -291,8 +289,16 @@ public class ApplyRunCerActivity extends BaseActivity {
         SuperTextView superApplyUser = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_user);
         //申请类型
         SuperTextView superApplyType = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_type);
+        //申请日期
+        SuperTextView superApplyData = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_data);
         //申请状态
         SuperTextView superApplyState = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_state);
+        //申请结果
+        SuperTextView superApplyResult = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_result);
+        //所属车辆
+        SuperTextView superApplyCar = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_car);
+        //毕业日期
+        SuperTextView superApplyGraduationData = mApplyRunStatusView.getContentView().findViewById(R.id.super_apply_graduation_data);
         //核酸监测
         SuperTextView superNucleicPic = mApplyRunStatusView.getContentView().findViewById(R.id.super_nucleic_pic);
         //健康码
@@ -303,34 +309,42 @@ public class ApplyRunCerActivity extends BaseActivity {
         SuperTextView superStuCard = mApplyRunStatusView.getContentView().findViewById(R.id.super_stu_card);
 
         //(2)调用data种的用户ID查询真实姓名
-        OkGo.<String>post(Constant.USER_SELECT_USER_INFO_BY_USER_ID + "/" +data.getArUserId())
+        OkGo.<String>post(Constant.USER_SELECT_USER_INFO_BY_USER_ID + "/" + data.getArUserId())
                 .tag("ID查用户信息")
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
                         if (200 == okGoUserBeanData.getCode() && null != okGoUserBeanData.getData() && "success".equals(okGoUserBeanData.getMsg())) {
-                            OkGoUserBean.Data userInfo =  okGoUserBeanData.getData();
+                            OkGoUserBean.Data userInfo = okGoUserBeanData.getData();
                             superApplyUser.setCenterTopString(userInfo.getUlRealname());//真实姓名
                             superApplyUser.setCenterBottomString(userInfo.getUlIdcard().replaceAll("(\\d{4})\\d{8}(\\w{6})", "$1*****$2"));//身份证号
                             superApplyUser.setRightString(userInfo.getUlTel());//联系电话
                         }
                     }
                 });
-
-        // (3)申请结果
         int applyResult = data.getArState();
-        if (applyResult == 0){ //审核中
+        if (applyResult == 0) { //审核中
             superApplyState.setRightTvDrawableRight(getResources().getDrawable(R.mipmap.checking));
-        }else if(applyResult == 1){ //审核通过
+        } else if (applyResult == 1) { //审核通过
             superApplyState.setRightTvDrawableRight(getResources().getDrawable(R.mipmap.checkok));
-        }else if(applyResult == -1){ //审核失败
+            superApplyState.setCenterBottomString("已审核认证");//失败原因
+        } else if (applyResult == -1) { //审核失败
             superApplyState.setRightTvDrawableRight(getResources().getDrawable(R.mipmap.checkno));
+            superApplyState.setCenterBottomString(data.getArPostscript());//失败原因
         }
-        // (4)定义Glide加载模式 (占位图 + 无缓存)
-        RequestOptions options = new RequestOptions().placeholder(R.mipmap.placeholder).diskCacheStrategy(DiskCacheStrategy.NONE);
 
-        // (5)Glide加载OSS网络图片 + 本机图片
+        // (4)申请日期
+        superApplyData.setRightString(data.getCreateTime());
+        // (5)申请结果
+        superApplyResult.setRightString(data.getArPostscript());
+        // (6)所属车辆
+        superApplyCar.setRightString(data.getArCar());
+        // (7)毕业日期
+        superApplyGraduationData.setRightString(data.getArGraduationData());
+
+        // (8)Glide加载OSS网络图片 + 本机图片 (占位图 + 无缓存)
+        RequestOptions options = new RequestOptions().placeholder(R.mipmap.placeholder).diskCacheStrategy(DiskCacheStrategy.NONE);
 
         // 申请类型：加载跑腿本机图片
         if (data.getArType() == 1) {
