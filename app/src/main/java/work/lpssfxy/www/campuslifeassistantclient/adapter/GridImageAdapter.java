@@ -26,6 +26,7 @@ import java.util.List;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.listener.OnItemLongClickListener;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCommitActivity;
 
 /**
  * created by on 2021/12/4
@@ -151,8 +152,8 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCerActivity.imgPathList!=null){
-                        ApplyRunCerActivity.imgPathList.remove(index);
+                    if (ApplyRunCommitActivity.imgPathList!=null){
+                        ApplyRunCommitActivity.imgPathList.remove(index);
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

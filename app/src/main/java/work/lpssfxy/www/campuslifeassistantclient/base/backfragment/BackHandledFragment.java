@@ -3,8 +3,6 @@ package work.lpssfxy.www.campuslifeassistantclient.base.backfragment;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import work.lpssfxy.www.campuslifeassistantclient.utils.BackHandlerHelper;
-
 
 /**
  * created by on 2021/11/23

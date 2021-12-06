@@ -2,6 +2,8 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.os.Bundle;
 
+import java.util.List;
+
 import work.lpssfxy.www.campuslifeassistantclient.R;
 
 /**
@@ -12,6 +14,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
  * @create 2021-12-05-14:35
  */
 public class ApplyRunCommitActivity extends BaseActivity {
+
+    //多图片选择路径List集合
+    public static List<String> imgPathList;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {

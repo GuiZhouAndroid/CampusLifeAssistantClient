@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_content"
+    android:id="@+id/fl_apply_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,148 +45,188 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <LinearLayout
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_apply_run_detail_info"
-            android:orientation="vertical">
+            app:srlAccentColor="@color/Grey700"
+            app:srlEnableAutoLoadMore="false"
+            app:srlEnableLoadMore="true"
+            app:srlPrimaryColor="@android:color/transparent">
 
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_user"
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                app:sCenterBottomTextColor="@color/Grey600"
-                app:sCenterBottomTextSize="@dimen/sp_13"
-                app:sCenterTopTextColor="@color/Grey600"
-                app:sCenterTopTextSize="@dimen/sp_13"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="申请人"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="20dp"
-                app:sRightTvDrawableWidth="45dp"
-                app:sRightViewMarginRight="@dimen/dp_50" />
+                android:layout_height="wrap_content"
+                app:srlClassicsSpinnerStyle="FixedBehind"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableProgress="@drawable/ic_progress_puzzle"
+                app:srlDrawableProgressSize="20dp"
+                app:srlEnableLastTime="true"
+                app:srlFinishDuration="500"
+                app:srlTextSizeTime="10dp"
+                app:srlTextSizeTitle="16sp"
+                app:srlTextTimeMarginTop="2dp" />
 
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_type"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                app:sLeftTextString="申请类型"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="20dp"
-                app:sRightTvDrawableWidth="45dp"
-                app:sRightViewMarginRight="@dimen/dp_50" />
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/toolbar_apply_run_detail_info"
+                    android:orientation="vertical">
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextColor="@color/Grey600"
+                        app:sCenterBottomTextSize="@dimen/sp_13"
+                        app:sCenterTopTextColor="@color/Grey600"
+                        app:sCenterTopTextSize="@dimen/sp_13"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="申请人"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightBottomTextColor="@color/Grey600"
+                        app:sRightBottomTextSize="@dimen/sp_14"
+                        app:sRightTopTextColor="@color/Grey600"
+                        app:sRightTopTextSize="@dimen/sp_13"
+                        app:sRightViewGravity="center"
+                        app:sRightViewMarginRight="@dimen/dp_20" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sLeftTextString="申请类型"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="20dp"
+                        app:sRightTvDrawableWidth="45dp"
+                        app:sRightViewMarginRight="@dimen/dp_50" />
 
 
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_data"
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="申请日期"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextSize="@dimen/sp_11"
+                        app:sCenterTopTextSize="@dimen/sp_14"
+                        app:sCenterViewGravity="center"
+                        app:sLeftTextString="审核状态"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="审核回复"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_car"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="车辆信息"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_graduation_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="毕业日期"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_nucleic_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:sLeftTextString="核酸检测"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTvDrawableHeight="70dp"
+                        app:sRightTvDrawableWidth="40dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_heal_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:sLeftTextString="健康码"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTvDrawableHeight="70dp"
+                        app:sRightTvDrawableWidth="40dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_run_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:sLeftTextString="行程码"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTvDrawableHeight="70dp"
+                        app:sRightTvDrawableWidth="40dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_stu_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:sLeftTextString="学生证"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTvDrawableHeight="70dp"
+                        app:sRightTvDrawableWidth="40dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="申请日期"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="40dp"
-                app:sRightTvDrawableWidth="70dp"
-                app:sRightViewMarginRight="@dimen/dp_40" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_state"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="申请状态"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="40dp"
-                app:sRightTvDrawableWidth="70dp"
-                app:sRightViewMarginRight="@dimen/dp_40" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_result"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="审核回复"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="40dp"
-                app:sRightTvDrawableWidth="70dp"
-                app:sRightViewMarginRight="@dimen/dp_40" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_car"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="车辆信息"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="40dp"
-                app:sRightTvDrawableWidth="70dp"
-                app:sRightViewMarginRight="@dimen/dp_40" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_apply_graduation_data"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sCenterViewGravity="left_center"
-                app:sLeftTextString="毕业日期"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightTvDrawableHeight="40dp"
-                app:sRightTvDrawableWidth="70dp"
-                app:sRightViewMarginRight="@dimen/dp_40" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_nucleic_pic"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                app:sLeftTextString="核酸检测"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightIconRes="@mipmap/icon_arrow_right_red"
-                app:sRightTvDrawableHeight="60dp"
-                app:sRightTvDrawableWidth="40dp"
-                app:sRightViewMarginRight="@dimen/dp_30" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_heal_code"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:sLeftTextString="健康码"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightIconRes="@mipmap/icon_arrow_right_red"
-                app:sRightTvDrawableHeight="70dp"
-                app:sRightTvDrawableWidth="40dp"
-                app:sRightViewMarginRight="@dimen/dp_30" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_run_code"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:sLeftTextString="行程码"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightIconRes="@mipmap/icon_arrow_right_red"
-                app:sRightTvDrawableHeight="70dp"
-                app:sRightTvDrawableWidth="40dp"
-                app:sRightViewMarginRight="@dimen/dp_30" />
-
-            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/super_stu_card"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:sLeftTextString="学生证"
-                app:sLeftViewGravity="left_center"
-                app:sLeftViewMarginLeft="@dimen/dp_20"
-                app:sRightIconRes="@mipmap/icon_arrow_right_red"
-                app:sRightTvDrawableHeight="70dp"
-                app:sRightTvDrawableWidth="40dp"
-                app:sRightViewMarginRight="@dimen/dp_30" />
-
-        </LinearLayout>
+                android:layout_height="wrap_content" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </RelativeLayout>
-</work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView>
+
+</FrameLayout>

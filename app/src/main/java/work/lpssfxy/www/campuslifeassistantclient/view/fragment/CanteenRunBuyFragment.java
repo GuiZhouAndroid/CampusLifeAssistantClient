@@ -61,6 +61,12 @@ public class CanteenRunBuyFragment extends BaseFragment {
     /* Fragment内容 */
     @BindView(R2.id.contentPanel_canteen) FrameLayout mContentPanelCanteen;
 
+    private long firstTime;
+
+    public static CanteenRunBuyFragment getInstance() {
+
+        return new CanteenRunBuyFragment();
+    }
 
     @Override
     protected int bindLayout() {
@@ -175,6 +181,6 @@ public class CanteenRunBuyFragment extends BaseFragment {
 
     @Override
     public boolean onBackPressed() {
-        return false;
+        return super.onBackPressed();
     }
 }

@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.utils;
+package work.lpssfxy.www.campuslifeassistantclient.base.backfragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -15,7 +15,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.FragmentBack
 
 /**
  * created by on 2021/11/23
- * 描述：
+ * 描述：定义BackHandlerHelper帮助类，进行返回事件分发，用于实现Fragment和FragmentActivity返回操作，主要实现将FragmentActivity监听到的返回事件进行分发给Fragment
  *
  * @author ZSAndroid
  * @create 2021-11-23-18:26
