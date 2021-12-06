@@ -16,6 +16,10 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserInTheSessi
  */
 public class Constant {
 
+    public static final String ACTION_DELETE_STU_CARD_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+    public static final String ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+    public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+    public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     /***
      *  进度条全局值
      */

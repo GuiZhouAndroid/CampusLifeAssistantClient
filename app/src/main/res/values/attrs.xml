@@ -230,5 +230,4 @@
         <attr name="styleColor" format="color"/>
         <attr name="borderStyle" format="string" />
     </declare-styleable>
-
 </resources>

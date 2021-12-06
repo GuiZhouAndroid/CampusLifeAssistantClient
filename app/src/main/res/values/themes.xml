@@ -183,4 +183,5 @@
         <item name="android:paddingTop">?attr/xui_config_content_spacing_vertical</item>
         <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
     </style>
+
 </resources>

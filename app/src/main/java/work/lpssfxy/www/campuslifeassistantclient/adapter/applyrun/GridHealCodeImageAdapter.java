@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter;
+package work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun;
 
 import android.content.Context;
 import android.net.Uri;
@@ -25,17 +25,16 @@ import java.util.List;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.listener.OnItemLongClickListener;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCommitActivity;
 
 /**
  * created by on 2021/12/4
- * 描述：自定义网格布局相册图片适配器
+ * 描述：自定义网格布局相册健康码图片适配器
  *
  * @author ZSAndroid
  * @create 2021-12-04-23:10
  */
-public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.ViewHolder> {
+public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeImageAdapter.ViewHolder> {
     public static final String TAG = "PictureSelector";
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
@@ -67,7 +66,7 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
         }
     }
 
-    public GridImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
+    public GridHealCodeImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.mInflater = LayoutInflater.from(context);
         this.mOnAddPicClickListener = mOnAddPicClickListener;
     }
@@ -152,8 +151,8 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCommitActivity.imgPathList!=null){
-                        ApplyRunCommitActivity.imgPathList.remove(index);
+                    if (ApplyRunCommitActivity.imgPathListHealCode !=null){
+                        ApplyRunCommitActivity.imgPathListHealCode.remove(index);
                     }
                     list.remove(index);
                     notifyItemRemoved(index);
