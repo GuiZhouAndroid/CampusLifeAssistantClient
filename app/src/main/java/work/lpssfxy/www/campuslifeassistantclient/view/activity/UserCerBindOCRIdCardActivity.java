@@ -46,6 +46,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.XXPermissionsAction;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/12/2
@@ -55,7 +56,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
  * @create 2021-12-02-22:22
  */
 @SuppressLint("NonConstantResourceId")
-public class UserCerBindOCRIdCardActivity extends BaseActivity{
+public class UserCerBindOCRIdCardActivity extends BaseActivity {
 
     private static final String TAG = "UserCerBindOCRIdCardActivity";
 

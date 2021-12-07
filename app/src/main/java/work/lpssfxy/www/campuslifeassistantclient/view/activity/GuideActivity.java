@@ -16,6 +16,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.circleprogress.CircleProg
 import work.lpssfxy.www.campuslifeassistantclient.base.guide.GuideFullVideoView;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/8/21

@@ -33,6 +33,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseRecyclerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.SmartViewHolder;
 import work.lpssfxy.www.campuslifeassistantclient.utils.statusbarutils.StatusBarUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 /**
  * created by on 2021/11/23

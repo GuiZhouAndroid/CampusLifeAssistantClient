@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.view.activity;
+package work.lpssfxy.www.campuslifeassistantclient.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

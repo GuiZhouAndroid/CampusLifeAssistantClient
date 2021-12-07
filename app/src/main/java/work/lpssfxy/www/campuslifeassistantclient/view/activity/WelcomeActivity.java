@@ -31,6 +31,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.TextPagerAdapt
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.FixedSpeedScroller;
 import work.lpssfxy.www.campuslifeassistantclient.base.welcome.MyInterceptViewPager;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/8/13

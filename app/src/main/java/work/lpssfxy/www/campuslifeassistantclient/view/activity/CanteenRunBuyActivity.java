@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.BackHandlerHelper;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.CanteenRunBuyFragment;
 
 /**

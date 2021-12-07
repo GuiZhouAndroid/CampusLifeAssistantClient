@@ -3,6 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 import android.os.Bundle;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/12/2
@@ -11,7 +12,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
  * @author ZSAndroid
  * @create 2021-12-02-22:32
  */
-public class UserCerSelectIdCardActivity extends BaseActivity{
+public class UserCerSelectIdCardActivity extends BaseActivity {
 
     @Override
     protected Boolean isSetSwipeBackLayout() {

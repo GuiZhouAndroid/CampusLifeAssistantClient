@@ -22,7 +22,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 /**
  * created by on 2021/12/1

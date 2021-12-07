@@ -101,7 +101,7 @@
 
         <!-- Activity基类 -->
         <activity
-            android:name=".view.activity.BaseActivity"
+            android:name=".view.BaseActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <!-- 欢迎页 -->

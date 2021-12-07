@@ -32,7 +32,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPager2Adapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserRoleTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 

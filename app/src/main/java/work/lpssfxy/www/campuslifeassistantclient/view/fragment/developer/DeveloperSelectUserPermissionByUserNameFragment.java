@@ -27,7 +27,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissi
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 /**
  * created by on 2021/11/27

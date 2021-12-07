@@ -52,7 +52,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerSelectIdCardActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 
 /**

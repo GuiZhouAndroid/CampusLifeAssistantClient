@@ -21,6 +21,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutViewPagerAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerCertificationInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserRoleInfoFragment;

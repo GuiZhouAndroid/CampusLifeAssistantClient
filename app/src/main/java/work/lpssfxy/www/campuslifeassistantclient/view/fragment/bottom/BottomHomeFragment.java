@@ -71,10 +71,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 
 /**
