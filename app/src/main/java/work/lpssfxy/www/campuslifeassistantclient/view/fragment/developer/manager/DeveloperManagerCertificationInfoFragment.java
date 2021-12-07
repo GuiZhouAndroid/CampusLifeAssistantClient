@@ -37,7 +37,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
 
 /**
  * created by on 2021/12/1
- * 描述：开发者认证管理模块
+ * 描述：开发者实名认证管理模块
  *
  * @author ZSAndroid
  * @create 2021-12-01-22:45

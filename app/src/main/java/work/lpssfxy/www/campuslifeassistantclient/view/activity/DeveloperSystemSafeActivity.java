@@ -23,6 +23,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutVie
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerCertificationInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerRunCerInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerBannedAccountInfoFragment;
@@ -137,8 +138,9 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
                 DeveloperManagerPermissionInfoFragment.newInstance(), //权限管理
                 DeveloperManagerUserRoleInfoFragment.newInstance(), //用户角色
                 DeveloperManagerUserPermissionInfoFragment.newInstance(), //用户权限
-                DeveloperManagerCertificationInfoFragment.newInstance(),//认证管理
-                DeveloperManagerBannedAccountInfoFragment.newInstance()//账户封禁
+                DeveloperManagerBannedAccountInfoFragment.newInstance(),//账户封禁
+                DeveloperManagerCertificationInfoFragment.newInstance(),//实名认证
+                DeveloperManagerRunCerInfoFragment.newInstance() //跑腿认证
         };
         //ViewPager2设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));

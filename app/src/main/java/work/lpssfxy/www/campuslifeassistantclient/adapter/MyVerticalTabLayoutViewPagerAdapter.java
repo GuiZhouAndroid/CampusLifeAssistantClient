@@ -40,8 +40,9 @@ public class MyVerticalTabLayoutViewPagerAdapter extends FragmentStatePagerAdapt
         TabLayoutTitleList.add("权限管理");
         TabLayoutTitleList.add("用户角色");
         TabLayoutTitleList.add("用户权限");
-        TabLayoutTitleList.add("认证管理");
         TabLayoutTitleList.add("账户封禁");
+        TabLayoutTitleList.add("实名认证");
+        TabLayoutTitleList.add("跑腿认证");
 
         this.fragments = fragments;
         this.fragmentList = fragmentList;
