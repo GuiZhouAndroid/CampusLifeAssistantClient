@@ -13,7 +13,11 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
+import android.os.SystemClock;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +38,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.bumptech.glide.Glide;
 import com.hjq.toast.ToastUtils;
 import com.luck.picture.lib.PictureMediaScannerConnection;
 import com.luck.picture.lib.PictureSelector;
@@ -60,6 +69,10 @@ import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.interfaces.XPopupCallback;
+import com.lxj.xpopup.util.XPopupUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.shouzhong.scanner.ScannerView;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.picker.widget.TimePickerView;
@@ -87,9 +100,16 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridRunCodeIm
 import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridStuCardImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyRunBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.UUIDUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
+import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.FullyGridLayoutManager;
 import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.GlideEngine;
+import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.OssManager;
 
 /**
  * created by on 2021/12/5
@@ -104,6 +124,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     private static final String TAG = "ApplyRunCommitActivity";
 
     /** 获取View控件 */
+    @BindView(R2.id.rl_commit_run_info_show) RelativeLayout mrlCommitRunInfoShow; //标题栏
     @BindView(R2.id.toolbar_apply_commit) Toolbar mToolbarApplyCommit; //标题栏
     @BindView(R2.id.iv_apply_commit) ImageView mIvApplyCommit;  //标题栏返回
     @BindView(R2.id.recycler_commit_stu_card) RecyclerView mRecycleCommitStuCard; //学生证列表控件
@@ -119,9 +140,9 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @BindView(R2.id.tv_commit_car) TextView mTvCommitCar; //设置车牌信息
     @BindView(R2.id.rbn_commit_info) RoundButton mRbnCommitInfo; //提交信息
     @BindView(R2.id.circle_progress_commit) CircleProgress mCircleProgressCommit; //进度条
+    private final static int[] COLORS = new int[]{Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE};
     /** 毕业日期 */
     private TimePickerView mDatePicker;//日期选择器
-    private String nowData;//当前选中日期
     /** 图片选择器基本参数 */
     private PictureParameterStyle mPictureParameterStyle;//全局主题
     private PictureCropParameterStyle mCropParameterStyle;//裁剪主题
@@ -144,9 +165,11 @@ public class ApplyRunCommitActivity extends BaseActivity {
     public static String imgPathNucleicPic;//核酸证明图片路径
     public static String imgPathHealCode;//健康码图片路径
     public static String imgPathRunCode;//行程码图片路径
-
     public static List<String> imgApplyCommitPathList;//学生证图片路径 + 核酸证明图片路径 + 健康码图片路径 + 行程码图片路径 = 总集合图片路径
-
+    //车辆类型默认值
+    private String strCarType = "无车辆";
+    //Android振动器
+    private Vibrator vibrator;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -187,6 +210,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        startVibrator();//进入界面振动
         /**判断Toolbar，开启主图标并显示title*/
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -197,13 +221,12 @@ public class ApplyRunCommitActivity extends BaseActivity {
         }
         /** 设置Toolbar */
         setSupportActionBar(mToolbarApplyCommit);
-
         /** 初始化List集合长度，用于装图片路径 ，不初始化4个值，将会出现跳过Add 时崩溃，初始化使用set就可以完美避免错误 */
         imgApplyCommitPathList = new ArrayList<>();
-        imgApplyCommitPathList.add(0,"");
-        imgApplyCommitPathList.add(1,"");
-        imgApplyCommitPathList.add(2,"");
-        imgApplyCommitPathList.add(3,"");
+        imgApplyCommitPathList.add(0, "");
+        imgApplyCommitPathList.add(1, "");
+        imgApplyCommitPathList.add(2, "");
+        imgApplyCommitPathList.add(3, "");
     }
 
 
@@ -261,13 +284,16 @@ public class ApplyRunCommitActivity extends BaseActivity {
      * 初始化车辆类型下拉选择框
      */
     private void initSpinnerCarType() {
+
+
         //设置下拉选项内容
         mSpinnerCarType.setItems(ResUtils.getStringArray(R.array.apply_run_car_type));
         //下拉框item监听事件
         mSpinnerCarType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                ToastUtils.show("点击了"+item.toString());
+                ToastUtils.show("点击了" + item.toString());
+                strCarType = item.toString();
             }
         });
         //未选择item监听事件
@@ -275,6 +301,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
             @Override
             public void onNothingSelected(MaterialSpinner spinner) {
                 ToastUtils.show("请选择车辆类型");
+                strCarType = "无车辆";
             }
         });
     }
@@ -284,7 +311,8 @@ public class ApplyRunCommitActivity extends BaseActivity {
      */
     @SuppressLint("SimpleDateFormat")
     private void initNowData() {
-        nowData = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        //当前选中日期
+        String nowData = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         mTvCommitData.setText(nowData);//设置日期
     }
 
@@ -302,7 +330,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_apply_commit, R2.id.sample_heal_code_scale, R2.id.sample_run_code_scale,R2.id.rl_commit_graduation_data,R2.id.rl_commit_car_info,R2.id.rbn_commit_info})
+    @OnClick({R2.id.iv_apply_commit, R2.id.sample_heal_code_scale, R2.id.sample_run_code_scale, R2.id.rl_commit_graduation_data, R2.id.rl_commit_car_info, R2.id.rbn_commit_info})
     public void onApplyCommitViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_apply_commit://点击返回
@@ -318,7 +346,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 chooseData();//选择毕业时间
                 break;
             case R.id.rl_commit_car_info://点击调用OCR车牌识别
-                IntentUtil.startActivityForResultAnimBottomToTop1(this,new Intent(this,ApplyCarNumberOCRActivity.class),Constant.REQUEST_CODE_VALUE);
+                IntentUtil.startActivityForResultAnimBottomToTop1(this, new Intent(this, ApplyCarNumberOCRActivity.class), Constant.REQUEST_CODE_VALUE);
                 break;
             case R.id.rbn_commit_info://提交认证信息
                 startCommitApplyInfo();
@@ -359,7 +387,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 @Override
                 public void onTimeSelected(Date date, View v) {
                     mTvCommitData.setText(DateUtils.date2String(date, DateUtils.yyyyMMdd.get()));
-                    ToastUtils.show("您选择毕业日期是："+DateUtils.date2String(date, DateUtils.yyyyMMdd.get()));
+                    ToastUtils.show("您选择毕业日期是：" + DateUtils.date2String(date, DateUtils.yyyyMMdd.get()));
                 }
             })
                     .setTitleText("选择毕业日期")
@@ -387,25 +415,122 @@ public class ApplyRunCommitActivity extends BaseActivity {
      */
     private void startCommitApplyInfo() {
         Log.i(TAG, "长度: " + imgApplyCommitPathList.size());
-        if (imgPathStuCard == null ){
+        if (imgPathStuCard == null) {
             ToastUtils.show("请选择学生证 ");
             return;
         }
-        if (imgPathNucleicPic == null ){
+        if (imgPathNucleicPic == null) {
             ToastUtils.show("请选择核酸证明");
             return;
         }
-        if (imgPathHealCode == null ){
+        if (imgPathHealCode == null) {
             ToastUtils.show("请选择健康码");
             return;
         }
-        if (imgPathRunCode == null ){
+        if (imgPathRunCode == null) {
             ToastUtils.show("请选择行程码");
             return;
         }
-        if (imgApplyCommitPathList !=null && imgApplyCommitPathList.size() == 4 ){
-            ToastUtils.show("目前内容"+imgApplyCommitPathList.toString());
+        if (imgApplyCommitPathList != null && imgApplyCommitPathList.size() == 4) {
+            startOSSUploadFile(imgApplyCommitPathList);
         }
+    }
+
+    /**
+     * 上传集合中的图片到阿里云OSS对象存储
+     *
+     * @param imgApplyCommitPathList 未处理的图片路径集合
+     */
+    private void startOSSUploadFile(List<String> imgApplyCommitPathList) {
+
+        //MyXPopupUtils.getInstance().setShowDialog(ApplyRunCommitActivity.this,"正在上传...");
+
+        List<String> list = new ArrayList<>();
+        for (String imgPath : imgApplyCommitPathList) {
+            //时间戳使用原因 + UUID：避免OSS云资源重名覆盖文件，导致用户数据丢失，加入时间戳来拼接在OSS文件名中，那么必然不会出现重名问题
+            String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPath.substring(imgPath.lastIndexOf("."));
+            list.add(Constant.BASE_OSS_URL + Constant.OSS_IMG_PATH + fileName);
+            OssManager builder = new OssManager.Builder(this)
+                    .bucketName("zs-android")//OSS桶名
+                    .accessKeyId("LTAI5tB2LygPxntS2B56AH75")
+                    .accessKeySecret("LYG9rSEDENh7kZuJhZKRJMfbaRgf4B")
+                    .endPoint(Constant.BASE_OSS_URL)//OSS外网域名(阿里云分配的或自定义域名)
+                    .objectKey(Constant.OSS_IMG_PATH + fileName)//对应OSS文件夹+文件名(时间戳+UUID+图片后缀)
+                    .localFilePath(imgPath)//本机的文件AndroidQ目录路径
+                    .build();
+
+            //OSS推送上传状态监听事件
+            builder.setPushStateListener(new OssManager.OnPushStateListener() {
+                @Override
+                public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                    //上传参数，主要获取objectKey(例如：pic_data/1637295593752.jpeg)
+                    //时间戳数据，通过Handle子线程处理，调用后端API接口，进行存储。主要作为:拼接访问的URL地址，不进行记录将不清楚OSS对应的资源文件是什么
+
+                    //OSS监听文件上传成功后，返回成功数据信息，发送消息到子线程中进行相关操作
+                    Message msg = new Message();
+                    msg.obj = result;
+                    msg.what = 2;
+                    mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
+                        @Override
+                        public void run() {
+                            mHandler.sendMessage(msg);
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onFailure(PutObjectRequest request, ClientException clientException, ServiceException serviceException) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 请求异常。
+                            if (clientException != null) {
+                                Toast.makeText(ApplyRunCommitActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (serviceException != null) {
+                                Toast.makeText(ApplyRunCommitActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
+                                // 服务异常。
+                                Log.e("ErrorCode", serviceException.getErrorCode());
+                                Log.e("RequestId", serviceException.getRequestId());
+                                Log.e("HostId", serviceException.getHostId());
+                                Log.e("RawMessage", serviceException.getRawMessage());
+                            }
+                        }
+                    });
+                }
+            });
+            //OSS推送上传进度监听事件
+            builder.setPushProgressListener(new OssManager.OnPushProgressListener() {
+                @Override
+                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                    //不要Handler发送消息 ，文件 当前kb大小 和 总kb大小，必须实时传递进度参数设置到水波纹进度上
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //默认Gone失效，有进度值就设置可见VISIBLE
+                            mCircleProgressCommit.setVisibility(View.VISIBLE);
+                            //在代码中动态改变渐变色，可能会导致颜色跳跃
+                            mCircleProgressCommit.setGradientColors(COLORS);
+                            //OSS当前值 ==  OSS最大值时，证明文件推送上传成功
+                            if (currentSize == totalSize) {
+                                mCircleProgressCommit.setValue(currentSize);
+                            }
+                        }
+                    });
+                }
+            });
+            //构建完成，开始调用OSS推送上传图片服务
+            builder.push();
+        }
+        Message msg1 = new Message();
+        msg1.obj = list;
+        msg1.what = 1;
+        mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
+            @Override
+            public void run() {
+                mHandler.sendMessage(msg1);
+            }
+        }, 500);
     }
 
     /**
@@ -947,7 +1072,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathStuCard = media.getAndroidQToPath();
-                                imgApplyCommitPathList.set(0,imgPathStuCard);
+                                imgApplyCommitPathList.set(0, imgPathStuCard);
                                 Log.i(TAG, "AndroidQ学生证Path" + media.getAndroidQToPath());
                             }
                             mAdapterStuCard.setList(selectList);
@@ -991,7 +1116,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathNucleicPic = media.getAndroidQToPath();
-                                imgApplyCommitPathList.set(1,imgPathNucleicPic);
+                                imgApplyCommitPathList.set(1, imgPathNucleicPic);
                                 Log.i(TAG, "AndroidQ核酸证明Path:" + media.getAndroidQToPath());
                             }
                             mAdapterNucleicPic.setList(selectList);
@@ -1035,7 +1160,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathHealCode = media.getAndroidQToPath();
-                                imgApplyCommitPathList.set(2,imgPathHealCode);
+                                imgApplyCommitPathList.set(2, imgPathHealCode);
                                 Log.i(TAG, "AndroidQ健康码Path:" + media.getAndroidQToPath());
                             }
                             mAdapterHealCode.setList(selectList);
@@ -1079,7 +1204,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathRunCode = media.getAndroidQToPath();
-                                imgApplyCommitPathList.set(3,imgPathRunCode);
+                                imgApplyCommitPathList.set(3, imgPathRunCode);
                                 Log.i(TAG, "AndroidQ行程码Path:" + media.getAndroidQToPath());
                             }
                             mAdapterRunCode.setList(selectList);
@@ -1133,7 +1258,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_STU_CARD_POSITION);
+                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除学生证图片！");
                     mAdapterStuCard.remove(position);
                     mAdapterStuCard.notifyItemRemoved(position);
@@ -1141,9 +1266,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
                     if (imgPathStuCard != null) {
                         imgPathStuCard = null;
                     }
-//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
-//                        imgApplyCommitPathList.clear();
-//                    }
                 }
             }
         }
@@ -1163,7 +1285,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_NUCLEIC_PIC_POSITION);
+                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除核酸证明图片！");
                     mAdapterNucleicPic.remove(position);
                     mAdapterNucleicPic.notifyItemRemoved(position);
@@ -1171,9 +1293,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
                     if (imgPathNucleicPic != null) {
                         imgPathNucleicPic = null;
                     }
-//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
-//                        imgApplyCommitPathList.clear();
-//                    }
                 }
             }
         }
@@ -1193,7 +1312,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_HEAL_CODE_POSITION);
+                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除健康码图片！");
                     mAdapterHealCode.remove(position);
                     mAdapterHealCode.notifyItemRemoved(position);
@@ -1201,9 +1320,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
                     if (imgPathHealCode != null) {
                         imgPathHealCode = null;
                     }
-//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
-//                        imgApplyCommitPathList.clear();
-//                    }
                 }
             }
         }
@@ -1223,7 +1339,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_RUN_CODE_POSITION);
+                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除行程码图片！");
                     mAdapterRunCode.remove(position);
                     mAdapterRunCode.notifyItemRemoved(position);
@@ -1231,9 +1347,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
                     if (imgPathRunCode != null) {
                         imgPathRunCode = null;
                     }
-//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
-//                        imgApplyCommitPathList.clear();
-//                    }
                 }
             }
         }
@@ -1412,12 +1525,20 @@ public class ApplyRunCommitActivity extends BaseActivity {
     }
 
     /**
+     * Android振动器
+     */
+    private void startVibrator() {
+        if (vibrator == null)
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(300);
+    }
+
+    /**
      * 清空缓存包括裁剪、压缩、AndroidQToPath所生成的文件，注意调用时机必须是处理完本身的业务逻辑后调用；非强制性
      */
     private void clearCache() {
         // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
         if (PermissionChecker.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            //PictureCacheManager.deleteCacheDirFile(this, PictureMimeType.ofImage());
             PictureCacheManager.deleteAllCacheDirRefreshFile(getContext());
         } else {
             PermissionChecker.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -1430,6 +1551,11 @@ public class ApplyRunCommitActivity extends BaseActivity {
      */
     @Override
     protected void onDestroy() {
+        //释放振动资源
+        if (vibrator != null) {
+            vibrator.cancel();
+            vibrator = null;
+        }
         super.onDestroy();
         /** 清空图片选择参数的缓存图片 */
         clearCache();
@@ -1469,12 +1595,79 @@ public class ApplyRunCommitActivity extends BaseActivity {
         if (imgPathRunCode != null) {
             imgPathRunCode = null;
         }
-//        if (mHandler != null){
-//            mHandler.removeCallbacksAndMessages(null);
-//            mHandler = null;
-//        }
+        /* 9.清除子线程 */
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        /* 10.清除图片路径集合 */
+        if (imgApplyCommitPathList != null) {
+            imgPathRunCode = null;
+            imgApplyCommitPathList.clear();
+        }
 
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1://此处理URL + OCR + 个人信息 上传后端数据库
+                    //显示上传图片
+                    //OSS上传成功重组的URL地址集合，OKGo上传后端数据库
+                    List<String> ossUrlFileNameLists = (List<String>) msg.obj;
+                    Log.i(TAG, "重组处理后的OSS地址集合: " + ossUrlFileNameLists);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String carNumberInfo = mTvCommitCar.getText().toString().trim();
+                            if (carNumberInfo.equals("无车辆")) {
+                                carNumberInfo = "";
+                            } else {
+                                carNumberInfo = "[" + carNumberInfo + "]";
+                            }
+                            OkGo.<String>post(Constant.USER_DO_APPLY_RUN_BY_MY_INFO)
+                                    .tag("提交跑腿申请")
+                                    .params("applyRoleType", 3) //跑腿 申请类型
+                                    .params("applyCar", strCarType + carNumberInfo) //车辆信息
+                                    .params("applyStuCard", ossUrlFileNameLists.get(0)) //学生证
+                                    .params("applyNucleicPic", ossUrlFileNameLists.get(1)) //核算检测
+                                    .params("applyHealthCode", ossUrlFileNameLists.get(2)) //健康码
+                                    .params("applyRunCode", ossUrlFileNameLists.get(3)) //行程码
+                                    .params("applyGraduationData", mTvCommitData.getText().toString().trim()) //毕业时间
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onSuccess(Response<String> response) {
+                                            startVibrator();//成功振动
+                                            OkGoApplyRunBean okGoApplyRunBean = GsonUtil.gsonToBean(response.body(), OkGoApplyRunBean.class);
+                                            if (200 == okGoApplyRunBean.getCode() && null == okGoApplyRunBean.getData() && "跑腿信息提交成功".equals(okGoApplyRunBean.getMsg())) {
+                                                DialogPrompt dialogPrompt = new DialogPrompt(ApplyRunCommitActivity.this, "跑腿信息已提交成功，耐心等待超管审核哟~", 10);
+                                                dialogPrompt.showAndFinish(ApplyRunCommitActivity.this);
+                                                return;
+                                            }
+                                            if (200 == okGoApplyRunBean.getCode() && null == okGoApplyRunBean.getData() && "跑腿信息提交失败".equals(okGoApplyRunBean.getMsg())) {
+                                                DialogPrompt dialogPrompt = new DialogPrompt(ApplyRunCommitActivity.this, "跑腿信息提交失败，如有疑问请联系我们~", 10);
+                                                dialogPrompt.showAndFinish(ApplyRunCommitActivity.this);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Response<String> response) {
+                                            OkGoErrorUtil.CustomFragmentOkGoError(response, ApplyRunCommitActivity.this, mrlCommitRunInfoShow, "请求错误，服务器连接失败！");
+                                        }
+                                    });
+                        }
+                    }, 1000);
+                    break;
+                case 2:
+                    mCircleProgressCommit.reset();
+                    mCircleProgressCommit.setVisibility(View.GONE);//进度条加载完成后，隐藏进度条
+                    break;
+            }
+        }
+    };
+
 
     class MyCarNumberOCRXPopup implements XPopupCallback {
 

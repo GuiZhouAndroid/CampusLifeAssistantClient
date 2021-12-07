@@ -27,6 +27,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XXPermissionsAction;
 
 /**
  * created by on 2021/12/7
@@ -42,7 +43,7 @@ public class ApplyCarNumberOCRActivity extends BaseActivity {
     @BindView(R2.id.tv_car_number_result) TextView mTvCarNumberResult;//识别结果
     @BindView(R2.id.tv_car_number_back_time) TextView mTvCarNumberBackTime;//3秒倒计时返回
 
-    //振动
+    //Android振动器
     private Vibrator vibrator;
     private CountDownTimer timer;
 
@@ -78,7 +79,7 @@ public class ApplyCarNumberOCRActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-
+        XXPermissionsAction.getInstance().camera(this);
     }
 
     @Override

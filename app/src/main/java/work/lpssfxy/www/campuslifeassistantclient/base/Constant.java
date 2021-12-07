@@ -24,11 +24,7 @@ public class Constant {
     public static final String ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
-    // 外部预览右上角删除
-    public final static String EXTRA_PREVIEW_DELETE_STU_CARD_POSITION = "position";
-    public final static String EXTRA_PREVIEW_DELETE_NUCLEIC_PIC_POSITION = "position";
-    public final static String EXTRA_PREVIEW_DELETE_HEAL_CODE_POSITION = "position";
-    public final static String EXTRA_PREVIEW_DELETE_RUN_CODE_POSITION = "position";
+
     /***
      *  进度条全局值
      */
@@ -80,9 +76,12 @@ public class Constant {
     // 阿里云服务器后端数据备案域名(含SSL证书)
     public static final String BASE_URL = "https://www.lpssfxy.work";
     // 阿里云对象数据OSS自定义备案域名(含SSL证书)
-    private static final String BASE_OSS_URL = "https://www.zsitking.top";
+    public static final String BASE_OSS_URL = "https://www.zsitking.top/";
     // 阿里云OSS存储文件夹路径(非目录名)
-    private static final String OSS_IMG_PATH = "/pic_data/";
+    public static final String OSS_IMG_PATH = "pic_data/";
+
+
+
 
     /**
      * 用户登录注册相关API接口

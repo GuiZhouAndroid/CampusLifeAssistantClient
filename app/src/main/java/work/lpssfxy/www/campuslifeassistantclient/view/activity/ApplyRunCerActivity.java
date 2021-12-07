@@ -1,14 +1,15 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,20 +36,13 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.xuexiang.xui.widget.statelayout.MultipleStatusView;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-
 import butterknife.BindView;
-import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.BackHandlerHelper;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyRunBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.BackHandlerHelper;
 import work.lpssfxy.www.campuslifeassistantclient.utils.DynamicTimeFormat;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
@@ -70,12 +64,10 @@ public class ApplyRunCerActivity extends BaseActivity {
 
     /** 父布局*/
     @BindView(R2.id.rl_apply_info) RelativeLayout mRlApplyInfo;
-    /** 返回按钮 */
-    @BindView(R2.id.iv_apply_run_back) ImageView mIvApplyRunBack;
-    /** Toolbar */
-    @BindView(R2.id.toolbar_apply_run) Toolbar mApplyRunToolbar;
     /** 状态控件 */
     @BindView(R.id.apply_run_status_view) MultipleStatusView mApplyRunStatusView;
+    /** Android振动器 */
+    private Vibrator vibrator;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -114,16 +106,7 @@ public class ApplyRunCerActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        /**判断Toolbar，开启主图标并显示title*/
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-        } else {
-            Log.i(TAG, "onCreate: actionBar is null");
-        }
-        /** 设置Toolbar */
-        setSupportActionBar(mApplyRunToolbar);
+
     }
 
     @Override
@@ -146,68 +129,20 @@ public class ApplyRunCerActivity extends BaseActivity {
         initNowUserApplyRunInfo();
     }
 
+
     /**
-     * 使用 ButterKnife注解式监听单击事件
-     *
-     * @param view 控件Id
+     * Android振动器
      */
-    @OnClick({R2.id.iv_apply_run_back})
-    public void onApplyRunViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_apply_run_back://点击返回
-                ApplyRunCerActivity.this.finish();
-                break;
-        }
+    private void startVibrator() {
+        if (vibrator == null)
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(300);
     }
 
     /**
      * 初始化当前用户跑腿认证信息
      */
     private void initNowUserApplyRunInfo() {
-//        OkGo.<String>post(Constant.USER_DO_APPLY_RUN_BY_MY_INFO)
-//                .tag("申请跑腿认证")
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onStart(Request<String, ? extends Request> request) {
-//                        MyXPopupUtils.getInstance().setShowDialog(ApplyRunCerActivity.this, "正在请求认证信息...");
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        OkGoApplyRunBean okGoApplyRunBean = GsonUtil.gsonToBean(response.body(), OkGoApplyRunBean.class);
-//                        Log.i("okGoApplyRunBean", okGoApplyRunBean.toString());
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() != null && "跑腿认证审核中".equals(okGoApplyRunBean.getMsg())) {
-//                            return;
-//                        }
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() != null && "跑腿认证已审核".equals(okGoApplyRunBean.getMsg())) {
-//                            return;
-//                        }
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() != null && "跑腿认证审核失败".equals(okGoApplyRunBean.getMsg())) {
-//                            return;
-//                        }
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() == null && "查询失败，用户不存在".equals(okGoApplyRunBean.getMsg())) {
-//                            return;
-//                        }
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() == null && "跑腿信息提交失败".equals(okGoApplyRunBean.getMsg())) {
-//                            return;
-//                        }
-//                        if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() == null && "跑腿信息提交成功".equals(okGoApplyRunBean.getMsg())) {
-//
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//                        MyXPopupUtils.getInstance().setSmartDisDialog();
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<String> response) {
-//                        //OkGoErrorUtil.CustomFragmentOkGoError(response, ApplyRunCerActivity.this, goTopNestedScrollView, "请求错误，服务器连接失败！");
-//                    }
-//                });
-
         OkGo.<String>post(Constant.USER_SELECT_APPLY_RUN_BY_SA_TOKEN_SESSION)
                 .tag("当前用户申请信息")
                 .execute(new StringCallback() {
@@ -219,7 +154,6 @@ public class ApplyRunCerActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoApplyRunBean okGoApplyRunBean = GsonUtil.gsonToBean(response.body(), OkGoApplyRunBean.class);
-                        Log.i("okGoApplyRunBean", okGoApplyRunBean.toString());
                         if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() == null && "查询失败，用户不存在".equals(okGoApplyRunBean.getMsg())) {
                             return;
                         }
@@ -228,8 +162,7 @@ public class ApplyRunCerActivity extends BaseActivity {
                             return;
                         }
                         if (200 == okGoApplyRunBean.getCode() && okGoApplyRunBean.getData() != null && "有历史申请信息".equals(okGoApplyRunBean.getMsg())) {
-                            Log.i("有历史申请信息", okGoApplyRunBean.getData().toString());
-                            haveApplyInfo(okGoApplyRunBean.getData());
+                            haveApplyInfo(okGoApplyRunBean.getData());//有申请跑腿历史认证信息
                         }
                     }
 
@@ -262,6 +195,7 @@ public class ApplyRunCerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 IntentUtil.startActivityAnimLeftToRight(ApplyRunCerActivity.this, new Intent(ApplyRunCerActivity.this, ApplyRunCommitActivity.class));//执行动画跳转
+                finish();
             }
         });
         //子View中父布局view + 父布局点击事件
@@ -270,6 +204,7 @@ public class ApplyRunCerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 IntentUtil.startActivityAnimLeftToRight(ApplyRunCerActivity.this, new Intent(ApplyRunCerActivity.this, ApplyRunCommitActivity.class));//执行动画跳转
+                finish();
             }
         });
     }
@@ -318,6 +253,7 @@ public class ApplyRunCerActivity extends BaseActivity {
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                startVibrator();
                 doApplyInfoRefresh(data, mRefreshLayout);
                 ToastUtils.show("申请认证信息已刷新");
             }
@@ -419,7 +355,7 @@ public class ApplyRunCerActivity extends BaseActivity {
         RequestOptions options = new RequestOptions().placeholder(R.mipmap.placeholder).diskCacheStrategy(DiskCacheStrategy.NONE);
 
         // 申请类型：加载跑腿本机图片
-        if (data.getArType() == 1) {
+        if (data.getArType() == 3) {
             Glide.with(this).load(R.mipmap.run).apply(options).into(new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -494,6 +430,16 @@ public class ApplyRunCerActivity extends BaseActivity {
         /* 9.个人信息和图片加载完成后自动关系刷新 */
         mRefreshLayout.finishRefresh();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        //释放振动资源
+        if (vibrator != null) {
+            vibrator.cancel();
+            vibrator = null;
+        }
+        super.onDestroy();
     }
 
     /**

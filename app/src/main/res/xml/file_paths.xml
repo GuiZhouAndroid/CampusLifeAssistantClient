@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <external-files-path name="opensdk_external" path="Images/tmp"/>
-    <root-path name="opensdk_root" path=""/>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 适配Android 7.0文件意图 -->
-    <external-path name="files_root" path="Android/data/${applicationId}/"/>
-    <external-path name="external_storage_root" path="." />
+
+    <root-path
+        name="root"
+        path="." />
+    <files-path
+        name="files"
+        path="." />
+    <cache-path
+        name="cache"
+        path="/"/>
+    <external-path
+        name="external"
+        path="." />
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <external-files-path
+        name="external_file"
+        path="." />
+
 </paths>
