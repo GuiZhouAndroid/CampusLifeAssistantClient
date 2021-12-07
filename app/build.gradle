@@ -179,6 +179,8 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc10'
     //图片缩放 https://github.com/Baseflow/PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.2.0'
+    //自定义圆形按钮，可以设置边框 https://github.com/yoomaz/RoundButton
+    implementation 'com.github.Graypn:RoundButton:1.0.1'
     //缩略视图到原视图无缝过渡转变的神奇框架 https://github.com/Hitomis/transferee
     //implementation 'com.github.Hitomis:transferee:1.6.1' //添加所有 module  [包括 Transferee、GlideImageLoader、PicassoImageLoader、UniversalImageLoader]
     //implementation 'com.github.Hitomis.transferee:Transferee:1.6.1'// 单独添加核心 module Transferee

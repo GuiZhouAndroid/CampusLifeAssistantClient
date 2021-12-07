@@ -9,17 +9,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +34,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.luck.picture.lib.PictureMediaScannerConnection;
 import com.luck.picture.lib.PictureSelector;
@@ -65,12 +58,8 @@ import com.luck.picture.lib.style.PictureSelectorUIStyle;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
-import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.interfaces.XPopupCallback;
-import com.shouzhong.scanner.Callback;
-import com.shouzhong.scanner.IViewFinder;
-import com.shouzhong.scanner.Result;
 import com.shouzhong.scanner.ScannerView;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.picker.widget.TimePickerView;
@@ -78,6 +67,7 @@ import com.xuexiang.xui.widget.picker.widget.builder.TimePickerBuilder;
 import com.xuexiang.xui.widget.picker.widget.listener.OnTimeSelectListener;
 import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
 import com.xuexiang.xutil.data.DateUtils;
+import com.yoma.roundbutton.RoundButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +86,6 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridNucleicIm
 import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridRunCodeImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridStuCardImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.UserInfoFullPopup;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.FullyGridLayoutManager;
@@ -104,7 +93,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.GlideEngin
 
 /**
  * created by on 2021/12/5
- * 描述：申请认证跑腿信息提交
+ * 描述：申请认证跑腿信息提交--->BUG未解决，外部样式删除按钮，没实现对应删除，而是全部已选图片同时删除清空
  *
  * @author ZSAndroid
  * @create 2021-12-05-14:35
@@ -128,7 +117,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @BindView(R2.id.rl_commit_car_info) RelativeLayout mRlCommitCarInfo; //选择OCR车牌识别
     @BindView(R.id.spinner_car_type) MaterialSpinner mSpinnerCarType;//车辆类型
     @BindView(R2.id.tv_commit_car) TextView mTvCommitCar; //设置车牌信息
-
+    @BindView(R2.id.rbn_commit_info) RoundButton mRbnCommitInfo; //提交信息
     @BindView(R2.id.circle_progress_commit) CircleProgress mCircleProgressCommit; //进度条
     /** 毕业日期 */
     private TimePickerView mDatePicker;//日期选择器
@@ -151,10 +140,10 @@ public class ApplyRunCommitActivity extends BaseActivity {
     private GridRunCodeImageAdapter mAdapterRunCode;//加载行程码
 
     /** 每个列表控件获取图片的目录路径，用于判断内容长度，满足条件，调用阿里云OSS上传同时调用SpringBoot后端接口存储申请认证跑腿表 */
-    public static List<String> imgPathListStuCard;//学生证图片路径
-    public static List<String> imgPathListNucleicPic;//核酸证明图片路径
-    public static List<String> imgPathListHealCode;//健康码图片路径
-    public static List<String> imgPathListRunCode;//行程码图片路径
+    public static String imgPathStuCard;//学生证图片路径
+    public static String imgPathNucleicPic;//核酸证明图片路径
+    public static String imgPathHealCode;//健康码图片路径
+    public static String imgPathRunCode;//行程码图片路径
 
     public static List<String> imgApplyCommitPathList;//学生证图片路径 + 核酸证明图片路径 + 健康码图片路径 + 行程码图片路径 = 总集合图片路径
 
@@ -208,6 +197,13 @@ public class ApplyRunCommitActivity extends BaseActivity {
         }
         /** 设置Toolbar */
         setSupportActionBar(mToolbarApplyCommit);
+
+        /** 初始化List集合长度，用于装图片路径 ，不初始化4个值，将会出现跳过Add 时崩溃，初始化使用set就可以完美避免错误 */
+        imgApplyCommitPathList = new ArrayList<>();
+        imgApplyCommitPathList.add(0,"");
+        imgApplyCommitPathList.add(1,"");
+        imgApplyCommitPathList.add(2,"");
+        imgApplyCommitPathList.add(3,"");
     }
 
 
@@ -306,7 +302,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_apply_commit, R2.id.sample_heal_code_scale, R2.id.sample_run_code_scale,R2.id.rl_commit_graduation_data,R2.id.rl_commit_car_info})
+    @OnClick({R2.id.iv_apply_commit, R2.id.sample_heal_code_scale, R2.id.sample_run_code_scale,R2.id.rl_commit_graduation_data,R2.id.rl_commit_car_info,R2.id.rbn_commit_info})
     public void onApplyCommitViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_apply_commit://点击返回
@@ -323,6 +319,9 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 break;
             case R.id.rl_commit_car_info://点击调用OCR车牌识别
                 IntentUtil.startActivityForResultAnimBottomToTop1(this,new Intent(this,ApplyCarNumberOCRActivity.class),Constant.REQUEST_CODE_VALUE);
+                break;
+            case R.id.rbn_commit_info://提交认证信息
+                startCommitApplyInfo();
                 break;
         }
     }
@@ -383,7 +382,31 @@ public class ApplyRunCommitActivity extends BaseActivity {
 //                .show();
     }
 
-
+    /**
+     * 提交认证信息
+     */
+    private void startCommitApplyInfo() {
+        Log.i(TAG, "长度: " + imgApplyCommitPathList.size());
+        if (imgPathStuCard == null ){
+            ToastUtils.show("请选择学生证 ");
+            return;
+        }
+        if (imgPathNucleicPic == null ){
+            ToastUtils.show("请选择核酸证明");
+            return;
+        }
+        if (imgPathHealCode == null ){
+            ToastUtils.show("请选择健康码");
+            return;
+        }
+        if (imgPathRunCode == null ){
+            ToastUtils.show("请选择行程码");
+            return;
+        }
+        if (imgApplyCommitPathList !=null && imgApplyCommitPathList.size() == 4 ){
+            ToastUtils.show("目前内容"+imgApplyCommitPathList.toString());
+        }
+    }
 
     /**
      * 初始化学生证图片选择适配器配置参数
@@ -477,7 +500,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
             }
         });
         // 注册广播，接收选择的核酸图片 + 刷新适配器
-        BroadcastManager.getInstance(getContext()).registerReceiver(nucleicPicBroadcastReceiver, Constant.ACTION_DELETE_STU_CARD_PREVIEW_POSITION);
+        BroadcastManager.getInstance(getContext()).registerReceiver(nucleicPicBroadcastReceiver, Constant.ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION);
         launcherNucleicPicResult = createActivityNucleicPicResultLauncher();
     }
 
@@ -579,7 +602,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
         public void onAddPicClick() {
             //此处清空非常重要，不设置，将会把之前选择的路径存放在集合中，当需要再次启动相册增添其它照片
             //将导致第二次选择的图片路径集合 与 之前选择的路径集合 产生并集，那么OSS上传时，就会出现多次上传同张图片负效果
-            imgPathListStuCard = null;
+            imgPathStuCard = null;
             // 进入相册 以下是例子：不需要的api可以不写
             PictureSelector.create(ApplyRunCommitActivity.this)
                     //设置只选择图片
@@ -697,7 +720,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     private final GridNucleicImageAdapter.onAddPicClickListener onAddNucleicPicClickListener = new GridNucleicImageAdapter.onAddPicClickListener() {
         @Override
         public void onAddPicClick() {
-            imgPathListNucleicPic = null;
+            imgPathNucleicPic = null;
             PictureSelector.create(ApplyRunCommitActivity.this)
                     .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                     .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
@@ -761,7 +784,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     private final GridHealCodeImageAdapter.onAddPicClickListener onAddHealCodeClickListener = new GridHealCodeImageAdapter.onAddPicClickListener() {
         @Override
         public void onAddPicClick() {
-            imgPathListHealCode = null;
+            imgPathHealCode = null;
             PictureSelector.create(ApplyRunCommitActivity.this)
                     .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                     .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
@@ -825,7 +848,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     private final GridRunCodeImageAdapter.onAddPicClickListener onAddRunCodeClickListener = new GridRunCodeImageAdapter.onAddPicClickListener() {
         @Override
         public void onAddPicClick() {
-            imgPathListRunCode = null;
+            imgPathRunCode = null;
             PictureSelector.create(ApplyRunCommitActivity.this)
                     .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                     .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
@@ -919,11 +942,12 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 //OSS上传成功后，把imgPathList对象内存地址设置为null了，对象是唯一的，只是内存地址清空了，不是重复创建对象
                                 //主要为避免选择多次相册图片，把上次选择的目录路径全往集合中，导致OSS批量遍历路径集合上传时，连旧的路径也重复上传
                                 //既然设置为null，那么就进行判空处理，为空就新创集合，重组目录路径集合
-                                if (imgPathListStuCard == null) {
-                                    imgPathListStuCard = new ArrayList<>();
+                                if (imgPathStuCard != null) {
+                                    imgPathStuCard = null;
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
-                                imgPathListStuCard.add(media.getAndroidQToPath());
+                                imgPathStuCard = media.getAndroidQToPath();
+                                imgApplyCommitPathList.set(0,imgPathStuCard);
                                 Log.i(TAG, "AndroidQ学生证Path" + media.getAndroidQToPath());
                             }
                             mAdapterStuCard.setList(selectList);
@@ -962,11 +986,12 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 //OSS上传成功后，把imgPathList对象内存地址设置为null了，对象是唯一的，只是内存地址清空了，不是重复创建对象
                                 //主要为避免选择多次相册图片，把上次选择的目录路径全往集合中，导致OSS批量遍历路径集合上传时，连旧的路径也重复上传
                                 //既然设置为null，那么就进行判空处理，为空就新创集合，重组目录路径集合
-                                if (imgPathListNucleicPic == null) {
-                                    imgPathListNucleicPic = new ArrayList<>();
+                                if (imgPathNucleicPic != null) {
+                                    imgPathNucleicPic = null;
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
-                                imgPathListNucleicPic.add(media.getAndroidQToPath());
+                                imgPathNucleicPic = media.getAndroidQToPath();
+                                imgApplyCommitPathList.set(1,imgPathNucleicPic);
                                 Log.i(TAG, "AndroidQ核酸证明Path:" + media.getAndroidQToPath());
                             }
                             mAdapterNucleicPic.setList(selectList);
@@ -1005,11 +1030,12 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 //OSS上传成功后，把imgPathList对象内存地址设置为null了，对象是唯一的，只是内存地址清空了，不是重复创建对象
                                 //主要为避免选择多次相册图片，把上次选择的目录路径全往集合中，导致OSS批量遍历路径集合上传时，连旧的路径也重复上传
                                 //既然设置为null，那么就进行判空处理，为空就新创集合，重组目录路径集合
-                                if (imgPathListHealCode == null) {
-                                    imgPathListHealCode = new ArrayList<>();
+                                if (imgPathHealCode != null) {
+                                    imgPathHealCode = null;
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
-                                imgPathListHealCode.add(media.getAndroidQToPath());
+                                imgPathHealCode = media.getAndroidQToPath();
+                                imgApplyCommitPathList.set(2,imgPathHealCode);
                                 Log.i(TAG, "AndroidQ健康码Path:" + media.getAndroidQToPath());
                             }
                             mAdapterHealCode.setList(selectList);
@@ -1048,11 +1074,12 @@ public class ApplyRunCommitActivity extends BaseActivity {
                                 //OSS上传成功后，把imgPathList对象内存地址设置为null了，对象是唯一的，只是内存地址清空了，不是重复创建对象
                                 //主要为避免选择多次相册图片，把上次选择的目录路径全往集合中，导致OSS批量遍历路径集合上传时，连旧的路径也重复上传
                                 //既然设置为null，那么就进行判空处理，为空就新创集合，重组目录路径集合
-                                if (imgPathListRunCode == null) {
-                                    imgPathListRunCode = new ArrayList<>();
+                                if (imgPathRunCode != null) {
+                                    imgPathRunCode = null;
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
-                                imgPathListRunCode.add(media.getAndroidQToPath());
+                                imgPathRunCode = media.getAndroidQToPath();
+                                imgApplyCommitPathList.set(3,imgPathRunCode);
                                 Log.i(TAG, "AndroidQ行程码Path:" + media.getAndroidQToPath());
                             }
                             mAdapterRunCode.setList(selectList);
@@ -1106,14 +1133,17 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
+                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_STU_CARD_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除学生证图片！");
                     mAdapterStuCard.remove(position);
                     mAdapterStuCard.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
-                    if (imgPathListStuCard != null) {
-                        imgPathListStuCard.remove(position);
+                    if (imgPathStuCard != null) {
+                        imgPathStuCard = null;
                     }
+//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
+//                        imgApplyCommitPathList.clear();
+//                    }
                 }
             }
         }
@@ -1133,14 +1163,17 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
+                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_NUCLEIC_PIC_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除核酸证明图片！");
                     mAdapterNucleicPic.remove(position);
                     mAdapterNucleicPic.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
-                    if (imgPathListNucleicPic != null) {
-                        imgPathListNucleicPic.remove(position);
+                    if (imgPathNucleicPic != null) {
+                        imgPathNucleicPic = null;
                     }
+//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
+//                        imgApplyCommitPathList.clear();
+//                    }
                 }
             }
         }
@@ -1160,14 +1193,17 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
+                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_HEAL_CODE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除健康码图片！");
                     mAdapterHealCode.remove(position);
                     mAdapterHealCode.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
-                    if (imgPathListHealCode != null) {
-                        imgPathListHealCode.remove(position);
+                    if (imgPathHealCode != null) {
+                        imgPathHealCode = null;
                     }
+//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
+//                        imgApplyCommitPathList.clear();
+//                    }
                 }
             }
         }
@@ -1187,14 +1223,17 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
+                    int position = extras.getInt(Constant.EXTRA_PREVIEW_DELETE_RUN_CODE_POSITION);
                     ToastUtils.show("校园帮APP提示：您已删除行程码图片！");
                     mAdapterRunCode.remove(position);
                     mAdapterRunCode.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
-                    if (imgPathListRunCode != null) {
-                        imgPathListRunCode.remove(position);
+                    if (imgPathRunCode != null) {
+                        imgPathRunCode = null;
                     }
+//                    if (imgApplyCommitPathList != null && imgApplyCommitPathList.size()>0) {
+//                        imgApplyCommitPathList.clear();
+//                    }
                 }
             }
         }
@@ -1392,6 +1431,8 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /** 清空图片选择参数的缓存图片 */
+        clearCache();
         /* 1.清除学生证*/
         if (launcherStuCardResult != null) {
             launcherStuCardResult.unregister();
@@ -1412,10 +1453,27 @@ public class ApplyRunCommitActivity extends BaseActivity {
             launcherRunCodeResult.unregister();
         }
         BroadcastManager.getInstance(getContext()).unregisterReceiver(runCodeBroadcastReceiver, Constant.ACTION_DELETE_RUN_CODE_PREVIEW_POSITION);
+        /* 5.清除学生证图片路径 */
+        if (imgPathStuCard != null) {
+            imgPathStuCard = null;
+        }
+        /* 6.清除核酸检测图片路径 */
+        if (imgPathNucleicPic != null) {
+            imgPathNucleicPic = null;
+        }
+        /* 7.清除健康码图片路径 */
+        if (imgPathHealCode != null) {
+            imgPathHealCode = null;
+        }
+        /* 8.清除健康码图片路径 */
+        if (imgPathRunCode != null) {
+            imgPathRunCode = null;
+        }
 //        if (mHandler != null){
 //            mHandler.removeCallbacksAndMessages(null);
 //            mHandler = null;
 //        }
+
     }
 
     class MyCarNumberOCRXPopup implements XPopupCallback {

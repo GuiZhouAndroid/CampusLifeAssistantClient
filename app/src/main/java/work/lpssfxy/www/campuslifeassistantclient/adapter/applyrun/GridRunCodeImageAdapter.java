@@ -87,6 +87,11 @@ public class GridRunCodeImageAdapter extends RecyclerView.Adapter<GridRunCodeIma
         if (list != null && position < list.size()) {
             list.remove(position);
         }
+        //删除后，不影响List集合中初始化长度
+        if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(3).isEmpty()) {
+            ApplyRunCommitActivity.imgApplyCommitPathList.remove(3);
+            ApplyRunCommitActivity.imgApplyCommitPathList.add(3,"");
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -151,8 +156,11 @@ public class GridRunCodeImageAdapter extends RecyclerView.Adapter<GridRunCodeIma
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCommitActivity.imgPathListRunCode != null) {
-                        ApplyRunCommitActivity.imgPathListRunCode.remove(index);
+                    if (ApplyRunCommitActivity.imgPathRunCode != null) {
+                        ApplyRunCommitActivity.imgPathRunCode = null;
+                    }
+                    if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(3).isEmpty()) {
+                        ApplyRunCommitActivity.imgApplyCommitPathList.remove(3);
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

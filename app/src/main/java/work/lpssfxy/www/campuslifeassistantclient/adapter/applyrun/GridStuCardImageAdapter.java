@@ -87,6 +87,11 @@ public class GridStuCardImageAdapter extends RecyclerView.Adapter<GridStuCardIma
         if (list != null && position < list.size()) {
             list.remove(position);
         }
+        //删除后，不影响List集合中初始化长度
+        if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(0).isEmpty()) {
+            ApplyRunCommitActivity.imgApplyCommitPathList.remove(0);
+            ApplyRunCommitActivity.imgApplyCommitPathList.add(0,"");
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -151,8 +156,11 @@ public class GridStuCardImageAdapter extends RecyclerView.Adapter<GridStuCardIma
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCommitActivity.imgPathListStuCard !=null){
-                        ApplyRunCommitActivity.imgPathListStuCard.remove(index);
+                    if (ApplyRunCommitActivity.imgPathStuCard != null) {
+                        ApplyRunCommitActivity.imgPathStuCard = null;
+                    }
+                    if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(0).isEmpty()) {
+                        ApplyRunCommitActivity.imgApplyCommitPathList.remove(0);
                     }
                     list.remove(index);
                     notifyItemRemoved(index);
