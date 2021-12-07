@@ -159,8 +159,10 @@ public class GridRunCodeImageAdapter extends RecyclerView.Adapter<GridRunCodeIma
                     if (ApplyRunCommitActivity.imgPathRunCode != null) {
                         ApplyRunCommitActivity.imgPathRunCode = null;
                     }
+                    //删除后，不影响List集合中初始化长度
                     if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(3).isEmpty()) {
                         ApplyRunCommitActivity.imgApplyCommitPathList.remove(3);
+                        ApplyRunCommitActivity.imgApplyCommitPathList.add(3,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

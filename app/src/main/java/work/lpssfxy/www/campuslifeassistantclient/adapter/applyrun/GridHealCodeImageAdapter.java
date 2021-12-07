@@ -159,8 +159,10 @@ public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeI
                     if (ApplyRunCommitActivity.imgPathHealCode !=null){
                         ApplyRunCommitActivity.imgPathHealCode = null;
                     }
+                    //删除后，不影响List集合中初始化长度
                     if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(2).isEmpty()) {
                         ApplyRunCommitActivity.imgApplyCommitPathList.remove(2);
+                        ApplyRunCommitActivity.imgApplyCommitPathList.add(2,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

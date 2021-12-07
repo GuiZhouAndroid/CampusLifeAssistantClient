@@ -159,8 +159,10 @@ public class GridStuCardImageAdapter extends RecyclerView.Adapter<GridStuCardIma
                     if (ApplyRunCommitActivity.imgPathStuCard != null) {
                         ApplyRunCommitActivity.imgPathStuCard = null;
                     }
+                    //删除后，不影响List集合中初始化长度
                     if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(0).isEmpty()) {
                         ApplyRunCommitActivity.imgApplyCommitPathList.remove(0);
+                        ApplyRunCommitActivity.imgApplyCommitPathList.add(0,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

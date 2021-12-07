@@ -159,8 +159,10 @@ public class GridNucleicImageAdapter extends RecyclerView.Adapter<GridNucleicIma
                     if (ApplyRunCommitActivity.imgPathNucleicPic != null) {
                         ApplyRunCommitActivity.imgPathNucleicPic = null;
                     }
+                    //删除后，不影响List集合中初始化长度
                     if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(1).isEmpty()) {
                         ApplyRunCommitActivity.imgApplyCommitPathList.remove(1);
+                        ApplyRunCommitActivity.imgApplyCommitPathList.add(1,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);
