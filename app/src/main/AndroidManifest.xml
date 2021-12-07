@@ -213,6 +213,13 @@
         <activity
             android:name=".view.activity.ApplyRunCommitActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 申请认证跑腿车牌识别OCR -->
+        <activity
+            android:name=".view.activity.ApplyCarNumberOCRActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->

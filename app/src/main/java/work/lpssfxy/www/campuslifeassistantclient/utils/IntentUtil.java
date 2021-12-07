@@ -80,7 +80,69 @@ public class IntentUtil {
      * @param code   请求码
      */
     public static void startActivityForResultAnimRightToLeft(Activity activity, Intent intent, int code) {
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, code);
         activity.overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+    }
+
+    /**
+     * Activity 或 Fragment 调用
+     * 下————>上：启动动画 方式一
+     *
+     * @param intent 跳转意图
+     */
+    public static void startActivityAnimBottomToTop1(Activity activity, Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.layout_down_up, R.anim.layout_center);
+    }
+
+    /**
+     * Activity 或 Fragment 调用
+     * 下————>上：启动动画 方式一
+     * 请求码+返回码 ---> 传值交互
+     *
+     * @param activity 上下文
+     * @param intent   跳转意图
+     * @param code     请求码
+     */
+    public static void startActivityForResultAnimBottomToTop1(Activity activity, Intent intent, int code) {
+        activity.startActivityForResult(intent, code);
+        activity.overridePendingTransition(R.anim.layout_down_up, R.anim.layout_center);
+    }
+
+    /**
+     * Activity 或 Fragment 调用
+     * 下————>上：启动动画 方式二
+     *
+     * @param intent 跳转意图
+     */
+    public static void startActivityAnimBottomToTop2(Activity activity, Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.anim_bottom_in, R.anim.anim_bottom_out);
+    }
+
+
+    /**
+     * Activity 或 Fragment 调用
+     * 下————>上：启动动画 方式二
+     * 请求码+返回码 ---> 传值交互
+     *
+     * @param activity 上下文
+     * @param intent   跳转意图
+     * @param code     请求码
+     */
+    public static void startActivityForResultAnimBottomToTop2(Activity activity, Intent intent, int code) {
+        activity.startActivityForResult(intent, code);
+        activity.overridePendingTransition(R.anim.anim_bottom_in, R.anim.anim_bottom_out);
+    }
+
+    /**
+     * Activity 或 Fragment finish时调用
+     * 上————>下：结束动画
+     *
+     * @param activity 上下文
+     */
+    public static void finishActivityAnimTopToBottom(Activity activity) {
+        activity.overridePendingTransition(R.anim.layout_center, R.anim.layout_up_down);
+        activity.finish();
     }
 }

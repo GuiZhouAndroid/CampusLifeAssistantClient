@@ -55,6 +55,7 @@ public class Constant {
     public static final int RESULT_CODE_QQ_ONE_KEY_USERINFO_AND_QQ_SESSION = 104;//QQ会话一键登录 Gson解析的实体对象数据
     public static final int RESULT_CODE_REGISTER_ACCOUNT_SUCCESS = 105;//注册账户成功
     public static final int RESULT_CODE_OCR_BIND_ACCOUNT_SUCCESS = 106;//实名认证绑定账户成功
+    public static final int RESULT_CODE_OCR_CAR_NUMBER_OCR_SUCCESS = 107;//车牌号识别成功
 
     /**
      * 腾讯QQ第三方登录

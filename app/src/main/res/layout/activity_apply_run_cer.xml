@@ -45,6 +45,7 @@
         android:id="@+id/apply_run_status_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_apply_run"
         android:layout_centerInParent="true"
         app:msv_contentView="@layout/custom_apply_content_layout" />
 

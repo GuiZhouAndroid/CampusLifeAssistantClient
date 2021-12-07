@@ -230,4 +230,12 @@
         <attr name="styleColor" format="color"/>
         <attr name="borderStyle" format="string" />
     </declare-styleable>
+
+    <!-- 车辆类型 -->
+    <string-array name="apply_run_car_type">
+        <item>无车辆</item>
+        <item>电动车</item>
+        <item>摩托车</item>
+        <item>小轿车</item>
+    </string-array>
 </resources>

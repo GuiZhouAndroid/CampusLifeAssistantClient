@@ -24,7 +24,7 @@ public class UserInfoFullPopup extends FullScreenPopupView {
 
     @Override
     protected int getImplLayoutId() {
-        return R.layout.custom_fullscreen_popup_user_info;
+        return R.layout.activity_apply_commit_car_number_fullscreen_popup;
     }
 
 }

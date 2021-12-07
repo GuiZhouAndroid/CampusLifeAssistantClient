@@ -155,7 +155,7 @@ public class StatusBarUtil {
 
     /** android 6.0设置字体颜色 */
     @RequiresApi(Build.VERSION_CODES.M)
-    private static void darkModeForM(Window window, boolean dark) {
+    public static void darkModeForM(Window window, boolean dark) {
 //        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 //        window.setStatusBarColor(Color.TRANSPARENT);

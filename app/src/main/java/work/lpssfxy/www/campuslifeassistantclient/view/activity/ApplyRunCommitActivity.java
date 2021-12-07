@@ -9,11 +9,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +40,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.luck.picture.lib.PictureMediaScannerConnection;
 import com.luck.picture.lib.PictureSelector;
@@ -58,17 +65,23 @@ import com.luck.picture.lib.style.PictureSelectorUIStyle;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
-import com.mob.tools.utils.Data;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.interfaces.XPopupCallback;
+import com.shouzhong.scanner.Callback;
+import com.shouzhong.scanner.IViewFinder;
+import com.shouzhong.scanner.Result;
+import com.shouzhong.scanner.ScannerView;
+import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.picker.widget.TimePickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.TimePickerBuilder;
-import com.xuexiang.xui.widget.picker.widget.listener.OnTimeSelectChangeListener;
 import com.xuexiang.xui.widget.picker.widget.listener.OnTimeSelectListener;
+import com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner;
 import com.xuexiang.xutil.data.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,8 +96,9 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridNucleicIm
 import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridRunCodeImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridStuCardImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.UserInfoFullPopup;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
-import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.FullyGridLayoutManager;
 import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.GlideEngine;
 
@@ -112,6 +126,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @BindView(R2.id.rl_commit_graduation_data) RelativeLayout mRlCommitGraduationData; //选择毕业时间父布局
     @BindView(R2.id.tv_commit_data) TextView mTvCommitData; //设置毕业时间
     @BindView(R2.id.rl_commit_car_info) RelativeLayout mRlCommitCarInfo; //选择OCR车牌识别
+    @BindView(R.id.spinner_car_type) MaterialSpinner mSpinnerCarType;//车辆类型
     @BindView(R2.id.tv_commit_car) TextView mTvCommitCar; //设置车牌信息
 
     @BindView(R2.id.circle_progress_commit) CircleProgress mCircleProgressCommit; //进度条
@@ -178,6 +193,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @Override
     protected void prepareData() {
 
+
     }
 
     @Override
@@ -242,6 +258,29 @@ public class ApplyRunCommitActivity extends BaseActivity {
     @Override
     protected void doBusiness() {
         initNowData();//默认设置当前日期为毕业时间
+        initSpinnerCarType();//初始化车辆类型下拉选择框
+    }
+
+    /**
+     * 初始化车辆类型下拉选择框
+     */
+    private void initSpinnerCarType() {
+        //设置下拉选项内容
+        mSpinnerCarType.setItems(ResUtils.getStringArray(R.array.apply_run_car_type));
+        //下拉框item监听事件
+        mSpinnerCarType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                ToastUtils.show("点击了"+item.toString());
+            }
+        });
+        //未选择item监听事件
+        mSpinnerCarType.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                ToastUtils.show("请选择车辆类型");
+            }
+        });
     }
 
     /**
@@ -283,7 +322,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
                 chooseData();//选择毕业时间
                 break;
             case R.id.rl_commit_car_info://点击调用OCR车牌识别
-                CarNumberOCR();//OCR车牌识别
+                IntentUtil.startActivityForResultAnimBottomToTop1(this,new Intent(this,ApplyCarNumberOCRActivity.class),Constant.REQUEST_CODE_VALUE);
                 break;
         }
     }
@@ -331,11 +370,21 @@ public class ApplyRunCommitActivity extends BaseActivity {
     }
 
     /**
-     * OCR车牌识别
+     * 处理返回的OCR车牌识别结果
      */
-    private void CarNumberOCR() {
-        ToastUtils.show("OCR车牌识别待实现");
+    private void CarNumberManageOCRResult() {
+
+//        new XPopup.Builder(getContext())
+//                .isDestroyOnDismiss(true) //关闭弹窗，释放资源
+//                .hasBlurBg(true) //开启高斯模糊
+//                .hasStatusBar(true)
+//                .setPopupCallback(new MyCarNumberOCRXPopup())
+//                .asCustom(new UserInfoFullPopup(getContext())) //定制自定义布局
+//                .show();
     }
+
+
+
     /**
      * 初始化学生证图片选择适配器配置参数
      */
@@ -1152,6 +1201,22 @@ public class ApplyRunCommitActivity extends BaseActivity {
     };
 
     /**
+     * 回调数据
+     *
+     * @param requestCode 请求码，即调用startActivityForResult()传递过去的值
+     * @param resultCode  结果码，结果码用于标识返回数据来自指定的Activity
+     * @param data        返回数据，存放了返回数据的Intent，使用第三个输入参数可以取出新Activity返回的数据
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //实名认证完成回调真实姓名显示
+        if (requestCode == Constant.REQUEST_CODE_VALUE && resultCode == Constant.RESULT_CODE_OCR_CAR_NUMBER_OCR_SUCCESS) {
+            mTvCommitCar.setText(data.getStringExtra("CarNumberOCRResult"));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
      * 微信主题
      *
      * @return 裁剪样式
@@ -1351,5 +1416,52 @@ public class ApplyRunCommitActivity extends BaseActivity {
 //            mHandler.removeCallbacksAndMessages(null);
 //            mHandler = null;
 //        }
+    }
+
+    class MyCarNumberOCRXPopup implements XPopupCallback {
+
+        private Button mBtnOkOcrCarNumber;
+        private ScannerView mSvOCRCarNumberView;
+        private TextView mTvCarNumberResult;
+
+        @Override
+        public void onCreated(BasePopupView popupView) {
+
+        }
+
+        @Override
+        public void beforeShow(BasePopupView popupView) {
+
+        }
+
+        @Override
+        public void onShow(BasePopupView popupView) {
+
+        }
+
+        @Override
+        public void onDismiss(BasePopupView popupView) {
+
+        }
+
+        @Override
+        public void beforeDismiss(BasePopupView popupView) {
+
+        }
+
+        @Override
+        public boolean onBackPressed(BasePopupView popupView) {
+            return false;
+        }
+
+        @Override
+        public void onKeyBoardStateChanged(BasePopupView popupView, int height) {
+
+        }
+
+        @Override
+        public void onDrag(BasePopupView popupView, int value, float percent, boolean upOrLeft) {
+
+        }
     }
 }
