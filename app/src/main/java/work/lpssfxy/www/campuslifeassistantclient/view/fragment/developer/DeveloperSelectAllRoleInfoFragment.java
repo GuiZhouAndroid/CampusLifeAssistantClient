@@ -93,7 +93,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     @Override
     protected void prepareData(Bundle savedInstanceState) {
         //准备表的顶部标题数据
-        topTitleArrays = new String[]{"角色ID", "角色名称", "角色描述", "创建时间", "修改时间"};
+        topTitleArrays = new String[]{"角色名","角色ID",  "角色描述", "创建时间", "修改时间"};
     }
 
     @Override
@@ -283,8 +283,8 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
             for (OkGoAllRoleInfoBean.Data data : okGoAllRoleInfoBean.getData()) {
                 //3.1 创建集合，装载表格内容
                 ArrayList<String> rowData = new ArrayList<>();
-                rowData.add(String.valueOf(data.getTrId()));
                 rowData.add(data.getTrName());
+                rowData.add(String.valueOf(data.getTrId()));
                 rowData.add(data.getTrDescription());
                 rowData.add(data.getCreateTime());
                 rowData.add(data.getUpdateTime());
@@ -406,8 +406,8 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                     .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
                         @Override
                         public void onItemLongClick(View item, int position) {
-                            String strRoleId = tableData.get(position).get(0); //当前item角色ID
-                            String strOldRoleName = tableData.get(position).get(1); //当前item角色名称
+                            String strOldRoleName = tableData.get(position).get(0); //当前item角色名称
+                            String strRoleId = tableData.get(position).get(1); //当前item角色ID
                             new MaterialDialog.Builder(getContext())
                                     .title("是否删除[" + strOldRoleName + "]角色")
                                     .titleGravity(GravityEnum.CENTER)

@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * created by on 2021/11/29
- * 描述：全部用户实体类
+ * 描述：OkGo网络请求返回全部用户信息的Json数据
  *
  * @author ZSAndroid
  * @create 2021-11-29-12:37

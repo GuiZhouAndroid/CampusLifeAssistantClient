@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -18,7 +17,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-import com.rmondjone.locktableview.DisplayUtil;
 import com.rmondjone.locktableview.LockTableView;
 import com.rmondjone.xrecyclerview.ProgressStyle;
 import com.rmondjone.xrecyclerview.XRecyclerView;
@@ -37,7 +35,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.CallUserTelPopup;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllUserPermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -45,50 +43,46 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 /**
- * created by on 2021/11/29
- * 描述：超管查询用户全部信息
+ * created by on 2021/12/8
+ * 描述：超管查询用户角色权限全部信息
  *
  * @author ZSAndroid
- * @create 2021-11-29-13:23
+ * @create 2021-12-08-20:46
  */
-
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
-
-    private static final String TAG = "DeveloperSelectAllUserInfoFragment";
+public class DeveloperSelectAllUserPermissionInfoFragment extends BaseFragment {
 
     /* 父布局 */
-    @BindView(R2.id.ll_dev_select_all_user_info) LinearLayout mLlDevSelectAllUserInfo;
-    /* XUI按钮搜索用户 */
-    @BindView(R2.id.btn_search_user_info) ButtonView mBtnSearchUserInfo;
+    @BindView(R2.id.ll_dev_select_all_user_permission_info) LinearLayout mLlDevSelectAllUserPermissionInfo;
+    /* XUI按钮搜索用户权限 */
+    @BindView(R2.id.btn_search_user_permission_info) ButtonView mBtnSearchUserInfo;
     /* 填充表格视图 */
-    @BindView(R2.id.ll_user_info_table_content_view) LinearLayout mLlUserInfoTableContentView;
-    //跑马灯滚动显示用户总条数
-    @BindView(R2.id.mtv_count_user_number) MarqueeTextView mMtvCountUserNumber;
+    @BindView(R2.id.ll_user_permission_info_table_content_view) LinearLayout mLlUserPermissionInfoTableContentView;
+    //跑马灯滚动显示用户权限总条数
+    @BindView(R2.id.mtv_count_user_permission_number) MarqueeTextView mMtvCountUserPermissionNumber;
     //顶部标题数组
     private String[] topTitleArrays;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperSelectAllUserInfoFragment newInstance() {
-        return new DeveloperSelectAllUserInfoFragment();
+    public static DeveloperSelectAllUserPermissionInfoFragment newInstance() {
+        return new DeveloperSelectAllUserPermissionInfoFragment();
     }
 
     @Override
     protected int bindLayout() {
-        return R.layout.fragment_developer_select_all_user_info;
+        return R.layout.fragment_developer_select_all_user_permission_info;
     }
 
     @Override
     protected void prepareData(Bundle savedInstanceState) {
-        //准备表的顶部标题数据
-        topTitleArrays = new String[]{"用户名","用户ID","真实姓名", "性别", "身份证号", "学号", "手机号", "QQ邮箱", "班级", "院系", "注册时间", "修改时间"};
+        topTitleArrays = new String[]{"真实姓名", "用户ID", "用户名", "角色ID", "角色名", "角色描述", "权限ID", "权限名", "权限描述"};
     }
 
     @Override
     protected void initView(View rootView) {
-        initDisplayOpinion();
+
     }
 
     @Override
@@ -103,41 +97,31 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        //开始查询全部用户信息
-        startSelectAllUserInfo(context);
-    }
-
-    private void initDisplayOpinion() {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        DisplayUtil.density = dm.density;
-        DisplayUtil.densityDPI = dm.densityDpi;
-        DisplayUtil.screenWidthPx = dm.widthPixels;
-        DisplayUtil.screenhightPx = dm.heightPixels;
-        DisplayUtil.screenWidthDip = DisplayUtil.px2dip(getContext(), dm.widthPixels);
-        DisplayUtil.screenHightDip = DisplayUtil.px2dip(getContext(), dm.heightPixels);
+        //开始查询全部用户权限信息
+        startSelectAllUserPermissionInfo(context);
     }
 
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_search_user_info})
-    public void onSelectAllUserInfoViewClick(View view) {
+    @OnClick({R2.id.btn_search_user_permission_info})
+    public void onSelectAllPermissionInfoViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_search_user_info://确定搜索
-                startSearchUserInfo();
+            case R.id.btn_search_user_permission_info://确定搜索
+                startSearchPermissionInfo();//弹出用户角色权限信息搜索方式选择框
                 break;
         }
     }
 
     /**
-     * 弹出用户信息搜索方式选择框
+     * 弹出用户角色权限信息搜索方式选择框
      */
-    private void startSearchUserInfo() {
+    private void startSearchPermissionInfo() {
         new XPopup.Builder(getContext())
                 .maxHeight(800)
                 .isDarkTheme(true)
                 .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                .asCenterList("选择搜索信息方式", new String[]{"用户ID", "用户名", "真实姓名"}, new OnSelectListener() {
+                .asCenterList("选择搜索信息方式", new String[]{"用户ID", "用户名", "真实姓名","权限ID","权限名"}, new OnSelectListener() {
                     @Override
                     public void onSelect(int position, String searchMode) {
                         switch (position) {
@@ -150,6 +134,12 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                             case 2:
                                 chooseRealName();//选择真实姓名
                                 break;
+                            case 3:
+                                choosePermissionId();//选择权限ID
+                                break;
+                            case 4:
+                                choosePermissionName();//选择权限名
+                                break;
                         }
                     }
                 })
@@ -157,7 +147,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过用户ID查询对应信息
+     * 通过用户ID查询对应用户角色权限信息
      */
     private void chooseUserId() {
         new XPopup.Builder(getContext())
@@ -166,13 +156,13 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户ID",
+                .asInputConfirm("搜索信息", null, null, "请输入用户ID",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strUserId) {
                                 //开始网络请求，访问后端服务器，执行查询角色操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_USER_INFO_BY_USER_ID + "/" + strUserId)
-                                        .tag("用户ID查询信息")
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_USER_ID + "/" + strUserId)
+                                        .tag("用户ID查询用户角色权限信息")
                                         .execute(new StringCallback() {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
@@ -196,7 +186,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onError(Response<String> response) {
                                                 super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserInfo, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserPermissionInfo, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -205,7 +195,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过用户名查询对应信息
+     * 通过用户名查询对应用户角色权限信息
      */
     private void chooseUserName() {
         new XPopup.Builder(getContext())
@@ -214,13 +204,13 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户名",
+                .asInputConfirm("搜索信息", null, null, "请输入用户名",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strUserName) {
                                 //开始网络请求，访问后端服务器，执行查询用户操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_USER_INFO_BY_USERNAME + "/" + strUserName)
-                                        .tag("用户名查询信息")
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_USER_NAME + "/" + strUserName)
+                                        .tag("用户名查询用户角色权限信息")
                                         .execute(new StringCallback() {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
@@ -244,7 +234,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onError(Response<String> response) {
                                                 super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserInfo, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserPermissionInfo, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -253,7 +243,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过真实姓名查询对应信息
+     * 通过用户真实姓名查询对应用户角色权限信息
      */
     private void chooseRealName() {
         new XPopup.Builder(getContext())
@@ -262,13 +252,13 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索用户信息", null, null, "请输入用户真实姓名",
+                .asInputConfirm("搜索信息", null, null, "请输入用户真实姓名",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strRealName) {
                                 //开始网络请求，访问后端服务器，执行查询用户操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_USER_INFO_BY_USER_REAL_NAME + "/" + strRealName)
-                                        .tag("姓名查询信息")
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_REAL_NAME + "/" + strRealName)
+                                        .tag("真实姓名查询用户角色权限信息")
                                         .execute(new StringCallback() {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
@@ -292,7 +282,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @Override
                                             public void onError(Response<String> response) {
                                                 super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserInfo, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserPermissionInfo, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -301,13 +291,107 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
     }
 
     /**
-     * OkGo网络请求开始调用API接口开始查询全部用户信息
+     * 通过权限ID查询对应用户角色权限信息
+     */
+    private void choosePermissionId() {
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("搜索用户信息", null, null, "请输入权限ID",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strPermissionId) {
+                                //开始网络请求，访问后端服务器，执行查询用户操作
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_ID + "/" + strPermissionId)
+                                        .tag("权限ID查询用户角色权限信息")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                            }
+
+                                            @SuppressLint("SetTextI18n")
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
+                                                starSetTabData(response);//Json字符串Gson解析使用，绘制表格
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserPermissionInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+                            }
+                        })
+                .show();
+    }
+    /**
+     * 通过权限名查询对应用户角色权限信息
+     */
+    private void choosePermissionName() {
+        new XPopup.Builder(getContext())
+                .hasStatusBarShadow(false)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+                .autoOpenSoftInput(true)
+                .isDarkTheme(true)
+                .isViewMode(true)
+                .asInputConfirm("搜索用户信息", null, null, "请输入权限名",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String strPermissionName) {
+                                //开始网络请求，访问后端服务器，执行查询用户操作
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_NAME + "/" + strPermissionName)
+                                        .tag("权限名查询用户角色权限信息")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onStart(Request<String, ? extends Request> request) {
+                                                super.onStart(request);
+                                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在搜索...");
+                                            }
+
+                                            @SuppressLint("SetTextI18n")
+                                            @Override
+                                            public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
+                                                starSetTabData(response);//Json字符串Gson解析使用，绘制表格
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                super.onFinish();
+                                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                                            }
+
+                                            @Override
+                                            public void onError(Response<String> response) {
+                                                super.onError(response);
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserPermissionInfo, "请求错误，服务器连接失败！");
+                                            }
+                                        });
+                            }
+                        })
+                .show();
+    }
+    /**
+     * OkGo网络请求开始调用API接口开始查询全部用户权限信息
      *
      * @param context 上下文
      */
-    private void startSelectAllUserInfo(Context context) {
+    private void startSelectAllUserPermissionInfo(Context context) {
         //开始网络请求，访问后端服务器，执行查询角色操作
-        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_USER_INFO)
+        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_AND_PERMISSION)
                 .tag("查询全部用户信息")
                 .execute(new StringCallback() {
                     @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
@@ -319,7 +403,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlDevSelectAllUserInfo, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mLlUserPermissionInfoTableContentView, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -330,41 +414,47 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
      * @param response okGo响应返回的Json字符串
      */
     private void starSetTabData(Response<String> response) {
-        OkGoAllUserInfoBean okGoAllUserInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllUserInfoBean.class);
-        if (200 == okGoAllUserInfoBean.getCode() && okGoAllUserInfoBean.getData().size() > 0 && "success".equals(okGoAllUserInfoBean.getMsg())) {
+        OkGoAllUserPermissionInfoBean okGoAllUserPermissionInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllUserPermissionInfoBean.class);
+        if (200 == okGoAllUserPermissionInfoBean.getCode() && okGoAllUserPermissionInfoBean.getData().size() > 0 && "success".equals(okGoAllUserPermissionInfoBean.getMsg())) {
             //1.创建集合，用于显示表格
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             //2.顶部标题数组，绑定表第一列标题
             tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
-            //3.遍历用户集合，绑定表格内容
-            for (OkGoAllUserInfoBean.Data data : okGoAllUserInfoBean.getData()) {
+            //3.遍历用户角色权限集合，绑定表格内容
+            for (OkGoAllUserPermissionInfoBean.Data data : okGoAllUserPermissionInfoBean.getData()) {
                 //3.1 创建集合，装载表格内容
                 ArrayList<String> rowData = new ArrayList<>();
-                rowData.add(data.getUlUsername());
-                rowData.add(String.valueOf(data.getUlId()));
+                //用户
                 rowData.add(data.getUlRealname());
-                rowData.add(data.getUlSex());
-                rowData.add(data.getUlIdcard());
-                rowData.add(data.getUlStuno());
-                rowData.add(data.getUlTel());
-                rowData.add(data.getUlEmail());
-                rowData.add(data.getUlClass());
-                rowData.add(data.getUlDept());
-                rowData.add(data.getCreateTime());
-                rowData.add(data.getUpdateTime());
-                //3.2 单个用户信息遍历后，设置进表格总集合
+                rowData.add(String.valueOf(data.getUlId()));
+                rowData.add(data.getUlUsername());
+
+                for (OkGoAllUserPermissionInfoBean.Data.RoleInfo roleInfo : data.getRoleInfo()) {
+                    //角色
+                    rowData.add(String.valueOf(roleInfo.getTrId()));
+                    rowData.add(String.valueOf(roleInfo.getTrName()));
+                    rowData.add(String.valueOf(roleInfo.getTrDescription()));
+                }
+
+                for (OkGoAllUserPermissionInfoBean.Data.PermissionInfo permissionInfo : data.getPermissionInfo()) {
+                    //权限
+                    rowData.add(String.valueOf(permissionInfo.getTpId()));
+                    rowData.add(String.valueOf(permissionInfo.getTpName()));
+                    rowData.add(String.valueOf(permissionInfo.getTpDescription()));
+                }
+                //3.2 单个用户角色权限信息遍历后，设置进表格总集合
                 tableData.add(rowData);
             }
             // 4.设置文本滚动显示用户条数
             if (!tableData.isEmpty()) {
                 //4.1设置滚动文本
-                mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前拥有" + (tableData.size() - 1) + "个用户注册使用"));
+                mMtvCountUserPermissionNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前拥有" + (tableData.size() - 1) + "条用户角色权限信息        "));
                 //4.2监听文本是否匹配--->匹配相同，执行循环滚动
-                mMtvCountUserNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                mMtvCountUserPermissionNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                     @Override
                     public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                         //4.3滚动开始
-                        if (displayMsg.toString().equals("        校园帮APP当前拥有" + (tableData.size() - 1) + "个用户注册使用")) {
+                        if (displayMsg.toString().equals("        校园帮APP当前拥有" + (tableData.size() - 1) + "条用户角色权限信息        ")) {
                             return displayMsg;//匹配相同，继续滚动
                         }
                         return null;
@@ -378,16 +468,16 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                 });
             }
             //5.携带全部用户信息的表格总集合，开始适配绘制表格
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserInfoTableContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserPermissionInfoTableContentView, tableData);
             //6.表格UI设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行
                     .setMaxColumnWidth(150) //列最大宽度
                     .setMinColumnWidth(50) //列最小宽度
-                    .setColumnWidth(4, 120) //设置指定列文本宽度
-                    .setColumnWidth(9, 120) //设置指定列文本宽度
-                    .setMinRowHeight(20)//行最小高度
-                    .setMaxRowHeight(20)//行最大高度
+                    .setColumnWidth(4, 150) //设置指定列文本宽度
+                    .setColumnWidth(9, 150) //设置指定列文本宽度
+                    .setMinRowHeight(50)//行最小高度
+                    .setMaxRowHeight(50)//行最大高度
                     .setTextViewSize(12) //单元格字体大小
                     .setFristRowBackGroudColor(R.color.xui_btn_blue_normal_color)//表头背景色
                     .setTableHeadTextColor(R.color.White)//表头字体颜色
@@ -421,7 +511,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startSelectAllUserInfo(context);
+                                    startSelectAllUserPermissionInfo(context);
                                     XToastUtils.success("用户信息重新加载完成");
                                 }
                             }, 1000);
@@ -451,7 +541,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                             new XPopup.Builder(getContext())
                                     .isCenterHorizontal(true)
                                     .isDestroyOnDismiss(true)
-                                    .atView(mLlUserInfoTableContentView)
+                                    .atView(mLlUserPermissionInfoTableContentView)
                                     .hasShadowBg(false) //去掉半透明背景
                                     .asCustom(new CallUserTelPopup(getContext(), strUserTel, strUserRealName).setArrowRadius(XPopupUtils.dp2px(getContext(), 3)))
                                     .show();
@@ -468,9 +558,9 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
         } else {
-            mMtvCountUserNumber.startSimpleRoll(Collections.singletonList("无此用户相关信息"));
+            mMtvCountUserPermissionNumber.startSimpleRoll(Collections.singletonList("无此用户相关信息"));
             //4.2监听文本是否匹配--->匹配相同，执行循环滚动
-            mMtvCountUserNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+            mMtvCountUserPermissionNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                 @Override
                 public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                     //4.3滚动开始
@@ -493,7 +583,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
             //空数据其它列字段
             tableData.add(new ArrayList<>());
             //表格绑定空数据
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserInfoTableContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlUserPermissionInfoTableContentView, tableData);
             //表格UI参数设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行
@@ -535,7 +625,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startSelectAllUserInfo(context);
+                                    startSelectAllUserPermissionInfo(context);
                                     XToastUtils.success("用户信息重新加载完成");
                                 }
                             }, 1000);

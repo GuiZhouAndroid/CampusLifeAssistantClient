@@ -92,7 +92,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
     @Override
     protected void prepareData(Bundle savedInstanceState) {
         //准备表的顶部标题数据
-        topTitleArrays = new String[]{"权限ID", "权限名称", "权限描述", "创建时间", "修改时间"};
+        topTitleArrays = new String[]{"权限名", "权限ID", "权限描述", "创建时间", "修改时间"};
     }
 
     @Override
@@ -183,8 +183,8 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
             for (OkGoAllPermissionInfoBean.Data data : okGoAllPermissionInfoBean.getData()) {
                 //3.1 创建集合，装载表格内容
                 ArrayList<String> rowData = new ArrayList<>();
-                rowData.add(String.valueOf(data.getTpId()));
                 rowData.add(data.getTpName());
+                rowData.add(String.valueOf(data.getTpId()));
                 rowData.add(data.getTpDescription());
                 rowData.add(data.getCreateTime());
                 rowData.add(data.getUpdateTime());
@@ -306,8 +306,8 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                     .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
                         @Override
                         public void onItemLongClick(View item, int position) {
-                            String strPermissionId = tableData.get(position).get(0); //当前item权限ID
-                            String strOldPermissionName = tableData.get(position).get(1); //当前item权限名称
+                            String strOldPermissionName = tableData.get(position).get(0); //当前item权限名称
+                            String strPermissionId = tableData.get(position).get(1); //当前item权限ID
                             new MaterialDialog.Builder(getContext())
                                     .title("是否删除[" + strOldPermissionName + "]权限")
                                     .titleGravity(GravityEnum.CENTER)

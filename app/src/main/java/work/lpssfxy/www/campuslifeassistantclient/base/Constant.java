@@ -344,8 +344,12 @@ public class Constant {
     // 超管通过角色ID查询拥有该角色的全部用户角色并集信息
     public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_ID = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleId";
 
+    //超管通过用户名查询该用户拥有全部对应的用户角色并集信息
+    public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_USER_NAME = BASE_URL + "/api/admin/user/role/adminSelectUserAndRoleInfoByUserName";
+
     // 超管通过角色名查询拥有该角色的全部用户角色并集信息
     public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_NAME = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleName";
+
     /* ************************ 6.角色权限相关API接口 *************************/
 
     // 超管新增一条角色权限信息
@@ -413,8 +417,6 @@ public class Constant {
 
     //超管修改审核状态和审核回复
     public static final String ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO = BASE_URL + "/api/apply/run/adminUpdateApplyRunInfoStateAndPostscriptByOldInfo";
-
-
 
 }
 

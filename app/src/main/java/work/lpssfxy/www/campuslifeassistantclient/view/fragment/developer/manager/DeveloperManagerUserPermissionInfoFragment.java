@@ -33,6 +33,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserPermissionTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllUserPermissionInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHavePermissionUserInfoByPermissionIdFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
 
@@ -170,6 +171,7 @@ public class DeveloperManagerUserPermissionInfoFragment extends BaseFragment{
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
         userPermissionInfoFragments = new Fragment[]{
+                DeveloperSelectAllUserPermissionInfoFragment.newInstance(),
                 DeveloperSelectUserPermissionByUserNameFragment.newInstance(),
                 DeveloperSelectHavePermissionUserInfoByPermissionIdFragment.newInstance()
         };
