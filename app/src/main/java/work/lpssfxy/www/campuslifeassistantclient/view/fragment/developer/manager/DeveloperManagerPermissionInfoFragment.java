@@ -44,7 +44,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
  */
 
 @SuppressLint("NonConstantResourceId")
-public class DeveloperManagerPermissionInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener{
+public class DeveloperManagerPermissionInfoFragment extends BaseFragment{
 
     private static final String TAG = "DeveloperManagerPermissionInfoFragment";
 
@@ -105,7 +105,6 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
     private void initTabLayout() {
         mPermissionInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
         mTabLayoutPermissionInfo.setTabMode(MODE_SCROLLABLE);
-        mTabLayoutPermissionInfo.addOnTabSelectedListener(this);
         mViewPager2PermissionInfo.setAdapter(mPermissionInfoAdapter);
         // 设置缓存的数量
         mViewPager2PermissionInfo.setOffscreenPageLimit(1);
@@ -189,21 +188,6 @@ public class DeveloperManagerPermissionInfoFragment extends BaseFragment impleme
         } else { // 清空适配全部数据
             mPermissionInfoAdapter.clear();
         }
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        XToastUtils.toast("新选中了:" + tab.getText());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-        XToastUtils.toast("未选中:" + tab.getText());
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-        XToastUtils.toast("再次选中了:" + tab.getText());
     }
 
     @Override

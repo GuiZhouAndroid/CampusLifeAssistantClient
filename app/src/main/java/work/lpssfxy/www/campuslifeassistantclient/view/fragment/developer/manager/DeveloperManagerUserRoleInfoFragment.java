@@ -44,7 +44,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
  * @create 2021-11-27-22:21
  */
 @SuppressLint("NonConstantResourceId")
-public class DeveloperManagerUserRoleInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener{
+public class DeveloperManagerUserRoleInfoFragment extends BaseFragment{
 
     private static final String TAG = "DeveloperManagerUserRoleInfoFragment";
 
@@ -106,7 +106,6 @@ public class DeveloperManagerUserRoleInfoFragment extends BaseFragment implement
     private void initTabLayout() {
         mUserRoleInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
         mTabLayoutUserRoleInfo.setTabMode(MODE_SCROLLABLE);
-        mTabLayoutUserRoleInfo.addOnTabSelectedListener(this);
         mViewPager2UserRoleInfo.setAdapter(mUserRoleInfoAdapter);
         // 设置缓存的数量
         mViewPager2UserRoleInfo.setOffscreenPageLimit(1);
@@ -191,21 +190,6 @@ public class DeveloperManagerUserRoleInfoFragment extends BaseFragment implement
         } else { // 清空适配全部数据
             mUserRoleInfoAdapter.clear();
         }
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        XToastUtils.toast("新选中了:" + tab.getText());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-        XToastUtils.toast("未选中:" + tab.getText());
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-        XToastUtils.toast("再次选中了:" + tab.getText());
     }
 
     @Override

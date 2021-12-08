@@ -193,17 +193,17 @@ public class DeveloperManagerUserInfoFragment extends BaseFragment implements Ta
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        XToastUtils.toast("新选中了:" + tab.getText());
+
     }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        XToastUtils.toast("未选中:" + tab.getText());
+
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        XToastUtils.toast("再次选中了:" + tab.getText());
+
     }
 
     @Override

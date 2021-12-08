@@ -43,7 +43,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.Develo
  * @create 2021-12-01-22:45
  */
 @SuppressLint("NonConstantResourceId")
-public class DeveloperManagerCertificationInfoFragment extends BaseFragment implements TabLayout.OnTabSelectedListener{
+public class DeveloperManagerCertificationInfoFragment extends BaseFragment{
 
     //顶部TabLayout
     @BindView(R2.id.tab_layout_certification_info)TabLayout mTabLayoutCertificationInfo;
@@ -102,7 +102,6 @@ public class DeveloperManagerCertificationInfoFragment extends BaseFragment impl
     private void initTabLayout() {
         mCertificationInfoAdapter = new MyFragmentStateViewPager2Adapter(this);
         mTabLayoutCertificationInfo.setTabMode(MODE_SCROLLABLE);
-        mTabLayoutCertificationInfo.addOnTabSelectedListener(this);
         mViewPager2CertificationInfo.setAdapter(mCertificationInfoAdapter);
         // 设置缓存的数量
         mViewPager2CertificationInfo.setOffscreenPageLimit(1);
@@ -185,21 +184,6 @@ public class DeveloperManagerCertificationInfoFragment extends BaseFragment impl
         } else { // 清空适配全部数据
             mCertificationInfoAdapter.clear();
         }
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        XToastUtils.toast("新选中了:" + tab.getText());
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-        XToastUtils.toast("未选中:" + tab.getText());
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-        XToastUtils.toast("再次选中了:" + tab.getText());
     }
 
     @Override
