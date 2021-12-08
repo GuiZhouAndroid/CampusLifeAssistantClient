@@ -39,6 +39,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.CallUserTelPopup;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
@@ -182,6 +183,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 
@@ -229,6 +231,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 
@@ -276,6 +279,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 
@@ -419,7 +423,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllUserInfo(context);
-                                    ToastUtils.show("信息重新加载完成");
+                                    XToastUtils.success("用户信息重新加载完成");
                                 }
                             }, 1000);
                         }
@@ -431,6 +435,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }
@@ -534,7 +539,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllUserInfo(context);
-                                    ToastUtils.show("全部用户信息重新加载完毕");
+                                    XToastUtils.success("用户信息重新加载完成");
                                 }
                             }, 1000);
                         }
@@ -546,7 +551,7 @@ public class DeveloperSelectAllUserInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
-                                    ToastUtils.show("分页功能待实现");
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }

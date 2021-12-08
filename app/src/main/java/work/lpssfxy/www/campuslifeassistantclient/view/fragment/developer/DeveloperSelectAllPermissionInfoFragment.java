@@ -47,6 +47,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllPermissionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
@@ -73,13 +74,8 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
     @BindView(R2.id.ll_permission_info_table_content_view) LinearLayout mLlPermissionInfoTableContentView;
     //跑马灯滚动显示权限总条数
     @BindView(R2.id.mtv_count_permission_number) MarqueeTextView mMtvCountPermissionNumber;
-
     //顶部标题数组
     private String[] topTitleArrays;
-//    /* RecyclerView列表 */
-//    @BindView(R2.id.recyclerView_all_permission_info) RecyclerView mRecyclerViewAllPermissionInfo;
-//    /* 权限信息列表适配器 */
-//    private BasePermissionInfoAdapter permissionInfoAdapter;
 
     /**
      * @return 单例对象
@@ -101,8 +97,6 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
 
     @Override
     protected void initView(View rootView) {
-//        //初始化RecyclerView列表控件
-//        initSelectAllPermissionInfoRecyclerView();
         initDisplayOpinion();
     }
 
@@ -147,18 +141,6 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
         }
     }
 
-//    /**
-//     * 初始化RecyclerView列表控件
-//     */
-//    private void initSelectAllPermissionInfoRecyclerView() {
-//        // 1.创建布局管理实例对象
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        // 2.设置RecyclerView布局方式为垂直方向
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        // 3.RecyclerView绑定携带垂直方向参数的布局管理实例对象
-//        mRecyclerViewAllPermissionInfo.setLayoutManager(layoutManager);
-//    }
-
     /**
      * OkGo网络请求开始调用API接口开始查询全部权限信息
      *
@@ -173,14 +155,6 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         starSetTabData(response);//Json字符串Gson解析使用，绘制表格
-
-                        // 5.创建权限适配器实例对象，参数一：适配显示样式的item布局文件id，参数二：循环遍历准备好的携带权限对象集合数据
-//                            permissionInfoAdapter = new BasePermissionInfoAdapter(R.layout.developer_fragment_select_all_permission_info_recycler_view_item, permissionInfoBeanList);
-//                            mRecyclerViewAllPermissionInfo.setAdapter(permissionInfoAdapter);
-//                            // 7.设置权限拥有数
-//                            mTvAllPermissionInfoShow.setText("校园帮APP已有：" + permissionInfoBeanList.size() + "条权限信息");
-                        // 8.执行子View单击事件业务逻辑--->更新权限信息
-
                     }
 
                     @Override
@@ -283,7 +257,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllPermissionInfo(context);
-                                    ToastUtils.show("信息重新加载完成");
+                                    XToastUtils.success("权限信息重新加载完毕");
                                 }
                             }, 1000);
                         }
@@ -295,6 +269,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }
@@ -350,7 +325,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setPullRefreshEnabled(true);//开启下拉刷新
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
-        }else {
+        } else {
             mMtvCountPermissionNumber.startSimpleRoll(Collections.singletonList("无此权限相关信息"));
             //4.2监听文本是否匹配--->匹配相同，执行循环滚动
             mMtvCountPermissionNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
@@ -419,7 +394,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllPermissionInfo(context);
-                                    ToastUtils.show("全部权限信息重新加载完毕");
+                                    XToastUtils.success("权限信息重新加载完毕");
                                 }
                             }, 1000);
                         }
@@ -431,7 +406,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
-                                    ToastUtils.show("分页功能待实现");
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }
@@ -495,6 +470,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 
@@ -542,6 +518,7 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 

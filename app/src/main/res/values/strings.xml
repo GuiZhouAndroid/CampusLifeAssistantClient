@@ -119,6 +119,7 @@
 
     <!-- 个人信息 -->
     <string name="my_info">我的信息</string>
+    <string name="yes_or_no_select_user_info">是否查看该用户个人信息</string>
 
 
     <!-- 首页 -->

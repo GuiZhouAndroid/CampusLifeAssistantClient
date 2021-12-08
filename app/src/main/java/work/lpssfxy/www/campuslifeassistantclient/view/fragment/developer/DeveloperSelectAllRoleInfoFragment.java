@@ -47,6 +47,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.edit.PowerfulEditText;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllRoleInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
@@ -74,7 +75,6 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     @BindView(R2.id.ll_role_info_table_content_view) LinearLayout mLlRoleInfoTableContentView;
     //跑马灯滚动显示角色总条数
     @BindView(R2.id.mtv_count_role_number) MarqueeTextView mMtvCountRoleNumber;
-
     //顶部标题数组
     private String[] topTitleArrays;
 
@@ -357,7 +357,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllRoleInfo(context);
-                                    ToastUtils.show("信息重新加载完成");
+                                    XToastUtils.success("角色信息重新加载完毕");
                                 }
                             }, 1000);
                         }
@@ -369,6 +369,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }
@@ -493,7 +494,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     startSelectAllRoleInfo(context);
-                                    ToastUtils.show("全部角色信息重新加载完毕");
+                                    XToastUtils.success("角色信息重新加载完毕");
                                 }
                             }, 1000);
                         }
@@ -505,7 +506,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                 @Override
                                 public void run() {
                                     mXRecyclerView.setNoMore(true);
-                                    ToastUtils.show("分页功能待实现");
+                                    XToastUtils.info("分页功能待实现");
                                 }
                             }, 1000);
                         }
@@ -569,6 +570,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 
@@ -616,6 +618,7 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
                                             @SuppressLint("SetTextI18n")
                                             @Override
                                             public void onSuccess(Response<String> response) {
+                                                XToastUtils.success("搜索成功");
                                                 starSetTabData(response);//Json字符串Gson解析使用，绘制表格
                                             }
 

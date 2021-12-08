@@ -30,7 +30,7 @@
             android:ellipsize="marquee"
             android:gravity="center_horizontal|center"
             android:singleLine="true"
-            android:text="跑腿学生个人信息"
+            android:text="学生个人信息"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_18" />
 
