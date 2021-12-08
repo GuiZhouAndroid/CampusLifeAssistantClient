@@ -92,6 +92,7 @@
     <string name="search_user">搜索用户</string>
     <string name="start_yes_cer">执行认证</string>
     <string name="search_certification">搜索认证</string>
+    <string name="search_cer_run">搜索跑腿</string>
     <string name="if_delete_now_role">是否删除此角色</string>
     <string name="yes">是</string>
     <string name="no">否</string>
@@ -150,6 +151,11 @@
     <string name="indexInt">正在请求数据...</string>
     <string name="logoutIng">正在注销...</string>
     <string name="notLogin">未登录</string>
+    <string name="apply_cer_ok">跑腿申请审核通过</string>
+    <string name="apply_cer_not_ok">跑腿申请拒绝成功</string>
+    <string name="apply_cer_no">跑腿申请审核失败</string>
+    <string name="apply_cer_not_no">跑腿申请拒绝失败</string>
+    <string name="apply_cer_info">必须输入审核回复</string>
     <!--behavior-->
     <string name="scale_down_show_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.FloatingActionButton.ScaleDownShowBehavior</string>
     <string name="bottom_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.BottomNavigation.BottomNavigationBehavior</string>

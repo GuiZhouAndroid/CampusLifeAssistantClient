@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <com.github.chrisbanes.photoview.PhotoView
+        android:layout_centerInParent="true"
         android:id="@+id/pv_apply_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

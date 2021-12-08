@@ -3,6 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -68,7 +69,7 @@ public class ApplyImgLookFragment extends BaseFragment {
         //设置MainActivity传来的数据
         if (getArguments() != null) {
             String strGetUrlData = getArguments().getString("urlData");
-            Toast.makeText(getActivity(), strGetUrlData, Toast.LENGTH_SHORT).show();
+            Log.i("urlData", strGetUrlData);
             //(占位图 + 无缓存)
             RequestOptions options = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE);
             // 加载核酸检测URL，CenterCrop()完全填充，但图像可能不会完整显示，fitCenter()图像将会完全显示，但可能不会填满整个ImageView

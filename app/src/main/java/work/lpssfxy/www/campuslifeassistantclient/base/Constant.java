@@ -411,5 +411,10 @@ public class Constant {
     // 超管通过用户ID查询跑腿认证学生用户信息
     public static final String ADMIN_SELECT_APPLY_RUN_INFO_BY_USERID = BASE_URL + "/api/apply/run/adminSelectApplyRunInfoByUserId";
 
+    //超管修改审核状态和审核回复
+    public static final String ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO = BASE_URL + "/api/apply/run/adminUpdateApplyRunInfoStateAndPostscriptByOldInfo";
+
+
+
 }
 

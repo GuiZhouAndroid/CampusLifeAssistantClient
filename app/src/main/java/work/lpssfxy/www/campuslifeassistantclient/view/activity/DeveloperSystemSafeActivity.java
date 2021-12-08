@@ -3,6 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +57,8 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
     @BindView(R2.id.vertical_viewpager_developer_safe) VerticalPager mDeveloperSafeVerticalViewPager;
     /** Fragment集合 */
     public Fragment[] fragments = null;
-
+    /** 防触碰使用的变量 */
+    private long firstTime;
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -162,5 +166,24 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
                 DeveloperSystemSafeActivity.this.finish();
                 break;
         }
+    }
+
+    /**
+     * 防触碰处理
+     * 再按一次退出后台中心
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 3000) {
+                ToastUtils.show("再按一次退出后台中心");
+                firstTime = secondTime;
+                return true;
+            } else {
+                DeveloperSystemSafeActivity.this.finish();
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }
