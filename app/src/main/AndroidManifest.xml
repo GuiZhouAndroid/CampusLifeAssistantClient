@@ -221,6 +221,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 用户收货地址 -->
+        <activity
+            android:name=".view.activity.UserAddressActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->
         <!-- 广播器 -->

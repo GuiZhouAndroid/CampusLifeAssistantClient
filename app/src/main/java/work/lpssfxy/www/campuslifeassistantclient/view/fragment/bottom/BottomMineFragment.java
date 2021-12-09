@@ -44,11 +44,13 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserCerBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerSelectIdCardActivity;
@@ -82,6 +84,7 @@ public class BottomMineFragment extends BaseFragment {
     @BindView(R2.id.stv_my_cer) SuperTextView mStvMyCer;//实名认证
     @BindView(R2.id.stv_my_account_safe) SuperTextView mStvAccountSafe;//账户与安全
     @BindView(R2.id.stv_my_order) SuperTextView mStvMyOrder;//我的订单
+    @BindView(R2.id.stv_my_address) SuperTextView mStvMyAddress;//我的收货地址
     @BindView(R2.id.stv_my_feed_back) SuperTextView mStvFeedBack;//意见反馈
     @BindView(R2.id.stv_my_report) SuperTextView mStvReport;//违规举报
     @BindView(R2.id.stv_my_contact_us) SuperTextView mStvContactUs;//联系我们
@@ -267,7 +270,13 @@ public class BottomMineFragment extends BaseFragment {
                 ToastUtils.show(strMyOrder);
             }
         });
-
+        mStvMyAddress.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+            @Override
+            public void onClick(SuperTextView superTextView) {
+                XToastUtils.success("收货地址");
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserAddressActivity.class));
+            }
+        });
         //意见反馈
         mStvFeedBack.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override

@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fl_address_show"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".view.activity.UserAddressActivity">
+
     <LinearLayout
-        android:fitsSystemWindows="true"
-        android:background="@color/Blue"
-        android:id="@+id/ll_user_info_title"
+        android:id="@+id/ll_address_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
+        android:background="@color/welcome_colorMain"
+        android:fitsSystemWindows="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -29,7 +31,7 @@
             android:ellipsize="marquee"
             android:gravity="center_horizontal|center"
             android:singleLine="true"
-            android:text="实名信息详情"
+            android:text="收货地址管理"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_18" />
 
@@ -46,4 +48,9 @@
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ryc_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_address_title" />
 </RelativeLayout>

@@ -179,6 +179,25 @@ public class Constant {
     public static final String USER_SELECT_APPLY_RUN_BY_SA_TOKEN_SESSION = BASE_URL + "/api/apply/run/userSelectApplyRunInfoBySaTokenSession";
 
     /**
+     * 用户收货地址
+     */
+
+    // 通过用户ID和收获地址ID查询对应的收获地址信息
+    public static final String USER_SELECT_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID = BASE_URL + "/api/user/address/selectUserAddressAllInfoByUserIdAndAddressId";
+
+    // 通过用户ID查询该用户全部收获地址信息
+    public static final String USER_SELECT_ADDRESS_ALL_INFO_BY_USER_ID = BASE_URL + "/api/user/address/selectUserAddressAllInfoByUserId";
+
+    // 通过用户ID和收获地址ID删除对应收获地址信息
+    public static final String USER_DELETE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID = BASE_URL + "/api/user/address/deleteUserAddressInfoByUserIdAndAddressId";
+
+    //用户添加一条收货地址信息
+    public static final String USER_ADD_ONCE_ADDRESS_INFO = BASE_URL + "/api/user/address/addOnceUserAddressInfo";
+
+    //通过用户ID和收获地址ID更新对应收获地址信息
+    public static final String USER_UPDATE_ONCE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID = BASE_URL + "/api/user/address/updateUserAddressInfoByUserIdAndAddressId";
+
+    /**
      * 检测用户登录注销状态相关API接口
      */
     // 查询当前已登录会话状态
