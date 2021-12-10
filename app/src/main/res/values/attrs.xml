@@ -238,4 +238,10 @@
         <item>摩托车</item>
         <item>小轿车</item>
     </string-array>
+
+    <!--添加收货地址标签-->
+    <string-array name="add_address_tags">
+        <item>先生</item>
+        <item>女士</item>
+    </string-array>
 </resources>

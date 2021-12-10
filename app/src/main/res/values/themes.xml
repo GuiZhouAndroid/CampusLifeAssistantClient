@@ -184,4 +184,12 @@
         <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
     </style>
 
+
+    <style name="StatusView.Custom">
+        <item name="sv_complete">@layout/custom_status_top_show_success_layout_item</item>
+        <item name="sv_error">@layout/custom_status_top_show_error_layout_item</item>
+        <item name="sv_loading">@layout/custom_status_top_show_loading_layout_item</item>
+        <item name="sv_custom">@layout/custom_status_top_show_custom_layout_item</item>
+    </style>
+
 </resources>

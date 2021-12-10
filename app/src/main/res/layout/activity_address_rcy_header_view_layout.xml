@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:paddingEnd="@dimen/dp_10"
+        android:id="@+id/ll_address_add"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/welcome_colorMain"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_add_24" />
+
+        <TextView
+            android:paddingEnd="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加收货地址"
+            android:textColor="@color/White"
+            android:textSize="@dimen/sp_16" />
+    </LinearLayout>
+</RelativeLayout>

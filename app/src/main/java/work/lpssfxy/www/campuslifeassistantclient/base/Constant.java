@@ -1,6 +1,7 @@
 package work.lpssfxy.www.campuslifeassistantclient.base;
 
 import com.tencent.tauth.Tencent;
+import com.xuexiang.xui.adapter.simple.AdapterItem;
 
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQSessionInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
@@ -24,6 +25,14 @@ public class Constant {
     public static final String ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+
+    /**
+     * 添加收货地址弹出标题内容
+     */
+    public static AdapterItem[] menuItems = new AdapterItem[]{
+            new AdapterItem("龙山校区"),
+            new AdapterItem("朝阳校区"),
+    };
 
     /***
      *  进度条全局值

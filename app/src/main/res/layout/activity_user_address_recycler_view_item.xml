@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/Grey100">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_150"
-        android:layout_marginTop="@dimen/dp_20"
+        android:layout_height="@dimen/dp_130"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/White"
         android:orientation="vertical">
 
@@ -21,7 +21,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
-
 
                 <LinearLayout
                     android:id="@+id/ll_address_my_info"
@@ -45,10 +44,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingEnd="@dimen/dp_10"
                         android:text="(先生)"
                         android:textColor="@color/Grey900"
-                        android:textSize="@dimen/sp_15" />
+                        android:textSize="@dimen/sp_14" />
 
                     <TextView
                         android:id="@+id/tv_address_mobile"
@@ -80,8 +78,8 @@
                         android:paddingStart="@dimen/dp_30"
                         android:paddingEnd="@dimen/dp_5"
                         android:text="龙山校区"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_15" />
+                        android:textColor="@color/Grey700"
+                        android:textSize="@dimen/sp_14" />
 
                     <TextView
                         android:id="@+id/tv_address_place"
@@ -90,8 +88,8 @@
                         android:layout_gravity="center_vertical"
                         android:paddingEnd="@dimen/dp_10"
                         android:text="模怨"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_15" />
+                        android:textColor="@color/Grey700"
+                        android:textSize="@dimen/sp_14" />
 
                     <TextView
                         android:id="@+id/tv_address_floor"
@@ -100,8 +98,8 @@
                         android:layout_gravity="center_vertical"
                         android:paddingEnd="@dimen/dp_10"
                         android:text="1楼"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_16" />
+                        android:textColor="@color/Grey700"
+                        android:textSize="@dimen/sp_14" />
 
                     <TextView
                         android:id="@+id/tv_address_street"
@@ -110,17 +108,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingEnd="@dimen/dp_10"
                         android:text="101"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_16" />
-
-                    <TextView
-                        android:id="@+id/tv_address_create_data"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="end"
-                        android:text="2021-12-09 15:53:45"
-                        android:textColor="@color/Grey900"
+                        android:textColor="@color/Grey700"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
@@ -129,40 +117,76 @@
                     android:id="@+id/ll_address_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/dp_10"
-                    android:paddingEnd="@dimen/dp_30"
                     tools:ignore="RtlSymmetry">
 
-                    <ImageView
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_25"
-                        android:src="@mipmap/addressupdate" />
-
                     <TextView
+                        android:id="@+id/tv_address_create_data"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingEnd="@dimen/dp_10"
-                        android:text="编辑"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_15" />
+                        android:layout_gravity="center"
+                        android:paddingStart="@dimen/dp_30"
+                        android:text="2021-12-09 15:53:45"
+                        android:textColor="@color/Grey700"
+                        android:textSize="@dimen/sp_13" />
 
-                    <ImageView
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_20"
-                        android:src="@mipmap/addressdelete" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="删除"
-                        android:textColor="@color/Grey800"
-                        android:textSize="@dimen/sp_15" />
+                        android:gravity="end"
+                        android:orientation="horizontal"
+                        android:paddingEnd="@dimen/dp_10">
+
+                        <LinearLayout
+                            android:id="@+id/ll_address_update"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/dp_30"
+                                android:layout_height="@dimen/dp_25"
+                                android:src="@mipmap/addressupdate" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:paddingEnd="@dimen/dp_10"
+                                android:text="编辑"
+                                android:textColor="@color/Grey800"
+                                android:textSize="@dimen/sp_15" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_address_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/dp_30"
+                                android:layout_height="@dimen/dp_20"
+                                android:src="@mipmap/addressdelete" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="删除"
+                                android:textColor="@color/Grey800"
+                                android:textSize="@dimen/sp_15" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
+
+                <work.lpssfxy.www.campuslifeassistantclient.base.MailLineView
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="@dimen/dp_5" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

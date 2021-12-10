@@ -273,8 +273,36 @@ public class BottomMineFragment extends BaseFragment {
         mStvMyAddress.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClick(SuperTextView superTextView) {
-                XToastUtils.success("收货地址");
-                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserAddressActivity.class));
+                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                        .tag("检查登录")
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onStart(Request<String, ? extends Request> request) {
+                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                            }
+
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserAddressActivity.class));
+                                    OkGo.getInstance().cancelTag("检查登录");
+                                } else {
+                                    CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                            }
+
+                            @Override
+                            public void onError(Response<String> response) {
+                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                            }
+                        });
             }
         });
         //意见反馈

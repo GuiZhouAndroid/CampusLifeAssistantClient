@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="10dp" />
-            <solid android:color="@color/LoginInputBackground" />
+            <solid android:color="@color/Deep_Orange" />
         </shape>
     </item>
 </selector>

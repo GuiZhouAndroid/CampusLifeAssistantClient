@@ -90,6 +90,7 @@
     <string name="search_role">搜索角色</string>
     <string name="search_permission">搜索权限</string>
     <string name="search_user">搜索用户</string>
+    <string name="address_yse">确认添加</string>
     <string name="search_user_permission">搜索用户权限</string>
     <string name="start_yes_cer">执行认证</string>
     <string name="search_certification">搜索认证</string>
