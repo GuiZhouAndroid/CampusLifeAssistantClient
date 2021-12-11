@@ -26,13 +26,10 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyVerticalTabLayoutVie
 import work.lpssfxy.www.campuslifeassistantclient.adapter.VerticalPager;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerCertificationInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerRunCerInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerBannedAccountInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerPermissionInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerRoleInfoFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.manager.DeveloperManagerUserPermissionInfoFragment;
 
 /**
  * created by on 2021/11/16
@@ -140,11 +137,8 @@ public class DeveloperSystemSafeActivity extends BaseActivity {
                 DeveloperManagerUserInfoFragment.newInstance(), //用户管理
                 DeveloperManagerRoleInfoFragment.newInstance(), //角色管理
                 DeveloperManagerPermissionInfoFragment.newInstance(), //权限管理
-                DeveloperManagerUserRoleInfoFragment.newInstance(), //用户角色
-                DeveloperManagerUserPermissionInfoFragment.newInstance(), //用户权限
                 DeveloperManagerBannedAccountInfoFragment.newInstance(),//账户封禁
-                DeveloperManagerCertificationInfoFragment.newInstance(),//实名认证
-                DeveloperManagerRunCerInfoFragment.newInstance() //跑腿认证
+                DeveloperManagerCertificationInfoFragment.newInstance(),//认证管理
         };
         //ViewPager2设置MyAdapter适配器，遍历List<Fragment>集合，填充Fragment页面
         mDeveloperSafeVerticalViewPager.setAdapter(new MyVerticalTabLayoutViewPagerAdapter(getSupportFragmentManager(), fragments, fragmentList));

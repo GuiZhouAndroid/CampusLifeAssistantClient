@@ -33,6 +33,8 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageCertificationTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllCerRunInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllCerShopInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllCertificationInfoFragment;
 
 /**
@@ -165,7 +167,9 @@ public class DeveloperManagerCertificationInfoFragment extends BaseFragment{
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
         certificationInfoFragments = new Fragment[]{
-                DeveloperSelectAllCertificationInfoFragment.newInstance()
+                DeveloperSelectAllCertificationInfoFragment.newInstance(),//实名认证
+                DeveloperSelectAllCerRunInfoFragment.newInstance(),//跑腿认证
+                DeveloperSelectAllCerShopInfoFragment.newInstance(),//商家认证
         };
         //装载List集合，提供给ViewPager2适配器使用
         List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.certificationInfoFragments));

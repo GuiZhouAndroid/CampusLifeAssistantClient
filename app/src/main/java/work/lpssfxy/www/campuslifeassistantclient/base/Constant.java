@@ -443,14 +443,25 @@ public class Constant {
 
     /* ************************ 8.申请跑腿认证相关API接口 *************************/
 
-    // 超管通过用户ID查询跑腿认证学生用户信息
+    // 超管查询跑腿认证学生用户全部信息
     public static final String ADMIN_SELECT_ALL_APPLY_RUN_INFO = BASE_URL + "/api/apply/run/adminSelectAllApplyRunInfo";
 
     // 超管通过用户ID查询跑腿认证学生用户信息
     public static final String ADMIN_SELECT_APPLY_RUN_INFO_BY_USERID = BASE_URL + "/api/apply/run/adminSelectApplyRunInfoByUserId";
 
-    //超管修改审核状态和审核回复
+    //超管修改跑腿认证审核状态和审核回复
     public static final String ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO = BASE_URL + "/api/apply/run/adminUpdateApplyRunInfoStateAndPostscriptByOldInfo";
+
+    /* ************************ 9.申请商家入驻认证相关API接口 *************************/
+
+    // 超管查询商家认证用户全部信息
+    public static final String ADMIN_SELECT_ALL_APPLY_SHOP_INFO = BASE_URL + "/api/apply/shop/adminSelectAllApplyShopInfo";
+
+    // 超管通过用户ID查询商家认证用户信息
+    public static final String ADMIN_SELECT_APPLY_SHOP_INFO_BY_USERID = BASE_URL + "/api/apply/shop/adminSelectApplyShopInfoByUserId";
+
+    //超管修改商家认证审核状态和审核回复
+    public static final String ADMIN_UPDATE_APPLY_SHOP_INFO_STATE_OLD_INFO = BASE_URL + "/api/apply/shop/adminUpdateApplyShopInfoStateByOldInfo";
 
 }
 

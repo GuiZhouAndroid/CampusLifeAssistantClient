@@ -9,7 +9,9 @@ package work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab;
  */
 public enum MultiPageCertificationTitle {
 
-    全部详情(0);
+    实名认证(0),
+    跑腿认证(1),
+    商家认证(2);
 
     private final int position;
 

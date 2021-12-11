@@ -98,6 +98,7 @@
     <string name="start_yes_cer">执行认证</string>
     <string name="search_certification">搜索认证</string>
     <string name="search_cer_run">搜索跑腿</string>
+    <string name="search_cer_shop">搜索商家</string>
     <string name="if_delete_now_role">是否删除此角色</string>
     <string name="yes">是</string>
     <string name="no">否</string>

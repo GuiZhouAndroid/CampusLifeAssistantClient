@@ -9,7 +9,12 @@ package work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab;
  */
 public enum MultiPageUserTitle {
 
-    全部详情(0);
+    用户详情(0),
+    专属角色(1),
+    专属权限(2),
+    用户角色(3),
+    用户权限(4),
+    用户权限专属(6);
 
     private final int position;
 

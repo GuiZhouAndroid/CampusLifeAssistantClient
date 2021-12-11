@@ -33,7 +33,13 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.MyFragmentStateViewPag
 import work.lpssfxy.www.campuslifeassistantclient.base.tablayout.tab.MultiPageUserTitle;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllRoleInfoFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllUserInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectAllUserPermissionInfoFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHavePermissionUserInfoByPermissionIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectHaveRoleUserInfoByRoleIdFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserPermissionByUserNameFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.fragment.developer.DeveloperSelectUserRoleByUserNameFragment;
 
 /**
  * created by on 2021/11/29
@@ -170,7 +176,12 @@ public class DeveloperManagerUserInfoFragment extends BaseFragment implements Ta
     private void refreshAdapter(boolean isShow) {
         //TabLayout适配的Fragment集合
         userInfoFragments = new Fragment[]{
-                DeveloperSelectAllUserInfoFragment.newInstance()
+                DeveloperSelectAllUserInfoFragment.newInstance(),//用户详情
+                DeveloperSelectUserRoleByUserNameFragment.newInstance(),//专属角色
+                DeveloperSelectUserPermissionByUserNameFragment.newInstance(),//专属权限
+                DeveloperSelectHaveRoleUserInfoByRoleIdFragment.newInstance(),//用户角色
+                DeveloperSelectHavePermissionUserInfoByPermissionIdFragment.newInstance(),//用户权限
+                DeveloperSelectAllUserPermissionInfoFragment.newInstance(),//用户权限专属
         };
         //装载List集合，提供给ViewPager2适配器使用
         List<Fragment> fragmentList = new ArrayList<>(Arrays.asList(this.userInfoFragments));

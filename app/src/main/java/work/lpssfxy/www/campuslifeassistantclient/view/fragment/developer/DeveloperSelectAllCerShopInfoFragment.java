@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -40,7 +39,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.UserInfoFullPopup;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllApplyRunInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllApplyShopInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
@@ -50,45 +49,45 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.ApplyImgLookFragment;
 
 /**
- * created by on 2021/12/8
- * 描述：超管查询跑腿认证全部信息
+ * created by on 2021/12/11
+ * 描述：超管查询商家认证全部信息
  *
  * @author ZSAndroid
- * @create 2021-12-08-12:36
+ * @create 2021-12-11-23:35
  */
-
 @SuppressLint("NonConstantResourceId")
-public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
+public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
 
-    private static final String TAG = "DeveloperSelectAllCerRunInfoFragment";
+    private static final String TAG = "DeveloperSelectAllCerShopInfoFragment";
 
     /* 父布局 */
-    @BindView(R2.id.fl_dev_select_all_cer_run_info) FrameLayout mFlDevSelectAllCerRunInfo;
+    @BindView(R2.id.fl_dev_select_all_cer_shop_info) FrameLayout mFlDevSelectAllCerShopInfo;
     /* XUI按钮搜索 */
-    @BindView(R2.id.btn_search_cer_run_info) ButtonView mBtnSearchCerRunInfo;
+    @BindView(R2.id.btn_search_cer_shop_info) ButtonView mBtnSearchCerShopInfo;
     /* 填充表格视图 */
-    @BindView(R2.id.ll_cer_run_table_content_view) LinearLayout mLlCerRunInfoTableContentView;
+    @BindView(R2.id.ll_cer_shop_table_content_view) LinearLayout mLlCerShopInfoTableContentView;
     //跑马灯滚动显示认证总条数
-    @BindView(R2.id.mtv_count_cer_run_number) MarqueeTextView mMtvCountCerRunNumber;
+    @BindView(R2.id.mtv_count_cer_shop_number) MarqueeTextView mMtvCountCerShopNumber;
     //顶部标题数组
     private String[] topTitleArrays;
 
     /**
      * @return 单例对象
      */
-    public static DeveloperSelectAllCerRunInfoFragment newInstance() {
-        return new DeveloperSelectAllCerRunInfoFragment();
+    public static DeveloperSelectAllCerShopInfoFragment newInstance() {
+        return new DeveloperSelectAllCerShopInfoFragment();
     }
+
 
     @Override
     protected int bindLayout() {
-        return R.layout.fragment_developer_select_all_cer_run_info;
+        return R.layout.fragment_developer_select_all_cer_shop_info;
     }
 
     @Override
     protected void prepareData(Bundle savedInstanceState) {
         //准备表的顶部标题数据
-        topTitleArrays = new String[]{"用户ID", "申请ID", "申请类型", "审核状态", "车辆信息", "学生证", "核酸检测", "健康码", "行程码", "毕业时间", "审核回复", "申请时间", "审核时间"};
+        topTitleArrays = new String[]{"用户ID", "申请ID", "申请类型", "审核状态", "餐饮许可证", "申请时间", "审核时间"};
     }
 
     @Override
@@ -108,8 +107,8 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
 
     @Override
     protected void doBusiness(Context context) {
-        //开始查询全部跑腿认证信息
-        startSelectAllCerRunInfo(context);
+        //开始查询全部商家认证信息
+        startSelectAllCerShopInfo(context);
     }
 
     private void initDisplayOpinion() {
@@ -125,24 +124,24 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
     /**
      * @param view 视图View
      */
-    @OnClick({R2.id.btn_search_cer_run_info})
-    public void onSelectAllCerRunInfoViewClick(View view) {
+    @OnClick({R2.id.btn_search_cer_shop_info})
+    public void onSelectAllCerShopInfoViewClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_search_cer_run_info://确定搜索
-                startSearchCerRunInfo();
+            case R.id.btn_search_cer_shop_info://确定搜索
+                startSearchCerShopInfo();
                 break;
         }
     }
 
     /**
-     * 开始查询全部跑腿认证信息
+     * 开始查询全部商家认证信息
      *
      * @param context 上下文
      */
-    private void startSelectAllCerRunInfo(Context context) {
+    private void startSelectAllCerShopInfo(Context context) {
         //开始网络请求，访问后端服务器
-        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_APPLY_RUN_INFO)
-                .tag("查询全部申请跑腿信息")
+        OkGo.<String>post(Constant.ADMIN_SELECT_ALL_APPLY_SHOP_INFO)
+                .tag("查询全部申请商家信息")
                 .execute(new StringCallback() {
                     @SuppressLint("SetTextI18n") // I18代表国际化,带有占位符的资源字符串
                     @Override
@@ -153,7 +152,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerRunInfo, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -164,35 +163,29 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
      * @param response okGo响应返回的Json字符串
      */
     private void starSetTabData(Response<String> response) {
-        OkGoAllApplyRunInfoBean okGoAllApplyRunInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllApplyRunInfoBean.class);
-        if (200 == okGoAllApplyRunInfoBean.getCode() && okGoAllApplyRunInfoBean.getData().size() > 0 && "success".equals(okGoAllApplyRunInfoBean.getMsg())) {
+        OkGoAllApplyShopInfoBean okGoAllApplyShopInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllApplyShopInfoBean.class);
+        if (200 == okGoAllApplyShopInfoBean.getCode() && okGoAllApplyShopInfoBean.getData().size() > 0 && "success".equals(okGoAllApplyShopInfoBean.getMsg())) {
             //1.创建集合，用于显示表格
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             //2.顶部标题数组，绑定表第一列标题
             tableData.add(new ArrayList<>(Arrays.asList(topTitleArrays)));
             //3.遍历用户集合，绑定表格内容
-            for (OkGoAllApplyRunInfoBean.Data data : okGoAllApplyRunInfoBean.getData()) {
+            for (OkGoAllApplyShopInfoBean.Data data : okGoAllApplyShopInfoBean.getData()) {
                 //3.1 创建集合，装载表格内容
                 ArrayList<String> rowData = new ArrayList<>();
-                rowData.add(String.valueOf(data.getArUserId()));
-                rowData.add(String.valueOf(data.getArId()));
-                if (data.getArType() == 3) {
-                    rowData.add("跑腿");
+                rowData.add(String.valueOf(data.getAsUserId()));
+                rowData.add(String.valueOf(data.getAsId()));
+                if (data.getAsType() == 4) {
+                    rowData.add("商家");
                 }
-                if (data.getArState() == 0) {
+                if (data.getAsState() == 0) {
                     rowData.add("待审核");
-                } else if (data.getArState() == 1) {
+                } else if (data.getAsState() == 1) {
                     rowData.add("已审核");
-                } else if (data.getArState() == -1) {
+                } else if (data.getAsState() == -1) {
                     rowData.add("审核失败");
                 }
-                rowData.add(data.getArCar());
-                rowData.add(data.getArStuCard());
-                rowData.add(data.getArNucleicPic());
-                rowData.add(data.getArHealthCode());
-                rowData.add(data.getArRunCode());
-                rowData.add(data.getArGraduationData());
-                rowData.add(data.getArPostscript());
+                rowData.add(data.getAsLicence());
                 rowData.add(data.getCreateTime());
                 rowData.add(data.getUpdateTime());
                 //3.2 单个用户信息遍历后，设置进表格总集合
@@ -201,13 +194,13 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
             // 4.设置文本滚动显示用户条数
             if (!tableData.isEmpty()) {
                 //4.1设置滚动文本
-                mMtvCountCerRunNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前拥有" + (tableData.size() - 1) + "个申请跑腿学生用户        "));
+                mMtvCountCerShopNumber.startSimpleRoll(Collections.singletonList("        校园帮APP当前拥有" + (tableData.size() - 1) + "个申请商家认证用户        "));
                 //4.2监听文本是否匹配--->匹配相同，执行循环滚动
-                mMtvCountCerRunNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+                mMtvCountCerShopNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                     @Override
                     public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                         //4.3滚动开始
-                        if (displayMsg.toString().equals("        校园帮APP当前拥有" + (tableData.size() - 1) + "个申请跑腿学生用户        ")) {
+                        if (displayMsg.toString().equals("        校园帮APP当前拥有\" + (tableData.size() - 1) + \"个申请商家认证用户        ")) {
                             return displayMsg;//匹配相同，继续滚动
                         }
                         return null;
@@ -221,16 +214,13 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                 });
             }
             //5.携带全部用户信息的表格总集合，开始适配绘制表格
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlCerRunInfoTableContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlCerShopInfoTableContentView, tableData);
             //6.表格UI设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行
                     .setMaxColumnWidth(200) //列最大宽度
                     .setMinColumnWidth(50) //列最小宽度
-                    .setColumnWidth(5, 200) //设置指定列文本宽度
-                    .setColumnWidth(6, 200) //设置指定列文本宽度
-                    .setColumnWidth(7, 200) //设置指定列文本宽度
-                    .setColumnWidth(8, 200) //设置指定列文本宽度
+                    .setColumnWidth(4, 200) //设置指定列文本宽度
                     .setMinRowHeight(30)//行最小高度
                     .setMaxRowHeight(30)//行最大高度
                     .setTextViewSize(12) //单元格字体大小
@@ -266,7 +256,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startSelectAllCerRunInfo(context);
+                                    startSelectAllCerShopInfo(context);
                                     ToastUtils.show("信息重新加载完成");
                                 }
                             }, 1000);
@@ -290,37 +280,24 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                             String strUserId = tableData.get(position).get(0); //当前item用户ID
                             String strCerType = tableData.get(position).get(2); //当前item申请类型
                             String strCerState = tableData.get(position).get(3); //当前item审核状态
-                            String strStuCardURL = tableData.get(position).get(5); //当前item学生证URL
-                            String strNucleicPicURL = tableData.get(position).get(6); //当前item核酸检测URL
-                            String strHealCodeURL = tableData.get(position).get(7); //当前item健康码URL
-                            String strRunCodeURL = tableData.get(position).get(8); //当前item行程码URL
-                            String strPostscript = tableData.get(position).get(10); //当前item审核回复
+                            String strLicencePicURL = tableData.get(position).get(4); //当前item餐饮许可证URL
                             //弹出操作对话框
                             new XPopup.Builder(getContext())
                                     .maxHeight(800)
                                     .isDarkTheme(true)
                                     .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                                    .asCenterList("选择用户ID[" + strUserId + "]申请的操作方式", new String[]{"处理跑腿申请", "查看学生信息", "查看学生证", "查看核酸证明", "查看健康码", "查看行程码"}, new OnSelectListener() {
+                                    .asCenterList("选择用户ID[" + strUserId + "]申请的操作方式", new String[]{"处理商家申请", "查看用户信息", "查看餐饮许可证"}, new OnSelectListener() {
                                         @Override
                                         public void onSelect(int position, String searchMode) {
                                             switch (position) {
                                                 case 0:
-                                                    doCerRunApplyInfo(strUserId, strCerType, strCerState, strPostscript);//处理跑腿申请，分配用户角色 + 审核状态  + 审核回复
+                                                    doCerShopApplyInfo(strUserId, strCerType, strCerState);//处理商家申请，分配用户角色 + 审核状态
                                                     break;
                                                 case 1:
-                                                    doSelectStuInfo(strUserId);//查看学生信息信息,通过用户ID
+                                                    doSelectShopUserInfo(strUserId);//查看商家信息,通过用户ID
                                                     break;
                                                 case 2:
-                                                    checkStuCardImg(strStuCardURL);//查看学生证图片
-                                                    break;
-                                                case 3:
-                                                    checkNucleicPicImg(strNucleicPicURL);//查看核酸证明图片
-                                                    break;
-                                                case 4:
-                                                    checkHealCodeImg(strHealCodeURL);//查看健康码图片
-                                                    break;
-                                                case 5:
-                                                    checkRunCodeImg(strRunCodeURL);//查看行程码图片
+                                                    checkLicenceImg(strLicencePicURL);//查看学生证图片
                                                     break;
                                             }
                                         }
@@ -331,7 +308,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                     .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
                         @Override
                         public void onItemLongClick(View item, int position) {
-                            ToastUtils.show("您长按了第" + position + "行跑腿信息");
+                            ToastUtils.show("您长按了第" + position + "行商家信息");
                         }
                     })
                     .setOnItemSeletor(R.color.Grey300)//设置Item被选中颜色
@@ -340,13 +317,13 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
             mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);//开启上拉加载
             mLockTableView.getTableScrollView().setRefreshProgressStyle(ProgressStyle.BallBeat);//设置下拉刷样式风格
         } else {
-            mMtvCountCerRunNumber.startSimpleRoll(Collections.singletonList("无此跑腿认证信息"));
+            mMtvCountCerShopNumber.startSimpleRoll(Collections.singletonList("无此商家认证信息"));
             //4.2监听文本是否匹配--->匹配相同，执行循环滚动
-            mMtvCountCerRunNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
+            mMtvCountCerShopNumber.setOnMarqueeListener(new MarqueeTextView.OnMarqueeListener() {
                 @Override
                 public DisplayEntity onStartMarquee(DisplayEntity displayMsg, int index) {
                     //4.3滚动开始
-                    if (displayMsg.toString().equals("无此跑腿认证信息")) {
+                    if (displayMsg.toString().equals("无此商家认证信息")) {
                         return displayMsg;//匹配相同，继续滚动
                     }
                     return null;
@@ -365,7 +342,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
             //空数据其它列字段
             tableData.add(new ArrayList<>());
             //表格绑定空数据
-            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlCerRunInfoTableContentView, tableData);
+            final LockTableView mLockTableView = new LockTableView(getActivity(), mLlCerShopInfoTableContentView, tableData);
             //表格UI参数设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     .setLockFristRow(true) //是否锁定第一行
@@ -407,7 +384,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startSelectAllCerRunInfo(context);
+                                    startSelectAllCerShopInfo(context);
                                     ToastUtils.show("全部跑腿认证信息重新加载完毕");
                                 }
                             }, 1000);
@@ -434,9 +411,9 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
     }
 
     /**
-     * 搜索认证跑腿用户信息
+     * 搜索已申请商家认证信息
      */
-    private void startSearchCerRunInfo() {
+    private void startSearchCerShopInfo() {
         new XPopup.Builder(getContext())
                 .maxHeight(800)
                 .isDarkTheme(true)
@@ -458,7 +435,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
     }
 
     /**
-     * 通过用户ID查询已申请跑腿认证信息
+     * 通过用户ID查询已申请商家认证信息
      */
     private void chooseUserId() {
         new XPopup.Builder(getContext())
@@ -496,7 +473,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                             @Override
                                             public void onError(Response<String> response) {
                                                 super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerRunInfo, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -505,16 +482,15 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
     }
 
     /**
-     * 处理跑腿申请，分配用户角色 + 审核状态  + 审核回复
+     * 处理商家申请，分配用户角色 + 审核状态
      *
      * @param strUserId  用户ID
      * @param strCerType 申请类型
      * @param cerState   审核状态
-     * @param postscript 审核回复
      */
-    private void doCerRunApplyInfo(String strUserId, String strCerType, String cerState, String postscript) {
+    private void doCerShopApplyInfo(String strUserId, String strCerType, String cerState) {
         new BottomSheet.BottomListSheetBuilder(getActivity())
-                .setTitle("跑腿审核处理")
+                .setTitle("商家审核处理")
                 .addItem("暂不处理")
                 .addItem("同意申请")
                 .addItem("拒绝申请")
@@ -528,10 +504,10 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                 XToastUtils.warning("别忘记处理申请哟");
                                 break;
                             case 1: //同意申请
-                                agreeApplyCerToInfo(strUserId, strCerType, cerState, postscript);// 角色分配 + 审核状态 + 审核回复
+                                agreeApplyCerToInfo(strUserId, strCerType, cerState);// 角色分配 + 审核状态
                                 break;
                             case 2: //拒绝申请
-                                notAgreeUserApply(strUserId, cerState, postscript);//不同意申请 + 审核状态 + 审核回复
+                                notAgreeUserApply(strUserId, cerState);//不同意申请 + 审核状态
                                 break;
                         }
                     }
@@ -546,9 +522,8 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
      * @param userId        用户ID
      * @param strCerType    申请类型
      * @param cerOldState   旧审核状态
-     * @param oldPostscript 旧审核回复
      */
-    private void agreeApplyCerToInfo(String userId, String strCerType, String cerOldState, String oldPostscript) {
+    private void agreeApplyCerToInfo(String userId, String strCerType, String cerOldState) {
         new XPopup.Builder(getContext())
                 .hasStatusBarShadow(false)
                 .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
@@ -563,8 +538,8 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                     /*1.先处理表格抽取的数据 */
                                     int intRoleId = 0;
 
-                                    if (strCerType.equals("跑腿")) {
-                                        intRoleId = 3;
+                                    if (strCerType.equals("商家")) {
+                                        intRoleId = 4;
                                     }
 
                                     /* 2.分配角色 */
@@ -585,14 +560,14 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                                         if (cerOldState.equals("待审核")) {
                                                             intCerOldState = 0; //此0代表旧审核状态-->待审核
                                                         }
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO + "/" + Integer.parseInt(userId) + "/" + intCerOldState + "/" + intNewState + "/" + oldPostscript + "/" + strNewPostscript)
+                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_SHOP_INFO_STATE_OLD_INFO + "/" + Integer.parseInt(userId) + "/" + intCerOldState + "/" + intNewState)
                                                                 .tag("同意跑腿申请")
                                                                 .execute(new StringCallback() {
                                                                     @Override
                                                                     public void onSuccess(Response<String> response) {
                                                                         OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                                         if (200 == okGoResponseBean.getCode() && "跑腿认证审核通过".equals(okGoResponseBean.getMsg())) {
-                                                                            startSelectAllCerRunInfo(context);
+                                                                            startSelectAllCerShopInfo(context);
                                                                             XToastUtils.success(R.string.apply_cer_ok);
                                                                             return;
                                                                         }
@@ -605,7 +580,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                                                     @Override
                                                                     public void onError(Response<String> response) {
                                                                         super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerRunInfo, "请求错误，服务器连接失败！");
+                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
                                                                     }
                                                                 });
                                                     }
@@ -614,7 +589,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                                 @Override
                                                 public void onError(Response<String> response) {
                                                     super.onError(response);
-                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerRunInfo, "请求错误，服务器连接失败！");
+                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
                                                 }
                                             });
                                 } else {
@@ -630,9 +605,8 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
      *
      * @param strUserId     用户ID
      * @param cerOldState   旧审核状态
-     * @param oldPostscript 旧审核回复
      */
-    private void notAgreeUserApply(String strUserId, String cerOldState, String oldPostscript) {
+    private void notAgreeUserApply(String strUserId, String cerOldState) {
         new XPopup.Builder(getContext())
                 .hasStatusBarShadow(false)
                 .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
@@ -648,14 +622,14 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                 if (cerOldState.equals("待审核")) {
                                     intCerOldState = 0; //此0代表旧审核状态-->待审核
                                 }
-                                OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO + "/" + Integer.parseInt(strUserId) + "/" + intCerOldState + "/" + intNewState + "/" + oldPostscript + "/" + strNewPostscript)
+                                OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO + "/" + Integer.parseInt(strUserId) + "/" + intCerOldState + "/" + intNewState)
                                         .tag("拒绝申请原因")
                                         .execute(new StringCallback() {
                                             @Override
                                             public void onSuccess(Response<String> response) {
                                                 OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                                                 if (200 == okGoResponseBean.getCode() && "跑腿认证审核通过".equals(okGoResponseBean.getMsg())) {
-                                                    startSelectAllCerRunInfo(context);
+                                                    startSelectAllCerShopInfo(context);
                                                     XToastUtils.success(R.string.apply_cer_not_ok);
                                                     return;
                                                 }
@@ -667,7 +641,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
                                             @Override
                                             public void onError(Response<String> response) {
                                                 super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerRunInfo, "请求错误，服务器连接失败！");
+                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
                                             }
                                         });
                             }
@@ -680,7 +654,7 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
      *
      * @param strUserId 用户ID
      */
-    private void doSelectStuInfo(String strUserId) {
+    private void doSelectShopUserInfo(String strUserId) {
         new XPopup.Builder(getContext())
                 .isDestroyOnDismiss(true) //关闭弹窗，释放资源
                 .hasBlurBg(true) //开启高斯模糊
@@ -690,42 +664,12 @@ public class DeveloperSelectAllCerRunInfoFragment extends BaseFragment {
     }
 
     /**
-     * 查看学生信息图片
+     * 查看餐饮许可证图片
      *
-     * @param strStuCardURL 阿里云OSS学生证图片URL地址
+     * @param strLicenceURL 阿里云OSS餐饮许可证图片URL地址
      */
-    private void checkStuCardImg(String strStuCardURL) {
+    private void checkLicenceImg(String strLicenceURL) {
         //单例模式将学生证URL传到Fragment中
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strStuCardURL)).commit();
-    }
-
-    /**
-     * 查看核酸证明图片
-     *
-     * @param strNucleicPicURL 阿里云OSS核酸检测图片URL地址
-     */
-    private void checkNucleicPicImg(String strNucleicPicURL) {
-        //单例模式将核酸证明URL传到Fragment中
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strNucleicPicURL)).commit();
-    }
-
-    /**
-     * 查看健康码图片
-     *
-     * @param strHealCodeURL 阿里云OSS健康码图片URL地址
-     */
-    private void checkHealCodeImg(String strHealCodeURL) {
-        //单例模式将健康码URL传到Fragment中
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strHealCodeURL)).commit();
-    }
-
-    /**
-     * 查看行程码图片
-     *
-     * @param strRunCodeURL 阿里云OSS行程码图片URL地址
-     */
-    private void checkRunCodeImg(String strRunCodeURL) {
-        //单例模式将行程码URL传到Fragment中
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strRunCodeURL)).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strLicenceURL)).commit();
     }
 }
