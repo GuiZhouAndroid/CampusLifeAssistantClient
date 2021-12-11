@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.module.BaseDraggableModule;
-import com.chad.library.adapter.base.module.BaseLoadMoreModule;
 import com.chad.library.adapter.base.module.DraggableModule;
 import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.module.UpFetchModule;
@@ -68,7 +66,7 @@ public class BaseUserAddressInfoAdapter extends BaseQuickAdapter<UserAddressInfo
                 .setText(R.id.tv_address_mobile, userAddressInfoBean.getMobile())
                 .setText(R.id.tv_address_district, userAddressInfoBean.getDistrict())
                 .setText(R.id.tv_address_place, userAddressInfoBean.getPlace())
-                .setText(R.id.tv_address_create_data, "添加时间：" + new SimpleDateFormat("yyyy年MM月dd日").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userAddressInfoBean.getCreateTime())))
+                .setText(R.id.tv_address_create_data, "操作时间:" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userAddressInfoBean.getCreateTime())))
                 .setText(R.id.tv_address_floor, userAddressInfoBean.getFloor())
                 .setText(R.id.tv_address_street, userAddressInfoBean.getStreet());
     }

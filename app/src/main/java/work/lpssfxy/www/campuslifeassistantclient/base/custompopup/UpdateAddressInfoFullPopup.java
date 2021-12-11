@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.impl.FullScreenPopupView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -57,18 +56,19 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
     /* Activity传递过来的待编辑收获地址对象 */
     private UserAddressInfoBean userAddressInfoBean;
     /* 待更新的地址ID 和 用户ID */
-    private int addressId,userId;
-
+    private int addressId;
+    /* 更新的列表索引 */
+    private int position;
 
     public UpdateAddressInfoFullPopup(@NonNull Context context) {
         super(context);
     }
 
-    public UpdateAddressInfoFullPopup(@NonNull Context context, UserAddressInfoBean userAddressInfoBean) {
+    public UpdateAddressInfoFullPopup(@NonNull Context context, UserAddressInfoBean userAddressInfo, int position) {
         super(context);
-        this.userAddressInfoBean = userAddressInfoBean;
+        this.userAddressInfoBean = userAddressInfo;
+        this.position = position;
     }
-
 
     @Override
     protected int getImplLayoutId() {
@@ -126,7 +126,6 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
      */
     private void initUpdateData() {
         addressId = userAddressInfoBean.getAddressId();
-        userId = userAddressInfoBean.getUserId();
         mEditUpdateAddressName.setText(userAddressInfoBean.getAddressName());//设置收货人
         mEditUpdateAddressMobile.setText(userAddressInfoBean.getMobile());//设置联系电话
         mTvUpdateAddressDistrict.setText(userAddressInfoBean.getDistrict());//设置校区
@@ -143,10 +142,10 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
         mFlowUpdateTagLayoutGender.setAdapter(tagAdapter);//设置流布局适配
         mFlowUpdateTagLayoutGender.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);//设置标签选中模式--->支持单个选择,不可取消
         tagAdapter.addTags(ResUtils.getStringArray(R.array.add_address_tags));//增加流布局的标签数据
-        if (userAddressInfoBean.getGender().equals("先生")){//设置初始化选中的标签索引
+        if (userAddressInfoBean.getGender().equals("先生")) {//设置初始化选中的标签索引
             tagAdapter.setSelectedPositions(0);//设置初始化选中的标签索引 先生--->索引0 1 女士
             strUpdateGender = tagAdapter.getItem(0);
-        }else if (userAddressInfoBean.getGender().equals("女士")){
+        } else if (userAddressInfoBean.getGender().equals("女士")) {
             tagAdapter.setSelectedPositions(1);
             strUpdateGender = tagAdapter.getItem(1);
         }
@@ -190,7 +189,7 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
 
 
     /**
-     * 执行添加收货地址
+     * 执行更新收货地址
      */
     private void doUpdateAddressInfo() {
         /*1.获取文本内容*/
@@ -201,10 +200,10 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
         String strGetUpdateFloor = mTvUpdateAddressFloor.getText().toString().trim();//楼层数据
         String strGetUpdateStreet = mEditUpdateAddressStreet.getText().toString().trim();//门牌号
         /* 2.调用接口添加 */
-        OkGo.<String>post(Constant.USER_ADD_ONCE_ADDRESS_INFO
+        OkGo.<String>post(Constant.USER_UPDATE_ONCE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID + "/" + addressId
                 + "/" + strGetUpdateName + "/" + strUpdateGender + "/" + strGetUpdateMobile + "/" + strUpdateDistrict
                 + "/" + strGetUpdatePlace + "/" + strGetUpdateFloor + "/" + strGetUpdateStreet)
-                .tag("添加收货地址")
+                .tag("修改收货地址")
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
@@ -214,21 +213,21 @@ public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoAddressBean okGoAddressBean = GsonUtil.gsonToBean(response.body(), OkGoAddressBean.class);
-                        if (200 == okGoAddressBean.getCode() && "收货信息添加成功".equals(okGoAddressBean.getMsg())) {
-                            XToastUtils.success("添加成功");
+                        if (200 == okGoAddressBean.getCode() && "收货信息更新成功".equals(okGoAddressBean.getMsg())) {
+                            XToastUtils.success("编辑成功");
                             dismiss();
                             //解析JSON，封装实体，传入列表适配器，更新UI
                             UserAddressInfoBean userAddressInfoBean = new UserAddressInfoBean(
-                                    okGoAddressBean.getData().getAddressId(), okGoAddressBean.getData().getAddressName(), okGoAddressBean.getData().getCreateTime(),
+                                    okGoAddressBean.getData().getAddressId(), okGoAddressBean.getData().getAddressName(), okGoAddressBean.getData().getUpdateTime(),
                                     okGoAddressBean.getData().getDistrict(), okGoAddressBean.getData().getFloor(), okGoAddressBean.getData().getGender(),
                                     okGoAddressBean.getData().getMobile(), okGoAddressBean.getData().getPlace(), okGoAddressBean.getData().getStreet(),
                                     okGoAddressBean.getData().getUpdateTime(), okGoAddressBean.getData().getUserId());
                             //Activity中实现接口，传输数据并发起更新UI请求
-                            ((UserAddressActivity) (getContext())).doSetAddressData(userAddressInfoBean);
+                            ((UserAddressActivity) (getContext())).doUpdateAddressData(userAddressInfoBean, position);
                             return;
                         }
-                        if (200 == okGoAddressBean.getCode() && "收货信息添加失败".equals(okGoAddressBean.getMsg())) {
-                            XToastUtils.success("添加失败");
+                        if (200 == okGoAddressBean.getCode() && "收货信息更新失败".equals(okGoAddressBean.getMsg())) {
+                            XToastUtils.success("编辑失败");
                         }
                     }
 

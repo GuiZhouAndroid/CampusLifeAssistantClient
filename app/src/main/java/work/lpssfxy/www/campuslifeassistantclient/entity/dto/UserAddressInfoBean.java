@@ -26,6 +26,20 @@ public class UserAddressInfoBean {
     public UserAddressInfoBean() {
     }
 
+
+    /**
+     * 用于添加收货地址
+     *
+     * @param addressName 收货人姓名
+     * @param gender      称呼
+     * @param mobile      联系号码
+     * @param district    收货校区
+     * @param place       收货地点
+     * @param floor       楼层
+     * @param street      门牌号
+     * @param addressId   收货地址ID
+     * @param userId      用户ID
+     */
     public UserAddressInfoBean(int addressId, String addressName, String createTime, String district, String floor, String gender, String mobile, String place, String street, String updateTime, int userId) {
         this.addressId = addressId;
         this.addressName = addressName;

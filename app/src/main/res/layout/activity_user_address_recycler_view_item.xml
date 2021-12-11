@@ -125,10 +125,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingStart="@dimen/dp_30"
+                        android:paddingStart="@dimen/dp_20"
                         android:text="2021-12-09 15:53:45"
                         android:textColor="@color/Grey700"
-                        android:textSize="@dimen/sp_13" />
+                        android:textSize="@dimen/sp_12" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

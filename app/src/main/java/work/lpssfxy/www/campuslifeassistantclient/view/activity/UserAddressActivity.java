@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -418,10 +417,11 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
      */
     private void initSetAdapterOnItemClickListener(BaseUserAddressInfoAdapter userAddressInfoAdapter) {
         userAddressInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                 UserAddressInfoBean userAddressInfo = (UserAddressInfoBean) adapter.getItem(position);
-                updateUserAddressInfo(userAddressInfo);
+                updateUserAddressInfo(userAddressInfo,position);
             }
         });
     }
@@ -439,7 +439,7 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
                 UserAddressInfoBean userAddressInfo = (UserAddressInfoBean) adapter.getItem(position);
                 switch (view.getId()) {
                     case R.id.ll_address_update: //编辑收货地址
-                        updateUserAddressInfo(userAddressInfo);
+                        updateUserAddressInfo(userAddressInfo,position);
                         break;
                     case R.id.ll_address_delete://删除收货地址
                         deleteUserAddressInfo(userAddressInfo.getAddressId());
@@ -458,7 +458,7 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
         new XPopup.Builder(UserAddressActivity.this)
                 .isDestroyOnDismiss(true) //关闭弹窗，释放资源
                 .hasBlurBg(true) //开启高斯模糊
-                .hasStatusBar(false)
+                .hasStatusBar(true)
                 .setPopupCallback(new SimpleCallback() {
                     @Override
                     public void onCreated(BasePopupView popupView) { //重点：弹出创建之前
@@ -488,11 +488,29 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
     }
 
     /**
-     * 通过旧收货地址信息更新用户收货地址
-     *
-     * @param userAddressInfo 旧收货地址信息
+     * 更新结果
      */
-    private void updateUserAddressInfo(UserAddressInfoBean userAddressInfo) {
+    /**
+     * 更新接口回调，更新UI，覆盖之前索引对应的收货地址数据
+     *
+     * @param userAddressInfoBean 更新后的收获地址
+     * @param position            更新的列表索引
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void doUpdateAddressData(UserAddressInfoBean userAddressInfoBean, int position) {
+        //覆盖数据
+        userAddressInfoAdapter.getData().set(position,userAddressInfoBean);
+        //刷新适配器
+        userAddressInfoAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 通过旧收货地址信息更新用户收货地址
+     * @param userAddressInfo 旧收货地址信息
+     * @param position 编辑列表的索引
+     */
+    private void updateUserAddressInfo(UserAddressInfoBean userAddressInfo, int position) {
         new XPopup.Builder(UserAddressActivity.this)
                 .isDestroyOnDismiss(true) //关闭弹窗，释放资源
                 .hasBlurBg(true) //开启高斯模糊
@@ -506,7 +524,7 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
                         }
                     }
                 })
-                .asCustom(new UpdateAddressInfoFullPopup(UserAddressActivity.this, userAddressInfo)) //定制自定义布局
+                .asCustom(new UpdateAddressInfoFullPopup(UserAddressActivity.this, userAddressInfo,position)) //定制自定义布局
                 .show();
     }
 
@@ -536,5 +554,4 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
                     }
                 });
     }
-
 }

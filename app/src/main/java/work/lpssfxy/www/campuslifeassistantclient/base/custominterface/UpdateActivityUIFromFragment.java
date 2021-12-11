@@ -10,5 +10,8 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean
  * @create 2021-12-11-9:53
  */
 public interface UpdateActivityUIFromFragment {
+
     void doSetAddressData(UserAddressInfoBean userAddressInfoBean);
+
+    void doUpdateAddressData(UserAddressInfoBean userAddressInfoBean,int position);
 }
