@@ -89,9 +89,6 @@ public class Constant {
     // 阿里云OSS存储文件夹路径(非目录名)
     public static final String OSS_IMG_PATH = "pic_data/";
 
-
-
-
     /**
      * 用户登录注册相关API接口
      */
@@ -186,6 +183,15 @@ public class Constant {
 
     // 普通用户查询历史申请信息
     public static final String USER_SELECT_APPLY_RUN_BY_SA_TOKEN_SESSION = BASE_URL + "/api/apply/run/userSelectApplyRunInfoBySaTokenSession";
+
+    /**
+     * 用户个人信息申请商家入驻认证相关API接口
+     */
+    // 普通用户上传个人信息申请商家入驻资格
+    public static final String USER_DO_APPLY_SHOP_BY_MY_INFO = BASE_URL + "/api/apply/shop/userDoApplyShopByMyInfo";
+
+    // 普通用户查询历史商家申请信息
+    public static final String USER_SELECT_APPLY_SHOP_BY_SA_TOKEN_SESSION = BASE_URL + "/api/apply/shop/userSelectApplyShopInfoBySaTokenSession";
 
     /**
      * 用户收货地址

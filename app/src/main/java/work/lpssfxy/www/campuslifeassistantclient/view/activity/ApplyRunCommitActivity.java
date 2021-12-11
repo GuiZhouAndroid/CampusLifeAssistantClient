@@ -65,13 +65,9 @@ import com.luck.picture.lib.style.PictureSelectorUIStyle;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.core.BasePopupView;
-import com.lxj.xpopup.interfaces.XPopupCallback;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.shouzhong.scanner.ScannerView;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.picker.widget.TimePickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.TimePickerBuilder;
@@ -92,10 +88,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridHealCodeImageAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridNucleicImageAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridRunCodeImageAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun.GridStuCardImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridHealCodeImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridNucleicImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridRunCodeImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridStuCardImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyRunBean;
@@ -196,7 +192,7 @@ public class ApplyRunCommitActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_apply_commit;
+        return R.layout.activity_apply_run_commit;
     }
 
 
@@ -282,8 +278,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
      * 初始化车辆类型下拉选择框
      */
     private void initSpinnerCarType() {
-
-
         //设置下拉选项内容
         mSpinnerCarType.setItems(ResUtils.getStringArray(R.array.apply_run_car_type));
         //下拉框item监听事件
@@ -392,20 +386,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
                     .build();
         }
         mDatePicker.show();
-    }
-
-    /**
-     * 处理返回的OCR车牌识别结果
-     */
-    private void CarNumberManageOCRResult() {
-
-//        new XPopup.Builder(getContext())
-//                .isDestroyOnDismiss(true) //关闭弹窗，释放资源
-//                .hasBlurBg(true) //开启高斯模糊
-//                .hasStatusBar(true)
-//                .setPopupCallback(new MyCarNumberOCRXPopup())
-//                .asCustom(new UserInfoFullPopup(getContext())) //定制自定义布局
-//                .show();
     }
 
     /**

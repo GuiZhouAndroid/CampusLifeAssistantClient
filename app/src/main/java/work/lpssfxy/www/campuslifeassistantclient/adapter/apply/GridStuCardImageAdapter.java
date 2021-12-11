@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun;
+package work.lpssfxy.www.campuslifeassistantclient.adapter.apply;
 
 import android.content.Context;
 import android.net.Uri;
@@ -29,12 +29,12 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCommitAc
 
 /**
  * created by on 2021/12/4
- * 描述：自定义网格布局相册健康码图片适配器
+ * 描述：自定义网格布局相册学生证图片适配器
  *
  * @author ZSAndroid
  * @create 2021-12-04-23:10
  */
-public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeImageAdapter.ViewHolder> {
+public class GridStuCardImageAdapter extends RecyclerView.Adapter<GridStuCardImageAdapter.ViewHolder> {
     public static final String TAG = "PictureSelector";
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
@@ -66,7 +66,7 @@ public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeI
         }
     }
 
-    public GridHealCodeImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
+    public GridStuCardImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.mInflater = LayoutInflater.from(context);
         this.mOnAddPicClickListener = mOnAddPicClickListener;
     }
@@ -88,9 +88,9 @@ public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeI
             list.remove(position);
         }
         //删除后，不影响List集合中初始化长度
-        if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(2).isEmpty()) {
-            ApplyRunCommitActivity.imgApplyCommitPathList.remove(2);
-            ApplyRunCommitActivity.imgApplyCommitPathList.add(2,"");
+        if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(0).isEmpty()) {
+            ApplyRunCommitActivity.imgApplyCommitPathList.remove(0);
+            ApplyRunCommitActivity.imgApplyCommitPathList.add(0,"");
         }
     }
 
@@ -156,13 +156,13 @@ public class GridHealCodeImageAdapter extends RecyclerView.Adapter<GridHealCodeI
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCommitActivity.imgPathHealCode !=null){
-                        ApplyRunCommitActivity.imgPathHealCode = null;
+                    if (ApplyRunCommitActivity.imgPathStuCard != null) {
+                        ApplyRunCommitActivity.imgPathStuCard = null;
                     }
                     //删除后，不影响List集合中初始化长度
-                    if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(2).isEmpty()) {
-                        ApplyRunCommitActivity.imgApplyCommitPathList.remove(2);
-                        ApplyRunCommitActivity.imgApplyCommitPathList.add(2,"");
+                    if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(0).isEmpty()) {
+                        ApplyRunCommitActivity.imgApplyCommitPathList.remove(0);
+                        ApplyRunCommitActivity.imgApplyCommitPathList.add(0,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

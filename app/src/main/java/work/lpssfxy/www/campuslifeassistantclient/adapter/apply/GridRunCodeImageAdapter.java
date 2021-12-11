@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun;
+package work.lpssfxy.www.campuslifeassistantclient.adapter.apply;
 
 import android.content.Context;
 import android.net.Uri;

@@ -1,16 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_apply_info"
+    android:id="@+id/rl_apply_shop_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.ApplyRunCerActivity">
+    tools:context=".view.activity.ApplyShopCerActivity">
 
     <com.xuexiang.xui.widget.statelayout.MultipleStatusView
-        android:id="@+id/apply_run_status_view"
+        android:id="@+id/apply_shop_status_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        app:msv_contentView="@layout/custom_apply_run_content_layout" />
+        app:msv_contentView="@layout/custom_apply_shop_content_layout" />
 
 </RelativeLayout>

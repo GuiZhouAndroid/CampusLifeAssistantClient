@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/apply_commit"
+                android:text="@string/apply_run_commit"
                 android:textColor="@color/White"
                 android:textSize="18sp" />
 

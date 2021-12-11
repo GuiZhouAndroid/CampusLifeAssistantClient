@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_150"
         android:background="@color/viewBackground"
-        app:columnNumbers="3"
+        app:columnNumbers="4"
         app:cutLine="true"
         app:cutLineColor="@color/colorAccent"
         app:cutLineWidth="1px"

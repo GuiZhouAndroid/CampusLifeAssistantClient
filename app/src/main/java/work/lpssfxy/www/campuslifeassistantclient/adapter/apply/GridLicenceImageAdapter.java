@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter.applyrun;
+package work.lpssfxy.www.campuslifeassistantclient.adapter.apply;
 
 import android.content.Context;
 import android.net.Uri;
@@ -26,15 +26,16 @@ import java.util.List;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.listener.OnItemLongClickListener;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCommitActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCommitActivity;
 
 /**
  * created by on 2021/12/4
- * 描述：自定义网格布局相册核酸证明图片适配器
+ * 描述：自定义网格布局相册餐饮许可证适配器
  *
  * @author ZSAndroid
  * @create 2021-12-04-23:10
  */
-public class GridNucleicImageAdapter extends RecyclerView.Adapter<GridNucleicImageAdapter.ViewHolder> {
+public class GridLicenceImageAdapter extends RecyclerView.Adapter<GridLicenceImageAdapter.ViewHolder> {
     public static final String TAG = "PictureSelector";
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
@@ -66,7 +67,7 @@ public class GridNucleicImageAdapter extends RecyclerView.Adapter<GridNucleicIma
         }
     }
 
-    public GridNucleicImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
+    public GridLicenceImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.mInflater = LayoutInflater.from(context);
         this.mOnAddPicClickListener = mOnAddPicClickListener;
     }
@@ -87,10 +88,8 @@ public class GridNucleicImageAdapter extends RecyclerView.Adapter<GridNucleicIma
         if (list != null && position < list.size()) {
             list.remove(position);
         }
-        //删除后，不影响List集合中初始化长度
-        if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(1).isEmpty()) {
-            ApplyRunCommitActivity.imgApplyCommitPathList.remove(1);
-            ApplyRunCommitActivity.imgApplyCommitPathList.add(1,"");
+        if (ApplyShopCommitActivity.imgPathLicence != null) {
+            ApplyShopCommitActivity.imgPathLicence = null;
         }
     }
 
@@ -155,14 +154,8 @@ public class GridNucleicImageAdapter extends RecyclerView.Adapter<GridNucleicIma
             viewHolder.mIvDel.setOnClickListener(view -> {
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
-                    //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
-                    if (ApplyRunCommitActivity.imgPathNucleicPic != null) {
-                        ApplyRunCommitActivity.imgPathNucleicPic = null;
-                    }
-                    //删除后，不影响List集合中初始化长度
-                    if (!ApplyRunCommitActivity.imgApplyCommitPathList.get(1).isEmpty()) {
-                        ApplyRunCommitActivity.imgApplyCommitPathList.remove(1);
-                        ApplyRunCommitActivity.imgApplyCommitPathList.add(1,"");
+                    if (ApplyShopCommitActivity.imgPathLicence != null) {
+                        ApplyShopCommitActivity.imgPathLicence = null;
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

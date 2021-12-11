@@ -184,7 +184,7 @@ public class ApplyRunCerActivity extends BaseActivity {
      */
     private void notApplyInfo() {
         //加载状态当前View自定义空布局
-        mApplyRunStatusView.showEmpty(R.layout.custom_apply_empty_layout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mApplyRunStatusView.showEmpty(R.layout.custom_apply_run_or_shop_empty_layout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //子View的自定义空布局
         MultipleStatusView mMultipleEmptyStatusView = mApplyRunStatusView.getEmptyView().findViewById(R.id.multiple_empty_status_view);
         mMultipleEmptyStatusView.showEmpty();

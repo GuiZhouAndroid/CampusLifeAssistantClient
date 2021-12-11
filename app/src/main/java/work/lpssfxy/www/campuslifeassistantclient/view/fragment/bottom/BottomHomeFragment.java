@@ -70,6 +70,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialog
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
@@ -107,8 +108,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     //private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_own_food,R.mipmap.index_other_people_server,
     //R.mipmap.index_express, R.mipmap.index_second_hand,R.mipmap.index_lost_and_found,R.mipmap.index_horoscope,
     //R.mipmap.index_joke_encyclopedia, R.mipmap.index_weather,R.mipmap.index_map,R.mipmap.index_into_school};
-    private static final String[] Grid_Tv_Data = new String[]{"食堂代取","快递代取","笑话百科","星座运势","六师官网","跑腿认证"};
-    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_other_people_server, R.mipmap.index_express, R.mipmap.index_joke_encyclopedia,R.mipmap.index_horoscope,R.mipmap.index_into_school,R.mipmap.cerrun};
+    private static final String[] Grid_Tv_Data = new String[]{"食堂代取","快递代取","笑话百科","星座运势","六师官网","跑腿认证","商家入驻"};
+    private static final int[] Grid_Iv_Data =new int[]{R.mipmap.index_other_people_server, R.mipmap.index_express, R.mipmap.index_joke_encyclopedia,R.mipmap.index_horoscope,R.mipmap.index_into_school,R.mipmap.cerrun,R.mipmap.shopapply};
     /** 底部弹出——第三方地图 */
     private BottomSheetPop mBottomSheetPop;
     private View openBottomView;
@@ -262,9 +263,15 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
             case 5://跑腿认证
                 startApplyRunCer();
                 break;
+            case 6://商家入驻认证
+                startApplyShopCer();
+                break;
         }
     }
 
+    /**
+     * 申请跑腿
+     */
     private void startApplyRunCer() {
         OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
                 .tag("检查登录")
@@ -279,6 +286,42 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
                             IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), ApplyRunCerActivity.class));//执行动画跳转
+                        } else {
+                            CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), goTopNestedScrollView, "请求错误，服务器连接失败！");
+                    }
+                });
+
+    }
+
+    /**
+     * 商家入驻
+     */
+    private void startApplyShopCer() {
+        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                .tag("检查登录")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), ApplyShopCerActivity.class));//执行动画跳转
                         } else {
                             CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
                         }

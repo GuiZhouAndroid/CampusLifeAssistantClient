@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_commit_shop_info_show"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".view.activity.ApplyRunCommitActivity">
+
+    <!--标题控件-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_apply_shop_commit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/Light_Blue"
+        android:fitsSystemWindows="true"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:id="@+id/fl_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_apply_shop_commit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/apply_shop_commit"
+                android:textColor="@color/White"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_commit_licence_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="@dimen/dp_70"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/shoplicence" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="餐饮经营许可证"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/dp_130"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_commit_licence_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:overScrollMode="never" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="(真实有效证明)"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_line6"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="@dimen/dp_40"
+            android:background="@color/Black" />
+
+        <com.yoma.roundbutton.RoundButton
+            android:id="@+id/rbn_commit_shop_info"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dp_40"
+            android:text="提交认证"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:backgroundColor="@drawable/bg_btn"
+            app:borderColor="@drawable/bg_btn_b"
+            app:borderWidth="@dimen/dp_5"
+            app:isRadiusAdjustBounds="true" />
+
+    </LinearLayout>
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress
+        android:id="@+id/circle_progress_shop_commit"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:antiAlias="true"
+        app:arcWidth="5dp"
+        app:bgArcColor="@android:color/darker_gray"
+        app:bgArcWidth="5dp"
+        app:hint="正在上传"
+        app:hintSize="23sp"
+        app:startAngle="270"
+        app:sweepAngle="360"
+        app:unit="%"
+        app:unitSize="20sp"
+        app:value="0"
+        app:valueSize="25sp" />
+
+</RelativeLayout>

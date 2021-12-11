@@ -215,6 +215,18 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 申请商家资格 -->
+        <activity
+            android:name=".view.activity.ApplyShopCerActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 申请商家认证认证信息提交 -->
+        <activity
+            android:name=".view.activity.ApplyShopCommitActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!-- 申请认证跑腿车牌识别OCR -->
         <activity
             android:name=".view.activity.ApplyCarNumberOCRActivity"

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fl_apply_shop_show"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--标题控件-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_apply_shop_detail_info"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_80"
+            android:background="@color/Light_Blue"
+            android:fitsSystemWindows="true"
+            app:contentInsetStart="0dp">
+
+            <LinearLayout
+                android:id="@+id/fl_layout_detail_shop_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_apply_shop_back_detail_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+                <TextView
+                    android:id="@+id/tv_title_detail_shop_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/apply_shop_detail_info"
+                    android:textColor="@color/White"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout_shop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_apply_shop_detail_info"
+            app:srlAccentColor="@color/Grey700"
+            app:srlEnableAutoLoadMore="false"
+            app:srlEnableLoadMore="true"
+            app:srlPrimaryColor="@android:color/transparent">
+
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlClassicsSpinnerStyle="FixedBehind"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableProgress="@drawable/ic_progress_puzzle"
+                app:srlDrawableProgressSize="20dp"
+                app:srlEnableLastTime="true"
+                app:srlFinishDuration="500"
+                app:srlTextSizeTime="10dp"
+                app:srlTextSizeTitle="16sp"
+                app:srlTextTimeMarginTop="2dp" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/toolbar_apply_shop_detail_info"
+                    android:orientation="vertical">
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_shop_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextColor="@color/Grey600"
+                        app:sCenterBottomTextSize="@dimen/sp_13"
+                        app:sCenterTopTextColor="@color/Grey600"
+                        app:sCenterTopTextSize="@dimen/sp_13"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="申请人"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightBottomTextColor="@color/Grey600"
+                        app:sRightBottomTextSize="@dimen/sp_14"
+                        app:sRightTopTextColor="@color/Grey600"
+                        app:sRightTopTextSize="@dimen/sp_13"
+                        app:sRightViewGravity="center"
+                        app:sRightViewMarginRight="@dimen/dp_20" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_shop_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sLeftTextString="申请类型"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="50dp"
+                        app:sRightTvDrawableWidth="50dp"
+                        app:sRightViewMarginRight="@dimen/dp_50" />
+
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_shop_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="申请日期"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_apply_shop_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextSize="@dimen/sp_11"
+                        app:sCenterTopTextSize="@dimen/sp_14"
+                        app:sCenterViewGravity="center"
+                        app:sLeftTextString="审核状态"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_shop_licence_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:sLeftTextString="餐饮经营许可证"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTvDrawableHeight="70dp"
+                        app:sRightTvDrawableWidth="40dp"
+                        app:sRightViewMarginRight="@dimen/dp_30" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
+
+</FrameLayout>

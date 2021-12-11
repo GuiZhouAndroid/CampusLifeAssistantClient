@@ -33,8 +33,10 @@
     <string name="forgetpassword">忘记密码?</string>
     <string name="telNumberLogin">手机号快捷登录</string>
     <string name="apply_run_cer">申请跑腿认证</string>
-    <string name="apply_commit">提交跑腿信息</string>
-    <string name="apply_run_detail_info">跑腿认证申请详情</string>
+    <string name="apply_run_commit">提交跑腿信息</string>
+    <string name="apply_shop_commit">提交商家认证信息</string>
+    <string name="apply_run_detail_info">跑腿入驻认证申请详情</string>
+    <string name="apply_shop_detail_info">商家入驻认证申请详情</string>
     <string name="developer_system_safe_center">开发者后台系统管理中心</string>
     <string name="login">登\t\t\t\t\t录</string>
     <string name="no_account">没有账号？去注册</string>
