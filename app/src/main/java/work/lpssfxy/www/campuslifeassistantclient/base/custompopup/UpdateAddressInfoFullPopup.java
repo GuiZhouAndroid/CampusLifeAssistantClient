@@ -2,8 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.base.custompopup;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +30,6 @@ import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.flow.FlowTagAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAddressBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
@@ -45,66 +42,76 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActiv
  * @author ZSAndroid
  * @create 2021-12-10-19:13
  */
-public class AddAddressInfoFullPopup extends FullScreenPopupView {
+public class UpdateAddressInfoFullPopup extends FullScreenPopupView {
 
     /* 先生或女士文本内容 */
-    private String strGender;
+    private String strUpdateGender;
     /* 初始化所在校区弹出框视图 */
-    private XUISimplePopup mMenuPopup;
+    private XUISimplePopup mUpdateMenuPopup;
     /* 输入框控件 */
-    private ClearEditText mEditAddressName, mEditAddressMobile, mTvAddressPlace, mTvAddressFloor, mEditAddressStreet;
+    private ClearEditText mEditUpdateAddressName, mEditUpdateAddressMobile, mTvUpdateAddressPlace, mTvUpdateAddressFloor, mEditUpdateAddressStreet;
     /* 流布局控件 */
-    private FlowTagLayout mFlowTagLayoutGender;
+    private FlowTagLayout mFlowUpdateTagLayoutGender;
     /* 校区控件 */
-    private TextView mTvAddressDistrict;
+    private TextView mTvUpdateAddressDistrict;
+    /* Activity传递过来的待编辑收获地址对象 */
+    private UserAddressInfoBean userAddressInfoBean;
+    /* 待更新的地址ID 和 用户ID */
+    private int addressId,userId;
 
-    public AddAddressInfoFullPopup(@NonNull Context context) {
+
+    public UpdateAddressInfoFullPopup(@NonNull Context context) {
         super(context);
+    }
+
+    public UpdateAddressInfoFullPopup(@NonNull Context context, UserAddressInfoBean userAddressInfoBean) {
+        super(context);
+        this.userAddressInfoBean = userAddressInfoBean;
     }
 
 
     @Override
     protected int getImplLayoutId() {
-        return R.layout.activity_address_add_user_address_info_fullscreen_popup;
+        return R.layout.activity_address_update_user_address_info_fullscreen_popup;
     }
 
 
     @Override
     protected void beforeShow() {
         super.beforeShow();
-        mEditAddressName = findViewById(R.id.edit_address_name);//姓名
-        mFlowTagLayoutGender = findViewById(R.id.flowlayout_address_gender);//性别
-        mEditAddressMobile = findViewById(R.id.edit_address_mobile); //联系电话
-        mTvAddressDistrict = findViewById(R.id.tv_address_district);//校区文本
-        mTvAddressPlace = findViewById(R.id.edit_address_place);//地点
-        mTvAddressFloor = findViewById(R.id.edit_address_floor);//楼层
-        mEditAddressStreet = findViewById(R.id.edit_address_street); //门牌号
+        mEditUpdateAddressName = findViewById(R.id.edit_address_update_name);//姓名
+        mFlowUpdateTagLayoutGender = findViewById(R.id.flowlayout_address_update_gender);//性别
+        mEditUpdateAddressMobile = findViewById(R.id.edit_address_update_mobile); //联系电话
+        mTvUpdateAddressDistrict = findViewById(R.id.tv_address_update_district);//校区文本
+        mTvUpdateAddressPlace = findViewById(R.id.edit_address_update_place);//地点
+        mTvUpdateAddressFloor = findViewById(R.id.edit_address_update_floor);//楼层
+        mEditUpdateAddressStreet = findViewById(R.id.edit_address_update_street); //门牌号
         initSingleFlowTagLayout();//初始化性别流布局
         initAddressDistrict();//初始化所在校区弹出框视图
+        initUpdateData();//初始化收货地址更新数据
     }
 
     @Override
     protected void onShow() {
-        super.onShow();
 
         //校区父布局
-        LinearLayout mLlAddressDistrict = findViewById(R.id.ll_address_choose_district);
+        LinearLayout mLlAddressDistrict = findViewById(R.id.ll_address_choose_update_district);
         mLlAddressDistrict.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMenuPopup.showDown(mEditAddressMobile);
+                mUpdateMenuPopup.showDown(mEditUpdateAddressMobile);
             }
         });
-        //确认添加
-        ButtonView mBtnAddress = findViewById(R.id.btn_do_add_address);
+        //确认更新
+        ButtonView mBtnAddress = findViewById(R.id.btn_do_update_address);
         mBtnAddress.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                doAddressInfo();/* 开始添加收货地址 */
+                doUpdateAddressInfo();/* 开始更新收货地址 */
             }
         });
         //返回
-        ImageView mIvAddressAddBack = findViewById(R.id.iv_address_add_back);
+        ImageView mIvAddressAddBack = findViewById(R.id.iv_address_update_back);
         mIvAddressAddBack.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,20 +122,39 @@ public class AddAddressInfoFullPopup extends FullScreenPopupView {
     }
 
     /**
+     * 初始化收货地址更新数据
+     */
+    private void initUpdateData() {
+        addressId = userAddressInfoBean.getAddressId();
+        userId = userAddressInfoBean.getUserId();
+        mEditUpdateAddressName.setText(userAddressInfoBean.getAddressName());//设置收货人
+        mEditUpdateAddressMobile.setText(userAddressInfoBean.getMobile());//设置联系电话
+        mTvUpdateAddressDistrict.setText(userAddressInfoBean.getDistrict());//设置校区
+        mTvUpdateAddressPlace.setText(userAddressInfoBean.getPlace());//设置地点
+        mTvUpdateAddressFloor.setText(userAddressInfoBean.getFloor());//设置楼层
+        mEditUpdateAddressStreet.setText(userAddressInfoBean.getStreet());//设置门牌号
+    }
+
+    /**
      * 初始化性别流布局
      */
     private void initSingleFlowTagLayout() {
         FlowTagAdapter tagAdapter = new FlowTagAdapter(getContext());
-        mFlowTagLayoutGender.setAdapter(tagAdapter);//设置流布局适配
-        mFlowTagLayoutGender.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);//设置标签选中模式--->支持单个选择,不可取消
+        mFlowUpdateTagLayoutGender.setAdapter(tagAdapter);//设置流布局适配
+        mFlowUpdateTagLayoutGender.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);//设置标签选中模式--->支持单个选择,不可取消
         tagAdapter.addTags(ResUtils.getStringArray(R.array.add_address_tags));//增加流布局的标签数据
-        tagAdapter.setSelectedPositions(0);//设置初始化选中的标签索引 先生--->索引0 1 女士
-        strGender = tagAdapter.getItem(0);//默认为先生--->索引0 1 女士
+        if (userAddressInfoBean.getGender().equals("先生")){//设置初始化选中的标签索引
+            tagAdapter.setSelectedPositions(0);//设置初始化选中的标签索引 先生--->索引0 1 女士
+            strUpdateGender = tagAdapter.getItem(0);
+        }else if (userAddressInfoBean.getGender().equals("女士")){
+            tagAdapter.setSelectedPositions(1);
+            strUpdateGender = tagAdapter.getItem(1);
+        }
         /* 流布局标签监听事件 */
-        mFlowTagLayoutGender.setOnTagSelectListener(new FlowTagLayout.OnTagSelectListener() {
+        mFlowUpdateTagLayoutGender.setOnTagSelectListener(new FlowTagLayout.OnTagSelectListener() {
             @Override
             public void onItemSelect(FlowTagLayout parent, int position, List<Integer> selectedList) {
-                strGender = getSelectedText(parent, selectedList);//选中的先生或女士原有数据
+                strUpdateGender = getSelectedText(parent, selectedList);//选中的先生或女士原有数据
             }
         });
     }
@@ -153,66 +179,36 @@ public class AddAddressInfoFullPopup extends FullScreenPopupView {
      */
     private void initAddressDistrict() {
         //设置弹出框数据 + 选择的数据
-        mMenuPopup = new XUISimplePopup(getContext(), Constant.menuItems).create(new XUISimplePopup.OnPopupItemClickListener() {
+        mUpdateMenuPopup = new XUISimplePopup(getContext(), Constant.menuItems).create(new XUISimplePopup.OnPopupItemClickListener() {
             @Override
             public void onItemClick(XUISimpleAdapter adapter, AdapterItem item, int position) {
                 //设置TextView上，提供添加收货地址使用
-                mTvAddressDistrict.setText(item.getTitle().toString());
+                mTvUpdateAddressDistrict.setText(item.getTitle().toString());
             }
         });
-        //弹出框在所在校区周围
-        mMenuPopup.showDown(mEditAddressMobile);
     }
 
 
     /**
      * 执行添加收货地址
      */
-    private void doAddressInfo() {
-        String strGetName = mEditAddressName.getText().toString().trim();//收货人数据
-        String strGetMobile = mEditAddressMobile.getText().toString().trim();//联系电话数据
-        String strDistrict = mTvAddressDistrict.getText().toString().trim();//校区数据
-        String strGetPlace = mTvAddressPlace.getText().toString().trim();//详细地点数据
-        String strGetFloor = mTvAddressFloor.getText().toString().trim();//楼层数据
-        String strGetStreet = mEditAddressStreet.getText().toString().trim();//门牌号
-        /* 2.判空处理 */
-        if (TextUtils.isEmpty(strGetName)) {
-            ToastUtils.show("请完善收货人信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGender)) {
-            ToastUtils.show("请完善称呼信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetMobile)) {
-            ToastUtils.show("请完善联系电话信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strDistrict)) {
-            ToastUtils.show("请完善所在校区信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetPlace)) {
-            ToastUtils.show("请完善详细地点信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetFloor)) {
-            ToastUtils.show("请完善楼层信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetStreet)) {
-            ToastUtils.show("请完善门牌号信息");
-            return;
-        }
-        /* 3.调用接口添加 */
+    private void doUpdateAddressInfo() {
+        /*1.获取文本内容*/
+        String strGetUpdateName = mEditUpdateAddressName.getText().toString().trim();//收货人数据
+        String strGetUpdateMobile = mEditUpdateAddressMobile.getText().toString().trim();//联系电话数据
+        String strUpdateDistrict = mTvUpdateAddressDistrict.getText().toString().trim();//校区数据
+        String strGetUpdatePlace = mTvUpdateAddressPlace.getText().toString().trim();//详细地点数据
+        String strGetUpdateFloor = mTvUpdateAddressFloor.getText().toString().trim();//楼层数据
+        String strGetUpdateStreet = mEditUpdateAddressStreet.getText().toString().trim();//门牌号
+        /* 2.调用接口添加 */
         OkGo.<String>post(Constant.USER_ADD_ONCE_ADDRESS_INFO
-                + "/" + strGetName + "/" + strGender + "/" + strGetMobile + "/" + strDistrict
-                + "/" + strGetPlace + "/" + strGetFloor + "/" + strGetStreet)
+                + "/" + strGetUpdateName + "/" + strUpdateGender + "/" + strGetUpdateMobile + "/" + strUpdateDistrict
+                + "/" + strGetUpdatePlace + "/" + strGetUpdateFloor + "/" + strGetUpdateStreet)
                 .tag("添加收货地址")
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        MyXPopupUtils.getInstance().setShowDialog((Activity) getContext(),"正在添加收货地址...");
+                        MyXPopupUtils.getInstance().setShowDialog((Activity) getContext(), "正在添加收货地址...");
                     }
 
                     @Override

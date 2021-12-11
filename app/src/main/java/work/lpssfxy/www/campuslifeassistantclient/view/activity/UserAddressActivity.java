@@ -1,12 +1,10 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,6 @@ import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.interfaces.SimpleCallback;
-import com.lxj.xpopup.interfaces.XPopupCallback;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -38,7 +35,6 @@ import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.xuexiang.xui.widget.popupwindow.status.Status;
 import com.xuexiang.xui.widget.popupwindow.status.StatusView;
 
 import java.util.ArrayList;
@@ -51,8 +47,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseUserAddressInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.CustomLoadMoreView;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.UpdateActivityUIFromFragment;
 import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.AddAddressInfoFullPopup;
-import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.UserInfoFullPopup;
+import work.lpssfxy.www.campuslifeassistantclient.base.custompopup.UpdateAddressInfoFullPopup;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllAddressInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
@@ -71,7 +68,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
  */
 
 @SuppressLint("NonConstantResourceId")
-public class UserAddressActivity extends BaseActivity implements AddAddressInfoFullPopup.updateActivityUIFromFragment {
+public class UserAddressActivity extends BaseActivity implements UpdateActivityUIFromFragment {
 
     private static final String TAG = "UserAddressActivity";
     /** 状态布局 */
@@ -147,6 +144,20 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
     }
 
     /**
+     * 使用 ButterKnife注解式监听单击事件
+     *
+     * @param view 控件Id
+     */
+    @OnClick({R2.id.iv_address_back})
+    public void onUserAddressViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_address_back://点击返回
+                UserAddressActivity.this.finish();
+                break;
+        }
+    }
+
+    /**
      * 初始化RecyclerView列表控件
      */
     private void initSelectUserAddressAllInfoRecyclerView() {
@@ -159,17 +170,30 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
     }
 
     /**
-     * 使用 ButterKnife注解式监听单击事件
-     *
-     * @param view 控件Id
+     * 初始化下拉刷新收货地址信息
      */
-    @OnClick({R2.id.iv_address_back})
-    public void onUserAddressViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_address_back://点击返回
-                UserAddressActivity.this.finish();
-                break;
+    private void initSetRefreshListener() {
+        // 设置下拉刷新参数和主题颜色
+        ClassicsHeader mClassicsHeader = (ClassicsHeader) mRefreshLayoutAddress.getRefreshHeader();
+        if (mClassicsHeader != null) {
+            mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
         }
+        setThemeColor(mRefreshLayoutAddress, R.color.welcome_colorMain);
+        mRefreshLayoutAddress.autoRefresh();
+        // 执行下拉刷新业务
+        mRefreshLayoutAddress.setOnRefreshListener(new OnRefreshListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                if (userAddressInfoAdapter == null) {
+                    startSelectUserAddressAllInfo();//查询当前登录用户全部的收货地址
+                }
+                if (userAddressInfoAdapter != null && mRefreshLayoutAddress.getState().isOpening) {
+                    mRefreshLayoutAddress.finishRefresh();
+                    userAddressInfoAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     /**
@@ -191,8 +215,10 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
 
                     @Override
                     public void onFinish() {
+                        if (mRefreshLayoutAddress.getState().isOpening) {
+                            mRefreshLayoutAddress.finishRefresh();
+                        }
                         //mStatusTopShow.dismiss();
-                        mRefreshLayoutAddress.finishRefresh();
                         MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
@@ -239,25 +265,6 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
             //初始化适配器适配器item中的子view单击事件
             initSetAdapterOnItemChildClickListener(userAddressInfoAdapter);
         }
-    }
-
-    /**
-     * 初始化下拉刷新收货地址信息
-     */
-    private void initSetRefreshListener() {
-        // 设置下拉刷新参数和主题颜色
-        ClassicsHeader mClassicsHeader = (ClassicsHeader) mRefreshLayoutAddress.getRefreshHeader();
-        mClassicsHeader.setTimeFormat(new DynamicTimeFormat("更新于 %s"));
-        setThemeColor(mRefreshLayoutAddress, R.color.welcome_colorMain);
-        mRefreshLayoutAddress.autoRefresh();
-        // 执行下拉刷新业务
-        mRefreshLayoutAddress.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                //查询当前登录用户全部的收货地址
-                startSelectUserAddressAllInfo();
-            }
-        });
     }
 
     /**
@@ -315,26 +322,27 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
      * 初始化适配器侧滑删除
      *
      * @param userAddressInfoAdapter
-     * @param draggableModule 收货地址适配器拖拽基类
+     * @param draggableModule        收货地址适配器拖拽基类
      */
     private void initAdapterDragDelete(BaseUserAddressInfoAdapter userAddressInfoAdapter, BaseDraggableModule draggableModule) {
         draggableModule.setSwipeEnabled(true);//启动侧滑删除
         draggableModule.getItemTouchHelperCallback().setSwipeMoveFlags(ItemTouchHelper.START);//侧滑删除方向
         draggableModule.setOnItemSwipeListener(new OnItemSwipeListener() {
             private int addressId;
-            public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) { //当滑动动作开始时调用，提取收货地址ID
-                addressId = userAddressInfoAdapter.getData().get(pos).getAddressId();
-                Log.i(TAG, "onItemSwipeStart: "+userAddressInfoAdapter.getData().get(pos).toString());
+
+            public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int position) { //当滑动动作开始时调用，提取收货地址ID
+                addressId = userAddressInfoAdapter.getData().get(position).getAddressId();
+                Log.i(TAG, "onItemSwipeStart: " + userAddressInfoAdapter.getData().get(position).toString());
             }
 
             @Override
-            public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {//当item滑动删除之前，松手之时调用
+            public void clearView(RecyclerView.ViewHolder viewHolder, int position) {//当item滑动删除之前，松手之时调用
 
             }
 
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) { //当item滑动时视图从适配器中删除之后调用
+            public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int position) { //当item滑动时视图从适配器中删除之后调用
                 deleteUserAddressInfo(addressId);//删除收货地址
                 //移除list中的数据后，并没有紧接着告知adapter有数据已经移除，就会导致后面操作的报错
                 //解决方法是，在list做完remove或者add操作后，紧跟着notifyItemInserted(notifyItemRangeInserted)或notifyDataSetChanged
@@ -425,15 +433,18 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
      */
     private void initSetAdapterOnItemChildClickListener(BaseUserAddressInfoAdapter userAddressInfoAdapter) {
         userAddressInfoAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
                 UserAddressInfoBean userAddressInfo = (UserAddressInfoBean) adapter.getItem(position);
                 switch (view.getId()) {
                     case R.id.ll_address_update: //编辑收货地址
-                        ToastUtils.show(userAddressInfo.toString());
+                        updateUserAddressInfo(userAddressInfo);
                         break;
                     case R.id.ll_address_delete://删除收货地址
                         deleteUserAddressInfo(userAddressInfo.getAddressId());
+                        userAddressInfoAdapter.remove(position);
+                        userAddressInfoAdapter.notifyDataSetChanged();
                         break;
                 }
             }
@@ -448,10 +459,13 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
                 .isDestroyOnDismiss(true) //关闭弹窗，释放资源
                 .hasBlurBg(true) //开启高斯模糊
                 .hasStatusBar(false)
-                .setPopupCallback(new SimpleCallback(){//收货地址添加成功后，回调拉取数据
+                .setPopupCallback(new SimpleCallback() {
                     @Override
-                    public void onDismiss(BasePopupView popupView) {
-                        onCreate(null);
+                    public void onCreated(BasePopupView popupView) { //重点：弹出创建之前
+                        /*避免多次快速点击底部全屏弹窗，导致出现重叠现象*/
+                        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                            getSupportFragmentManager().popBackStackImmediate();//移出栈顶Fragment的弹窗页面
+                        }
                     }
                 })
                 .asCustom(new AddAddressInfoFullPopup(UserAddressActivity.this)) //定制自定义布局
@@ -459,11 +473,18 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
     }
 
     /**
-     * 收货地址添加成功后，实现此接口拉取数据，更新UI--->此方法能实现没使用
+     * 收货地址添加成功后，实现此接口拉取数据，更新UserAddressActivity的UI
+     * 只需动态添加适配数据，无须访问接口再次调用全部收货地址信息
+     *
+     * @param userAddressInfoBean 新增的收获地址对象数据，同步现有适配器的集合数据，避免数组下标越界异常
      */
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void unReadChange() {
-
+    public void doSetAddressData(UserAddressInfoBean userAddressInfoBean) {
+        //1.在适配器最后一条数据后面动态追加此新增收货地址
+        userAddressInfoAdapter.addData(userAddressInfoAdapter.getData().size(), userAddressInfoBean);
+        //刷新适配器
+        userAddressInfoAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -472,7 +493,21 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
      * @param userAddressInfo 旧收货地址信息
      */
     private void updateUserAddressInfo(UserAddressInfoBean userAddressInfo) {
-
+        new XPopup.Builder(UserAddressActivity.this)
+                .isDestroyOnDismiss(true) //关闭弹窗，释放资源
+                .hasBlurBg(true) //开启高斯模糊
+                .hasStatusBar(false)
+                .setPopupCallback(new SimpleCallback() {
+                    @Override
+                    public void onCreated(BasePopupView popupView) { //重点：弹出创建之前
+                        /*避免多次快速点击底部全屏弹窗，导致出现重叠现象*/
+                        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                            getSupportFragmentManager().popBackStackImmediate();//移出栈顶Fragment的弹窗页面
+                        }
+                    }
+                })
+                .asCustom(new UpdateAddressInfoFullPopup(UserAddressActivity.this, userAddressInfo)) //定制自定义布局
+                .show();
     }
 
     /**
@@ -484,12 +519,12 @@ public class UserAddressActivity extends BaseActivity implements AddAddressInfoF
         OkGo.<String>post(Constant.USER_DELETE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID + "/" + addressId)
                 .tag("删除收获地址")
                 .execute(new StringCallback() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
                         if (200 == OkGoResponseBean.getCode() && "收获地址信息删除成功".equals(OkGoResponseBean.getData())) {
                             XToastUtils.success("地址删除成功");
-                            startSelectUserAddressAllInfo();//查询当前登录用户全部的收货地址
                         } else {
                             XToastUtils.error(OkGoResponseBean.getData());
                         }
