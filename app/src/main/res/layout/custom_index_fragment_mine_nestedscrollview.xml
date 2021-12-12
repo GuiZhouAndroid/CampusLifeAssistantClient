@@ -146,6 +146,16 @@
             app:sRightIconRes="@mipmap/icon_arrow_right_red" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_my_shop"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:sLeftIconHeight="25dp"
+            app:sLeftIconRes="@mipmap/myshop"
+            app:sLeftIconWidth="25dp"
+            app:sLeftTextString="我的店铺"
+            app:sRightIconRes="@mipmap/icon_arrow_right_red" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
             android:id="@+id/stv_my_feed_back"
             android:layout_width="match_parent"
             android:layout_height="50dp"

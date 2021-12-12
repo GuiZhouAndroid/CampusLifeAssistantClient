@@ -127,6 +127,9 @@
     <string name="my_info">我的信息</string>
     <string name="yes_or_no_select_user_info">是否查看该用户个人信息</string>
 
+    <!-- 我的店铺 -->
+    <string name="my_shop">我的店铺</string>
+
 
     <!-- 首页 -->
     <string name="click_user_image">点击头像登录</string>

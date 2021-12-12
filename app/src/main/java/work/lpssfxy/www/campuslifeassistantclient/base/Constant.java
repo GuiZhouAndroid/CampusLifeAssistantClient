@@ -213,6 +213,16 @@ public class Constant {
     public static final String USER_UPDATE_ONCE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID = BASE_URL + "/api/user/address/updateUserAddressInfoByUserIdAndAddressId";
 
     /**
+     * 商家店铺相关API接口
+     */
+
+    //商家查询店铺信息
+    public static final String SHOP_SELECT_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopSelectStoreInfoBySaToken";
+
+    //商家创建店铺
+    public static final String SHOP_ADD_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopAddShopStoreInfoSaToken";
+
+    /**
      * 检测用户登录注销状态相关API接口
      */
     // 查询当前已登录会话状态

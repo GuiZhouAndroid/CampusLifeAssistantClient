@@ -34,9 +34,9 @@ import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.ActivityInteraction;
-import work.lpssfxy.www.campuslifeassistantclient.base.dialog.AlertDialog;
 import work.lpssfxy.www.campuslifeassistantclient.base.scrollview.GoTopNestedScrollView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyShopBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoRoleOrPermissionListBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
@@ -48,13 +48,15 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialogUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyShopActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerSelectIdCardActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 
 /**
@@ -66,8 +68,10 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
  */
 
 @SuppressLint("NonConstantResourceId")
-public class BottomMineFragment extends BaseFragment {
+public class BottomMineFragment extends BaseFragment implements SuperTextView.OnSuperTextViewClickListener{
+
     private static final String TAG = "BottomMineFragment";
+
     //父布局
     @BindView(R2.id.scrollview_mine_info) GoTopNestedScrollView mScrollviewMineInfo;//绑定资源文件中mipmap中的ic_launcher图片
     //绑定资源文件中mipmap中的ic_launcher图片
@@ -85,17 +89,17 @@ public class BottomMineFragment extends BaseFragment {
     @BindView(R2.id.stv_my_account_safe) SuperTextView mStvAccountSafe;//账户与安全
     @BindView(R2.id.stv_my_order) SuperTextView mStvMyOrder;//我的订单
     @BindView(R2.id.stv_my_address) SuperTextView mStvMyAddress;//我的收货地址
+    @BindView(R2.id.stv_my_shop) SuperTextView mStvMyShop;//我的店铺
     @BindView(R2.id.stv_my_feed_back) SuperTextView mStvFeedBack;//意见反馈
     @BindView(R2.id.stv_my_report) SuperTextView mStvReport;//违规举报
     @BindView(R2.id.stv_my_contact_us) SuperTextView mStvContactUs;//联系我们
+
     /** QQ个人资料 */
     private OnlyQQUserInfoBean onlyQQUserInfo;
-    /** 自定义对话框 */
-    private AlertDialog mDialog;
+    /** 当前认证显示角色LOGO图标 */
     private String strNowRole;
 
     public static BottomMineFragment newInstance() {
-        //GlobalBus.getBus().register(fragment);
         return new BottomMineFragment();
     }
 
@@ -159,25 +163,225 @@ public class BottomMineFragment extends BaseFragment {
      */
     @Override
     protected void initEvent() {
-        //QQ昵称
-        mStvQQNickname.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+        mStvQQNickname.setOnSuperTextViewClickListener(this);//QQ昵称
+        mStvMyInfo.setOnSuperTextViewClickListener(this);//点击我的资料跳转详情页，提供完善信息功能
+        mStvAccountSafe.setOnSuperTextViewClickListener(this);//账户与安全
+        mStvMyOrder.setOnSuperTextViewClickListener(this);//我的订单
+        mStvMyAddress.setOnSuperTextViewClickListener(this);//我的收获地址
+        mStvMyShop.setOnSuperTextViewClickListener(this);//我的店铺
+        mStvFeedBack.setOnSuperTextViewClickListener(this);//意见反馈
+        mStvReport.setOnSuperTextViewClickListener(this);//违规举报
+        mStvContactUs.setOnSuperTextViewClickListener(this);//联系我们
+    }
+
+    @Override
+    protected void doBusiness(Context context) {
+
+    }
+
+    /**
+     * 初始化用户当前实名信息
+     *
+     * @param userInfo
+     */
+    private void initUserNowCerInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
+        OkGo.<String>post(Constant.SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME)
+                .tag("查询当前用户实名状态")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoUserCerBean okGoUserCerBean = GsonUtil.gsonToBean(response.body(), OkGoUserCerBean.class);
+                        Log.i(TAG, "查询当前用户实名状态: " + okGoUserCerBean);
+                        if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "未登录".equals(okGoUserCerBean.getMsg())) {
+                            //设置未登录状态
+                            mStvMyCer.setRightString("未登录");
+                            mStvMyCer.setLeftTopString("未登录");
+                            mStvMyCer.setLeftBottomString("未登录");
+                            mStvMyCer.setRightTvDrawableLeft(null);
+                            return;
+                        }
+                        if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
+                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.notcer));
+                            //组装未实名状态假数据，用于判断true或false进入绑定或查看详情页面
+                            OkGoUserCerBean.Data customFalseCerState = new OkGoUserCerBean.Data(new OkGoUserCerBean.Data.UserCertificationBean(false));
+                            mStvMyCer.setLeftTopString("您暂未认证");//认证真实姓名
+                            mStvMyCer.setLeftBottomString("请绑定身份证");//认证身份证号
+                            userDoToBindOrSelectCerIdCard(customFalseCerState, userInfo);
+                            return;
+                        }
+                        if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
+                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.alreadycer));
+                            mStvMyCer.setLeftTopString(okGoUserCerBean.getData().getUlRealname());//认证真实姓名
+                            //认证安全显示处理过的身份证号
+                            String strCerIdCard = okGoUserCerBean.getData().getUserCertificationBean().getTucIdcard().replaceAll("(\\d{4})\\d{8}(\\w{6})", "$1*****$2");
+                            mStvMyCer.setLeftBottomString(strCerIdCard);
+                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData(), userInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
+
+    /**
+     * 初始化我的信息
+     *
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     */
+    private void initUserMyInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
+        OkGo.<String>post(Constant.SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME)
+                .tag("当前登录会话角色集合")
+                .execute(new StringCallback() {
+                    @SuppressLint("UseCompatLoadingForDrawables")
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
+                        Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "未登录".equals(okGoRoleOrPermissionListBean.getMsg())) {
+                            mStvMyInfo.setRightString("未登录");//我的资料
+                            mStvMyInfo.setRightTvDrawableLeft(null);
+                            return;
+                        }
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "success".equals(okGoRoleOrPermissionListBean.getMsg())) {
+                            List<String> roleStringList = okGoRoleOrPermissionListBean.getData();
+                            if (roleStringList.contains("超管") && roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.supermanager));//设置管理员角色图片
+                                strNowRole = "您目前身份是尊贵的超管开发者";
+                            } else if (roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
+                                strNowRole = "您已成为跑腿认证学生，欢迎您的加入";
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.run));//设置跑腿角色图片
+                            } else if (roleStringList.contains("学生")) {
+                                strNowRole = "您目前是普通用户，无资格兼职接单，快去申请加入跑腿大家庭吧";
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.ordinary));//设置普通用户角色图片
+                            }
+                            return;
+                        }
+                        if (200 == okGoRoleOrPermissionListBean.getCode() && "error".equals(okGoRoleOrPermissionListBean.getMsg())) {
+                            mStvMyInfo.setRightString("无资格");
+                            mStvMyInfo.setRightTvDrawableLeft(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
+
+    /**
+     * 设置监听事件：根据实名认证状态布尔值执行相应的：查看已实名认证相关信息 + 跳转绑定身份证号
+     *
+     * @param data     当前用户实名认证信息
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     */
+    private void userDoToBindOrSelectCerIdCard(OkGoUserCerBean.Data data, OkGoSessionAndUserBean.Data.UserInfo userInfo) {
+        //实名认证
+        mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
-            public void onClick(SuperTextView QQNickname) {
-                String strQQName = QQNickname.getRightTextView().getText().toString();
-                ToastUtils.show(strQQName);
+            public void onClick(SuperTextView myCer) {
+                if (data.getUserCertificationBean().isTucState()) { //已实名，跳转实名详情页
+                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserCerSelectIdCardActivity.class));
+                } else { //未实名，跳转OCR绑定界面
+                    Intent thisToCerBindOCRIdCard = new Intent(getActivity(), UserCerBindOCRIdCardActivity.class);
+                    thisToCerBindOCRIdCard.putExtra("NowDoCerUserId", String.valueOf(userInfo.getUlId()));
+                    thisToCerBindOCRIdCard.putExtra("NowDoCerUserRealName", userInfo.getUlRealname());
+                    IntentUtil.startActivityForResultAnimLeftToRight(getActivity(), new Intent(thisToCerBindOCRIdCard), Constant.REQUEST_CODE_VALUE);
+                }
             }
         });
+    }
 
-        //点击我的资料跳转详情页，提供完善信息功能
-        mStvMyInfo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView superTextView) {
+    /**
+     * 初始化账户封禁信息
+     *
+     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     */
+    private void initUserAccountBannedInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
+        OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID + "/" + userInfo.getUlId())
+                .tag("当前账户封禁状态")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == okGoResponseBean.getCode() && "查询失败，此用户ID不存在".equals(okGoResponseBean.getMsg())) {
+                            ToastUtils.show(okGoResponseBean.getMsg());
+                            return;
+                        }
+                        if (200 == okGoResponseBean.getCode() && "此账户未被封禁".equals(okGoResponseBean.getMsg())) {
+                            mStvAccountSafe.setRightString("正在保护");//设置实名状态
+                            mStvAccountSafe.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.safeaccount));//账户与安全图标
+                            return;
+                        }
+                        if (200 == okGoResponseBean.getCode() && "此账户处于封禁状态".equals(okGoResponseBean.getMsg())) {
+                            SharePreferenceUtil.removeObject(getActivity(), OkGoSessionAndUserBean.class);//清空持久化xml文件
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getActivity().finish();
+                                }
+                            }, 300000);
+                            CustomAlertDialogUtil.notification1(getActivity(), "超管提示", "您已被系统超管强制下线，5分钟后将自动退出APP！如有疑问，请联系开发者！" + okGoResponseBean.getData(), "我知道了");
+                            mStvAccountSafe.setRightString("已被封禁");//设置实名状态
+                            mStvAccountSafe.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.alreayban));//账户与安全图标
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 列表单击事件
+     *
+     * @param superTextView item
+     */
+    @Override
+    public void onClick(SuperTextView superTextView) {
+        switch (superTextView.getLeftString()) {
+            case "QQ昵称":
+                ToastUtils.show(superTextView.getRightTextView().getText().toString());
+                break;
+            case "我的信息":
+                doMyInfoClick(context);
                 superTextView.setRightTvClickListener(new SuperTextView.OnRightTvClickListener() {
                     @Override
                     public void onClick(TextView textView) {
                         ToastUtils.show(strNowRole);
                     }
                 });
+                break;
+            case "账户与安全":
+                doMyAccountSafeClick(context);
+                break;
+            case "我的订单":
+                doMyOrderClick(context);
+                break;
+            case "我的收货地址":
+                doMyAddressClick(context);
+                break;
+            case "我的店铺":
+                doMyShopClick(context);
+                break;
+            case "意见反馈":
+                doFeedBackClick(context);
+                break;
+            case "违规举报":
+                doReportClick(context);
+                break;
+            case "联系我们":
+                doContactUsClick(context);
+                break;
+        }
+    }
+
+    /**
+     * 我的信息单击业务
+     *
+     * @param context 上下文
+     */
+    private void doMyInfoClick(Context context) {
 //                //方式一：获取本地持久化文件，判断有无数据
 //                if (userInfo !=null){ //登录有数据
 //                    int userId = userInfo.getUlId();
@@ -219,170 +423,30 @@ public class BottomMineFragment extends BaseFragment {
 //                }else {
 //                    CustomAlertDialogUtil.notification1(getActivity(),"温馨提示","您还没有登录呀~","朕知道了");
 //                }
-                //方式二：调用sa-Token后端检查登录API接口
-                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
-                        .tag("检查登录")
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onStart(Request<String, ? extends Request> request) {
-                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
-                            }
-
-                            @Override
-                            public void onSuccess(Response<String> response) {
-                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
-                                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), MineInfoActivity.class));
-                                    OkGo.getInstance().cancelTag("检查登录");
-                                } else {
-                                    CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
-                                }
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                super.onFinish();
-                                MyXPopupUtils.getInstance().setSmartDisDialog();
-                            }
-
-                            @Override
-                            public void onError(Response<String> response) {
-                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
-                            }
-                        });
-            }
-        });
-
-        //账户与安全
-        mStvAccountSafe.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView accountSafe) {
-                String strAccountSafe = accountSafe.getRightTextView().getText().toString();
-                ToastUtils.show(strAccountSafe);
-            }
-        });
-
-        //我的订单
-        mStvMyOrder.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView MyOrder) {
-                String strMyOrder = MyOrder.getLeftTextView().getText().toString();
-                ToastUtils.show(strMyOrder);
-            }
-        });
-        mStvMyAddress.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView superTextView) {
-                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
-                        .tag("检查登录")
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onStart(Request<String, ? extends Request> request) {
-                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
-                            }
-
-                            @Override
-                            public void onSuccess(Response<String> response) {
-                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
-                                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserAddressActivity.class));
-                                    OkGo.getInstance().cancelTag("检查登录");
-                                } else {
-                                    CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
-                                }
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                super.onFinish();
-                                MyXPopupUtils.getInstance().setSmartDisDialog();
-                            }
-
-                            @Override
-                            public void onError(Response<String> response) {
-                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
-                            }
-                        });
-            }
-        });
-        //意见反馈
-        mStvFeedBack.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView superTextView) {
-                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求跳转中...");
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+        //方式二：调用sa-Token后端检查登录API接口
+        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                .tag("检查登录")
+                .execute(new StringCallback() {
                     @Override
-                    public void run() {
+                    public void onStart(Request<String, ? extends Request> request) {
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), MineInfoActivity.class));
+                            OkGo.getInstance().cancelTag("检查登录");
+                        } else {
+                            CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
                         MyXPopupUtils.getInstance().setSmartDisDialog();
-                        IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserApplyUntieActivity.class));
-                    }
-                }, 500);
-            }
-        });
-
-        //违规举报
-        mStvReport.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView report) {
-                String strReport = report.getLeftTextView().getText().toString();
-                ToastUtils.show(strReport);
-            }
-        });
-
-        //联系我们
-        mStvContactUs.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
-            @Override
-            public void onClick(SuperTextView contactUs) {
-                String strContactUs = contactUs.getLeftTextView().getText().toString();
-                ToastUtils.show(strContactUs);
-            }
-        });
-    }
-
-    @Override
-    protected void doBusiness(Context context) {
-
-    }
-
-
-    /**
-     * 初始化用户当前实名信息
-     * @param userInfo
-     */
-    private void initUserNowCerInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
-        OkGo.<String>post(Constant.SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME)
-                .tag("查询当前用户实名状态")
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        OkGoUserCerBean okGoUserCerBean = GsonUtil.gsonToBean(response.body(), OkGoUserCerBean.class);
-                        Log.i(TAG, "查询当前用户实名状态: " + okGoUserCerBean);
-                        if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "未登录".equals(okGoUserCerBean.getMsg())) {
-                            //设置未登录状态
-                            mStvMyCer.setRightString("未登录");
-                            mStvMyCer.setLeftTopString("未登录");
-                            mStvMyCer.setLeftBottomString("未登录");
-                            mStvMyCer.setRightTvDrawableLeft(null);
-                            return;
-                        }
-                        if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
-                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.notcer));
-                            //组装未实名状态假数据，用于判断true或false进入绑定或查看详情页面
-                            OkGoUserCerBean.Data customFalseCerState = new OkGoUserCerBean.Data(new OkGoUserCerBean.Data.UserCertificationBean(false));
-                            mStvMyCer.setLeftTopString("您暂未认证");//认证真实姓名
-                            mStvMyCer.setLeftBottomString("请绑定身份证");//认证身份证号
-                            userDoToBindOrSelectCerIdCard(customFalseCerState, userInfo);
-                            return;
-                        }
-                        if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
-                            mStvMyCer.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.alreadycer));
-                            mStvMyCer.setLeftTopString(okGoUserCerBean.getData().getUlRealname());//认证真实姓名
-                            //认证安全显示处理过的身份证号
-                            String strCerIdCard = okGoUserCerBean.getData().getUserCertificationBean().getTucIdcard().replaceAll("(\\d{4})\\d{8}(\\w{6})", "$1*****$2");
-                            mStvMyCer.setLeftBottomString(strCerIdCard);
-                            userDoToBindOrSelectCerIdCard(okGoUserCerBean.getData(),userInfo);
-                        }
                     }
 
                     @Override
@@ -393,78 +457,52 @@ public class BottomMineFragment extends BaseFragment {
     }
 
     /**
-     * 初始化账户封禁信息
-     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     * 账户与安全单击业务
+     *
+     * @param context 上下文
      */
-    private void initUserAccountBannedInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
-        OkGo.<String>post(Constant.QUERY_BANNED_STATE_BY_USERID + "/" + userInfo.getUlId())
-                .tag("当前账户封禁状态")
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                        if (200 == okGoResponseBean.getCode() && "查询失败，此用户ID不存在".equals(okGoResponseBean.getMsg())) {
-                            ToastUtils.show(okGoResponseBean.getMsg());
-                            return;
-                        }
-                        if (200 == okGoResponseBean.getCode() && "此账户未被封禁".equals(okGoResponseBean.getMsg())) {
-                            mStvAccountSafe.setRightString("正在保护");//设置实名状态
-                            mStvAccountSafe.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.safeaccount));//账户与安全图标
-                            return;
-                        }
-                        if (200 == okGoResponseBean.getCode() && "此账户处于封禁状态".equals(okGoResponseBean.getMsg())) {
-                            SharePreferenceUtil.removeObject(getActivity(), OkGoSessionAndUserBean.class);//清空持久化xml文件
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getActivity().finish();
-                                }
-                            }, 300000);
-                            CustomAlertDialogUtil.notification1(getActivity(), "超管提示", "您已被系统超管强制下线，5分钟后将自动退出APP！如有疑问，请联系开发者！" + okGoResponseBean.getData(), "我知道了");
-                            mStvAccountSafe.setRightString("已被封禁");//设置实名状态
-                            mStvAccountSafe.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.alreayban));//账户与安全图标
-                        }
-                    }
-                });
+    private void doMyAccountSafeClick(Context context) {
+
     }
 
     /**
-     * 初始化我的信息
+     * 我的订单单击业务
      *
-     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     * @param context 上下文
      */
-    private void initUserMyInfo(OkGoSessionAndUserBean.Data.UserInfo userInfo) {
-        OkGo.<String>post(Constant.SA_TOKEN_REDIS_USER_SESSION_SELECT_ROLE_LIST_BY_REAL_NAME_TO_USERNAME)
-                .tag("当前登录会话角色集合")
+    private void doMyOrderClick(Context context) {
+
+    }
+
+    /**
+     * 我的收货地址单击业务
+     *
+     * @param context 上下文
+     */
+    private void doMyAddressClick(Context context) {
+        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                .tag("检查登录")
                 .execute(new StringCallback() {
-                    @SuppressLint("UseCompatLoadingForDrawables")
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                    }
+
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoRoleOrPermissionListBean okGoRoleOrPermissionListBean = GsonUtil.gsonToBean(response.body(), OkGoRoleOrPermissionListBean.class);
-                        Log.i(TAG, "OkGoRoleOrPermissionListBean: " + okGoRoleOrPermissionListBean.getData());
-                        if (200 == okGoRoleOrPermissionListBean.getCode() && "未登录".equals(okGoRoleOrPermissionListBean.getMsg())){
-                            mStvMyInfo.setRightString("未登录");//我的资料
-                            mStvMyInfo.setRightTvDrawableLeft(null);
-                            return;
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserAddressActivity.class));
+                            OkGo.getInstance().cancelTag("检查登录");
+                        } else {
+                            CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
                         }
-                        if (200 == okGoRoleOrPermissionListBean.getCode() && "success".equals(okGoRoleOrPermissionListBean.getMsg())){
-                            List<String> roleStringList =  okGoRoleOrPermissionListBean.getData();
-                            if (roleStringList.contains("超管") && roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
-                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.supermanager));//设置管理员角色图片
-                                strNowRole = "您目前身份是尊贵的超管开发者";
-                            } else if(roleStringList.contains("学生") && roleStringList.contains("跑腿")){
-                                strNowRole = "您已成为跑腿认证学生，欢迎您的加入";
-                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.run));//设置跑腿角色图片
-                            } else if(roleStringList.contains("学生")){
-                                strNowRole = "您目前是普通用户，无资格兼职接单，快去申请加入跑腿大家庭吧";
-                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.ordinary));//设置普通用户角色图片
-                            }
-                            return;
-                        }
-                        if (200 == okGoRoleOrPermissionListBean.getCode() && "error".equals(okGoRoleOrPermissionListBean.getMsg())){
-                            mStvMyInfo.setRightString("无资格");
-                            mStvMyInfo.setRightTvDrawableLeft(null);
-                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
                     }
 
                     @Override
@@ -473,27 +511,129 @@ public class BottomMineFragment extends BaseFragment {
                     }
                 });
     }
+
     /**
-     * 设置监听事件：根据实名认证状态布尔值执行相应的：查看已实名认证相关信息 + 跳转绑定身份证号
+     * 我的店铺单击业务
      *
-     * @param data 当前用户实名认证信息
-     * @param userInfo QQSession+用户全部信息(并集信息中的用户全部信息)
+     * @param context 上下文
      */
-    private void userDoToBindOrSelectCerIdCard(OkGoUserCerBean.Data data, OkGoSessionAndUserBean.Data.UserInfo userInfo) {
-        //实名认证
-        mStvMyCer.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+    private void doMyShopClick(Context context) {
+        /* 1.检查登录 */
+        OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                .tag("检查登录")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                            /* 2.检查商家认证 */
+                            OkGo.<String>post(Constant.USER_SELECT_APPLY_SHOP_BY_SA_TOKEN_SESSION)
+                                    .tag("当前用户申请信息")
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onSuccess(Response<String> response) {
+                                            OkGoApplyShopBean okGoApplyShopBean = GsonUtil.gsonToBean(response.body(), OkGoApplyShopBean.class);
+                                            if (200 == okGoApplyShopBean.getCode() && okGoApplyShopBean.getData() == null && "无申请信息".equals(okGoApplyShopBean.getMsg())) {
+                                                CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有申请商家认证哟~", "朕知道了");
+                                                return;
+                                            }
+                                            if (200 == okGoApplyShopBean.getCode() && okGoApplyShopBean.getData() != null && "有历史申请信息".equals(okGoApplyShopBean.getMsg())) {
+                                                if (okGoApplyShopBean.getData().getAsState() == 0) {
+                                                    XToastUtils.error("您提交的商家入驻申请正在审核中");
+                                                } else if (okGoApplyShopBean.getData().getAsState() == -1) {
+                                                    XToastUtils.error("您提交的商家入驻申请未通过认证审核");
+                                                } else if (okGoApplyShopBean.getData().getAsState() == 1) { //审核通过
+                                                    /* 3.检查商实名认证 */
+                                                    OkGo.<String>post(Constant.SELECT_NOW_CER_ALL_INFO_BY_SA_TOKEN_LOGIN_REAL_NAME)
+                                                            .tag("查询当前用户实名状态")
+                                                            .execute(new StringCallback() {
+                                                                @Override
+                                                                public void onSuccess(Response<String> response) {
+                                                                    OkGoUserCerBean okGoUserCerBean = GsonUtil.gsonToBean(response.body(), OkGoUserCerBean.class);
+                                                                    if (200 == okGoUserCerBean.getCode() && null == okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
+                                                                        XToastUtils.error("请您先进行实名认证后重试");
+                                                                        return;
+                                                                    }
+                                                                    if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
+                                                                        if (okGoUserCerBean.getData().getUserCertificationBean().isTucState()) {
+                                                                            XToastUtils.success("系统检测您已完成实名认证");
+                                                                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), MyShopActivity.class));
+                                                                        } else {
+                                                                            XToastUtils.error("系统检测您实名认证已失效");
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onError(Response<String> response) {
+                                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Response<String> response) {
+                                            OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                                        }
+                                    });
+                        } else {
+                            CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        MyXPopupUtils.getInstance().setSmartDisDialog();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mScrollviewMineInfo, "请求错误，服务器连接失败！");
+                    }
+                });
+    }
+
+    /**
+     * 意见反馈单击业务
+     *
+     * @param context 上下文
+     */
+    private void doFeedBackClick(Context context) {
+        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求跳转中...");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onClick(SuperTextView myCer) {
-                if (data.getUserCertificationBean().isTucState()) { //已实名，跳转实名详情页
-                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserCerSelectIdCardActivity.class));
-                } else { //未实名，跳转OCR绑定界面
-                    Intent thisToCerBindOCRIdCard = new Intent(getActivity(), UserCerBindOCRIdCardActivity.class);
-                    thisToCerBindOCRIdCard.putExtra("NowDoCerUserId", String.valueOf(userInfo.getUlId()));
-                    thisToCerBindOCRIdCard.putExtra("NowDoCerUserRealName", userInfo.getUlRealname());
-                    IntentUtil.startActivityForResultAnimLeftToRight(getActivity(), new Intent(thisToCerBindOCRIdCard), Constant.REQUEST_CODE_VALUE);
-                }
+            public void run() {
+                MyXPopupUtils.getInstance().setSmartDisDialog();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), UserApplyUntieActivity.class));
             }
-        });
+        }, 500);
+    }
+
+    /**
+     * 违规举报单击业务
+     *
+     * @param context 上下文
+     */
+    private void doReportClick(Context context) {
+
+    }
+
+    /**
+     * 联系我们单击业务
+     *
+     * @param context 上下文
+     */
+    private void doContactUsClick(Context context) {
+
     }
 
     // 接收MainActivity发送消息，匹配消息what值(消息标记)
@@ -587,5 +727,4 @@ public class BottomMineFragment extends BaseFragment {
     public boolean onBackPressed() {
         return false;
     }
-
 }

@@ -227,6 +227,18 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 我的店铺 -->
+        <activity
+            android:name=".view.activity.MyShopActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 开通店铺 -->
+        <activity
+            android:name=".view.activity.CreateStoreActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!-- 申请认证跑腿车牌识别OCR -->
         <activity
             android:name=".view.activity.ApplyCarNumberOCRActivity"
