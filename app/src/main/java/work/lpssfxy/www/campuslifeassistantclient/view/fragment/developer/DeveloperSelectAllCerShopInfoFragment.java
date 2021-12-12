@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -213,7 +212,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                     }
                 });
             }
-            //5.携带全部用户信息的表格总集合，开始适配绘制表格
+            //5.携带全部商家认证信息的表格总集合，开始适配绘制表格
             final LockTableView mLockTableView = new LockTableView(getActivity(), mLlCerShopInfoTableContentView, tableData);
             //6.表格UI设置
             mLockTableView.setLockFristColumn(true) //是否锁定第一列
@@ -251,7 +250,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                     .setOnLoadingListener(new LockTableView.OnLoadingListener() {
                         @Override
                         public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
-                            //下拉刷新，再次获取用户全部数据
+                            //下拉刷新，再次获取商家全部数据
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -276,7 +275,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                     .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
                         @Override
                         public void onItemClick(View item, int position) {
-                            //获取索引对应的用户信息
+                            //获取索引对应的商家信息
                             String strUserId = tableData.get(position).get(0); //当前item用户ID
                             String strCerType = tableData.get(position).get(2); //当前item申请类型
                             String strCerState = tableData.get(position).get(3); //当前item审核状态
@@ -297,7 +296,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                                                     doSelectShopUserInfo(strUserId);//查看商家信息,通过用户ID
                                                     break;
                                                 case 2:
-                                                    checkLicenceImg(strLicencePicURL);//查看学生证图片
+                                                    checkLicenceImg(strLicencePicURL);//查看餐饮许可证图片
                                                     break;
                                             }
                                         }
@@ -357,7 +356,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                     .setTableHeadTextColor(R.color.White)//表头字体颜色
                     .setTableContentTextColor(R.color.colorAccent)//单元格字体颜色
                     .setCellPadding(15)//设置单元格内边距(dp)
-                    .setNullableString("无此跑腿学生") //空值替换值
+                    .setNullableString("无此商家认证信息") //空值替换值
                     .setTableViewListener(new LockTableView.OnTableViewListener() {
                         @Override
                         public void onTableViewScrollChange(int x, int y) {
@@ -444,13 +443,13 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
                 .autoOpenSoftInput(true)
                 .isDarkTheme(true)
                 .isViewMode(true)
-                .asInputConfirm("搜索跑腿信息", null, null, "请输入用户ID",
+                .asInputConfirm("搜索商家信息", null, null, "请输入用户ID",
                         new OnInputConfirmListener() {
                             @Override
                             public void onConfirm(String strCerRunId) {
-                                //开始网络请求，访问后端服务器，执行查询跑腿认证操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_APPLY_RUN_INFO_BY_USERID + "/" + strCerRunId)
-                                        .tag("跑腿用户ID查询信息")
+                                //开始网络请求，访问后端服务器，执行查询商家认证认证操作
+                                OkGo.<String>post(Constant.ADMIN_SELECT_APPLY_SHOP_INFO_BY_USERID + "/" + strCerRunId)
+                                        .tag("商家用户ID查询信息")
                                         .execute(new StringCallback() {
                                             @Override
                                             public void onStart(Request<String, ? extends Request> request) {
@@ -517,140 +516,107 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
     }
 
     /**
-     * 角色分配 + 审核状态 + 审核回复
+     * 角色分配 + 审核状态
      *
-     * @param userId        用户ID
-     * @param strCerType    申请类型
-     * @param cerOldState   旧审核状态
+     * @param userId      用户ID
+     * @param strCerType  申请类型
+     * @param cerOldState 旧审核状态
      */
     private void agreeApplyCerToInfo(String userId, String strCerType, String cerOldState) {
-        new XPopup.Builder(getContext())
-                .hasStatusBarShadow(false)
-                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                .autoOpenSoftInput(true)
-                .isDarkTheme(true)
-                .isViewMode(true)
-                .asInputConfirm("同意申请原因", null, null, "请输入审核评语内容",
-                        new OnInputConfirmListener() {
-                            @Override
-                            public void onConfirm(String strNewPostscript) {
-                                if (!TextUtils.isEmpty(strNewPostscript)) {
-                                    /*1.先处理表格抽取的数据 */
-                                    int intRoleId = 0;
-
-                                    if (strCerType.equals("商家")) {
-                                        intRoleId = 4;
-                                    }
-
-                                    /* 2.分配角色 */
-                                    OkGo.<String>post(Constant.ADMIN_ADD_ONCE_USER_ROLE_INFO_BY_USERID_AND_ROLE_ID + "/" + Integer.parseInt(userId) + "/" + intRoleId)
-                                            .tag("同意跑腿审核处理")
-                                            .execute(new StringCallback() {
-                                                @Override
-                                                public void onSuccess(Response<String> response) {
-                                                    OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                    if (200 == okGoResponseBean.getCode() && "用户角色添加失败".equals(okGoResponseBean.getMsg())) {
-                                                        XToastUtils.success(R.string.apply_cer_no);
-                                                        return;
-                                                    }
-                                                    if (200 == okGoResponseBean.getCode() && "用户角色添加成功".equals(okGoResponseBean.getMsg())) {
-                                                        XToastUtils.success(R.string.apply_cer_ok);
-                                                        /* 3.审核状态和审核回复业务操作 */
-                                                        int intCerOldState = 0, intNewState = 1;//此0为初始值无意义————此1代表审核通过
-                                                        if (cerOldState.equals("待审核")) {
-                                                            intCerOldState = 0; //此0代表旧审核状态-->待审核
-                                                        }
-                                                        OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_SHOP_INFO_STATE_OLD_INFO + "/" + Integer.parseInt(userId) + "/" + intCerOldState + "/" + intNewState)
-                                                                .tag("同意跑腿申请")
-                                                                .execute(new StringCallback() {
-                                                                    @Override
-                                                                    public void onSuccess(Response<String> response) {
-                                                                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                                        if (200 == okGoResponseBean.getCode() && "跑腿认证审核通过".equals(okGoResponseBean.getMsg())) {
-                                                                            startSelectAllCerShopInfo(context);
-                                                                            XToastUtils.success(R.string.apply_cer_ok);
-                                                                            return;
-                                                                        }
-                                                                        if (200 == okGoResponseBean.getCode() && "跑腿认证审核失败".equals(okGoResponseBean.getMsg())) {
-                                                                            XToastUtils.success(R.string.apply_cer_no);
-
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError(Response<String> response) {
-                                                                        super.onError(response);
-                                                                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onError(Response<String> response) {
-                                                    super.onError(response);
-                                                    OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
-                                                }
-                                            });
-                                } else {
-                                    XToastUtils.info(R.string.apply_cer_info);
-                                }
+        /*1.先处理表格抽取的数据 */
+        int intRoleId = 0;
+        if (strCerType.equals("商家")) {
+            intRoleId = 4;
+        }
+        /* 2.分配角色 */
+        OkGo.<String>post(Constant.ADMIN_ADD_ONCE_USER_ROLE_INFO_BY_USERID_AND_ROLE_ID + "/" + Integer.parseInt(userId) + "/" + intRoleId)
+                .tag("同意商家认证审核处理")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == okGoResponseBean.getCode() && "用户角色添加失败".equals(okGoResponseBean.getMsg())) {
+                            XToastUtils.success(R.string.apply_shop_no);
+                            return;
+                        }
+                        if (200 == okGoResponseBean.getCode() && "用户角色添加成功".equals(okGoResponseBean.getMsg())) {
+                            XToastUtils.success(R.string.apply_shop_ok);
+                            /* 3.审核状态和审核回复业务操作 */
+                            int intCerOldState = 0, intNewState = 1;//此0为初始值无意义————此1代表审核通过
+                            if (cerOldState.equals("待审核")) {
+                                intCerOldState = 0; //此0代表旧审核状态-->待审核
                             }
-                        })
-                .show();
+                            OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_SHOP_INFO_STATE_OLD_INFO + "/" + Integer.parseInt(userId) + "/" + intCerOldState + "/" + intNewState)
+                                    .tag("同意商家认证申请")
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onSuccess(Response<String> response) {
+                                            OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                            if (200 == okGoResponseBean.getCode() && "商家入驻认证审核失败".equals(okGoResponseBean.getMsg())) {
+                                                XToastUtils.success(R.string.apply_shop_no);
+                                                return;
+                                            }
+                                            if (200 == okGoResponseBean.getCode() && "商家入驻审核通过".equals(okGoResponseBean.getMsg())) {
+                                                startSelectAllCerShopInfo(context);
+                                                XToastUtils.success(R.string.apply_shop_ok);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Response<String> response) {
+                                            super.onError(response);
+                                            OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
+                    }
+                });
     }
 
     /**
-     * 不同意申请 + 审核状态 + 审核回复
+     * 不同意申请 + 审核状态
      *
-     * @param strUserId     用户ID
-     * @param cerOldState   旧审核状态
+     * @param strUserId   用户ID
+     * @param cerOldState 旧审核状态
      */
     private void notAgreeUserApply(String strUserId, String cerOldState) {
-        new XPopup.Builder(getContext())
-                .hasStatusBarShadow(false)
-                .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                .autoOpenSoftInput(true)
-                .isDarkTheme(true)
-                .isViewMode(true)
-                .asInputConfirm("拒绝申请原因", null, null, "请输入审核评语内容",
-                        new OnInputConfirmListener() {
-                            @Override
-                            public void onConfirm(String strNewPostscript) {
-                                /* 3.审核状态和审核回复业务操作 */
-                                int intCerOldState = 0, intNewState = -1;//此0为初始值无意义————此-1代表审核失败
-                                if (cerOldState.equals("待审核")) {
-                                    intCerOldState = 0; //此0代表旧审核状态-->待审核
-                                }
-                                OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_RUN_INFO_STATE_AND_POSTSCRIPT_BY_OLD_INFO + "/" + Integer.parseInt(strUserId) + "/" + intCerOldState + "/" + intNewState)
-                                        .tag("拒绝申请原因")
-                                        .execute(new StringCallback() {
-                                            @Override
-                                            public void onSuccess(Response<String> response) {
-                                                OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                                if (200 == okGoResponseBean.getCode() && "跑腿认证审核通过".equals(okGoResponseBean.getMsg())) {
-                                                    startSelectAllCerShopInfo(context);
-                                                    XToastUtils.success(R.string.apply_cer_not_ok);
-                                                    return;
-                                                }
-                                                if (200 == okGoResponseBean.getCode() && "跑腿认证审核失败".equals(okGoResponseBean.getMsg())) {
-                                                    XToastUtils.success(R.string.apply_cer_not_no);
-                                                }
-                                            }
+        int intCerOldState = 0, intNewState = -1;//此0为初始值无意义————此-1代表审核失败
+        if (cerOldState.equals("待审核")) {
+            intCerOldState = 0; //此0代表旧审核状态-->待审核
+        }
+        OkGo.<String>post(Constant.ADMIN_UPDATE_APPLY_SHOP_INFO_STATE_OLD_INFO + "/" + Integer.parseInt(strUserId) + "/" + intCerOldState + "/" + intNewState)
+                .tag("拒绝申请原因")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == okGoResponseBean.getCode() && "商家入驻审核通过".equals(okGoResponseBean.getMsg())) {
+                            startSelectAllCerShopInfo(context);
+                            XToastUtils.success(R.string.apply_shop_not_ok);
+                            return;
+                        }
+                        if (200 == okGoResponseBean.getCode() && "商家入驻认证审核失败".equals(okGoResponseBean.getMsg())) {
+                            XToastUtils.success(R.string.apply_shop_not_no);
 
-                                            @Override
-                                            public void onError(Response<String> response) {
-                                                super.onError(response);
-                                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
-                                            }
-                                        });
-                            }
-                        })
-                .show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mFlDevSelectAllCerShopInfo, "请求错误，服务器连接失败！");
+                    }
+                });
     }
 
     /**
-     * 通过用户ID，查看学生信息信息
+     * 通过用户ID，查看商家用户信息
      *
      * @param strUserId 用户ID
      */
@@ -669,7 +635,7 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
      * @param strLicenceURL 阿里云OSS餐饮许可证图片URL地址
      */
     private void checkLicenceImg(String strLicenceURL) {
-        //单例模式将学生证URL传到Fragment中
-        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_run_info, ApplyImgLookFragment.getInstance("urlData", strLicenceURL)).commit();
+        //单例模式将餐饮许可证URL传到Fragment中
+        getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_dev_select_all_cer_shop_info, ApplyImgLookFragment.getInstance("urlData", strLicenceURL)).commit();
     }
 }

@@ -159,9 +159,13 @@
     <string name="logoutIng">正在注销...</string>
     <string name="notLogin">未登录</string>
     <string name="apply_cer_ok">跑腿申请审核通过</string>
+    <string name="apply_shop_ok">商家申请审核通过</string>
     <string name="apply_cer_not_ok">跑腿申请拒绝成功</string>
+    <string name="apply_shop_not_ok">商家申请拒绝成功</string>
     <string name="apply_cer_no">跑腿申请审核失败</string>
+    <string name="apply_shop_no">商家申请审核失败</string>
     <string name="apply_cer_not_no">跑腿申请拒绝失败</string>
+    <string name="apply_shop_not_no">商家申请拒绝失败</string>
     <string name="apply_cer_info">必须输入审核回复</string>
     <!--behavior-->
     <string name="scale_down_show_behavior">work.lpssfxy.www.campuslifeassistantclient.base.behavior.FloatingActionButton.ScaleDownShowBehavior</string>
