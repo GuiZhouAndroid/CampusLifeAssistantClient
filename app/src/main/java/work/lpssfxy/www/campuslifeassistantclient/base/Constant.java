@@ -25,7 +25,7 @@ public class Constant {
     public static final String ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
-
+    public static final String ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     /**
      * 添加收货地址弹出标题内容
      */
@@ -213,14 +213,20 @@ public class Constant {
     public static final String USER_UPDATE_ONCE_ADDRESS_INFO_BY_USER_ID_AND_ADDRESS_ID = BASE_URL + "/api/user/address/updateUserAddressInfoByUserIdAndAddressId";
 
     /**
-     * 商家店铺相关API接口
+     * 店铺相关API接口
      */
 
+    /* ************************ 1.商家店铺相关API接口 *************************/
     //商家查询店铺信息
     public static final String SHOP_SELECT_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopSelectStoreInfoBySaToken";
 
     //商家创建店铺
     public static final String SHOP_ADD_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopAddShopStoreInfoSaToken";
+
+    /* ************************ 2.店铺相关API接口 *************************/
+
+    //查询全部店铺分类表信息
+    public static final String SELECT_ALL_SHOP_CATEGORY_INFO = BASE_URL + "/api/shop/category/SelectAllShopCategoryInfo";
 
     /**
      * 检测用户登录注销状态相关API接口

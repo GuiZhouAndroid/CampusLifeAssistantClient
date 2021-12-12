@@ -36,7 +36,7 @@
                 android:ellipsize="marquee"
                 android:gravity="center_horizontal|center"
                 android:singleLine="true"
-                android:text="我的店铺"
+                android:text="店铺管理"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_18" />
 

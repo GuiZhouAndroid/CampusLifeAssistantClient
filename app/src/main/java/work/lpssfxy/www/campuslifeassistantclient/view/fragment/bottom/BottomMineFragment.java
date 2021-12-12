@@ -49,10 +49,9 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.CustomAlertDialog
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MineInfoActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyShopActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyShopCenterActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserApplyUntieActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserCerBindOCRIdCardActivity;
@@ -562,7 +561,7 @@ public class BottomMineFragment extends BaseFragment implements SuperTextView.On
                                                                     if (200 == okGoUserCerBean.getCode() && null != okGoUserCerBean.getData() && "success".equals(okGoUserCerBean.getMsg())) {
                                                                         if (okGoUserCerBean.getData().getUserCertificationBean().isTucState()) {
                                                                             XToastUtils.success("系统检测您已完成实名认证");
-                                                                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), MyShopActivity.class));
+                                                                            IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), MyShopCenterActivity.class));
                                                                         } else {
                                                                             XToastUtils.error("系统检测您实名认证已失效");
                                                                         }

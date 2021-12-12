@@ -204,7 +204,6 @@ public class ApplyRunCommitActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        startVibrator();//进入界面振动
         /**判断Toolbar，开启主图标并显示title*/
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

@@ -7,13 +7,12 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/12/12
- * 描述：开通商铺
+ * 描述：商品管理
  *
  * @author ZSAndroid
- * @create 2021-12-12-14:51
+ * @create 2021-12-12-20:05
  */
-public class CreateStoreActivity extends BaseActivity {
-    private static final String TAG = "CreateStoreActivity";
+public class MyGoodsManagerActivity extends BaseActivity {
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -42,7 +41,7 @@ public class CreateStoreActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_create_store;
+        return R.layout.activity_goods_manager;
     }
 
     @Override

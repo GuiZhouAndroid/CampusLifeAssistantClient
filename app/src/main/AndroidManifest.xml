@@ -227,18 +227,6 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <!-- 我的店铺 -->
-        <activity
-            android:name=".view.activity.MyShopActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <!-- 开通店铺 -->
-        <activity
-            android:name=".view.activity.CreateStoreActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
         <!-- 申请认证跑腿车牌识别OCR -->
         <activity
             android:name=".view.activity.ApplyCarNumberOCRActivity"
@@ -251,6 +239,31 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 我的商铺店铺 -->
+        <activity
+            android:name=".view.activity.MyShopCenterActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 店铺管理 -->
+        <activity
+            android:name=".view.activity.MyStoreManagerActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 商家开店 -->
+        <activity
+            android:name=".view.activity.MyCreateStoreActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <!-- 商品管理 -->
+        <activity
+            android:name=".view.activity.MyGoodsManagerActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->
         <!-- 广播器 -->

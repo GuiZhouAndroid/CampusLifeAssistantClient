@@ -1,0 +1,15 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_my_store_manager_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activity.MyStoreManagerActivity">
+
+    <com.xuexiang.xui.widget.statelayout.MultipleStatusView
+        android:id="@+id/my_store_manager_status_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:msv_contentView="@layout/custom_my_shop_content_layout" />
+
+</RelativeLayout>

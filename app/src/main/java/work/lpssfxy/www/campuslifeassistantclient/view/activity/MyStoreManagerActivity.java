@@ -30,19 +30,19 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
  * created by on 2021/12/12
- * 描述：我的店铺
+ * 描述：店铺管理
  *
  * @author ZSAndroid
  * @create 2021-12-12-12:02
  */
 @SuppressLint("NonConstantResourceId")
-public class MyShopActivity extends BaseActivity {
+public class MyStoreManagerActivity extends BaseActivity {
 
-    private static final String TAG = "MyShopActivity";
+    private static final String TAG = "MyStoreManagerActivity";
     /** 父布局*/
-    @BindView(R2.id.rl_my_shop_info) RelativeLayout mRlMyShopInfo;
+    @BindView(R2.id.rl_my_store_manager_info) RelativeLayout mRlMyStoreManagerInfo;
     /** 状态控件 */
-    @BindView(R.id.my_shop_status_view) MultipleStatusView mMyShopStatusView;
+    @BindView(R.id.my_store_manager_status_view) MultipleStatusView mMyStoreManagerStatusView;
     /** Android振动器 */
     private Vibrator vibrator;
 
@@ -72,7 +72,7 @@ public class MyShopActivity extends BaseActivity {
     }
     @Override
     public int bindLayout() {
-        return R.layout.activity_my_shop;
+        return R.layout.activity_my_store_manager;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class MyShopActivity extends BaseActivity {
     }
 
     /**
-     * 初始化当前用户店铺信息
+     * 初始化店铺信息
      */
     private void initNowUserShopStoreInfo() {
         OkGo.<String>post(Constant.SHOP_SELECT_STORE_INFO_BY_SA_TOKEN)
@@ -123,7 +123,7 @@ public class MyShopActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        mMyShopStatusView.showLoading();
+                        mMyStoreManagerStatusView.showLoading();
                     }
 
                     @Override
@@ -145,7 +145,7 @@ public class MyShopActivity extends BaseActivity {
 
                     @Override
                     public void onError(Response<String> response) {
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, MyShopActivity.this, mRlMyShopInfo, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, MyStoreManagerActivity.this, mRlMyStoreManagerInfo, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -155,17 +155,17 @@ public class MyShopActivity extends BaseActivity {
      */
     private void notShopStoreInfo() {
         //加载状态当前View自定义空布局
-        mMyShopStatusView.showEmpty(R.layout.custom_my_shop_empty_layout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mMyStoreManagerStatusView.showEmpty(R.layout.custom_my_store_empty_layout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //子View的自定义空布局
-        MultipleStatusView mMultipleEmptyMyShopStatusView = mMyShopStatusView.getEmptyView().findViewById(R.id.multiple_empty_my_shop_status_view);
-        mMultipleEmptyMyShopStatusView.showEmpty();
+        MultipleStatusView mMultipleEmptyMyStoreStatusView = mMyStoreManagerStatusView.getEmptyView().findViewById(R.id.multiple_empty_my_store_status_view);
+        mMultipleEmptyMyStoreStatusView.showEmpty();
 
         //子View中父布局view + 父布局点击事件
-        RelativeLayout relativeLayout = mMultipleEmptyMyShopStatusView.getEmptyView().findViewById(R.id.rl_empty_my_shop_info);
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout mrlEmptyMyStoreInfo = mMultipleEmptyMyStoreStatusView.getEmptyView().findViewById(R.id.rl_empty_my_store_info);
+        mrlEmptyMyStoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IntentUtil.startActivityAnimLeftToRight(MyShopActivity.this, new Intent(MyShopActivity.this, CreateStoreActivity.class));//执行动画跳转
+                IntentUtil.startActivityAnimLeftToRight(MyStoreManagerActivity.this, new Intent(MyStoreManagerActivity.this, MyCreateStoreActivity.class));//执行动画跳转
                 finish();
             }
         });

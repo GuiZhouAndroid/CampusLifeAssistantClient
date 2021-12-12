@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_create_store_show"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/ll_create_store_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100"
+        android:background="@color/welcome_colorMain"
+        android:fitsSystemWindows="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_create_store_back"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="center"
+            android:ellipsize="none"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_5"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal|center"
+            android:singleLine="true"
+            android:text="开通商铺"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_18" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingEnd="@dimen/dp_5"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_18"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ll_create_store_title"
+        android:background="@color/White">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="5"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_80"
+                            android:layout_height="@dimen/dp_80"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="@dimen/dp_5"
+                            android:src="@mipmap/storepic" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="门店实拍图"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="@dimen/dp_130"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_create_store_pic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:overScrollMode="never" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="请选择上传 \n(支持相册、相机)"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/super_create_store_category"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                app:sLeftTextString="店铺分类"
+                app:sLeftViewGravity="left_center"
+                app:sLeftViewMarginLeft="@dimen/dp_20"
+                app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                app:sRightTextColor="@color/Grey500"
+                app:sRightTextString="请选择"
+                app:sRightTvDrawableHeight="20dp"
+                app:sRightTvDrawableWidth="45dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@color/White"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="商铺名称"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
+
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                    android:id="@+id/edit_create_store_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:hint="请输入开店名称"
+                    android:textColor="@color/welcome_colorMain"
+                    android:textColorHint="@color/Grey500"
+                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
+                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@color/White"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="商铺描述"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
+
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                    android:id="@+id/edit_create_store_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:hint="请输入店铺描述"
+                    android:textColor="@color/welcome_colorMain"
+                    android:textColorHint="@color/Grey500"
+                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
+                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@color/White"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="商铺公告"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
+
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                    android:id="@+id/edit_create_store_notice"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:hint="请输入店铺公告信息(如：进店戴口罩)"
+                    android:textColor="@color/welcome_colorMain"
+                    android:textColorHint="@color/Grey500"
+                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
+                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@color/White"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="商铺地址"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
+
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                    android:id="@+id/edit_create_store_address"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:hint="请输入店铺详细地点(如：龙山食堂二楼)"
+                    android:textColor="@color/welcome_colorMain"
+                    android:textColorHint="@color/Grey500"
+                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
+                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@color/White"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="联系电话"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
+
+                <com.xuexiang.xui.widget.edittext.ClearEditText
+                    android:id="@+id/edit_create_store_mobile"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@null"
+                    android:hint="请输入店铺联系手机号(如：187****2411)"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    android:textColor="@color/welcome_colorMain"
+                    android:textColorHint="@color/Grey500"
+                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
+                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/super_create_store_begin_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                app:sCenterBottomTextSize="@dimen/sp_11"
+                app:sCenterTopTextSize="@dimen/sp_14"
+                app:sCenterViewGravity="center"
+                app:sLeftTextString="营业开始时间"
+                app:sLeftViewGravity="left_center"
+                app:sLeftViewMarginLeft="@dimen/dp_20"
+                app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                app:sRightTextColor="@color/Grey500"
+                app:sRightTextString="请选择"
+                app:sRightTvDrawableHeight="40dp"
+                app:sRightTvDrawableWidth="70dp" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/super_create_store_end_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:layout_marginBottom="@dimen/dp_40"
+                app:sCenterBottomTextSize="@dimen/sp_11"
+                app:sCenterTopTextSize="@dimen/sp_14"
+                app:sCenterViewGravity="center"
+                app:sLeftTextString="营业结束时间"
+                app:sLeftViewGravity="left_center"
+                app:sLeftViewMarginLeft="@dimen/dp_20"
+                app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                app:sRightTextColor="@color/Grey500"
+                app:sRightTextString="请选择"
+                app:sRightTvDrawableHeight="40dp"
+                app:sRightTvDrawableWidth="70dp" />
+
+            <com.yoma.roundbutton.RoundButton
+                android:id="@+id/rbn_create_store_ok"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="@dimen/dp_200"
+                android:layout_height="@dimen/dp_50"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_40"
+                android:text="立即开店"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:backgroundColor="@drawable/bg_btn"
+                app:borderColor="@drawable/bg_btn_b"
+                app:borderWidth="@dimen/dp_5"
+                app:isRadiusAdjustBounds="true" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress
+        android:id="@+id/circle_progress_create_store"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:antiAlias="true"
+        app:arcWidth="5dp"
+        app:bgArcColor="@android:color/darker_gray"
+        app:bgArcWidth="5dp"
+        app:hint="正在开通"
+        app:hintSize="23sp"
+        app:startAngle="270"
+        app:sweepAngle="360"
+        app:unit="%"
+        app:unitSize="20sp"
+        app:value="0"
+        app:valueSize="25sp" />
+</RelativeLayout>

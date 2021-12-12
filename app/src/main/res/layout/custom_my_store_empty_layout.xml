@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.MyShopActivity">
+    tools:context=".view.activity.MyStoreManagerActivity">
 
     <com.xuexiang.xui.widget.statelayout.MultipleStatusView
-        android:id="@+id/multiple_empty_my_shop_status_view"
+        android:id="@+id/multiple_empty_my_store_status_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        app:msv_emptyView="@layout/custom_my_shop_empty_view" />
+        app:msv_emptyView="@layout/custom_my_store_empty_view" />
 
 </RelativeLayout>
