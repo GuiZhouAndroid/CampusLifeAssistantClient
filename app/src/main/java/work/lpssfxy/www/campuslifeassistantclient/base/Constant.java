@@ -240,6 +240,9 @@ public class Constant {
     //商铺通过店铺ID查询旗下拥有全部商品信息
     public static final String SHOP_SELECT_ALL_GOODS_INFO_BY_SHOP_STORE_ID = BASE_URL + "/api/goods/shopSelectAllGoodsInfoByShopStoreId";
 
+    //通过商品分类ID查询商品分类名称
+    public static final String SELECT_GOODS_CATEGORY_NAME_BY_CATEGORY_ID = BASE_URL + "/api/goods/category/selectGoodsCategoryNameByCategoryId";
+
     /* ************************ 2.店铺相关API接口 *************************/
 
     //查询全部店铺分类表信息

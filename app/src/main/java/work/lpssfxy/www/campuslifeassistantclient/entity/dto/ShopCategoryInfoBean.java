@@ -20,6 +20,7 @@ public class ShopCategoryInfoBean {
     }
 
 
+
     public ShopCategoryInfoBean(int scId, String scName, String scDesc) {
         this.scId = scId;
         this.scName = scName;

@@ -49,22 +49,21 @@
     </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:background="@color/welcome_colorMain"
         android:id="@+id/tab_layout_goods"
         style="@style/TabLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/xui_actionbar_height"
-        android:fitsSystemWindows="true"
-        app:tabGravity="fill"
-        app:tabTextColor="@color/White"
-        app:tabIndicatorColor="@color/aqua"
-        app:tabSelectedTextColor="@color/springgreen"/>
-    <androidx.viewpager.widget.ViewPager
         android:background="@color/welcome_colorMain"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/aqua"
+        app:tabSelectedTextColor="@color/yellow"
+        app:tabTextColor="@color/White" />
+
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_goods"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fitsSystemWindows="true" />
+        android:background="@color/white" />
 
 </LinearLayout>

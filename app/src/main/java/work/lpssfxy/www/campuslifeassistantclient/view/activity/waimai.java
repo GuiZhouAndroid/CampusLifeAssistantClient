@@ -165,7 +165,7 @@ public class waimai extends BaseActivity {
      */
     private void showImg() {
         Glide.with(this)
-                .load("https://zs-android.oss-cn-chengdu.aliyuncs.com/.jpg")
+                .load("https://www.zsitking.top/pic_data/1639407786651.jpeg")
                 .into((ImageView) findViewById(R.id.iv_one));
         Glide.with(this)
                 .load("http://gank.io/images/92989b6a707b44dfb1c734e8d53d39a2")

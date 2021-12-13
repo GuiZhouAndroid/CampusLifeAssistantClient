@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +72,6 @@ import com.xuexiang.xui.widget.edittext.ClearEditText;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
-import com.xuexiang.xutil.common.StringUtils;
 import com.yoma.roundbutton.RoundButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -90,9 +88,7 @@ import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridStoreImageAd
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.button.NotFastButton;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyShopBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyStringUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
