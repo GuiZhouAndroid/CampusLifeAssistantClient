@@ -234,6 +234,12 @@ public class Constant {
     //查询全部商品分类表信息
     public static final String SELECT_ALL_GOODS_CATEGORY_INFO_BY = BASE_URL + "/api/goods/category/SelectAllGoodsCategoryInfo";
 
+    //添加商品信息
+    public static final String SHOP_ADD_GOODS_INFO_BY_SA_TOKEN_TO_USERID = BASE_URL + "/api/goods/shopAddGoodsInfoSaToken";
+
+    //商铺通过店铺ID查询旗下拥有全部商品信息
+    public static final String SHOP_SELECT_ALL_GOODS_INFO_BY_SHOP_STORE_ID = BASE_URL + "/api/goods/shopSelectAllGoodsInfoByShopStoreId";
+
     /* ************************ 2.店铺相关API接口 *************************/
 
     //查询全部店铺分类表信息

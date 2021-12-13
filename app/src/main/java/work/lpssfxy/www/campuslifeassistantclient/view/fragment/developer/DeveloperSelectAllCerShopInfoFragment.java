@@ -79,6 +79,11 @@ public class DeveloperSelectAllCerShopInfoFragment extends BaseFragment {
 
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_all_cer_shop_info;
     }

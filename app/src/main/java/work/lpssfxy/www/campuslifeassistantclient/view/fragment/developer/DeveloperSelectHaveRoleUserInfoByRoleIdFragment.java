@@ -70,6 +70,11 @@ public class DeveloperSelectHaveRoleUserInfoByRoleIdFragment extends BaseFragmen
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_have_role_user_info_by_role_id;
     }

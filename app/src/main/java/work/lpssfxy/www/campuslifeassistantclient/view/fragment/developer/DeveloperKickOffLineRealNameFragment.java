@@ -55,6 +55,11 @@ public class DeveloperKickOffLineRealNameFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_kickoff_line_realname;
     }

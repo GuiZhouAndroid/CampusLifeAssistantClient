@@ -40,7 +40,7 @@ public class MyGoodsManagerActivity extends BaseActivity implements TabLayout.On
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
-        return true;
+        return false;
     }
 
     @Override

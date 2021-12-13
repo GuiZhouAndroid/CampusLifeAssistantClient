@@ -1,9 +1,11 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods;
 
-import android.util.Log;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.LazyLoadFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 
 /**
  * created by on 2021/12/13
@@ -12,7 +14,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.LazyLoadFragment
  * @author ZSAndroid
  * @create 2021-12-13-16:20
  */
-public class GoodsUpdateFragment extends LazyLoadFragment {
+public class GoodsUpdateFragment extends BaseFragment {
 
 
     /**
@@ -21,10 +23,7 @@ public class GoodsUpdateFragment extends LazyLoadFragment {
     public static GoodsUpdateFragment newInstance() {
         return new GoodsUpdateFragment();
     }
-    @Override
-    protected int setContentView() {
-        return R.layout.fragment_goods_update;
-    }
+
 
     @Override
     protected void lazyLoad() {
@@ -32,7 +31,32 @@ public class GoodsUpdateFragment extends LazyLoadFragment {
     }
 
     @Override
-    protected void stopLoad() {
-        Log.d(TAG, "Fragment4" + "已经对用户不可见，可以停止加载数据");
+    protected int bindLayout() {
+        return R.layout.fragment_goods_update;
+    }
+
+    @Override
+    protected void prepareData(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void initView(View rootView) {
+
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void initEvent() {
+
+    }
+
+    @Override
+    protected void doBusiness(Context context) {
+
     }
 }

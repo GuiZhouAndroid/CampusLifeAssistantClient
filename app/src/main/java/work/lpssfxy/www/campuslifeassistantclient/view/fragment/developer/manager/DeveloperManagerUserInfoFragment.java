@@ -78,6 +78,11 @@ public class DeveloperManagerUserInfoFragment extends BaseFragment implements Ta
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_manager_user_info;
     }

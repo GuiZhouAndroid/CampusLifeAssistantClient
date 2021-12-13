@@ -73,6 +73,11 @@ public class DeveloperSelectUserPermissionByUserNameFragment extends BaseFragmen
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_permission_user_by_username;
     }

@@ -60,6 +60,11 @@ public class DeveloperSelectBannedStateUserIdFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_banned_state_user_id;
     }

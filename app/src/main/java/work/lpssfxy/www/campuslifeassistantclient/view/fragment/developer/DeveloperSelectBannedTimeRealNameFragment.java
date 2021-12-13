@@ -55,6 +55,11 @@ public class DeveloperSelectBannedTimeRealNameFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_banned_time_real_name;
     }

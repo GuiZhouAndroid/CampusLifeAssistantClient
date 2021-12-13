@@ -71,6 +71,11 @@ public class DeveloperManagerRoleInfoFragment extends BaseFragment{
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_manager_role_info;
     }

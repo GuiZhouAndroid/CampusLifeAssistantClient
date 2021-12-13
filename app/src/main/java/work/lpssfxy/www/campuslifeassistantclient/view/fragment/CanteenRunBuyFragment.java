@@ -70,6 +70,11 @@ public class CanteenRunBuyFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_canteen_run_buy_second_floor;
     }

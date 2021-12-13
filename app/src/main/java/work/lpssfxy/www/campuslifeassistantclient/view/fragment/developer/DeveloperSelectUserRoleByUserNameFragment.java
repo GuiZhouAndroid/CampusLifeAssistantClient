@@ -58,6 +58,11 @@ public class DeveloperSelectUserRoleByUserNameFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_role_user_by_username;
     }

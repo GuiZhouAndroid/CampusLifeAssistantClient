@@ -40,6 +40,11 @@ public class ApplyImgLookFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_apply_img_look;
     }

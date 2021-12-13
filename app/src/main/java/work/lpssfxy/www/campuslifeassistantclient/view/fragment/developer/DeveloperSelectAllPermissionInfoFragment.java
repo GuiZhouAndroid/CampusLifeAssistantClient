@@ -85,6 +85,11 @@ public class DeveloperSelectAllPermissionInfoFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_all_permission_info;
     }

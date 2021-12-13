@@ -139,6 +139,11 @@ public class BottomMineFragment extends BaseFragment implements SuperTextView.On
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_index_bottom_mine;
     }

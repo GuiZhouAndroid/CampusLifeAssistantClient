@@ -22,9 +22,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.FragmentBackHandler;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.BackHandlerHelper;
+import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.FragmentBackHandler;
 
 /**
  * created by on 2021/8/21
@@ -46,16 +46,19 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
     }
 
     /**
-     * 获取TAG的fragment名称
+     * 视图是否已经初初始化
      */
-    protected final String mRecyclerView = this.getClass().getSimpleName();
+    protected boolean isInit = false;
+    protected boolean isLoad = false;
+    protected final String TAG = "BaseFragment";
+    private View view = null;
+
     /**
      * 解绑ButterKnife
      */
     private Unbinder mUnbinder;
 
     public Context context;
-    private View mContextView = null;
 
     /**
      * Fragment 生命周期的第一步
@@ -73,20 +76,64 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         /** 初始化布局 */
-        mContextView = inflater.inflate(bindLayout(), container, false);
+        view = inflater.inflate(bindLayout(), container, false);
         /** 初始化ButterKnife */
-        mUnbinder = ButterKnife.bind(this, mContextView);
+        mUnbinder = ButterKnife.bind(this, view);
         /** 准备数据 */
         prepareData(savedInstanceState);
         /** 初始化控件 */
-        initView(mContextView);
+        initView(view);
         /** 初始化数据 */
         initData(savedInstanceState);
         /** 初始化事件监听器 */
         initEvent();
         /** 业务操作 */
         doBusiness(getActivity());
-        return mContextView;
+        /** 初始化的时候去加载数据 **/
+        isInit = true;
+        isCanLoadData();
+        return view;
+    }
+
+    /**
+     * 视图是否已经对用户可见，系统的方法
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isCanLoadData();
+    }
+
+    /**
+     * 是否可以加载数据
+     * 可以加载数据的条件：
+     * 1.视图已经初始化
+     * 2.视图对用户可见
+     */
+    private void isCanLoadData() {
+        if (!isInit) {
+            return;
+        }
+        if (getUserVisibleHint()) {
+            lazyLoad();
+            isLoad = true;
+        } else {
+            if (isLoad) {
+                stopLoad();
+            }
+        }
+    }
+
+    /**
+     * 当视图初始化并且对用户可见的时候去真正的加载数据
+     */
+    protected abstract void lazyLoad();
+
+    /**
+     * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以覆写此方法
+     */
+    protected void stopLoad() {
+
     }
 
     /**
@@ -131,10 +178,11 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
 
     /**
      * 设置Snackbar上提示的字体颜色
+     *
      * @param snackbar
      * @param color
      */
-    public void setSnackBarMessageTextColor(Snackbar snackbar, int color){
+    public void setSnackBarMessageTextColor(Snackbar snackbar, int color) {
         View view = snackbar.getView();
         ((TextView) view.findViewById(R.id.snackbar_text)).setTextColor(color);
     }
@@ -182,6 +230,8 @@ public abstract class BaseFragment extends Fragment implements FragmentBackHandl
             mUnbinder.unbind();
         }
         super.onDestroyView();
+        isInit = false;
+        isLoad = false;
         OkGo.getInstance().cancelAll();
     }
 }

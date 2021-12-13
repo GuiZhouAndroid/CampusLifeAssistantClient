@@ -86,6 +86,11 @@ public class DeveloperSelectAllRoleInfoFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_select_all_role_info;
     }

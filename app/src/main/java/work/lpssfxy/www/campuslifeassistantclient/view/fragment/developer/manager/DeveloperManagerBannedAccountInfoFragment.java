@@ -77,6 +77,11 @@ public class DeveloperManagerBannedAccountInfoFragment extends BaseFragment{
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_manager_developer_ban_account_info;
     }

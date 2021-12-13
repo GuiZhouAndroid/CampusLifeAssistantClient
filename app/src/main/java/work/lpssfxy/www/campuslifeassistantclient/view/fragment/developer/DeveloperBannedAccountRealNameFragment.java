@@ -59,6 +59,11 @@ public class DeveloperBannedAccountRealNameFragment extends BaseFragment {
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_banned_account_real_name;
     }

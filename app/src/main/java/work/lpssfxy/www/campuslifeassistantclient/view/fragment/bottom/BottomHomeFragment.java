@@ -130,6 +130,11 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     private MyRecyclerViewAdapter recyclerViewAdapter;
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_index_bottom_home;
     }

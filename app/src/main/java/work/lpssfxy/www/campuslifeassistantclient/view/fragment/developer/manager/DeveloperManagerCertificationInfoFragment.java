@@ -71,6 +71,11 @@ public class DeveloperManagerCertificationInfoFragment extends BaseFragment{
     }
 
     @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
     protected int bindLayout() {
         return R.layout.fragment_developer_manager_certification_info;
     }
