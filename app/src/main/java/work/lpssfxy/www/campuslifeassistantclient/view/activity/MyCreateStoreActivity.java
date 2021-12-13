@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,8 @@ import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnSelectListener;
+import com.lxj.xpopupext.listener.CommonPickerListener;
+import com.lxj.xpopupext.popup.CommonPickerPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -90,6 +93,7 @@ import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoApplyShopBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyStringUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.UUIDUtil;
@@ -119,11 +123,11 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     @BindView(R2.id.iv_create_store_back) ImageView mIvCreateStoreBack;  //标题栏返回
     @BindView(R2.id.recycler_create_store_pic) RecyclerView mRecycleCreateStorePic; //门店实图列表控件
     @BindView(R2.id.super_create_store_category) SuperTextView mStvCreateStoreCategory;//店铺分类
-    @BindView(R2.id.edit_create_store_name) ClearEditText mEditCreateStoreName;//商铺描述
-    @BindView(R2.id.edit_create_store_desc) ClearEditText mEditCreateStoreDesc;//商铺名称
+    @BindView(R2.id.edit_create_store_name) ClearEditText mEditCreateStoreName;//商铺名称
     @BindView(R2.id.edit_create_store_notice) ClearEditText mEditCreateStoreNotice;//商铺公告
-    @BindView(R2.id.edit_create_store_address) ClearEditText mEditCreateStoreAddress;//商铺地址
+    @BindView(R2.id.edit_create_store_address) ClearEditText mEditCreateStoreAddress;//商铺详细地址
     @BindView(R2.id.edit_create_store_mobile) ClearEditText mEditCreateStoreMobile;//联系电话
+    @BindView(R2.id.super_create_store_desc) SuperTextView mStvCreateStoreDesc;//商铺所属校区
     @BindView(R2.id.super_create_store_begin_time) SuperTextView mStvCreateStoreBeginTime;//营业开始时间
     @BindView(R2.id.super_create_store_end_time) SuperTextView mStvCreateStoreEndTime;//营业结束时间
     @BindView(R2.id.rbn_create_store_ok) RoundButton mRbnCreateStoreOk; //立即开店
@@ -147,6 +151,8 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     private String[][] mChooseBeginTime,mChooseEndTime;
     /** 输入框中的全局数据，提供网络请求提交信息时使用 */
     private String strGetCategoryName,strGetStoreName,strGetStoreDesc,strGetStoreNotice,strGetStoreAddress,strGetStoreMobile,strGetBeginTime,strGetEndTime;
+    /** 提取商铺分类ID */
+    private int categoryId;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -233,7 +239,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        MyXPopupUtils.getInstance().setShowDialog(MyCreateStoreActivity.this,"正在加载信息...");
+                        MyXPopupUtils.getInstance().setShowDialog(MyCreateStoreActivity.this, "正在加载信息...");
                     }
 
                     @Override
@@ -243,7 +249,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                         //提取商铺分类集合信息
                         if (200 == okGoAllShopCategoryInfoBean.getCode() && okGoAllShopCategoryInfoBean.getData().size() > 0 && "success".equals(okGoAllShopCategoryInfoBean.getMsg())) {
                             for (OkGoAllShopCategoryInfoBean.Data data : okGoAllShopCategoryInfoBean.getData()) {
-                                stringCategoryNameList.add("[编号"+data.getScId()+"]"+data.getScName());
+                                stringCategoryNameList.add("[编号" + data.getScId() + "]" + data.getScName());
                             }
                         }
                     }
@@ -275,11 +281,14 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_create_store_back, R2.id.super_create_store_begin_time, R2.id.super_create_store_end_time})
+    @OnClick({R2.id.iv_create_store_back, R2.id.super_create_store_desc, R2.id.super_create_store_begin_time, R2.id.super_create_store_end_time})
     public void onCreateStoreViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_create_store_back://点击返回
                 MyCreateStoreActivity.this.finish();
+                break;
+            case R.id.super_create_store_desc://点击选择商铺所在校区
+                chooseDesc();
                 break;
             case R.id.super_create_store_begin_time://点击选择营业开始时间
                 chooseBeginTime();
@@ -288,6 +297,28 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 chooseEndTime();
                 break;
         }
+    }
+
+    /**
+     * 选择商铺所在校区
+     */
+
+    private void chooseDesc() {
+        CommonPickerPopup popup = new CommonPickerPopup(MyCreateStoreActivity.this);
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("龙山校区");
+        list.add("朝阳校区");
+        //默认选择男
+        popup.setPickerData(list).setCurrentItem(0);
+        popup.setCommonPickerListener(new CommonPickerListener() {
+            @Override
+            public void onItemSelected(int index, String descName) {
+                mStvCreateStoreDesc.setRightString(descName);
+            }
+        });
+        new XPopup.Builder(MyCreateStoreActivity.this)
+                .asCustom(popup)
+                .show();
     }
 
     /**
@@ -365,7 +396,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
 
     @Override
     public void onClick(SuperTextView superTextView) {
-        switch (superTextView.getLeftString()){
+        switch (superTextView.getLeftString()) {
             case "店铺分类":
                 doStoreCategoryClick();
                 break;
@@ -379,9 +410,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         if (stringCategoryNameList.size() > 0) {
             String[] strings = new String[stringCategoryNameList.size()];
             for (int i = 0; i < stringCategoryNameList.size(); i++) {
-                String strText = stringCategoryNameList.get(i);
-                strings[i] = strText.substring(strText.indexOf("]") + 1);
-                Log.i(TAG, "测试===: " + MyStringUtils.subString(stringCategoryNameList.get(i), "[编号", "]"));
+                strings[i] = stringCategoryNameList.get(i);
             }
             new XPopup.Builder(getContext())
                     .isDarkTheme(true)
@@ -392,7 +421,10 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                             new OnSelectListener() {
                                 @Override
                                 public void onSelect(int position, String categoryName) {
-                                    mStvCreateStoreCategory.setRightString(categoryName);
+                                    //设置ID对应的分类名称
+                                    mStvCreateStoreCategory.setRightString(categoryName.substring(categoryName.indexOf("]") + 1));
+                                    //提取商铺分类ID
+                                    categoryId = Integer.parseInt(MyStringUtils.subString(categoryName, "[编号", "]"));
                                 }
                             }).show();
         } else {
@@ -411,34 +443,31 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         }
         strGetCategoryName = mStvCreateStoreCategory.getRightString();//商铺分类
         strGetStoreName = mEditCreateStoreName.getText().toString().trim();//商铺名称
-        strGetStoreDesc = mEditCreateStoreDesc.getText().toString().trim();//商铺描述
         strGetStoreNotice = mEditCreateStoreNotice.getText().toString().trim();//商铺公告
         strGetStoreAddress = mEditCreateStoreAddress.getText().toString().trim();//商铺地址
         strGetStoreMobile = mEditCreateStoreMobile.getText().toString().trim();//联系电话
+        strGetStoreDesc = mStvCreateStoreDesc.getRightString();//商铺所属校区
         strGetBeginTime = mStvCreateStoreBeginTime.getRightString();//营业开始时间
         strGetEndTime = mStvCreateStoreEndTime.getRightString();//营业结束时间
 
         if (strGetCategoryName.equals("请选择")) {
             strGetCategoryName = "";
         }
+        if (strGetStoreDesc.equals("请选择")) {
+            strGetStoreDesc = "";
+        }
         if (strGetBeginTime.equals("请选择")) {
             strGetBeginTime = "";
         }
-
         if (strGetEndTime.equals("请选择")) {
             strGetEndTime = "";
         }
         if (strGetCategoryName.isEmpty()) {
-            strGetStoreName = "";
             ToastUtils.show("请选择店铺分类");
             return;
         }
         if (TextUtils.isEmpty(strGetStoreName)) {
             ToastUtils.show("请完善商铺名称信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetStoreDesc)) {
-            ToastUtils.show("请完善商铺描述信息");
             return;
         }
         if (TextUtils.isEmpty(strGetStoreNotice)) {
@@ -451,6 +480,10 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         }
         if (TextUtils.isEmpty(strGetStoreMobile)) {
             ToastUtils.show("请完善联系电话信息");
+            return;
+        }
+        if (TextUtils.isEmpty(strGetStoreDesc)) {
+            ToastUtils.show("请选择商铺所属校区");
             return;
         }
         if (TextUtils.isEmpty(strGetBeginTime)) {
@@ -665,7 +698,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     };
 
     /**
-     * 创建ActivityResultLauncher 回调监听门店实拍图图片路径地址
+     * 创建ActivityResultLauncher 回调监听门店实拍图片路径地址
      *
      * @return 回调结果
      */
@@ -695,7 +728,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathStore = media.getAndroidQToPath();
-                                Log.i(TAG, "AndroidQ核酸证明Path:" + media.getAndroidQToPath());
+                                Log.i(TAG, "AndroidQ门店实拍图Path:" + media.getAndroidQToPath());
                             }
                             mAdapterStore.setList(selectList);
                             mAdapterStore.notifyDataSetChanged();
@@ -892,7 +925,6 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                         @Override
                         public void onCall(String absolutePath) {
                             new PictureMediaScannerConnection(getContext(), absolutePath);
-                            Log.i(TAG, "刷新图库:" + absolutePath);
                         }
                     });
                 } else {
@@ -957,33 +989,32 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 case 1://此处理URL + OCR + 商家信息 上传后端数据库
                     //OSS上传成功重组的URL地址集合，OKGo上传后端数据库
                     String ossUrlFileName = (String) msg.obj;
-                    Log.i(TAG, "，OKGo上传后端数据库: " + ossUrlFileName);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             OkGo.<String>post(Constant.SHOP_ADD_STORE_INFO_BY_SA_TOKEN)
                                     .tag("商家创建店铺")
-                                    .params("shopCategory",1)
-                                    .params("shopName",strGetStoreName)
-                                    .params("shopPic",ossUrlFileName)
-                                    .params("shopBeginTime",strGetBeginTime)
-                                    .params("shopEndTime",strGetEndTime)
-                                    .params("shopDesc",strGetStoreDesc)
-                                    .params("shopAddress",strGetStoreAddress)
-                                    .params("shopMobile",strGetStoreMobile)
-                                    .params("shopNotice",strGetStoreNotice)
+                                    .params("shopCategory", categoryId)
+                                    .params("shopName", strGetStoreName)
+                                    .params("shopPic", ossUrlFileName)
+                                    .params("shopBeginTime", strGetBeginTime)
+                                    .params("shopEndTime", strGetEndTime)
+                                    .params("shopDesc", strGetStoreDesc)
+                                    .params("shopAddress", strGetStoreAddress)
+                                    .params("shopMobile", strGetStoreMobile)
+                                    .params("shopNotice", strGetStoreNotice)
                                     .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(Response<String> response) {
-                                            startVibrator();//成功振动
-                                            OkGoApplyShopBean okGoApplyShopBean = GsonUtil.gsonToBean(response.body(), OkGoApplyShopBean.class);
-                                            if (200 == okGoApplyShopBean.getCode() && null == okGoApplyShopBean.getData() && "商铺创建成功".equals(okGoApplyShopBean.getMsg())) {
+                                            OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                            if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
+                                                startVibrator();//成功振动
                                                 DialogPrompt dialogPrompt = new DialogPrompt(MyCreateStoreActivity.this, "商铺已开通成功，快去管理商品信息吧", 10);
                                                 dialogPrompt.showAndFinish(MyCreateStoreActivity.this);
                                                 return;
                                             }
-                                            if (200 == okGoApplyShopBean.getCode() && null == okGoApplyShopBean.getData() && "SHOP_STORE_FAIL_COMMIT".equals(okGoApplyShopBean.getMsg())) {
-                                                DialogPrompt dialogPrompt = new DialogPrompt(MyCreateStoreActivity.this, "商铺已开通失败，请联系校园帮开发者", 10);
+                                            if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
+                                                DialogPrompt dialogPrompt = new DialogPrompt(MyCreateStoreActivity.this, "商铺已开通失败，请联系校园帮开发者解决", 10);
                                                 dialogPrompt.showAndFinish(MyCreateStoreActivity.this);
                                             }
                                         }
@@ -997,8 +1028,6 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     }, 1000);
                     break;
                 case 2:
-                    startVibrator();
-                    ToastUtils.show("上传成功");
                     mCircleProgressCreateStore.reset();
                     mCircleProgressCreateStore.setVisibility(View.GONE);//进度条加载完成后，隐藏进度条
                     break;

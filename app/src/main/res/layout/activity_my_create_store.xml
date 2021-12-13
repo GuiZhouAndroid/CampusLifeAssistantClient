@@ -192,43 +192,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="商铺描述"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
-
-                <com.xuexiang.xui.widget.edittext.ClearEditText
-                    android:id="@+id/edit_create_store_desc"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5"
-                    android:background="@null"
-                    android:hint="请输入店铺描述"
-                    android:textColor="@color/welcome_colorMain"
-                    android:textColorHint="@color/Grey500"
-                    app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
-                    app:cet_clearIconSize="@dimen/default_clear_icon_size"
-                    tools:ignore="HardcodedText" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/Grey100" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:background="@color/White"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
                     android:text="商铺公告"
                     android:textColor="@color/black"
                     android:textSize="15sp"
@@ -266,7 +229,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="商铺地址"
+                    android:text="详细地址"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     tools:ignore="HardcodedText,RtlSymmetry,TextViewEdits" />
@@ -277,7 +240,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:background="@null"
-                    android:hint="请输入店铺详细地点(如：龙山食堂二楼)"
+                    android:hint="请输入店铺具体位置(如：龙山食堂二楼)"
                     android:textColor="@color/welcome_colorMain"
                     android:textColorHint="@color/Grey500"
                     app:cet_clearIcon="@drawable/ic_baseline_cancel_24"
@@ -324,6 +287,27 @@
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey100" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/super_create_store_desc"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                app:sCenterBottomTextSize="@dimen/sp_11"
+                app:sCenterTopTextSize="@dimen/sp_14"
+                app:sCenterViewGravity="center"
+                app:sLeftTextString="商铺所属校区"
+                app:sLeftViewGravity="left_center"
+                app:sLeftViewMarginLeft="@dimen/dp_20"
+                app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                app:sRightTextColor="@color/Grey500"
+                app:sRightTextString="请选择"
+                app:sRightTvDrawableHeight="40dp"
+                app:sRightTvDrawableWidth="70dp" />
 
             <View
                 android:layout_width="match_parent"
