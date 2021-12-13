@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.MyShopCenterActivity"
-    android:background="@color/White">
+    android:background="@color/White"
+    tools:context=".view.activity.MyShopCenterActivity">
 
     <LinearLayout
+        android:id="@+id/ll_shop_center_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
         android:background="@color/welcome_colorMain"
@@ -47,10 +48,23 @@
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
+
+    <ImageView
+        android:id="@+id/ll_shop_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_shop_center_title"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:src="@mipmap/shopserver" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@+id/ll_shop_server"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
         <com.xuexiang.xui.widget.button.RippleView
@@ -59,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_20"
             android:layout_marginEnd="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_20"
             app:rv_color="@color/welcome_colorMain"
             app:rv_type="doubleRipple">
 
@@ -96,6 +109,30 @@
                 android:background="@drawable/btn_bg_shop_goods"
                 android:gravity="center"
                 android:text="商品管理"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="20sp" />
+
+        </com.xuexiang.xui.widget.button.RippleView>
+
+        <com.xuexiang.xui.widget.button.RippleView
+            android:id="@+id/ripple_sales_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            app:rv_color="@color/welcome_colorMain"
+            app:rv_type="doubleRipple">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="?attr/xui_config_content_spacing_horizontal"
+                android:layout_marginEnd="?attr/xui_config_content_spacing_horizontal"
+                android:background="@drawable/btn_bg_shop_sales_status"
+                android:gravity="center"
+                android:text="销售详情"
                 android:textColor="@color/xui_config_color_white"
                 android:textSize="20sp" />
 

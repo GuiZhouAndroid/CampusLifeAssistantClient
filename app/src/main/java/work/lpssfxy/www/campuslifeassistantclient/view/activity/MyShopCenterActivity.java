@@ -30,6 +30,7 @@ public class MyShopCenterActivity extends BaseActivity {
     @BindView(R2.id.iv_my_shop_store_back) ImageView mIvMyShopStoreBack;//返回
     @BindView(R2.id.ripple_store_manager) RippleView mRippleStoreManager;//店铺管理
     @BindView(R2.id.ripple_goods_manager) RippleView mRippleGoodsManager;//商品管理
+    @BindView(R2.id.ripple_sales_status) RippleView mRippleSalesStatus;//销售详情
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -96,7 +97,7 @@ public class MyShopCenterActivity extends BaseActivity {
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_my_shop_store_back,R2.id.ripple_store_manager,R2.id.ripple_goods_manager})
+    @OnClick({R2.id.iv_my_shop_store_back,R2.id.ripple_store_manager,R2.id.ripple_goods_manager,R2.id.ripple_sales_status})
     public void onMyShopCenterViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_my_shop_store_back://点击返回
@@ -106,6 +107,9 @@ public class MyShopCenterActivity extends BaseActivity {
                 IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, MyStoreManagerActivity.class));//执行动画跳转
                 break;
             case R.id.ripple_goods_manager://商品管理
+                IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, MyGoodsManagerActivity.class));//执行动画跳转
+                break;
+            case R.id.ripple_sales_status://销售详情
                 IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, MyGoodsManagerActivity.class));//执行动画跳转
                 break;
         }

@@ -217,6 +217,7 @@ public class Constant {
      */
 
     /* ************************ 1.商家店铺相关API接口 *************************/
+
     //商家查询店铺信息
     public static final String SHOP_SELECT_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopSelectStoreInfoBySaToken";
 
@@ -225,6 +226,13 @@ public class Constant {
 
     //通过商家用户ID查询该用户全部商铺信息
     public static final String SELECT_USER_SHOP_STORE_INFO_BY_SA_TOKEN_TO_USERID = BASE_URL + "/api/shop/store/selectUserShopStoreInfoByUserId";
+
+    /**
+     * 商品相关API接口
+     */
+
+    //查询全部商品分类表信息
+    public static final String SELECT_ALL_GOODS_CATEGORY_INFO_BY = BASE_URL + "/api/goods/category/SelectAllGoodsCategoryInfo";
 
     /* ************************ 2.店铺相关API接口 *************************/
 

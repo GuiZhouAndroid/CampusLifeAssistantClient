@@ -42,6 +42,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyRegexUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
@@ -247,6 +248,7 @@ public class MineInfoActivity extends BaseActivity {
                                     .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(Response<String> response) {
+                                            XToastUtils.success("信息已刷新");
                                             //Json字符串解析转为实体类对象
                                             OkGoUserBean okGoUserBeanData = GsonUtil.gsonToBean(response.body(), OkGoUserBean.class);
                                             //全局当前用户名，用于调用更新信息接口
@@ -260,7 +262,6 @@ public class MineInfoActivity extends BaseActivity {
 
                                         @Override
                                         public void onError(Response<String> response) {
-                                            super.onError(response);
                                             OkGoErrorUtil.CustomFragmentOkGoError(response, MineInfoActivity.this, mLlMineInfoShow, "请求错误，服务器连接失败！");
                                         }
 
