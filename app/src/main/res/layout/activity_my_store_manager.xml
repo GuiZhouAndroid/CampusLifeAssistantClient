@@ -10,6 +10,6 @@
         android:id="@+id/my_store_manager_status_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:msv_contentView="@layout/custom_my_shop_content_layout" />
+        app:msv_contentView="@layout/custom_my_store_content_layout" />
 
 </RelativeLayout>

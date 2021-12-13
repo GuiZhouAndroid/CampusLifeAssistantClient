@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_my_shop_show"
+    android:id="@+id/fl_store_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ll_my_shop_title"
+            android:id="@+id/ll_store_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_100"
             android:background="@color/welcome_colorMain"
@@ -20,7 +20,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/iv_my_shop_back"
+                android:id="@+id/iv_store_back"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:layout_gravity="center"
@@ -41,7 +41,6 @@
                 android:textSize="@dimen/sp_18" />
 
             <TextView
-                android:id="@+id/tv_forward"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:ellipsize="end"
@@ -55,10 +54,10 @@
 
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+            android:id="@+id/refreshLayout_store"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/ll_my_shop_title"
+            android:layout_below="@+id/ll_store_title"
             app:srlAccentColor="@color/Grey700"
             app:srlEnableAutoLoadMore="false"
             app:srlEnableLoadMore="true"
@@ -85,11 +84,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/toolbar_my_shop_detail_info"
                     android:orientation="vertical">
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_my_shop"
+                        android:id="@+id/super_store_my_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         app:sCenterBottomTextColor="@color/Grey600"
@@ -108,95 +106,7 @@
                         app:sRightViewMarginRight="@dimen/dp_20" />
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_my_shop_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sLeftTextString="店铺所属校区"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="20dp"
-                        app:sRightTvDrawableWidth="45dp"
-                        app:sRightViewMarginRight="@dimen/dp_50" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_desc"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterViewGravity="left_center"
-                        app:sLeftTextString="店铺描述"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_notice"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterViewGravity="left_center"
-                        app:sLeftTextString="店铺公告"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterViewGravity="left_center"
-                        app:sLeftTextString="详细地址"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
-
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_mobile"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterViewGravity="left_center"
-                        app:sLeftTextString="联系电话"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_begin_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterBottomTextSize="@dimen/sp_11"
-                        app:sCenterTopTextSize="@dimen/sp_14"
-                        app:sCenterViewGravity="center"
-                        app:sLeftTextString="营业开始时间"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_30" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_end_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_60"
-                        app:sCenterBottomTextSize="@dimen/sp_11"
-                        app:sCenterTopTextSize="@dimen/sp_14"
-                        app:sCenterViewGravity="center"
-                        app:sLeftTextString="营业结束时间"
-                        app:sLeftViewGravity="left_center"
-                        app:sLeftViewMarginLeft="@dimen/dp_20"
-                        app:sRightTvDrawableHeight="40dp"
-                        app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_30" />
-
-                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_my_shop_pic"
+                        android:id="@+id/super_store_pic"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         app:sCenterViewGravity="left_center"
@@ -208,28 +118,147 @@
                         app:sRightViewMarginRight="@dimen/dp_40" />
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_create"
+                        android:id="@+id/super_store_category"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sLeftTextString="店铺分类"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="20dp"
+                        app:sRightTvDrawableWidth="45dp"
+                        app:sRightTextSize="@dimen/sp_14"/>
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_name"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         app:sCenterViewGravity="left_center"
-                        app:sLeftTextString="创店时间"
+                        app:sLeftTextString="商铺名称"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
                         app:sLeftViewGravity="left_center"
                         app:sLeftViewMarginLeft="@dimen/dp_20"
                         app:sRightTvDrawableHeight="40dp"
                         app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
+                        app:sRightTextSize="@dimen/sp_14" />
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                        android:id="@+id/super_shop_update"
+                        android:id="@+id/super_store_notice"
+                        android:layout_width="match_parent"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="商铺公告"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_address"
+                        android:layout_width="match_parent"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="详细地址"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        app:sLeftTextString="联系电话"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14" />
+
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_desc"
+                        android:layout_width="match_parent"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="商铺所属校区"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14"/>
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_begin_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextSize="@dimen/sp_11"
+                        app:sCenterTopTextSize="@dimen/sp_14"
+                        app:sCenterViewGravity="center"
+                        app:sLeftTextString="营业开始时间"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14"/>
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_end_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterBottomTextSize="@dimen/sp_11"
+                        app:sCenterTopTextSize="@dimen/sp_14"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        app:sCenterViewGravity="center"
+                        app:sLeftTextString="营业结束时间"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="开店时间"
+                        app:sLeftViewGravity="left_center"
+                        app:sRightViewMarginRight="@dimen/dp_30"
+                        app:sRightTextColor="@color/Grey500"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14"/>
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_update"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         app:sCenterViewGravity="left_center"
                         app:sLeftTextString="更新时间"
                         app:sLeftViewGravity="left_center"
+                        app:sRightTextColor="@color/Grey500"
                         app:sLeftViewMarginLeft="@dimen/dp_20"
                         app:sRightTvDrawableHeight="40dp"
                         app:sRightTvDrawableWidth="70dp"
-                        app:sRightViewMarginRight="@dimen/dp_40" />
+                        app:sRightTextSize="@dimen/sp_14"/>
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

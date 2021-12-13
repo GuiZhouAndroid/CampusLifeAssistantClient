@@ -223,6 +223,9 @@ public class Constant {
     //商家创建店铺
     public static final String SHOP_ADD_STORE_INFO_BY_SA_TOKEN = BASE_URL + "/api/shop/store/shopAddShopStoreInfoSaToken";
 
+    //通过商家用户ID查询该用户全部商铺信息
+    public static final String SELECT_USER_SHOP_STORE_INFO_BY_SA_TOKEN_TO_USERID = BASE_URL + "/api/shop/store/selectUserShopStoreInfoByUserId";
+
     /* ************************ 2.店铺相关API接口 *************************/
 
     //查询全部店铺分类表信息
