@@ -1,24 +1,30 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.chad.library.adapter.base.listener.OnLoadMoreListener;
 import com.chad.library.adapter.base.module.BaseDraggableModule;
 import com.chad.library.adapter.base.module.BaseLoadMoreModule;
+import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -33,13 +39,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseUserAddressInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.BaseStoreGoodsInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.CustomLoadMoreView;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.UpdateActivityUIFromFragment;
+import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.UpdateFragmentUIFromActivity;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.GoodsCategoryInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.StoreGoodsInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean;
@@ -47,6 +57,7 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsCatego
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.DynamicTimeFormat;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
@@ -55,6 +66,8 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.GoodAddActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyGoodsManagerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 
@@ -66,7 +79,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActiv
  * @create 2021-12-13-16:20
  */
 @SuppressLint("NonConstantResourceId")
-public class GoodsAllFragment extends BaseFragment {
+public class GoodsAllFragment extends BaseFragment{
 
     @BindView(R2.id.refreshLayout_store_all_goods) RefreshLayout mRefreshLayoutStoreAllGoods;//下拉刷新
     @BindView(R2.id.ryc_store_all_goods) RecyclerView mRycStoreAllGoods;//列表控件
@@ -77,6 +90,14 @@ public class GoodsAllFragment extends BaseFragment {
      */
     public static GoodsAllFragment newInstance() {
         return new GoodsAllFragment();
+    }
+
+    @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        //MyGoodsManagerActivity myGoodsManagerActivity = (MyGoodsManagerActivity) activity;
+        //通过强转成宿主activity，就可以获取到传递过来的数据
+        //myGoodsManagerActivity.setHandler(mHandler);
     }
 
     @Override
@@ -140,7 +161,6 @@ public class GoodsAllFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param context
      */
     private void initSetRefreshListener(Context context) {
@@ -274,7 +294,7 @@ public class GoodsAllFragment extends BaseFragment {
         storeGoodsInfoAdapter.getEmptyLayout().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//商家添加商品信息
-                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), GoodAddActivity.class));
+                IntentUtil.startActivityForResultAnimLeftToRight(getActivity(), new Intent(getActivity(), GoodAddActivity.class), Constant.REQUEST_CODE_VALUE);//执行动画跳转
             }
         });
     }
@@ -330,12 +350,13 @@ public class GoodsAllFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())&& "商品信息删除成功".equals(okGoResponseBean.getData())) {
+                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg()) && "商品信息删除成功".equals(okGoResponseBean.getData())) {
                             XToastUtils.success("商品删除成功");
                         } else {
                             XToastUtils.error(okGoResponseBean.getData());
                         }
                     }
+
                     @Override
                     public void onError(Response<String> response) {
                         OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRycStoreAllGoods, "请求错误，服务器连接失败！");
@@ -347,4 +368,17 @@ public class GoodsAllFragment extends BaseFragment {
     protected void stopLoad() {
         Log.d(TAG, "Fragment1" + "已经对用户不可见，可以停止加载数据");
     }
+//
+//    // 接收MyGoodsManagerActivity发送消息，匹配消息what值(消息标记)
+//    @SuppressLint("HandlerLeak")
+//    public Handler mHandler = new Handler() {
+//        @SuppressLint("NotifyDataSetChanged")
+//        public void handleMessage(android.os.Message msg) {
+//            switch (msg.what) {
+//                case 1:
+//
+//                    break;
+//            }
+//        }
+//    };
 }

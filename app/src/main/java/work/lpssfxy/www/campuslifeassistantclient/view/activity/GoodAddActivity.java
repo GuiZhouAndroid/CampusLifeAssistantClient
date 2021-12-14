@@ -864,6 +864,9 @@ public class GoodAddActivity extends BaseActivity implements SuperTextView.OnSup
                                             if (200 == okGoResponseBean.getCode() && "ADD_GOODS_SUCCESS".equals(okGoResponseBean.getData()) && "success".equals(okGoResponseBean.getMsg())) {
                                                 DialogPrompt dialogPrompt = new DialogPrompt(GoodAddActivity.this, "此商品已成功添加，返回查看详情吧~", 10);
                                                 dialogPrompt.showAndFinish(GoodAddActivity.this);
+                                                Intent intent = new Intent();
+                                                intent.putExtra("BackGoodsName", strGetAddGoodsName);
+                                                GoodAddActivity.this.setResult(Constant.RESULT_CODE_ADD_GOODS_SUCCESS, intent);
                                                 XToastUtils.success("操作成功");
                                                 return;
                                             }

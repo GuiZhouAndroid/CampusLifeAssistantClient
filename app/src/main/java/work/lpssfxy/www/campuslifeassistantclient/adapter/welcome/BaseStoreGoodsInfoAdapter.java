@@ -1,6 +1,5 @@
 package work.lpssfxy.www.campuslifeassistantclient.adapter.welcome;
 
-import android.content.Context;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +36,7 @@ public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBe
     /**
      * 有参实例，无集合数据
      *
-     * @param layoutResId 数据需要自动适配的developer_fragment_have_role_user_info_role_id_recycler_view_item.xml视图布局的id
+     * @param layoutResId 数据需要自动适配视图布局的id
      */
     public BaseStoreGoodsInfoAdapter(int layoutResId) {
         super(layoutResId);
@@ -45,7 +44,6 @@ public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBe
 
     public BaseStoreGoodsInfoAdapter(int layoutResId, @Nullable List<StoreGoodsInfoBean> data) {
         super(layoutResId, data);
-
         //通过子View的Id绑定适配器，创建适配器实例时，自动添加子view监听事件
         //addChildClickViewIds(R.id.select_role_user_info_user_id);
         //addChildClickViewIds(R.id.select_role_user_info_user_name);
@@ -85,14 +83,14 @@ public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBe
             strGoodsFlagState = "(已下架)";
         }
         baseViewHolder
-                .setText(R.id.tv_goods_id,"(编号"+storeGoodsInfoBean.getGoodsId()+")")
+                .setText(R.id.tv_goods_id, "(编号" + storeGoodsInfoBean.getGoodsId() + ")")
                 .setText(R.id.tv_goods_name, storeGoodsInfoBean.getGoodsName())
                 .setText(R.id.tv_goods_price, storeGoodsInfoBean.getGoodsPrice() + "元/份")
                 .setText(R.id.tv_goods_repertory, "库存(" + storeGoodsInfoBean.getGoodsRepertory() + "份)")
                 .setText(R.id.tv_goods_desc, "【商品简介】:" + storeGoodsInfoBean.getGoodsDesc())
                 .setText(R.id.tv_goods_create, "上架时间(" + storeGoodsInfoBean.getCreateTime() + ")")
                 .setText(R.id.tv_goods_flag, strGoodsFlagState);
-
+        //阿里云OSS图片设置商品封面
         Glide.with(getContext()).load(storeGoodsInfoBean.getGoodsPic()).placeholder(R.mipmap.goodszwt).into((ImageView) baseViewHolder.getView(R.id.iv_goods_pic));
     }
 }
