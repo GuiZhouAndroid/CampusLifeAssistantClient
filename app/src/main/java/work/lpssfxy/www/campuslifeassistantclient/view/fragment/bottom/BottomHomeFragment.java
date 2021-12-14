@@ -71,8 +71,10 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.OtherActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.RepastPracticeActivity;
 
 
 /**
@@ -246,9 +248,9 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     public void onItemClick(int position, View view) {
         switch (position) {
             case 0://食堂代取
-                Constant.mTencent.reportDAU();
-                Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
-                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(),CanteenRunBuyActivity.class));
+                //Constant.mTencent.reportDAU();
+                //Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), CanteenRunBuyActivity.class));
                 break;
             case 1://快递代取
                 checkQQLogin();
@@ -259,7 +261,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Toast.makeText(getActivity(), "笑话百科", Toast.LENGTH_SHORT).show();
                 break;
             case 3://星座运势
-                Toast.makeText(getActivity(), "星座运势", Toast.LENGTH_SHORT).show();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), RepastPracticeActivity.class));
                 break;
             case 4://六师官网
                 openBottomMapNaviCation();

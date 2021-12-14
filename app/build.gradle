@@ -187,4 +187,9 @@ dependencies {
     //implementation 'com.github.Hitomis.transferee:GlideImageLoader:1.6.1' // 添加 Glide 图片加载器
     // 查看大图 https://github.com/SherlockGougou/BigImageViewPager
     //implementation 'com.github.SherlockGougou:BigImageViewPager:androidx-6.2.0'
+    //双列表联动
+    implementation 'com.kunminx.linkage:linkage-recyclerview:1.9.2'
+    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
+    implementation 'com.github.li-xiaojun:EasyAdapter:1.2.5'
 }

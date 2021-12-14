@@ -1,34 +1,51 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 
+
+import com.google.gson.reflect.TypeToken;
+import com.kunminx.linkage.LinkageRecyclerView;
+import com.kunminx.linkage.adapter.viewholder.LinkagePrimaryViewHolder;
+import com.kunminx.linkage.adapter.viewholder.LinkageSecondaryViewHolder;
+import com.kunminx.linkage.bean.BaseGroupedItem;
+import com.xuexiang.xui.utils.SnackbarUtils;
+import com.xuexiang.xutil.net.JsonUtil;
+import com.xuexiang.xutil.resource.ResourceUtils;
+
+import java.util.List;
+
+import butterknife.BindView;
+import work.lpssfxy.www.campuslifeassistantclient.base.eleme.CustomLinkagePrimaryAdapterConfig;
+import work.lpssfxy.www.campuslifeassistantclient.base.eleme.ElemeGroupedItem;
+import work.lpssfxy.www.campuslifeassistantclient.base.eleme.ElemeSecondaryAdapterConfig;
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.base.backfragment.BackHandlerHelper;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.CanteenRunBuyFragment;
 
 /**
- * created by on 2021/11/23
- * 描述：食堂跑腿代购
+ * created by on 2021/12/14
+ * 描述：
  *
  * @author ZSAndroid
- * @create 2021-11-23-17:47
+ * @create 2021-12-14-18:24
  */
-public class CanteenRunBuyActivity extends BaseActivity {
 
-    /**
-     * 防触碰使用的变量
-     */
-    private long firstTime;
+@SuppressLint("NonConstantResourceId")
+public class CanteenRunBuyActivity extends BaseActivity implements CustomLinkagePrimaryAdapterConfig.OnPrimaryItemClickListener, ElemeSecondaryAdapterConfig.OnSecondaryItemClickListener{
+
+
+    @BindView(R.id.linkage) LinkageRecyclerView linkage;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
-        return false;
+        return true;
     }
 
     @Override
     protected Boolean isSetStatusBarState() {
-        return false;
+        return true;
     }
 
     @Override
@@ -38,12 +55,12 @@ public class CanteenRunBuyActivity extends BaseActivity {
 
     @Override
     protected Boolean isSetBottomNaviCationColor() {
-        return true;
+        return false;
     }
 
     @Override
     protected Boolean isSetImmersiveFullScreen() {
-        return true;
+        return false;
     }
 
     @Override
@@ -58,8 +75,7 @@ public class CanteenRunBuyActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        //加载跑腿代购二楼Fragment页面
-        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_canteen_show, CanteenRunBuyFragment.getInstance()).commit();
+        linkage.init(JsonUtil.fromJson(ResourceUtils.readStringFromAssert("eleme.json"), new TypeToken<List<ElemeGroupedItem>>() {}.getType()), new CustomLinkagePrimaryAdapterConfig(this), new ElemeSecondaryAdapterConfig(this));
     }
 
     @Override
@@ -82,30 +98,19 @@ public class CanteenRunBuyActivity extends BaseActivity {
 
     }
 
-//    /**
-//     * 防触碰处理
-//     * 再按一次返回首页
-//     */
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            long secondTime = System.currentTimeMillis();
-//            if (secondTime - firstTime > 3000) {
-//                ToastUtils.show("再按一次返回首页");
-//                firstTime = secondTime;
-//                return true;
-//            } else {
-//                CanteenRunBuyActivity.this.finish();
-//                overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
-//            }
-//        }
-//        return super.onKeyUp(keyCode, event);
-//    }
+    @Override
+    public void onPrimaryItemClick(LinkagePrimaryViewHolder holder, View view, String title) {
+        SnackbarUtils.Short(view, title).show();
+    }
 
     @Override
-    public void onBackPressed() {
-        if (!BackHandlerHelper.handleBackPress(this)) {
-            super.onBackPressed();
-        }
+    public void onSecondaryItemClick(LinkageSecondaryViewHolder holder, ViewGroup view, BaseGroupedItem<ElemeGroupedItem.ItemInfo> item) {
+        SnackbarUtils.Short(view, item.info.getTitle()).show();
+    }
+
+    @Override
+    public void onGoodAdd(View view, BaseGroupedItem<ElemeGroupedItem.ItemInfo> item) {
+        SnackbarUtils.Short(view, "添加：" + item.info.getTitle()).show();
+
     }
 }

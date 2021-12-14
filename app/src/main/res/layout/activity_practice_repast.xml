@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:orientation="vertical"
+    tools:context=".view.activity.RepastPracticeActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_create_store_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_repast_back"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="center"
+            android:ellipsize="none"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_5"
+            android:src="@drawable/ic_arrow_back_dark_24dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal|center"
+            android:singleLine="true"
+            android:text="六师学院食堂跑腿代购"
+            android:textColor="@color/Black"
+            android:textSize="@dimen/sp_18" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingEnd="@dimen/dp_5"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+
+<!--        <com.github.mmin18.widget.RealtimeBlurView-->
+<!--            android:id="@+id/blurView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:visibility="visible" />-->
+<!--    </RelativeLayout>-->
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_repast"
+        style="@style/TabLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/xui_actionbar_height"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabSelectedTextColor="@color/Deep_Orange"
+        app:tabTextColor="@color/Black" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager_repast"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white" />
+
+</LinearLayout>
