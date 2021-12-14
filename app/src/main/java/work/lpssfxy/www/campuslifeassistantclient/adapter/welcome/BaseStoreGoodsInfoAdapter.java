@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.module.DraggableModule;
+import com.chad.library.adapter.base.module.LoadMoreModule;
+import com.chad.library.adapter.base.module.UpFetchModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -29,7 +32,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
  * @author ZSAndroid
  * @create 2021-11-26-22:19
  */
-public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBean, BaseViewHolder> {
+public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBean, BaseViewHolder> implements LoadMoreModule, DraggableModule, UpFetchModule {
 
     /**
      * 有参实例，无集合数据
@@ -82,6 +85,7 @@ public class BaseStoreGoodsInfoAdapter extends BaseQuickAdapter<StoreGoodsInfoBe
             strGoodsFlagState = "(已下架)";
         }
         baseViewHolder
+                .setText(R.id.tv_goods_id,"(编号"+storeGoodsInfoBean.getGoodsId()+")")
                 .setText(R.id.tv_goods_name, storeGoodsInfoBean.getGoodsName())
                 .setText(R.id.tv_goods_price, storeGoodsInfoBean.getGoodsPrice() + "元/份")
                 .setText(R.id.tv_goods_repertory, "库存(" + storeGoodsInfoBean.getGoodsRepertory() + "份)")

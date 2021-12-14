@@ -26,6 +26,7 @@ public class Constant {
     public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+    public static final String ACTION_DELETE_ADD_GOODS_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     /**
      * 添加收货地址弹出标题内容
      */
@@ -242,6 +243,12 @@ public class Constant {
 
     //通过商品分类ID查询商品分类名称
     public static final String SELECT_GOODS_CATEGORY_NAME_BY_CATEGORY_ID = BASE_URL + "/api/goods/category/selectGoodsCategoryNameByCategoryId";
+
+    // 通过商家店铺ID和商品ID删除对应商品信息
+    public static final String SHOP_DELETE_GOODS_INFO_BY_STORE_ID_AND_GOODS_ID = BASE_URL + "/api/goods/shopDeleteGoodsInfoByStoreIdAndGoodsId";
+
+    //通过商家店铺ID和商品名称删除对应商品信息
+    public static final String SHOP_DELETE_GOODS_INFO_BY_STORE_ID_AND_GOODS_NAME = BASE_URL + "/api/goods/shopDeleteGoodsInfoByStoreIdAndGoodsName";
 
     /* ************************ 2.店铺相关API接口 *************************/
 

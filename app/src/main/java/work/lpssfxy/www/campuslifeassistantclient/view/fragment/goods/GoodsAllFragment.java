@@ -2,15 +2,23 @@ package work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.chad.library.adapter.base.listener.OnLoadMoreListener;
+import com.chad.library.adapter.base.module.BaseDraggableModule;
+import com.chad.library.adapter.base.module.BaseLoadMoreModule;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -30,6 +38,7 @@ import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseUserAddressInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.BaseStoreGoodsInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.base.CustomLoadMoreView;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.GoodsCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.StoreGoodsInfoBean;
@@ -37,10 +46,16 @@ import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.DynamicTimeFormat;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.GoodAddActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyGoodsManagerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 
 /**
@@ -172,7 +187,8 @@ public class GoodsAllFragment extends BaseFragment {
 
                     @Override
                     public void onError(Response<String> response) {
-                        super.onError(response);
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRycStoreAllGoods, "请求错误，服务器连接失败！");
+
                     }
                 });
     }
@@ -199,6 +215,13 @@ public class GoodsAllFragment extends BaseFragment {
             mRycStoreAllGoods.setAdapter(storeGoodsInfoAdapter);
             //初始化适配器动画
             initAdapterAnimation();
+            //初始化适配器上拉加载更多
+            initAdapterLoadMore(storeGoodsInfoAdapter, storeGoodsInfoAdapter.getLoadMoreModule());
+            //初始化适配器侧滑删除
+            initAdapterDragDelete(storeGoodsInfoAdapter, storeGoodsInfoAdapter.getDraggableModule());
+            //初始化适配器空布局 + 监听事件--->新增收货地址（在setAdapter后使用，否则报错）
+            initSetAdapterEmptyView(storeGoodsInfoAdapter);
+
         }
     }
 
@@ -210,17 +233,114 @@ public class GoodsAllFragment extends BaseFragment {
         storeGoodsInfoAdapter.setAnimationEnable(true);//打开动画
         storeGoodsInfoAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.ScaleIn);//设置动画类型
         storeGoodsInfoAdapter.setAnimationFirstOnly(false);//设置始终显示动画
-        //设置自定义动画
-//        userAddressInfoAdapter.setAdapterAnimation(new BaseAnimation() {
-//            @NonNull
-//            @Override
-//            public Animator[] animators(@NonNull View view) {
-//                return new Animator[]{
-//                        ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1),
-//                        ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1)
-//                };
-//            }
-//        });
+    }
+
+    /**
+     * 初始化适配器上拉加载更多
+     *
+     * @param storeGoodsInfoAdapter 全部商品适配器
+     * @param loadMoreModule        全部商品适配器下拉加载基类
+     */
+    private void initAdapterLoadMore(BaseStoreGoodsInfoAdapter storeGoodsInfoAdapter, BaseLoadMoreModule loadMoreModule) {
+        loadMoreModule.setEnableLoadMore(true);//打开上拉加载
+        loadMoreModule.setAutoLoadMore(true);//自动加载
+        loadMoreModule.setPreLoadNumber(1);//设置滑动到倒数第几个条目时自动加载，默认为1
+        loadMoreModule.setEnableLoadMoreIfNotFullPage(true);//当数据不满一页时继续自动加载
+        loadMoreModule.setLoadMoreView(new CustomLoadMoreView());//设置自定义加载布局
+        loadMoreModule.setOnLoadMoreListener(new OnLoadMoreListener() {//设置加载更多监听事件
+            @Override
+            public void onLoadMore() {
+                mRycStoreAllGoods.postDelayed(new Runnable() {//延迟以提升用户体验
+                    @Override
+                    public void run() {
+                        //userAddressInfoAdapter.addData(userAddressInfoBeanList);
+                        ToastUtils.show("没有更多商品信息了");
+                        storeGoodsInfoAdapter.getLoadMoreModule().loadMoreEnd();//加载完毕
+                        //userAddressInfoAdapter.getLoadMoreModule().loadMoreComplete();//加载完毕
+                        //userAddressInfoAdapter.getLoadMoreModule().loadMoreFail()//加载失败
+                    }
+                }, 1000);
+            }
+        });
+    }
+
+    /**
+     * 初始化适配器空布局 + 监听事件--->新增商品信息
+     *
+     * @param storeGoodsInfoAdapter 全部商品适配器
+     */
+    private void initSetAdapterEmptyView(BaseStoreGoodsInfoAdapter storeGoodsInfoAdapter) {
+        storeGoodsInfoAdapter.setEmptyView(R.layout.custom_all_goods_empty_view);
+        storeGoodsInfoAdapter.getEmptyLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//商家添加商品信息
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), GoodAddActivity.class));
+            }
+        });
+    }
+
+    /**
+     * 初始化适配器侧滑删除商品
+     *
+     * @param storeGoodsInfoAdapter
+     * @param draggableModule       全部商品适配器适配器拖拽基类
+     */
+    private void initAdapterDragDelete(BaseStoreGoodsInfoAdapter storeGoodsInfoAdapter, BaseDraggableModule draggableModule) {
+        draggableModule.setSwipeEnabled(true);//启动侧滑删除
+        draggableModule.getItemTouchHelperCallback().setSwipeMoveFlags(ItemTouchHelper.START);//侧滑删除方向
+        draggableModule.setOnItemSwipeListener(new OnItemSwipeListener() {
+            private int goodsId;
+
+            public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int position) { //当滑动动作开始时调用，提取商品信息ID
+                goodsId = storeGoodsInfoAdapter.getData().get(position).getGoodsId();
+                Log.i(TAG, "onItemSwipeStart: " + storeGoodsInfoAdapter.getData().get(position).toString());
+            }
+
+            @Override
+            public void clearView(RecyclerView.ViewHolder viewHolder, int position) {//当item滑动删除之前，松手之时调用
+
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int position) { //当item滑动时视图从适配器中删除之后调用
+                deleteGoodsInfoInfo(goodsId);//删除商品信息
+                //移除list中的数据后，并没有紧接着告知adapter有数据已经移除，就会导致后面操作的报错
+                //解决方法是，在list做完remove或者add操作后，紧跟着notifyItemInserted(notifyItemRangeInserted)或notifyDataSetChanged
+                storeGoodsInfoAdapter.notifyDataSetChanged();//移出后，同步List收获地址数量，避免产生下标越界等错误--->必须在主线程
+            }
+
+            @Override //滑动时的背景，正在滑动时调用，一般用于绘制背景色
+            public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
+                canvas.drawColor(Color.parseColor("#fff75446"));
+            }
+        });
+    }
+
+    /**
+     * 商家删除商品信息
+     *
+     * @param goodsId 商品ID
+     */
+    private void deleteGoodsInfoInfo(int goodsId) {
+        OkGo.<String>post(Constant.SHOP_DELETE_GOODS_INFO_BY_STORE_ID_AND_GOODS_ID + "/" + goodsId)
+                .tag("删除商品信息")
+                .execute(new StringCallback() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                        if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())&& "商品信息删除成功".equals(okGoResponseBean.getData())) {
+                            XToastUtils.success("商品删除成功");
+                        } else {
+                            XToastUtils.error(okGoResponseBean.getData());
+                        }
+                    }
+                    @Override
+                    public void onError(Response<String> response) {
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mRycStoreAllGoods, "请求错误，服务器连接失败！");
+                    }
+                });
     }
 
     @Override

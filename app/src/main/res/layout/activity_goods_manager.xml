@@ -47,7 +47,29 @@
             android:textSize="@dimen/sp_18"
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
+    <LinearLayout
+        android:paddingEnd="@dimen/dp_10"
+        android:id="@+id/ll_goods_add"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/welcome_colorMain"
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_add_24" />
+
+        <TextView
+            android:paddingEnd="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加商品"
+            android:textColor="@color/White"
+            android:textSize="@dimen/sp_16" />
+    </LinearLayout>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_goods"
         style="@style/TabLayoutStyle"

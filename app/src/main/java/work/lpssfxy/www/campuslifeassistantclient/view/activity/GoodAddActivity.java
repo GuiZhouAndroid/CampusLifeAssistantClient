@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,15 +63,11 @@ import com.luck.picture.lib.tools.MediaUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnSelectListener;
-import com.lxj.xpopupext.listener.CommonPickerListener;
-import com.lxj.xpopupext.popup.CommonPickerPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.xuexiang.xui.widget.edittext.ClearEditText;
-import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
-import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 import com.yoma.roundbutton.RoundButton;
 
@@ -84,11 +81,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridStoreImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridAddGoodsImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.base.button.NotFastButton;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
+import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyStringUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
@@ -103,52 +99,47 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.pictrueselect.OssManager
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
- * created by on 2021/12/12
- * 描述：商家开店
+ * created by on 2021/12/14
+ * 描述：商家添加商品信息
  *
  * @author ZSAndroid
- * @create 2021-12-12-20:20
+ * @create 2021-12-14-10:46
  */
 @SuppressLint("NonConstantResourceId")
-public class MyCreateStoreActivity extends BaseActivity implements SuperTextView.OnSuperTextViewClickListener{
+public class GoodAddActivity extends BaseActivity implements SuperTextView.OnSuperTextViewClickListener{
 
-    private static final String TAG = "MyCreateStoreActivity";
+    private static final String TAG = "GoodsAddFragment";
 
     /** 获取View控件 */
-    @BindView(R2.id.fl_create_store_show) RelativeLayout mrlCreateStoreShow; //标题栏
-    @BindView(R2.id.iv_create_store_back) ImageView mIvCreateStoreBack;  //标题栏返回
-    @BindView(R2.id.recycler_create_store_pic) RecyclerView mRecycleCreateStorePic; //门店实图列表控件
-    @BindView(R2.id.super_create_store_category) SuperTextView mStvCreateStoreCategory;//店铺分类
-    @BindView(R2.id.edit_create_store_name) ClearEditText mEditCreateStoreName;//商铺名称
-    @BindView(R2.id.edit_create_store_notice) ClearEditText mEditCreateStoreNotice;//商铺公告
-    @BindView(R2.id.edit_create_store_address) ClearEditText mEditCreateStoreAddress;//商铺详细地址
-    @BindView(R2.id.edit_create_store_mobile) ClearEditText mEditCreateStoreMobile;//联系电话
-    @BindView(R2.id.super_create_store_desc) SuperTextView mStvCreateStoreDesc;//商铺所属校区
-    @BindView(R2.id.super_create_store_begin_time) SuperTextView mStvCreateStoreBeginTime;//营业开始时间
-    @BindView(R2.id.super_create_store_end_time) SuperTextView mStvCreateStoreEndTime;//营业结束时间
-    @BindView(R2.id.rbn_create_store_ok) RoundButton mRbnCreateStoreOk; //立即开店
-    @BindView(R2.id.circle_progress_create_store) CircleProgress mCircleProgressCreateStore; //进度条
+    @BindView(R2.id.rl_view_add_goods_show) RelativeLayout mRlViewAddGoodsShow; //父布局
+    @BindView(R2.id.iv_add_goods_back) ImageView mIvAddGoodsBack;  //标题栏返回
+    @BindView(R2.id.recycler_add_goods_pic) RecyclerView mRecycleAddGoodsPic; //添加商品列表控件
+    @BindView(R2.id.super_add_goods_category) SuperTextView mStvAddGoodsCategory;//商品分类
+    @BindView(R2.id.edit_add_goods_name) ClearEditText mEditAddGoodsName;//商品名称
+    @BindView(R2.id.edit_add_goods_desc) ClearEditText mEditAddGoodsDesc;//商品简介
+    @BindView(R2.id.edit_add_goods_price) ClearEditText mEditAddGoodsPrice;//商品单价
+    @BindView(R2.id.edit_add_goods_repertory) ClearEditText mEditAddGoodsRepertory;//商品库存
+    @BindView(R2.id.rbn_add_goods_ok) RoundButton mRbnAddGoodsOk; //立即添加商品
+    @BindView(R2.id.circle_progress_add_goods) CircleProgress mCircleProgressAddGoods; //进度条
     private final static int[] COLORS = new int[]{Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE};
     /** 图片选择器基本参数 */
     private PictureParameterStyle mPictureParameterStyle;//全局主题
     private PictureCropParameterStyle mCropParameterStyle;//裁剪主题
     private final int maxSelectNum = 1;//最大选择数
     /** 接收相册中选择图片的回调到Activity中 */
-    private ActivityResultLauncher<Intent> launcherStoreResult;//回调显示门店实图
-    /** 网格布局相册门店实图适配器 */
-    private GridStoreImageAdapter mAdapterStore;
-    /** 门店实图图片路径 */
-    public static String imgPathStore;
+    private ActivityResultLauncher<Intent> launcherAddGoodsResult;//回调显示添加商品
+    /** 网格布局相册添加商品适配器 */
+    private GridAddGoodsImageAdapter mAdapterAddGoods;
+    /** 添加商品图片路径 */
+    public static String imgPathAddGoods;
     /** Android振动器 */
     private Vibrator vibrator;
-    /** 商铺分类集合 */
+    /** 添加商品分类集合 */
     private List<String> stringCategoryNameList;
-    /** 选择营业时间 */
-    private String[][] mChooseBeginTime,mChooseEndTime;
     /** 输入框中的全局数据，提供网络请求提交信息时使用 */
-    private String strGetCategoryName,strGetStoreName,strGetStoreDesc,strGetStoreNotice,strGetStoreAddress,strGetStoreMobile,strGetBeginTime,strGetEndTime;
-    /** 提取商铺分类ID */
-    private int categoryId;
+    private String strGetAddGoodsCategory,strGetAddGoodsName,strGetAddGoodsDesc,strGetAddGoodsPrice,strGetAddGoodsRepertory;
+    /** 提取商品分类ID */
+    private int addGoodCategoryId;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -177,7 +168,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_my_create_store;
+        return R.layout.activity_add_goods;
     }
 
     @Override
@@ -193,59 +184,53 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     @Override
     protected void initData(Bundle savedInstanceState) {
         mPictureParameterStyle = getWeChatStyle();//设置全局主题为微信风格
-        initLicencePicSelect(savedInstanceState);//初始化门店实拍图片选择适配器配置参数
+        initAddGoodsPicSelect(savedInstanceState);//初始化商品图片选择适配器配置参数
         initRecyclerView();//初始化全部图片view列表
     }
 
     private void initRecyclerView() {
         /**自定义全局统一网格垂直布局 */
         FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
-        mRecycleCreateStorePic.setLayoutManager(manager);//设置RecyclerView的布局样式
-        mRecycleCreateStorePic.addItemDecoration(new GridSpacingItemDecoration(1, ScreenUtils.dip2px(this, 8), false));
-        mRecycleCreateStorePic.setAdapter(mAdapterStore);//设置RecyclerView的适配器
+        mRecycleAddGoodsPic.setLayoutManager(manager);//设置RecyclerView的布局样式
+        mRecycleAddGoodsPic.addItemDecoration(new GridSpacingItemDecoration(1, ScreenUtils.dip2px(this, 8), false));
+        mRecycleAddGoodsPic.setAdapter(mAdapterAddGoods);//设置RecyclerView的适配器
     }
 
     @Override
     protected void initEvent() {
-        mStvCreateStoreCategory.setOnSuperTextViewClickListener(this);//店铺分类
+        mStvAddGoodsCategory.setOnSuperTextViewClickListener(this);//店铺分类
     }
 
     @Override
     protected void initListener() {
-        //避免快速点击，提交开店信息，导致服务器错误。
-        mRbnCreateStoreOk.setOnClickListener(new NotFastButton.NotFastClickListener() {
-            @Override
-            public void onNotFastClick(View v) {
-                startCreateStoreInfo();
-            }
-        });
+
     }
 
     @Override
     protected void doBusiness() {
-        initStoreCategoryData();
+        initStoreCategoryData();//初始化获取商品分类信息
     }
 
     /**
-     * 初始化获取商铺分类信息
+     * 初始化获取商品分类信息
      */
     private void initStoreCategoryData() {
-        OkGo.<String>post(Constant.SELECT_ALL_SHOP_CATEGORY_INFO)
-                .tag("全部店铺分类信息")
+        OkGo.<String>post(Constant.SELECT_ALL_GOODS_CATEGORY_INFO_BY)
+                .tag("全部商品分类表信息")
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        MyXPopupUtils.getInstance().setShowDialog(MyCreateStoreActivity.this, "正在加载信息...");
+                        MyXPopupUtils.getInstance().setShowDialog(GoodAddActivity.this, "正在加载信息...");
                     }
 
                     @Override
                     public void onSuccess(Response<String> response) {
-                        OkGoAllShopCategoryInfoBean okGoAllShopCategoryInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllShopCategoryInfoBean.class);
+                        OkGoAllGoodsCategoryInfoBean okGoAllGoodsCategoryInfoBean = GsonUtil.gsonToBean(response.body(), OkGoAllGoodsCategoryInfoBean.class);
                         stringCategoryNameList = new ArrayList<>();
                         //提取商铺分类集合信息
-                        if (200 == okGoAllShopCategoryInfoBean.getCode() && okGoAllShopCategoryInfoBean.getData().size() > 0 && "success".equals(okGoAllShopCategoryInfoBean.getMsg())) {
-                            for (OkGoAllShopCategoryInfoBean.Data data : okGoAllShopCategoryInfoBean.getData()) {
-                                stringCategoryNameList.add("[编号" + data.getScId() + "]" + data.getScName());
+                        if (200 == okGoAllGoodsCategoryInfoBean.getCode() && okGoAllGoodsCategoryInfoBean.getData().size() > 0 && "success".equals(okGoAllGoodsCategoryInfoBean.getMsg())) {
+                            for (OkGoAllGoodsCategoryInfoBean.Data data : okGoAllGoodsCategoryInfoBean.getData()) {
+                                stringCategoryNameList.add("[编号" + data.getGcId() + "]" + data.getGcName());
                             }
                         }
                     }
@@ -258,7 +243,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        OkGoErrorUtil.CustomFragmentOkGoError(response, MyCreateStoreActivity.this, mrlCreateStoreShow, "请求错误，服务器连接失败！");
+                        OkGoErrorUtil.CustomFragmentOkGoError(response, GoodAddActivity.this, mRlViewAddGoodsShow, "请求错误，服务器连接失败！");
                     }
                 });
     }
@@ -277,132 +262,32 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_create_store_back, R2.id.super_create_store_desc, R2.id.super_create_store_begin_time, R2.id.super_create_store_end_time})
-    public void onCreateStoreViewClick(View view) {
+    @OnClick({R2.id.iv_add_goods_back, R2.id.rbn_add_goods_ok})
+    public void onAddGoodsViewClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_create_store_back://点击返回
-                MyCreateStoreActivity.this.finish();
+            case R.id.iv_add_goods_back://点击返回
+                GoodAddActivity.this.finish();
                 break;
-            case R.id.super_create_store_desc://点击选择商铺所在校区
-                chooseDesc();
-                break;
-            case R.id.super_create_store_begin_time://点击选择营业开始时间
-                chooseBeginTime();
-                break;
-            case R.id.super_create_store_end_time://点击选择营业结束时间
-                chooseEndTime();
+            case R.id.rbn_add_goods_ok://提交认证信息
+                startAddGoodsInfo();
                 break;
         }
-    }
-
-    /**
-     * 选择商铺所在校区
-     */
-
-    private void chooseDesc() {
-        CommonPickerPopup popup = new CommonPickerPopup(MyCreateStoreActivity.this);
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("龙山校区");
-        list.add("朝阳校区");
-        //默认选择男
-        popup.setPickerData(list).setCurrentItem(0);
-        popup.setCommonPickerListener(new CommonPickerListener() {
-            @Override
-            public void onItemSelected(int index, String descName) {
-                mStvCreateStoreDesc.setRightString(descName);
-            }
-        });
-        new XPopup.Builder(MyCreateStoreActivity.this)
-                .asCustom(popup)
-                .show();
-    }
-
-    /**
-     * 获取时间段
-     *
-     * @param interval 时间间隔（分钟）
-     * @return
-     */
-    public String[] getTimePeriod(int startHour, int totalHour, int interval) {
-        String[] time = new String[totalHour * 60 / interval];
-        int point, hour, min;
-        for (int i = 0; i < time.length; i++) {
-            point = i * interval + startHour * 60;
-            hour = point / 60;
-            min = point - hour * 60;
-            time[i] = (hour < 9 ? "0" + hour : "" + hour) + ":" + (min < 9 ? "0" + min : "" + min);
-        }
-        return time;
-    }
-
-    /**
-     * 选择营业开始时间
-     */
-    private void chooseBeginTime() {
-        if (mChooseBeginTime == null) {
-            mChooseBeginTime = new String[5][];
-            mChooseBeginTime[0] = getTimePeriod(0, 6, 15);
-            mChooseBeginTime[1] = getTimePeriod(6, 6, 15);
-            mChooseBeginTime[2] = getTimePeriod(12, 1, 15);
-            mChooseBeginTime[3] = getTimePeriod(1, 5, 15);
-            mChooseBeginTime[4] = getTimePeriod(6, 6, 15);
-        }
-        String[] option = new String[]{"凌晨", "上午", "中午", "下午", "晚上"};
-        //8点
-        int defaultOption = 2 * 60 / 15;
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(getContext(), (v, options1, options2, options3) -> {
-            mStvCreateStoreBeginTime.setRightString(option[options1] + mChooseBeginTime[options1][options2]);
-            return false;
-        })
-                .setTitleText("选择营业开始时间")
-                .isRestoreItem(true)
-                .setSelectOptions(1, defaultOption)
-                .build();
-        pvOptions.setPicker(option, mChooseBeginTime);
-        pvOptions.show();
-    }
-
-    /**
-     * 选择营业结束时间
-     */
-    private void chooseEndTime() {
-        if (mChooseEndTime == null) {
-            mChooseEndTime = new String[5][];
-            mChooseEndTime[0] = getTimePeriod(0, 6, 15);
-            mChooseEndTime[1] = getTimePeriod(6, 6, 15);
-            mChooseEndTime[2] = getTimePeriod(12, 1, 15);
-            mChooseEndTime[3] = getTimePeriod(1, 5, 15);
-            mChooseEndTime[4] = getTimePeriod(6, 6, 15);
-        }
-        String[] option = new String[]{"凌晨", "上午", "中午", "下午", "晚上"};
-        //8点
-        int defaultOption = 2 * 60 / 15;
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(getContext(), (v, options1, options2, options3) -> {
-            mStvCreateStoreEndTime.setRightString(option[options1] + mChooseEndTime[options1][options2]);
-            return false;
-        })
-                .setTitleText("选择营业结束时间")
-                .isRestoreItem(true)
-                .setSelectOptions(1, defaultOption)
-                .build();
-        pvOptions.setPicker(option, mChooseEndTime);
-        pvOptions.show();
     }
 
 
     @Override
     public void onClick(SuperTextView superTextView) {
         switch (superTextView.getLeftString()) {
-            case "店铺分类":
-                doStoreCategoryClick();
+            case "商品分类":
+                doGoodsCategoryClick();
                 break;
         }
     }
 
     /**
-     * 选择店铺分类
+     * 选择商品分类
      */
-    private void doStoreCategoryClick() {
+    private void doGoodsCategoryClick() {
         if (stringCategoryNameList.size() > 0) {
             String[] strings = new String[stringCategoryNameList.size()];
             for (int i = 0; i < stringCategoryNameList.size(); i++) {
@@ -413,14 +298,14 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     .hasShadowBg(true)
                     .isViewMode(true)
                     .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-                    .asBottomList("请选择店铺分类", strings,
+                    .asBottomList("请选择商品分类", strings,
                             new OnSelectListener() {
                                 @Override
                                 public void onSelect(int position, String categoryName) {
                                     //设置ID对应的分类名称
-                                    mStvCreateStoreCategory.setRightString(categoryName.substring(categoryName.indexOf("]") + 1));
+                                    mStvAddGoodsCategory.setRightString(categoryName.substring(categoryName.indexOf("]") + 1));
                                     //提取商铺分类ID
-                                    categoryId = Integer.parseInt(MyStringUtils.subString(categoryName, "[编号", "]"));
+                                    addGoodCategoryId = Integer.parseInt(MyStringUtils.subString(categoryName, "[编号", "]"));
                                 }
                             }).show();
         } else {
@@ -428,66 +313,39 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         }
     }
 
-    /**
-     * 提交开店请求
-     */
-    private void startCreateStoreInfo() {
+    private void startAddGoodsInfo() {
         /* 1.判空 */
-        if (imgPathStore == null) {
-            ToastUtils.show("请选择门店实拍图");
+        if (imgPathAddGoods == null) {
+            ToastUtils.show("请上传商品图片");
             return;
         }
-        strGetCategoryName = mStvCreateStoreCategory.getRightString();//商铺分类
-        strGetStoreName = mEditCreateStoreName.getText().toString().trim();//商铺名称
-        strGetStoreNotice = mEditCreateStoreNotice.getText().toString().trim();//商铺公告
-        strGetStoreAddress = mEditCreateStoreAddress.getText().toString().trim();//商铺地址
-        strGetStoreMobile = mEditCreateStoreMobile.getText().toString().trim();//联系电话
-        strGetStoreDesc = mStvCreateStoreDesc.getRightString();//商铺所属校区
-        strGetBeginTime = mStvCreateStoreBeginTime.getRightString();//营业开始时间
-        strGetEndTime = mStvCreateStoreEndTime.getRightString();//营业结束时间
+        strGetAddGoodsCategory = mStvAddGoodsCategory.getRightString();//商品分类
+        strGetAddGoodsName = mEditAddGoodsName.getText().toString().trim();//商品名称
+        strGetAddGoodsDesc = mEditAddGoodsDesc.getText().toString().trim();//商品简介
+        strGetAddGoodsPrice = mEditAddGoodsPrice.getText().toString().trim();//商品单价
+        strGetAddGoodsRepertory = mEditAddGoodsRepertory.getText().toString().trim();//商品库存
 
-        if (strGetCategoryName.equals("请选择")) {
-            strGetCategoryName = "";
+        if (strGetAddGoodsCategory.equals("请选择")) {
+            strGetAddGoodsCategory = "";
         }
-        if (strGetStoreDesc.equals("请选择")) {
-            strGetStoreDesc = "";
-        }
-        if (strGetBeginTime.equals("请选择")) {
-            strGetBeginTime = "";
-        }
-        if (strGetEndTime.equals("请选择")) {
-            strGetEndTime = "";
-        }
-        if (strGetCategoryName.isEmpty()) {
-            ToastUtils.show("请选择店铺分类");
+        if (strGetAddGoodsCategory.isEmpty()) {
+            ToastUtils.show("请选择商品分类");
             return;
         }
-        if (TextUtils.isEmpty(strGetStoreName)) {
-            ToastUtils.show("请完善商铺名称信息");
+        if (TextUtils.isEmpty(strGetAddGoodsName)) {
+            ToastUtils.show("请完善商品名称信息");
             return;
         }
-        if (TextUtils.isEmpty(strGetStoreNotice)) {
-            ToastUtils.show("请完善商铺公告信息");
+        if (TextUtils.isEmpty(strGetAddGoodsDesc)) {
+            ToastUtils.show("请完善商品简介信息");
             return;
         }
-        if (TextUtils.isEmpty(strGetStoreAddress)) {
-            ToastUtils.show("请完善商铺地址信息");
+        if (TextUtils.isEmpty(strGetAddGoodsPrice)) {
+            ToastUtils.show("请完善商品单价信息");
             return;
         }
-        if (TextUtils.isEmpty(strGetStoreMobile)) {
-            ToastUtils.show("请完善联系电话信息");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetStoreDesc)) {
-            ToastUtils.show("请选择商铺所属校区");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetBeginTime)) {
-            ToastUtils.show("请选择营业开始时间");
-            return;
-        }
-        if (TextUtils.isEmpty(strGetEndTime)) {
-            ToastUtils.show("请选择营业结束时间");
+        if (TextUtils.isEmpty(strGetAddGoodsRepertory)) {
+            ToastUtils.show("请完善商品库存信息");
             return;
         }
         /* 2.上传图片到阿里云OSS */
@@ -499,7 +357,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
      */
     private void startOSSUploadFile() {
         //时间戳使用原因 + UUID：避免OSS云资源重名覆盖文件，导致用户数据丢失，加入时间戳来拼接在OSS文件名中，那么必然不会出现重名问题
-        String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPathStore.substring(imgPathStore.lastIndexOf("."));
+        String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPathAddGoods.substring(imgPathAddGoods.lastIndexOf("."));
         String imgPath = Constant.BASE_OSS_URL + Constant.OSS_IMG_PATH + fileName;
 
         OssManager builder = new OssManager.Builder(this)
@@ -508,7 +366,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 .accessKeySecret("LYG9rSEDENh7kZuJhZKRJMfbaRgf4B")
                 .endPoint(Constant.BASE_OSS_URL)//OSS外网域名(阿里云分配的或自定义域名)
                 .objectKey(Constant.OSS_IMG_PATH + fileName)//对应OSS文件夹+文件名(时间戳+UUID+图片后缀)
-                .localFilePath(imgPathStore)//本机的文件AndroidQ目录路径
+                .localFilePath(imgPathAddGoods)//本机的文件AndroidQ目录路径
                 .build();
 
         //OSS推送上传状态监听事件
@@ -537,10 +395,10 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     public void run() {
                         // 请求异常。
                         if (clientException != null) {
-                            Toast.makeText(MyCreateStoreActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GoodAddActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         if (serviceException != null) {
-                            Toast.makeText(MyCreateStoreActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GoodAddActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
                             // 服务异常。
                             Log.e("ErrorCode", serviceException.getErrorCode());
                             Log.e("RequestId", serviceException.getRequestId());
@@ -560,12 +418,12 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     @Override
                     public void run() {
                         //默认Gone失效，有进度值就设置可见VISIBLE
-                        mCircleProgressCreateStore.setVisibility(View.VISIBLE);
+                        mCircleProgressAddGoods.setVisibility(View.VISIBLE);
                         //在代码中动态改变渐变色，可能会导致颜色跳跃
-                        mCircleProgressCreateStore.setGradientColors(COLORS);
+                        mCircleProgressAddGoods.setGradientColors(COLORS);
                         //OSS当前值 ==  OSS最大值时，证明文件推送上传成功
                         if (currentSize == totalSize) {
-                            mCircleProgressCreateStore.setValue(currentSize);
+                            mCircleProgressAddGoods.setValue(currentSize);
                         }
                     }
                 });
@@ -585,34 +443,34 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     }
 
     /**
-     * 初始化门店实拍图片选择适配器配置参数
+     * 初始化商品图片选择适配器配置参数
      */
-    private void initLicencePicSelect(Bundle savedInstanceState) {
-        mAdapterStore = new GridStoreImageAdapter(getContext(), onAddStorePicClickListener);//自定义网格布局相册图片适配器参数
+    private void initAddGoodsPicSelect(Bundle savedInstanceState) {
+        mAdapterAddGoods = new GridAddGoodsImageAdapter(getContext(), onAddGoodsPicClickListener);//自定义网格布局相册图片适配器参数
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("selectorList") != null) {
-            mAdapterStore.setList(savedInstanceState.getParcelableArrayList("selectorList"));
+            mAdapterAddGoods.setList(savedInstanceState.getParcelableArrayList("selectorList"));
         }
-        mAdapterStore.setSelectMax(maxSelectNum);//设置网格布局适配最大文件数
+        mAdapterAddGoods.setSelectMax(maxSelectNum);//设置网格布局适配最大文件数
         //自定义网格布局相册图片item监听
-        mAdapterStore.setOnItemClickListener((v, position) -> {
-            List<LocalMedia> selectList = mAdapterStore.getData();
+        mAdapterAddGoods.setOnItemClickListener((v, position) -> {
+            List<LocalMedia> selectList = mAdapterAddGoods.getData();
             if (selectList.size() > 0) {
                 LocalMedia media = selectList.get(position);
                 String mimeType = media.getMimeType();
                 int mediaType = PictureMimeType.getMimeType(mimeType);
                 switch (mediaType) {
                     case PictureConfig.TYPE_VIDEO:// 预览视频
-                        PictureSelector.create(MyCreateStoreActivity.this)
+                        PictureSelector.create(GoodAddActivity.this)
                                 .themeStyle(R.style.picture_default_style)
                                 .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
                                 .externalPictureVideo(TextUtils.isEmpty(media.getAndroidQToPath()) ? media.getPath() : media.getAndroidQToPath());
                         break;
                     case PictureConfig.TYPE_AUDIO:// 预览音频
-                        PictureSelector.create(MyCreateStoreActivity.this).externalPictureAudio(PictureMimeType.isContent(media.getPath()) ? media.getAndroidQToPath() : media.getPath());
+                        PictureSelector.create(GoodAddActivity.this).externalPictureAudio(PictureMimeType.isContent(media.getPath()) ? media.getAndroidQToPath() : media.getPath());
                         break;
 
                     default:
-                        PictureSelector.create(MyCreateStoreActivity.this)
+                        PictureSelector.create(GoodAddActivity.this)
                                 .themeStyle(R.style.picture_default_style) // xml设置主题
                                 .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
                                 //.setPictureWindowAnimationStyle(animationStyle)// 自定义页面启动动画
@@ -625,19 +483,19 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 }
             }
         });
-        // 注册广播，接收选择的门店实拍图片 + 刷新适配器
-        BroadcastManager.getInstance(getContext()).registerReceiver(licenceBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION);
-        launcherStoreResult = createActivityStoreResultLauncher();
+        // 注册广播，接收选择的商品图片 + 刷新适配器
+        BroadcastManager.getInstance(getContext()).registerReceiver(addGoodsBroadcastReceiver, Constant.ACTION_DELETE_ADD_GOODS_PREVIEW_POSITION);
+        launcherAddGoodsResult = createActivityAddGoodsResultLauncher();
     }
 
     /**
-     * 核酸证明启动相册相机
+     * 商品图片启动相册相机
      */
-    private final GridStoreImageAdapter.onAddPicClickListener onAddStorePicClickListener = new GridStoreImageAdapter.onAddPicClickListener() {
+    private final GridAddGoodsImageAdapter.onAddPicClickListener onAddGoodsPicClickListener = new GridAddGoodsImageAdapter.onAddPicClickListener() {
         @Override
         public void onAddPicClick() {
-            imgPathStore = null;
-            PictureSelector.create(MyCreateStoreActivity.this)
+            imgPathAddGoods = null;
+            PictureSelector.create(GoodAddActivity.this)
                     .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                     .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
                     .setPictureUIStyle(PictureSelectorUIStyle.ofDefaultStyle())
@@ -687,19 +545,19 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                     .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                     .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                     .isOpenClickSound(true)// 是否开启点击声音
-                    .selectionData(mAdapterStore.getData())// 是否传入已选图片
+                    .selectionData(mAdapterAddGoods.getData())// 是否传入已选图片
                     .cutOutQuality(90)// 裁剪输出质量 默认100
                     .minimumCompressSize(100)// 小于多少kb的图片不压缩
-                    .forResult(launcherStoreResult);
+                    .forResult(launcherAddGoodsResult);
         }
     };
 
     /**
-     * 创建ActivityResultLauncher 回调监听门店实拍图片路径地址
+     * 创建ActivityResultLauncher 回调监听商品图片路径地址
      *
      * @return 回调结果
      */
-    private ActivityResultLauncher<Intent> createActivityStoreResultLauncher() {
+    private ActivityResultLauncher<Intent> createActivityAddGoodsResultLauncher() {
         return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @SuppressLint("NotifyDataSetChanged")
@@ -720,15 +578,14 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                                         media.setHeight(videoExtraInfo.getHeight());
                                     }
                                 }
-                                if (imgPathStore != null) {
-                                    imgPathStore = null;
+                                if (imgPathAddGoods != null) {
+                                    imgPathAddGoods = null;
                                 }
-                                //Android Q 特有Path 赋值给目录路径的List集合
-                                imgPathStore = media.getAndroidQToPath();
-                                Log.i(TAG, "AndroidQ门店实拍图Path:" + media.getAndroidQToPath());
+                                imgPathAddGoods = media.getAndroidQToPath();
+                                Log.i(TAG, "AndroidQ商品图片Path:" + media.getAndroidQToPath());
                             }
-                            mAdapterStore.setList(selectList);
-                            mAdapterStore.notifyDataSetChanged();
+                            mAdapterAddGoods.setList(selectList);
+                            mAdapterAddGoods.notifyDataSetChanged();
                         }
                     }
                 });
@@ -742,17 +599,17 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     @Override
     protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        /* 1.门店实拍图片 */
-        if (mAdapterStore != null && mAdapterStore.getData() != null && mAdapterStore.getData().size() > 0) {
+        /* 1.商品图片 */
+        if (mAdapterAddGoods != null && mAdapterAddGoods.getData() != null && mAdapterAddGoods.getData().size() > 0) {
             outState.putParcelableArrayList("selectorList",
-                    (ArrayList<? extends Parcelable>) mAdapterStore.getData());
+                    (ArrayList<? extends Parcelable>) mAdapterAddGoods.getData());
         }
     }
 
     /**
-     * 广播接受回调的门店实拍图图片
+     * 广播接受回调的商品图片
      */
-    private final BroadcastReceiver licenceBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver addGoodsBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -764,12 +621,12 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
                     int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
-                    ToastUtils.show("校园帮APP提示：您已删除门店实拍图图片！");
-                    mAdapterStore.remove(position);
-                    mAdapterStore.notifyItemRemoved(position);
+                    ToastUtils.show("校园帮APP提示：您已删除商品图片！");
+                    mAdapterAddGoods.remove(position);
+                    mAdapterAddGoods.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
-                    if (imgPathStore != null) {
-                        imgPathStore = null;
+                    if (imgPathAddGoods != null) {
+                        imgPathAddGoods = null;
                     }
                 }
             }
@@ -925,7 +782,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                         }
                     });
                 } else {
-                    Toast.makeText(MyCreateStoreActivity.this, getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoodAddActivity.this, getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -966,11 +823,11 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         super.onDestroy();
         /** 清空图片选择参数的缓存图片 */
         clearCache();
-        /* 2.清除门店实拍图 */
-        if (launcherStoreResult != null) {
-            launcherStoreResult.unregister();
+        /* 2.清除商品图片 */
+        if (launcherAddGoodsResult != null) {
+            launcherAddGoodsResult.unregister();
         }
-        BroadcastManager.getInstance(getContext()).unregisterReceiver(licenceBroadcastReceiver, Constant.ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION);
+        BroadcastManager.getInstance(getContext()).unregisterReceiver(addGoodsBroadcastReceiver, Constant.ACTION_DELETE_ADD_GOODS_PREVIEW_POSITION);
         /* 9.清除子线程 */
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
@@ -986,50 +843,50 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 case 1://此处理URL + OCR + 商家信息 上传后端数据库
                     //OSS上传成功重组的URL地址集合，OKGo上传后端数据库
                     String ossUrlFileName = (String) msg.obj;
+                    Log.i(TAG, "，OKGo上传后端数据库: " + ossUrlFileName);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            OkGo.<String>post(Constant.SHOP_ADD_STORE_INFO_BY_SA_TOKEN)
-                                    .tag("商家创建店铺")
-                                    .params("shopCategory", categoryId)
-                                    .params("shopName", strGetStoreName)
-                                    .params("shopPic", ossUrlFileName)
-                                    .params("shopBeginTime", strGetBeginTime)
-                                    .params("shopEndTime", strGetEndTime)
-                                    .params("shopDesc", strGetStoreDesc)
-                                    .params("shopAddress", strGetStoreAddress)
-                                    .params("shopMobile", strGetStoreMobile)
-                                    .params("shopNotice", strGetStoreNotice)
+                            OkGo.<String>post(Constant.SHOP_ADD_GOODS_INFO_BY_SA_TOKEN_TO_USERID)
+                                    .tag("商家商品信息")
+                                    .params("goodsCategoryId", addGoodCategoryId)
+                                    .params("goodsName", strGetAddGoodsName)
+                                    .params("goodsDesc", strGetAddGoodsDesc)
+                                    .params("goodsPrice", strGetAddGoodsPrice)
+                                    .params("goodsRepertory", strGetAddGoodsRepertory)
+                                    .params("goodsPic", ossUrlFileName)
+                                    .params("goodsFlag", 1)
                                     .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(Response<String> response) {
+                                            startVibrator();//成功振动
                                             OkGoResponseBean okGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                                            if (200 == okGoResponseBean.getCode() && "success".equals(okGoResponseBean.getMsg())) {
-                                                startVibrator();//成功振动
-                                                DialogPrompt dialogPrompt = new DialogPrompt(MyCreateStoreActivity.this, "商铺已开通成功，快去管理商品信息吧", 10);
-                                                dialogPrompt.showAndFinish(MyCreateStoreActivity.this);
+                                            if (200 == okGoResponseBean.getCode() && "ADD_GOODS_SUCCESS".equals(okGoResponseBean.getData()) && "success".equals(okGoResponseBean.getMsg())) {
+                                                DialogPrompt dialogPrompt = new DialogPrompt(GoodAddActivity.this, "此商品已成功添加，返回查看详情吧~", 10);
+                                                dialogPrompt.showAndFinish(GoodAddActivity.this);
+                                                XToastUtils.success("操作成功");
                                                 return;
                                             }
-                                            if (200 == okGoResponseBean.getCode() && "error".equals(okGoResponseBean.getMsg())) {
-                                                DialogPrompt dialogPrompt = new DialogPrompt(MyCreateStoreActivity.this, "商铺已开通失败，请联系校园帮开发者解决", 10);
-                                                dialogPrompt.showAndFinish(MyCreateStoreActivity.this);
+                                            if (200 == okGoResponseBean.getCode() && "ADD_GOODS_FAIL".equals(okGoResponseBean.getData()) && "error".equals(okGoResponseBean.getMsg())) {
+                                                DialogPrompt dialogPrompt = new DialogPrompt(GoodAddActivity.this, "此商品添加失败啦，请联系开发者解决~", 10);
+                                                dialogPrompt.showAndFinish(GoodAddActivity.this);
+                                                XToastUtils.success("操作失败");
                                             }
                                         }
 
                                         @Override
                                         public void onError(Response<String> response) {
-                                            OkGoErrorUtil.CustomFragmentOkGoError(response, MyCreateStoreActivity.this, mrlCreateStoreShow, "请求错误，服务器连接失败！");
+                                            OkGoErrorUtil.CustomFragmentOkGoError(response, GoodAddActivity.this, mRlViewAddGoodsShow, "请求错误，服务器连接失败！");
                                         }
                                     });
                         }
                     }, 1000);
                     break;
                 case 2:
-                    mCircleProgressCreateStore.reset();
-                    mCircleProgressCreateStore.setVisibility(View.GONE);//进度条加载完成后，隐藏进度条
+                    mCircleProgressAddGoods.reset();
+                    mCircleProgressAddGoods.setVisibility(View.GONE);//进度条加载完成后，隐藏进度条
                     break;
             }
         }
     };
 }
-

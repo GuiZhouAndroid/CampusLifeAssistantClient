@@ -263,6 +263,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 商家添加商品信息 -->
+        <activity
+            android:name=".view.activity.GoodAddActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <!--使用百度服务功能-->
         <!--        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>-->

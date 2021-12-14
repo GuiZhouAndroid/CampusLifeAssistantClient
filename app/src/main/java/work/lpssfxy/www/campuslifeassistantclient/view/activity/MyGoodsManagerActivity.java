@@ -1,9 +1,11 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -18,8 +20,8 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.ViewPagerAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods.GoodsAddFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods.GoodsAllFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods.GoodsDeleteFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods.GoodsUpdateFragment;
@@ -35,6 +37,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.goods.GoodsUpdat
 public class MyGoodsManagerActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
 
     @BindView(R2.id.iv_goods_back) ImageView mIvGoodsBack;//返回
+    @BindView(R2.id.ll_goods_add) LinearLayout mLlGoodsAdd;//返回
     @BindView(R.id.tab_layout_goods) TabLayout mTabLayoutGoods;//顶部导航栏
     @BindView(R.id.view_pager_goods) ViewPager mViewPagerGoods;//左右滑动
 
@@ -104,11 +107,14 @@ public class MyGoodsManagerActivity extends BaseActivity implements TabLayout.On
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_goods_back})
+    @OnClick({R2.id.iv_goods_back,R2.id.ll_goods_add})
     public void onMyGoodsViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_goods_back://点击返回
                 MyGoodsManagerActivity.this.finish();
+                break;
+            case R.id.ll_goods_add://点击添加商品信息
+                IntentUtil.startActivityAnimLeftToRight(MyGoodsManagerActivity.this, new Intent(MyGoodsManagerActivity.this, GoodAddActivity.class));
                 break;
         }
     }
@@ -116,8 +122,8 @@ public class MyGoodsManagerActivity extends BaseActivity implements TabLayout.On
     private void initTabLayoutAndViewPager() {
         ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
         ArrayList<String> tabTitleList = new ArrayList<>();
-        Collections.addAll(tabTitleList, "全部商品", "添加商品", "删除商品", "更新商品");
-        Collections.addAll(fragmentArrayList, GoodsAllFragment.newInstance(), GoodsAddFragment.newInstance(), GoodsDeleteFragment.newInstance(), GoodsUpdateFragment.newInstance());
+        Collections.addAll(tabTitleList, "全部商品", "删除商品", "更新商品");
+        Collections.addAll(fragmentArrayList, GoodsAllFragment.newInstance(), GoodsDeleteFragment.newInstance(), GoodsUpdateFragment.newInstance());
         mTabLayoutGoods.setTabMode(TabLayout.MODE_FIXED);//设置TabLayout的模式
         //为TabLayout添加tab名称
         for (int i = 0; i < tabTitleList.size(); i++) {

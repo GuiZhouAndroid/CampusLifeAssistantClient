@@ -327,7 +327,8 @@ public class UserAddressActivity extends BaseActivity implements UpdateActivityU
         draggableModule.setSwipeEnabled(true);//启动侧滑删除
         draggableModule.getItemTouchHelperCallback().setSwipeMoveFlags(ItemTouchHelper.START);//侧滑删除方向
         draggableModule.setOnItemSwipeListener(new OnItemSwipeListener() {
-            private int addressId;
+
+            private int addressId;//准备收货地址ID
 
             public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int position) { //当滑动动作开始时调用，提取收货地址ID
                 addressId = userAddressInfoAdapter.getData().get(position).getAddressId();
