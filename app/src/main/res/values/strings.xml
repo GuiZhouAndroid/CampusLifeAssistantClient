@@ -88,6 +88,7 @@
     <string name="KickOffLine_token">登录Token</string>
     <string name="KickOffLine_ok">确定执行</string>
     <string name="add_ok">确定添加</string>
+    <string name="ok">确定</string>
     <string name="new_add_role">新增角色</string>
     <string name="search_role">搜索角色</string>
     <string name="search_permission">搜索权限</string>

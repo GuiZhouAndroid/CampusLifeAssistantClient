@@ -1,33 +1,51 @@
 package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.tencent.connect.UserInfo;
-import com.tencent.tauth.DefaultUiListener;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.UiError;
+import com.hjq.toast.ToastUtils;
+import com.xuexiang.xui.utils.ResUtils;
+import com.xuexiang.xui.widget.spinner.DropDownMenu;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.BindView;
 import work.lpssfxy.www.campuslifeassistantclient.R;
-import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
-import work.lpssfxy.www.campuslifeassistantclient.utils.SharePreferenceUtil;
+import work.lpssfxy.www.campuslifeassistantclient.base.dropdownmenu.CityDropDownAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.base.dropdownmenu.ConstellationAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.base.dropdownmenu.ListDropDownAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
+@SuppressLint("NonConstantResourceId")
 public class waimai extends BaseActivity {
 
-    private static final String TAG = "waimai";
+
+    @BindView(R.id.ddm_content) DropDownMenu mDropDownMenu;
+    @BindView(R.id.wai_show) LinearLayout wai_show;
+
+    private String[] mHeaders = {"城市", "年龄", "性别", "星座"};
+    private List<View> mPopupViews = new ArrayList<>();
+
+    private CityDropDownAdapter mCityAdapter;
+    private ListDropDownAdapter mAgeAdapter;
+    private ListDropDownAdapter mSexAdapter;
+    private ConstellationAdapter mConstellationAdapter;
+
+    private String[] mCitys;
+    private String[] mAges;
+    private String[] mSexs;
+    private String[] mConstellations;
     @Override
     protected Boolean isSetSwipeBackLayout() {
         return true;
@@ -61,38 +79,15 @@ public class waimai extends BaseActivity {
 
     @Override
     protected void prepareData() {
-        showImg();
-        OkGoSessionAndUserBean okGoSessionAndUserBean = SharePreferenceUtil.getObject(waimai.this, OkGoSessionAndUserBean.class);
-        Log.i(TAG, "首页: " + okGoSessionAndUserBean);
-        JSONObject jsonObject = new JSONObject();
-        if (okGoSessionAndUserBean != null) {//本地持久化xml文件有数据时才满足重组条件
-            try {
-                jsonObject.put("ret", okGoSessionAndUserBean.getData().getRet());
-                jsonObject.put("openid", okGoSessionAndUserBean.getData().getOpenid());
-                jsonObject.put("access_token", okGoSessionAndUserBean.getData().getAccessToken());
-                jsonObject.put("pay_token", okGoSessionAndUserBean.getData().getPayToken());
-                jsonObject.put("expires_in", okGoSessionAndUserBean.getData().getExpiresIn());
-                jsonObject.put("pf", okGoSessionAndUserBean.getData().getPf());
-                jsonObject.put("pfkey", okGoSessionAndUserBean.getData().getPfkey());
-                jsonObject.put("msg", okGoSessionAndUserBean.getData().getMsg());
-                jsonObject.put("login_cost", okGoSessionAndUserBean.getData().getLoginCost());
-                jsonObject.put("query_authority_cost", okGoSessionAndUserBean.getData().getQueryAuthorityCost());
-                jsonObject.put("authority_cost", okGoSessionAndUserBean.getData().getAuthorityCost());
-                jsonObject.put("expires_time", okGoSessionAndUserBean.getData().getExpiresTime());
-                /** 初始化设置上次授权登录的Session信息——来自持久化重组JSon数据顺序*/
-                Constant.mTencent.initSessionCache(jsonObject);
-                Log.i(TAG, "mTencent初始化后会话Session是否有效: " + Constant.mTencent.isSessionValid());//true
-            } catch (JSONException e) {//异常捕捉
-                e.printStackTrace();
-            }
-        }
+
     }
 
     @Override
     protected void initView() {
-        /** 注册广播接收者——更新UI*/
-        IntentFilter filter = new IntentFilter(LoginActivity.action);
-        registerReceiver(broadcastReceiver, filter);
+        mCitys = ResUtils.getStringArray(R.array.city_entry);
+        mAges = ResUtils.getStringArray(R.array.age_entry);
+        mSexs = ResUtils.getStringArray(R.array.sex_entry);
+        mConstellations = ResUtils.getStringArray(R.array.constellation_entry);
     }
 
     @Override
@@ -107,49 +102,7 @@ public class waimai extends BaseActivity {
 
     @Override
     protected void initListener() {
-        if (Constant.mTencent != null && Constant.mTencent.isSessionValid()) { //
-            IUiListener listener = new DefaultUiListener() {
-                /** 以下进行对获取授权用户信息使用业务，这里存入本地，以及发送广播传刀IndexActivity并更新首页UI */
-                @Override
-                public void onComplete(final Object response) {
-                    Log.d(TAG, "请求回调用户信息列表= " + response.toString());
-//                    /** 调用Gson工具类，回掉的JSON数据，转化为Java对象*/
-//                    onlyQQUserInfo = GsonUtil.gsonToBean(response.toString(), OnlyQQUserInfoBean.class);
-//                    /** 调用SharePreference工具类把Gson转化后的Java对象实现数据持久化，文件名为“ZSAndroid”的本地数据*/
-//                    SharePreferenceUtil.putObject(LoginActivity.this, onlyQQUserInfo);
-//                    Log.i(TAG, "qqUser全部数据: " + onlyQQUserInfo);
-//                    /** 通过Intent发送广播消息，*/
-//                    Intent intent = new Intent(action);
-//                    /**创建捆绑实例，Intent传递Java对象*/
-//                    Bundle bundle = new Bundle();
-//                    /** Java对象序列化存入Intent */
-//                    bundle.putSerializable("OnlyQQUserInfoBean", onlyQQUserInfo);
-//                    /** 发送Intent序列化数据至Bundle捆绑对象*/
-//                    intent.putExtras(bundle);
-//                    Log.i(TAG, "bundle: " + bundle.toString());
-//                    /** 发送广播，接受者通过“OnlyQQUserInfoBean”接收广播消息内容 */
-//                    sendBroadcast(intent);
-                }
 
-                @Override
-                public void onCancel() {
-                    Toast.makeText(waimai.this, "取消获取授权用户信息", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(UiError e) {
-                    Toast.makeText(waimai.this, "获取授权用户信息出错：" + e.errorDetail, Toast.LENGTH_SHORT).show();
-                }
-            };
-            /** 根据Constant.mTencent会话中TOKEN值，请求回调授权用户信息列表*/
-            UserInfo info = new UserInfo(this, Constant.mTencent.getQQToken());
-            Log.i(TAG, "外卖QQToken====: " + Constant.mTencent.getQQToken().toString());
-            /** 开始监听请求回调操作*/
-            info.getUserInfo(listener);
-
-        } else {
-            Toast.makeText(this, "QQ无效Session", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
@@ -157,40 +110,76 @@ public class waimai extends BaseActivity {
      */
     @Override
     protected void doBusiness() {
+        final ListView cityView = new ListView(this);
+        mCityAdapter = new CityDropDownAdapter(this, mCitys);
+        cityView.setDividerHeight(0);
+        cityView.setAdapter(mCityAdapter);
 
+        //init age menu
+        final ListView ageView = new ListView(this);
+        ageView.setDividerHeight(0);
+        mAgeAdapter = new ListDropDownAdapter(this, mAges);
+        ageView.setAdapter(mAgeAdapter);
+
+        //init sex menu
+        final ListView sexView = new ListView(this);
+        sexView.setDividerHeight(0);
+        mSexAdapter = new ListDropDownAdapter(this, mSexs);
+        sexView.setAdapter(mSexAdapter);
+
+        //init constellation
+        final View constellationView = getLayoutInflater().inflate(R.layout.layout_drop_down_custom, null);
+        GridView constellation = constellationView.findViewById(R.id.constellation);
+        mConstellationAdapter = new ConstellationAdapter(this, mConstellations);
+        constellation.setAdapter(mConstellationAdapter);
+        constellationView.findViewById(R.id.btn_ok).setOnClickListener(v -> {
+            mDropDownMenu.setTabMenuText(mConstellationAdapter.getSelectPosition() <= 0 ? mHeaders[3] : mConstellationAdapter.getSelectItem());
+            ToastUtils.show(mConstellationAdapter.getSelectItem());
+            mDropDownMenu.closeMenu();
+        });
+
+        //init mPopupViews
+        mPopupViews.add(cityView);
+        mPopupViews.add(ageView);
+        mPopupViews.add(sexView);
+        mPopupViews.add(constellationView);
+
+        //add item click event
+        cityView.setOnItemClickListener((parent, view, position, id) -> {
+            mCityAdapter.setSelectPosition(position);
+            ToastUtils.show(mCityAdapter.getSelectItem());
+            mDropDownMenu.setTabMenuText(position == 0 ? mHeaders[0] : mCitys[position]);
+            mDropDownMenu.closeMenu();
+        });
+
+        ageView.setOnItemClickListener((parent, view, position, id) -> {
+            mAgeAdapter.setSelectPosition(position);
+            ToastUtils.show(mAgeAdapter.getSelectItem());
+            mDropDownMenu.setTabMenuText(position == 0 ? mHeaders[1] : mAges[position]);
+            mDropDownMenu.closeMenu();
+        });
+
+        sexView.setOnItemClickListener((parent, view, position, id) -> {
+            mSexAdapter.setSelectPosition(position);
+            ToastUtils.show(mSexAdapter.getSelectItem());
+            mDropDownMenu.setTabMenuText(position == 0 ? mHeaders[2] : mSexs[position]);
+            mDropDownMenu.closeMenu();
+        });
+
+        constellation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mConstellationAdapter.setSelectPosition(position);
+
+
+            }
+        });
+
+        //init context view
+        LinearLayout contentView = new LinearLayout(this);
+        contentView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //init dropdownview
+        mDropDownMenu.setDropDownMenu(mHeaders, mPopupViews, contentView);
     }
 
-    /**
-     * 使用Glide加载显示网络图片 记得加网络权限和http地址url访问许可
-     */
-    private void showImg() {
-        Glide.with(this)
-                .load("https://www.zsitking.top/pic_data/1639407786651.jpeg")
-                .into((ImageView) findViewById(R.id.iv_one));
-        Glide.with(this)
-                .load("http://gank.io/images/92989b6a707b44dfb1c734e8d53d39a2")
-                .into((ImageView) findViewById(R.id.iv_two));
-        Glide.with(this)
-                .load("http://gank.io/images/4817628a6762410895f814079a6690a1")
-                .into((ImageView) findViewById(R.id.iv_three));
-        Glide.with(this)
-                .load("http://gank.io/images/f9523ebe24a34edfaedf2dd0df8e2b99")
-                .into((ImageView) findViewById(R.id.iv_four));
-        Glide.with(this)
-                .load("http://gank.io/images/4002b1fd18544802b80193fad27eaa62")
-                .into((ImageView) findViewById(R.id.iv_five));
-    }
-
-    /**
-     * 接受QQ登录广播，数据来源于广播，不是本地持久化数据文件，因此需要严格区分
-     */
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @SuppressLint("CheckResult")
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /** 根据Gson转化后的Java对象 Intent序列化的键获取广播消息内容*/
-            OkGoSessionAndUserBean okGoSessionAndUserBean = (OkGoSessionAndUserBean) intent.getSerializableExtra("OkGoSessionAndUserBean");
-            Log.i(TAG, "BroadcastReceiver的QQUserBean: " + okGoSessionAndUserBean);
-        }
-    };
 }

@@ -1,49 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<work.lpssfxy.www.campuslifeassistantclient.base.scrollview.MyNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/wai_show"
+    android:fitsSystemWindows="true"
+    android:background="@color/Red"
     tools:context=".view.activity.waimai">
 
-    <LinearLayout
+    <com.xuexiang.xui.widget.spinner.DropDownMenu
+        android:id="@+id/ddm_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/iv_one"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_two"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_three"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_four"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/iv_five"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/content" />
-    </LinearLayout>
-
-</work.lpssfxy.www.campuslifeassistantclient.base.scrollview.MyNestedScrollView>
+</LinearLayout>
