@@ -2,14 +2,18 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -20,11 +24,23 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
+import com.baidu.navisdk.adapter.IBNTTSManager;
+import com.baidu.navisdk.adapter.IBaiduNaviManager;
+import com.baidu.navisdk.adapter.struct.BNTTsInitConfig;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+import com.hjq.toast.ToastUtils;
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
@@ -38,6 +54,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 public class MapViewActivity extends BaseActivity {
 
     @BindView(R2.id.map_view) MapView mMapView;//百度地图控件
+    @BindView(R2.id.tv_now_poi) TextView mTvNowPoi;//poi
     @BindView(R2.id.btn_my_location) Button mBtmMyLocation;//我的位置
     @BindView(R2.id.btn_wxt) Button mBtnWxt;//卫星图
     @BindView(R2.id.btn_normal) Button mBtnNormal;//普通图
@@ -80,11 +97,38 @@ public class MapViewActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-
+        XXPermissions.with(this)
+                // 申请单个权限
+                .permission(Permission.ACCESS_FINE_LOCATION)
+                .permission(Permission.ACCESS_COARSE_LOCATION)
+                .request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                        if (all) {
+                            intBadDuMap();//判断定位权限后初始化百度地图
+                        }
+                    }
+                    @Override
+                    public void onDenied(List<String> permissions, boolean never) {
+                        if (never) {
+                            XToastUtils.error("被永久拒绝授权，请手动定位权限");
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.startPermissionActivity(MapViewActivity.this, permissions);
+                        } else {
+                            XToastUtils.error("获取定位权限失败");
+                        }
+                    }
+                });
     }
 
     @Override
     protected void initView() {
+        intBadDuMap();//判断定位权限后初始化百度地图
+    }
+    /**
+     * 初始化百度地图View
+     */
+    private void intBadDuMap() {
         /* 1 获取地图控件引用 .*/
         mBaiduMap = mMapView.getMap();
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);//普通地图
@@ -117,8 +161,12 @@ public class MapViewActivity extends BaseActivity {
         mLocationClient.requestLocation();
     }
 
+    /**
+     * 配置定位参数
+     */
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
+        option.setIsNeedLocationPoiList(true);//是否需要周边POI信息，默认为不需要，即参数为false
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，设置坐标类型默认gcj02，设置返回的定位结果坐标系
         option.setScanSpan(1000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
@@ -174,6 +222,7 @@ public class MapViewActivity extends BaseActivity {
     }
 
     public class MyLocationListener extends BDAbstractLocationListener {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onReceiveLocation(BDLocation location) {
             //mapView 销毁后不在处理新接收的位置
@@ -191,6 +240,22 @@ public class MapViewActivity extends BaseActivity {
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
                 isFirstLoc = false;
+                //POI周边
+                Poi poi = location.getPoiList().get(0);
+                String poiName = poi.getName();    //获取POI名称
+                String poiTags = poi.getTags();    //获取POI类型
+                String poiAddr = poi.getAddr();    //获取POI地址 //获取周边POI信息
+                mTvNowPoi.setText("当前实时位置："+ poiAddr+"-"+poiTags+"-"+poiName);
+
+                //室内定位
+                if (location.getFloor() != null) {
+                    // 当前支持高精度室内定位
+                    String buildingID = location.getBuildingID();// 百度内部建筑物ID
+                    String buildingName = location.getBuildingName();// 百度内部建筑物缩写
+                    String floor = location.getFloor();// 室内定位的楼层信息，如 f1,f2,b1,b2
+                    mLocationClient.startIndoorMode();// 开启室内定位模式（重复调用也没问题），开启后，定位SDK会融合各种定位信息（GPS,WI-FI，蓝牙，传感器等）连续平滑的输出定位结果；
+                    ToastUtils.show("当前处于室内定位状态："+buildingID+"-"+buildingName+"-"+floor);
+                }
                 //构造地图状态参数
                 LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();

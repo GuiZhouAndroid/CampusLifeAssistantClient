@@ -15,6 +15,10 @@ android {
             // 设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi", "armeabi-v7a","x86","x86_64"
         }
+        // 避免"64K 引用限制"
+        multiDexEnabled true
+         //导航SDK内部使用了annotationProcessor，需要添加下面代码，防止编译异常
+        //javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
 
     buildTypes {
@@ -35,6 +39,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    // apache包
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -43,6 +49,8 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    //implementation files('libs\\NaviTts.aar')
+    implementation files('libs\\onsdk_all.aar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -192,7 +200,7 @@ dependencies {
     implementation 'com.github.mmin18:realtimeblurview:1.2.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     implementation 'com.github.li-xiaojun:EasyAdapter:1.2.5'
-    //百度基础定位组件
+    //百度全量定位组件
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Location_All:9.1.8'
     //百度基础地图
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.4.0'

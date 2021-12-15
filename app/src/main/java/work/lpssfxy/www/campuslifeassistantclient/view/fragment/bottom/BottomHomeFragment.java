@@ -73,6 +73,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActiv
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.NaviCationActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.OtherActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.RepastPracticeActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
@@ -287,8 +288,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Toast.makeText(getActivity(), "快递代取", Toast.LENGTH_SHORT).show();
                 break;
             case 2://笑话百科
-                getUnionId();
-                Toast.makeText(getActivity(), "笑话百科", Toast.LENGTH_SHORT).show();
+                //getUnionId();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), NaviCationActivity.class));
                 break;
             case 3://星座运势
                 OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)

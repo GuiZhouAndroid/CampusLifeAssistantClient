@@ -289,6 +289,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 百度导航 -->
+        <activity
+            android:name=".view.activity.NaviCationActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!-- 百度地图 -->
 
         <!--使用百度服务功能-->

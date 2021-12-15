@@ -12,6 +12,20 @@
         android:clickable="true"
         android:focusable="true" />
 
+    <TextView
+        android:gravity="center"
+        android:paddingBottom="@dimen/dp_70"
+        android:id="@+id/tv_now_poi"
+        android:layout_margin="@dimen/dp_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_do_map"
+        android:layout_centerHorizontal="true"
+        android:text="@string/my_shop"
+        android:textColor="@color/Red"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:id="@+id/ll_do_map"
         android:layout_width="match_parent"
