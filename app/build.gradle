@@ -193,5 +193,9 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     implementation 'com.github.li-xiaojun:EasyAdapter:1.2.5'
     //百度基础定位组件
-    implementation 'com.baidu.lbsyun:BaiduMapSDK_Location:9.1.8'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Location_All:9.1.8'
+    //百度基础地图
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.4.0'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.4.0'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Util:7.4.0'
 }

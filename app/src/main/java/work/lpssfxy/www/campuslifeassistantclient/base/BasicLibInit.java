@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 
 //import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -64,7 +66,11 @@ public class BasicLibInit {
      */
     public static void init(Application application) {
         /** 初始化百度地图加载so文件 */
-        //SDKInitializer.initialize(application);
+        SDKInitializer.initialize(application);
+        //在使用SDK各组件之前初始化context信息，传入ApplicationContext
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
         /** 初始化全局适配AndroidAutoSize */
         initAutoSizeConfig(application);
         /** 初始化换肤框架 */

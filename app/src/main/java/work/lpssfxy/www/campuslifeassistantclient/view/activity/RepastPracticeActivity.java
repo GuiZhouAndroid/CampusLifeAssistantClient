@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.ViewPagerAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.MyStringUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XXPermissionsAction;
@@ -53,7 +56,10 @@ import work.lpssfxy.www.campuslifeassistantclient.view.fragment.canteen.CanteenL
 public class RepastPracticeActivity extends BaseActivity {
 
     @BindView(R2.id.iv_repast_back) ImageView mIvRepastBack;//返回
-    @BindView(R2.id.tv_repast_location) TextView mIvRepastLocation;//返回
+    @BindView(R2.id.ll_repast_location) LinearLayout mLlRepastLocation;//当前位置
+    @BindView(R2.id.iv_repast_location) ImageView mIvRepastLocation;//当前位置
+    @BindView(R2.id.tv_now_location) TextView mTvNowLocation;//当前位置
+    @BindView(R2.id.tv_repast_location) TextView mTvRepastLocation;//当前位置
     @BindView(R.id.tab_layout_repast) TabLayout mTabLayoutRepast;//顶部导航栏
     @BindView(R.id.view_pager_repast) ViewPager mViewPagerRepast;//左右滑动
 
@@ -91,7 +97,6 @@ public class RepastPracticeActivity extends BaseActivity {
 
     @Override
     protected void prepareData() {
-
     }
 
     @Override
@@ -154,11 +159,17 @@ public class RepastPracticeActivity extends BaseActivity {
         mLocationClient.start();//开启定位
     }
 
-    @OnClick({R2.id.iv_repast_back})
+    @OnClick({R2.id.iv_repast_back,R2.id.ll_repast_location,R2.id.iv_repast_location,R2.id.tv_now_location,R2.id.tv_repast_location})
     public void onRepastViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_repast_back://点击返回
                 RepastPracticeActivity.this.finish();
+                break;
+            case R.id.ll_repast_location://打开地图
+            case R.id.iv_repast_location:
+            case R.id.tv_now_location:
+            case R.id.tv_repast_location:
+                IntentUtil.startActivityAnimBottomToTop1(this, new Intent(this, MapViewActivity.class));
                 break;
         }
     }
@@ -204,7 +215,7 @@ public class RepastPracticeActivity extends BaseActivity {
             }
             else {
                 //在此处进行你的后续联网操作
-                mIvRepastLocation.setText(province+city+district+"-"+street+ town+ "-" + locationDescribe.substring(locationDescribe.indexOf("在")+1));
+                mTvRepastLocation.setText(province+city+district+"-"+street+ town+ "-" + locationDescribe.substring(locationDescribe.indexOf("在")+1));
                 //Log.i("定位: " ,addr+"-"+country+"-"+province+"-"+city+"-"+district+"-"+street+"-"+adcode+"-"+town + "===" +locationDescribe);
             }
         }
