@@ -45,17 +45,48 @@
             android:paddingEnd="@dimen/dp_5"
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_20"
+        tools:ignore="RtlHardcoded">
+
+        <ImageView
+            android:gravity="center_vertical"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_30"
+            android:ellipsize="none"
+            android:src="@mipmap/nowlocation" />
+        <TextView
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您的位置:"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:paddingLeft="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_40"
+            android:gravity="center_vertical"
+            android:id="@+id/tv_repast_location"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="当前位置"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
 
 
-<!--        <com.github.mmin18.widget.RealtimeBlurView-->
-<!--            android:id="@+id/blurView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:visibility="visible" />-->
-<!--    </RelativeLayout>-->
+    <!--        <com.github.mmin18.widget.RealtimeBlurView-->
+    <!--            android:id="@+id/blurView"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="?attr/actionBarSize"-->
+    <!--            android:visibility="visible" />-->
+    <!--    </RelativeLayout>-->
 
 
     <com.google.android.material.tabs.TabLayout

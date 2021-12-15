@@ -3,7 +3,7 @@ package work.lpssfxy.www.campuslifeassistantclient.base;
 import android.app.Activity;
 import android.app.Application;
 
-import com.baidu.mapapi.SDKInitializer;
+//import com.baidu.mapapi.SDKInitializer;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -64,7 +64,7 @@ public class BasicLibInit {
      */
     public static void init(Application application) {
         /** 初始化百度地图加载so文件 */
-        SDKInitializer.initialize(application);
+        //SDKInitializer.initialize(application);
         /** 初始化全局适配AndroidAutoSize */
         initAutoSizeConfig(application);
         /** 初始化换肤框架 */

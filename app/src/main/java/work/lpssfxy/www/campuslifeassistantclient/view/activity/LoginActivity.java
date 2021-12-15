@@ -68,7 +68,6 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.ToastUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.coding.FileCodeUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.dialog.DialogPrompt;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.permission.PermissionMgr;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
@@ -146,8 +145,7 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Override
     protected void prepareData() {
-        /** QQ登录权限申请*/
-        PermissionMgr.getInstance().requestPermissions(this);
+
     }
 
     /**
@@ -155,7 +153,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
      */
     @Override
     protected void initView() {
-        Log.i(TAG, "进入登录" + Constant.mTencent.isSessionValid());//true
         /** 默认不勾选✓授权同意 */
         mCheck_if_authorizer.setChecked(false);
         /** 默认不勾选✓扫码登录 */
@@ -230,19 +227,6 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
     @Override
     protected void doBusiness() {
 
-    }
-
-    /**
-     * 请求权限结果
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionMgr.getInstance().onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
     @OnClick({R2.id.login_ptn_anim, R2.id.login_tv_forget_pwd, R2.id.login_tv_go_register, R2.id.login_iv_wx, R2.id.login_iv_qq, R2.id.tv_login_tel})

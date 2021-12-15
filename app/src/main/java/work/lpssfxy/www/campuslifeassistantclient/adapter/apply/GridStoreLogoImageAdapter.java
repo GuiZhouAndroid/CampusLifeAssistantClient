@@ -25,17 +25,16 @@ import java.util.List;
 
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.base.listener.OnItemLongClickListener;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCommitActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyCreateStoreActivity;
 
 /**
  * created by on 2021/12/4
- * 描述：自定义网格布局相册店门实拍适配器
+ * 描述：自定义网格布局相册店铺Logo图适配器
  *
  * @author ZSAndroid
  * @create 2021-12-04-23:10
  */
-public class GridStoreImageAdapter extends RecyclerView.Adapter<GridStoreImageAdapter.ViewHolder> {
+public class GridStoreLogoImageAdapter extends RecyclerView.Adapter<GridStoreLogoImageAdapter.ViewHolder> {
     public static final String TAG = "PictureSelector";
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
@@ -67,7 +66,7 @@ public class GridStoreImageAdapter extends RecyclerView.Adapter<GridStoreImageAd
         }
     }
 
-    public GridStoreImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
+    public GridStoreLogoImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.mInflater = LayoutInflater.from(context);
         this.mOnAddPicClickListener = mOnAddPicClickListener;
     }
@@ -88,13 +87,10 @@ public class GridStoreImageAdapter extends RecyclerView.Adapter<GridStoreImageAd
         if (list != null && position < list.size()) {
             list.remove(position);
         }
-        if (MyCreateStoreActivity.imgPathStore != null) {
-            MyCreateStoreActivity.imgPathStore = null;
-        }
         //删除后，不影响List集合中初始化长度
-        if (!MyCreateStoreActivity.imgApplyStorePathList.get(0).isEmpty()) {
-            MyCreateStoreActivity.imgApplyStorePathList.remove(0);
-            MyCreateStoreActivity.imgApplyStorePathList.add(0,"");
+        if (!MyCreateStoreActivity.imgApplyStorePathList.get(1).isEmpty()) {
+            MyCreateStoreActivity.imgApplyStorePathList.remove(1);
+            MyCreateStoreActivity.imgApplyStorePathList.add(1,"");
         }
     }
 
@@ -159,14 +155,13 @@ public class GridStoreImageAdapter extends RecyclerView.Adapter<GridStoreImageAd
             viewHolder.mIvDel.setOnClickListener(view -> {
                 int index = viewHolder.getAbsoluteAdapterPosition();
                 if (index != RecyclerView.NO_POSITION && list.size() > index) {
-                    //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致点击了图片右上角的X图标，OSS依旧可以读取之前的路径进行推送上传
                     if (MyCreateStoreActivity.imgPathStore != null) {
                         MyCreateStoreActivity.imgPathStore = null;
                     }
                     //删除后，不影响List集合中初始化长度
-                    if (!MyCreateStoreActivity.imgApplyStorePathList.get(0).isEmpty()) {
-                        MyCreateStoreActivity.imgApplyStorePathList.remove(0);
-                        MyCreateStoreActivity.imgApplyStorePathList.add(0,"");
+                    if (!MyCreateStoreActivity.imgApplyStorePathList.get(1).isEmpty()) {
+                        MyCreateStoreActivity.imgApplyStorePathList.remove(1);
+                        MyCreateStoreActivity.imgApplyStorePathList.add(1,"");
                     }
                     list.remove(index);
                     notifyItemRemoved(index);

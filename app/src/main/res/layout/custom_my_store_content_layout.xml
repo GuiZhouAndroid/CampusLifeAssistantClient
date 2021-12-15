@@ -118,6 +118,18 @@
                         app:sRightViewMarginRight="@dimen/dp_40" />
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_logo"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sLeftTextString="店铺Logo图"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightViewMarginRight="@dimen/dp_40" />
+
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
                         android:id="@+id/super_store_category"
                         app:sRightIconRes="@mipmap/icon_arrow_right_red"
                         app:sRightTextColor="@color/Grey500"
@@ -186,6 +198,19 @@
                         app:sRightTvDrawableWidth="70dp"
                         app:sRightTextSize="@dimen/sp_14" />
 
+                    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                        android:id="@+id/super_store_recommend"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        app:sCenterViewGravity="left_center"
+                        app:sRightIconRes="@mipmap/icon_arrow_right_red"
+                        app:sRightTextColor="@color/Grey500"
+                        app:sLeftTextString="推荐商品"
+                        app:sLeftViewGravity="left_center"
+                        app:sLeftViewMarginLeft="@dimen/dp_20"
+                        app:sRightTvDrawableHeight="40dp"
+                        app:sRightTvDrawableWidth="70dp"
+                        app:sRightTextSize="@dimen/sp_14" />
 
                     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
                         android:id="@+id/super_store_desc"

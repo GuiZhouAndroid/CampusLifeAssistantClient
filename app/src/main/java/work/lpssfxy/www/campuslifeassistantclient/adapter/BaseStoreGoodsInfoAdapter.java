@@ -1,4 +1,4 @@
-package work.lpssfxy.www.campuslifeassistantclient.adapter.welcome;
+package work.lpssfxy.www.campuslifeassistantclient.adapter;
 
 import android.widget.ImageView;
 
@@ -26,7 +26,7 @@ import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 
 /**
  * created by on 2021/11/26
- * 描述：商家商品信息列表适配器，自动填充展示全部用户和角色信息
+ * 描述：商家商品信息列表适配器
  *
  * @author ZSAndroid
  * @create 2021-11-26-22:19

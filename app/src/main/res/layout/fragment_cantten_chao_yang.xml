@@ -107,6 +107,7 @@
             app:layout_srlSpinnerStyle="Scale" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:background="@color/Grey100"
             android:id="@+id/recyclerView_chao_yang"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

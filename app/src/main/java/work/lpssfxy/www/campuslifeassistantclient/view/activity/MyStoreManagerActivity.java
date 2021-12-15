@@ -271,6 +271,8 @@ public class MyStoreManagerActivity extends BaseActivity {
         SuperTextView superMyInfo = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_my_info);
         //门店实拍图
         SuperTextView superStorePic = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_pic);
+        //门店Logo图
+        SuperTextView superStoreLogo = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_logo);
         //店铺分类
         SuperTextView superStoreCategory = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_category);
         //商铺名称
@@ -281,6 +283,8 @@ public class MyStoreManagerActivity extends BaseActivity {
         SuperTextView superStoreAddress = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_address);
         //联系电话
         SuperTextView superStoreMobile = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_mobile);
+        //推荐商品
+        SuperTextView superStoreRecommend = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_recommend);
         //商铺所属校区
         SuperTextView superStoreDesc = mMyStoreManagerStatusView.getContentView().findViewById(R.id.super_store_desc);
         //营业开始时间
@@ -318,6 +322,23 @@ public class MyStoreManagerActivity extends BaseActivity {
             }
         });
 
+        //设置店铺Logo图
+        // 加载店铺Logo图URL
+        Glide.with(this).load(data.getSsLogo()).apply(options).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                superStoreLogo.setRightTvDrawableRight(resource);
+            }
+        });
+        //查看店铺Logo图
+        superStoreLogo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+            @Override
+            public void onClick(SuperTextView superTextView) {
+                //单例模式将店铺Logo图URL传到Fragment中
+                getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_store_show, ApplyImgLookFragment.getInstance("urlData", data.getSsLogo())).commit();
+            }
+        });
+
         /* 设置店铺分类 */
         superStoreCategory.setRightString("[编号" + data.getScId()+"]"+data.getScName());
 
@@ -332,6 +353,9 @@ public class MyStoreManagerActivity extends BaseActivity {
 
         /* 设置商铺联系电话 */
         superStoreMobile.setRightString(data.getSsMobile());
+
+        /* 设置商铺推荐商品 */
+        superStoreRecommend.setRightString(data.getSsRecommend());
 
         /* 设置商铺所属校区 */
         superStoreDesc.setRightString(data.getSsDesc());
@@ -383,6 +407,13 @@ public class MyStoreManagerActivity extends BaseActivity {
         });
         //修改店铺联系电话
         superStoreMobile.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+            @Override
+            public void onClick(SuperTextView superTextView) {
+                ToastUtils.show(superTextView.getRightString());
+            }
+        });
+        //修改店铺推荐商品
+        superStoreRecommend.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onClick(SuperTextView superTextView) {
                 ToastUtils.show(superTextView.getRightString());

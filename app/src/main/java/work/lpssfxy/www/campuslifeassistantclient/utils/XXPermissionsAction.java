@@ -80,4 +80,34 @@ public class XXPermissionsAction {
                     }
                 });
     }
+
+    /**
+     * GPS定位
+     * @param context
+     */
+    public void fileLocationGps(Context context) {
+        XXPermissions.with(context)
+                // 申请单个权限
+                .permission(Permission.ACCESS_FINE_LOCATION)
+                .permission(Permission.ACCESS_COARSE_LOCATION)
+                .request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                        if (all) {
+                            ToastUtils.show("获取定位权限成功");
+                        }
+                    }
+
+                    @Override
+                    public void onDenied(List<String> permissions, boolean never) {
+                        if (never) {
+                            ToastUtils.show("被永久拒绝授权，请手动定位权限");
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.startPermissionActivity(context, permissions);
+                        } else {
+                            ToastUtils.show("获取定位权限失败");
+                        }
+                    }
+                });
+    }
 }

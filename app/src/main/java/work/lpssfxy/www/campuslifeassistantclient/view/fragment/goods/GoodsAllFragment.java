@@ -7,24 +7,19 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.chad.library.adapter.base.listener.OnLoadMoreListener;
 import com.chad.library.adapter.base.module.BaseDraggableModule;
 import com.chad.library.adapter.base.module.BaseLoadMoreModule;
-import com.google.android.material.snackbar.Snackbar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -39,37 +34,21 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseUserAddressInfoAdapter;
-import work.lpssfxy.www.campuslifeassistantclient.adapter.welcome.BaseStoreGoodsInfoAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.BaseStoreGoodsInfoAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.CustomLoadMoreView;
-import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.UpdateActivityUIFromFragment;
-import work.lpssfxy.www.campuslifeassistantclient.base.custominterface.UpdateFragmentUIFromActivity;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.GoodsCategoryInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.OnlyQQUserInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.ShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.dto.StoreGoodsInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.dto.UserAddressInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllGoodsInfoBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoAllShopCategoryInfoBean;
 import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoResponseBean;
-import work.lpssfxy.www.campuslifeassistantclient.entity.okgo.OkGoSessionAndUserBean;
 import work.lpssfxy.www.campuslifeassistantclient.utils.DynamicTimeFormat;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
-import work.lpssfxy.www.campuslifeassistantclient.utils.MyXPopupUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.utils.gson.GsonUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.okhttp.OkGoErrorUtil;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.GoodAddActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.IndexActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.LoginActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.MyGoodsManagerActivity;
-import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 
 /**
  * created by on 2021/12/13

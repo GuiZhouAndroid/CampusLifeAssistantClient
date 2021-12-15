@@ -1,23 +1,23 @@
 package work.lpssfxy.www.campuslifeassistantclient.entity.okgo;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
- * created by on 2021/12/4
- * 描述：商铺信息实体
+ * created by on 2021/12/15
+ * 描述：全部店铺实体信息
  *
  * @author ZSAndroid
- * @create 2021-12-04-22:36
+ * @create 2021-12-15-10:54
  */
 @Data
-public class OkGoShopStoreBean {
-
+public class OkGoAllShopInfoBean {
 
     private int code;
-    private Data data;
+    private List<Data> data;
     private String msg;
     private String nowTime;
-
     @lombok.Data
     public static class Data {
         private String createTime;

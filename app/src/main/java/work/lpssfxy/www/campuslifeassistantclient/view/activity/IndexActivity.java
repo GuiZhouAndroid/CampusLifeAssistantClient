@@ -219,8 +219,6 @@ public class IndexActivity extends BaseActivity {
         initViewPager();
         /** 初始化底部导航 */
         initBottomNaviCation();
-        /** 初始化获取权限 */
-        initPermission();
     }
 
     /**
@@ -710,30 +708,6 @@ public class IndexActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 权限申请
-     * 百度定位检查权限/获取文件位置+写入外部存储器+读取手机状态
-     */
-    private void initPermission() {
-        List<String> permissionList = new ArrayList<>();  //创建空List集合
-        //运行时权限申请
-        if (ContextCompat.checkSelfPermission(IndexActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(IndexActivity.this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(IndexActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(IndexActivity.this, permissions, 1);
-        }
-    }
 
     /**
      * 打开APP，进入首页，获取QQSession持久化数据调用，实现DefaultUiListener接口

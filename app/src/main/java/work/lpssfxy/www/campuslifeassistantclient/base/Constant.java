@@ -26,6 +26,7 @@ public class Constant {
     public static final String ACTION_DELETE_HEAL_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_RUN_CODE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
+    public static final String ACTION_DELETE_CREATE_STORE_LOGO_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     public static final String ACTION_DELETE_ADD_GOODS_PREVIEW_POSITION = "com.luck.picture.lib.action.delete_preview_position";
     /**
      * 添加收货地址弹出标题内容
@@ -228,6 +229,9 @@ public class Constant {
 
     //通过商家用户ID查询该用户全部商铺信息
     public static final String SELECT_USER_SHOP_STORE_INFO_BY_SA_TOKEN_TO_USERID = BASE_URL + "/api/shop/store/selectUserShopStoreInfoByUserId";
+
+    //通过校区名称查询对应的全部店铺信息(不包括旗下商品信息)
+    public static final String SELECT_ALL_SHOP_STORE_INFO_BY_SHOP_DESC = BASE_URL + "/api/shop/store/shopSelectStoreInfoByShopDesc";
 
     /**
      * 商品相关API接口

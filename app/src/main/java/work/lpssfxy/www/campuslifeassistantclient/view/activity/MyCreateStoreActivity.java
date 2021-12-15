@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +39,13 @@ import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.luck.picture.lib.PictureMediaScannerConnection;
 import com.luck.picture.lib.PictureSelector;
@@ -85,6 +95,7 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridStoreImageAdapter;
+import work.lpssfxy.www.campuslifeassistantclient.adapter.apply.GridStoreLogoImageAdapter;
 import work.lpssfxy.www.campuslifeassistantclient.base.Constant;
 import work.lpssfxy.www.campuslifeassistantclient.base.button.NotFastButton;
 import work.lpssfxy.www.campuslifeassistantclient.base.pogress.CircleProgress;
@@ -118,11 +129,13 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     @BindView(R2.id.fl_create_store_show) RelativeLayout mrlCreateStoreShow; //标题栏
     @BindView(R2.id.iv_create_store_back) ImageView mIvCreateStoreBack;  //标题栏返回
     @BindView(R2.id.recycler_create_store_pic) RecyclerView mRecycleCreateStorePic; //门店实图列表控件
+    @BindView(R2.id.recycler_create_store_logo) RecyclerView mRecycleCreateStoreLogo; //店铺Logo图列表控件
     @BindView(R2.id.super_create_store_category) SuperTextView mStvCreateStoreCategory;//店铺分类
     @BindView(R2.id.edit_create_store_name) ClearEditText mEditCreateStoreName;//商铺名称
     @BindView(R2.id.edit_create_store_notice) ClearEditText mEditCreateStoreNotice;//商铺公告
     @BindView(R2.id.edit_create_store_address) ClearEditText mEditCreateStoreAddress;//商铺详细地址
     @BindView(R2.id.edit_create_store_mobile) ClearEditText mEditCreateStoreMobile;//联系电话
+    @BindView(R2.id.edit_create_store_recommend) ClearEditText mEditCreateStoreRecommend;//推荐商品
     @BindView(R2.id.super_create_store_desc) SuperTextView mStvCreateStoreDesc;//商铺所属校区
     @BindView(R2.id.super_create_store_begin_time) SuperTextView mStvCreateStoreBeginTime;//营业开始时间
     @BindView(R2.id.super_create_store_end_time) SuperTextView mStvCreateStoreEndTime;//营业结束时间
@@ -135,10 +148,14 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     private final int maxSelectNum = 1;//最大选择数
     /** 接收相册中选择图片的回调到Activity中 */
     private ActivityResultLauncher<Intent> launcherStoreResult;//回调显示门店实图
-    /** 网格布局相册门店实图适配器 */
+    private ActivityResultLauncher<Intent> launcherStoreLogoResult;//回调店铺Logo图
+    /** 网格布局相册门店实图 + 店铺Logo图适配器 */
     private GridStoreImageAdapter mAdapterStore;
-    /** 门店实图图片路径 */
+    private GridStoreLogoImageAdapter mAdapterStoreLogo;
+    /** 门店实图片路径 + 店铺Logo图路径 */
     public static String imgPathStore;
+    public static String imgPathStoreLogo;
+    public static List<String> imgApplyStorePathList;//门店实图片路径 + 店铺Logo图路径
     /** Android振动器 */
     private Vibrator vibrator;
     /** 商铺分类集合 */
@@ -146,9 +163,11 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     /** 选择营业时间 */
     private String[][] mChooseBeginTime,mChooseEndTime;
     /** 输入框中的全局数据，提供网络请求提交信息时使用 */
-    private String strGetCategoryName,strGetStoreName,strGetStoreDesc,strGetStoreNotice,strGetStoreAddress,strGetStoreMobile,strGetBeginTime,strGetEndTime;
+    private String strGetCategoryName,strGetStoreName,strGetStoreDesc,strGetStoreNotice,strGetStoreAddress,strGetStoreMobile,strGetStoreRecommend,strGetBeginTime,strGetEndTime;
     /** 提取商铺分类ID */
     private int categoryId;
+    /** 百度定位 */
+    public LocationClient mLocationClient = null;
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -182,27 +201,68 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
 
     @Override
     protected void prepareData() {
-
+        XXPermissions.with(this)
+                // 申请单个权限
+                .permission(Permission.ACCESS_FINE_LOCATION)
+                .permission(Permission.ACCESS_COARSE_LOCATION)
+                .request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                        if (all) {
+                            initLocationClient();
+                        }
+                    }
+                    @Override
+                    public void onDenied(List<String> permissions, boolean never) {
+                        if (never) {
+                            initLocationClient();
+                            XToastUtils.error("被永久拒绝授权，请手动定位权限");
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.startPermissionActivity(MyCreateStoreActivity.this, permissions);
+                        } else {
+                            XToastUtils.error("获取定位权限失败");
+                        }
+                    }
+                });
     }
 
+    private void initLocationClient() {
+        mLocationClient = new LocationClient(getApplicationContext());//声明LocationClient类
+        mLocationClient.registerLocationListener(new MyLocationListener());//注册监听函数
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedLocationDescribe(true);//获取位置描述信息
+        option.setIsNeedAddress(true);//默认false不需要，获得当前点的地址信息，此处必须为true
+        option.setNeedNewVersionRgc(true);//默认true需要最新版本的地址信息
+        mLocationClient.setLocOption(option);//定位参数设置完成，传递LocationClient对象使用，根据已绑定参数，实现接口回调地址信息
+        mLocationClient.start();//开启定位
+    }
     @Override
     protected void initView() {
-
+        imgApplyStorePathList = new ArrayList<>();
+        imgApplyStorePathList.add(0, "");
+        imgApplyStorePathList.add(1, "");
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
         mPictureParameterStyle = getWeChatStyle();//设置全局主题为微信风格
-        initLicencePicSelect(savedInstanceState);//初始化门店实拍图片选择适配器配置参数
-        initRecyclerView();//初始化全部图片view列表
+        initCreateStorePicSelect(savedInstanceState);//初始化门店实拍图片选择适配器配置参数
+        initCreateStoreLogoSelect(savedInstanceState);//初始化店铺Logo图片选择适配器配置参数
+        initAllRecyclerView();//初始化全部图片view列表
     }
 
-    private void initRecyclerView() {
+    private void initAllRecyclerView() {
         /**自定义全局统一网格垂直布局 */
+        /* 1.门店实拍图片 */
         FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
         mRecycleCreateStorePic.setLayoutManager(manager);//设置RecyclerView的布局样式
         mRecycleCreateStorePic.addItemDecoration(new GridSpacingItemDecoration(1, ScreenUtils.dip2px(this, 8), false));
         mRecycleCreateStorePic.setAdapter(mAdapterStore);//设置RecyclerView的适配器
+        /* 2.店铺Logo图片 */
+        FullyGridLayoutManager manager1 = new FullyGridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
+        mRecycleCreateStoreLogo.setLayoutManager(manager1);//设置RecyclerView的布局样式
+        mRecycleCreateStoreLogo.addItemDecoration(new GridSpacingItemDecoration(1, ScreenUtils.dip2px(this, 8), false));
+        mRecycleCreateStoreLogo.setAdapter(mAdapterStoreLogo);//设置RecyclerView的适配器
     }
 
     @Override
@@ -437,11 +497,16 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             ToastUtils.show("请选择门店实拍图");
             return;
         }
+        if (imgPathStoreLogo == null) {
+            ToastUtils.show("请选择店铺Logo图");
+            return;
+        }
         strGetCategoryName = mStvCreateStoreCategory.getRightString();//商铺分类
         strGetStoreName = mEditCreateStoreName.getText().toString().trim();//商铺名称
         strGetStoreNotice = mEditCreateStoreNotice.getText().toString().trim();//商铺公告
         strGetStoreAddress = mEditCreateStoreAddress.getText().toString().trim();//商铺地址
         strGetStoreMobile = mEditCreateStoreMobile.getText().toString().trim();//联系电话
+        strGetStoreRecommend = mEditCreateStoreRecommend.getText().toString().trim();//推荐商品
         strGetStoreDesc = mStvCreateStoreDesc.getRightString();//商铺所属校区
         strGetBeginTime = mStvCreateStoreBeginTime.getRightString();//营业开始时间
         strGetEndTime = mStvCreateStoreEndTime.getRightString();//营业结束时间
@@ -478,6 +543,10 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             ToastUtils.show("请完善联系电话信息");
             return;
         }
+        if (TextUtils.isEmpty(strGetStoreRecommend)) {
+            ToastUtils.show("请完善推荐商品信息");
+            return;
+        }
         if (TextUtils.isEmpty(strGetStoreDesc)) {
             ToastUtils.show("请选择商铺所属校区");
             return;
@@ -491,90 +560,189 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             return;
         }
         /* 2.上传图片到阿里云OSS */
-        startOSSUploadFile();
+        if (imgApplyStorePathList != null && imgApplyStorePathList.size() == 2) {
+            startOSSUploadFile(imgApplyStorePathList);
+        }
     }
+
+//    /**
+//     * 上传集合中的图片到阿里云OSS对象存储
+//     * @param imgApplyStorePathList 路径集合
+//     */
+//    private void startOSSUploadFile(List<String> imgApplyStorePathList) {
+//        //时间戳使用原因 + UUID：避免OSS云资源重名覆盖文件，导致用户数据丢失，加入时间戳来拼接在OSS文件名中，那么必然不会出现重名问题
+//        String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPathStore.substring(imgPathStore.lastIndexOf("."));
+//        String imgPath = Constant.BASE_OSS_URL + Constant.OSS_IMG_PATH + fileName;
+//
+//        OssManager builder = new OssManager.Builder(this)
+//                .bucketName("zs-android")//OSS桶名
+//                .accessKeyId("LTAI5tB2LygPxntS2B56AH75")
+//                .accessKeySecret("LYG9rSEDENh7kZuJhZKRJMfbaRgf4B")
+//                .endPoint(Constant.BASE_OSS_URL)//OSS外网域名(阿里云分配的或自定义域名)
+//                .objectKey(Constant.OSS_IMG_PATH + fileName)//对应OSS文件夹+文件名(时间戳+UUID+图片后缀)
+//                .localFilePath(imgPathStore)//本机的文件AndroidQ目录路径
+//                .build();
+//
+//        //OSS推送上传状态监听事件
+//        builder.setPushStateListener(new OssManager.OnPushStateListener() {
+//            @Override
+//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+//                //上传参数，主要获取objectKey(例如：pic_data/1637295593752.jpeg)
+//                //时间戳数据，通过Handle子线程处理，调用后端API接口，进行存储。主要作为:拼接访问的URL地址，不进行记录将不清楚OSS对应的资源文件是什么
+//
+//                //OSS监听文件上传成功后，返回成功数据信息，发送消息到子线程中进行相关操作
+//                Message msg = new Message();
+//                msg.obj = result;
+//                msg.what = 2;
+//                mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
+//                    @Override
+//                    public void run() {
+//                        mHandler.sendMessage(msg);
+//                    }
+//                }, 1000);
+//            }
+//
+//            @Override
+//            public void onFailure(PutObjectRequest request, ClientException clientException, ServiceException serviceException) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // 请求异常。
+//                        if (clientException != null) {
+//                            Toast.makeText(MyCreateStoreActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                        if (serviceException != null) {
+//                            Toast.makeText(MyCreateStoreActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
+//                            // 服务异常。
+//                            Log.e("ErrorCode", serviceException.getErrorCode());
+//                            Log.e("RequestId", serviceException.getRequestId());
+//                            Log.e("HostId", serviceException.getHostId());
+//                            Log.e("RawMessage", serviceException.getRawMessage());
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//        //OSS推送上传进度监听事件
+//        builder.setPushProgressListener(new OssManager.OnPushProgressListener() {
+//            @Override
+//            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+//                //不要Handler发送消息 ，文件 当前kb大小 和 总kb大小，必须实时传递进度参数设置到水波纹进度上
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //默认Gone失效，有进度值就设置可见VISIBLE
+//                        mCircleProgressCreateStore.setVisibility(View.VISIBLE);
+//                        //在代码中动态改变渐变色，可能会导致颜色跳跃
+//                        mCircleProgressCreateStore.setGradientColors(COLORS);
+//                        //OSS当前值 ==  OSS最大值时，证明文件推送上传成功
+//                        if (currentSize == totalSize) {
+//                            mCircleProgressCreateStore.setValue(currentSize);
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//        //构建完成，开始调用OSS推送上传图片服务
+//        builder.push();
+//        Message msg1 = new Message();
+//        msg1.obj = imgPath;
+//        msg1.what = 1;
+//        mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
+//            @Override
+//            public void run() {
+//                mHandler.sendMessage(msg1);
+//            }
+//        }, 500);
+//    }
 
     /**
      * 上传集合中的图片到阿里云OSS对象存储
+     * @param imgApplyStorePathList 路径集合
      */
-    private void startOSSUploadFile() {
-        //时间戳使用原因 + UUID：避免OSS云资源重名覆盖文件，导致用户数据丢失，加入时间戳来拼接在OSS文件名中，那么必然不会出现重名问题
-        String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPathStore.substring(imgPathStore.lastIndexOf("."));
-        String imgPath = Constant.BASE_OSS_URL + Constant.OSS_IMG_PATH + fileName;
+    private void startOSSUploadFile(List<String> imgApplyStorePathList) {
 
-        OssManager builder = new OssManager.Builder(this)
-                .bucketName("zs-android")//OSS桶名
-                .accessKeyId("LTAI5tB2LygPxntS2B56AH75")
-                .accessKeySecret("LYG9rSEDENh7kZuJhZKRJMfbaRgf4B")
-                .endPoint(Constant.BASE_OSS_URL)//OSS外网域名(阿里云分配的或自定义域名)
-                .objectKey(Constant.OSS_IMG_PATH + fileName)//对应OSS文件夹+文件名(时间戳+UUID+图片后缀)
-                .localFilePath(imgPathStore)//本机的文件AndroidQ目录路径
-                .build();
+        //MyXPopupUtils.getInstance().setShowDialog(ApplyRunCommitActivity.this,"正在上传...");
 
-        //OSS推送上传状态监听事件
-        builder.setPushStateListener(new OssManager.OnPushStateListener() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                //上传参数，主要获取objectKey(例如：pic_data/1637295593752.jpeg)
-                //时间戳数据，通过Handle子线程处理，调用后端API接口，进行存储。主要作为:拼接访问的URL地址，不进行记录将不清楚OSS对应的资源文件是什么
+        List<String> list = new ArrayList<>();
+        for (String imgPath : imgApplyStorePathList) {
+            //时间戳使用原因 + UUID：避免OSS云资源重名覆盖文件，导致用户数据丢失，加入时间戳来拼接在OSS文件名中，那么必然不会出现重名问题
+            String fileName = System.currentTimeMillis() + UUIDUtil.UUID32() + imgPath.substring(imgPath.lastIndexOf("."));
+            list.add(Constant.BASE_OSS_URL + Constant.OSS_IMG_PATH + fileName);
+            OssManager builder = new OssManager.Builder(this)
+                    .bucketName("zs-android")//OSS桶名
+                    .accessKeyId("LTAI5tB2LygPxntS2B56AH75")
+                    .accessKeySecret("LYG9rSEDENh7kZuJhZKRJMfbaRgf4B")
+                    .endPoint(Constant.BASE_OSS_URL)//OSS外网域名(阿里云分配的或自定义域名)
+                    .objectKey(Constant.OSS_IMG_PATH + fileName)//对应OSS文件夹+文件名(时间戳+UUID+图片后缀)
+                    .localFilePath(imgPath)//本机的文件AndroidQ目录路径
+                    .build();
 
-                //OSS监听文件上传成功后，返回成功数据信息，发送消息到子线程中进行相关操作
-                Message msg = new Message();
-                msg.obj = result;
-                msg.what = 2;
-                mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
-                    @Override
-                    public void run() {
-                        mHandler.sendMessage(msg);
-                    }
-                }, 1000);
-            }
+            //OSS推送上传状态监听事件
+            builder.setPushStateListener(new OssManager.OnPushStateListener() {
+                @Override
+                public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                    //上传参数，主要获取objectKey(例如：pic_data/1637295593752.jpeg)
+                    //时间戳数据，通过Handle子线程处理，调用后端API接口，进行存储。主要作为:拼接访问的URL地址，不进行记录将不清楚OSS对应的资源文件是什么
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientException, ServiceException serviceException) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 请求异常。
-                        if (clientException != null) {
-                            Toast.makeText(MyCreateStoreActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
+                    //OSS监听文件上传成功后，返回成功数据信息，发送消息到子线程中进行相关操作
+                    Message msg = new Message();
+                    msg.obj = result;
+                    msg.what = 2;
+                    mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
+                        @Override
+                        public void run() {
+                            mHandler.sendMessage(msg);
                         }
-                        if (serviceException != null) {
-                            Toast.makeText(MyCreateStoreActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
-                            // 服务异常。
-                            Log.e("ErrorCode", serviceException.getErrorCode());
-                            Log.e("RequestId", serviceException.getRequestId());
-                            Log.e("HostId", serviceException.getHostId());
-                            Log.e("RawMessage", serviceException.getRawMessage());
+                    }, 1000);
+                }
+
+                @Override
+                public void onFailure(PutObjectRequest request, ClientException clientException, ServiceException serviceException) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 请求异常。
+                            if (clientException != null) {
+                                Toast.makeText(MyCreateStoreActivity.this, "本机请求异常(无网络等情况)：" + clientException.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (serviceException != null) {
+                                Toast.makeText(MyCreateStoreActivity.this, "阿里服务异常：" + serviceException.getMessage(), Toast.LENGTH_SHORT).show();
+                                // 服务异常。
+                                Log.e("ErrorCode", serviceException.getErrorCode());
+                                Log.e("RequestId", serviceException.getRequestId());
+                                Log.e("HostId", serviceException.getHostId());
+                                Log.e("RawMessage", serviceException.getRawMessage());
+                            }
                         }
-                    }
-                });
-            }
-        });
-        //OSS推送上传进度监听事件
-        builder.setPushProgressListener(new OssManager.OnPushProgressListener() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                //不要Handler发送消息 ，文件 当前kb大小 和 总kb大小，必须实时传递进度参数设置到水波纹进度上
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //默认Gone失效，有进度值就设置可见VISIBLE
-                        mCircleProgressCreateStore.setVisibility(View.VISIBLE);
-                        //在代码中动态改变渐变色，可能会导致颜色跳跃
-                        mCircleProgressCreateStore.setGradientColors(COLORS);
-                        //OSS当前值 ==  OSS最大值时，证明文件推送上传成功
-                        if (currentSize == totalSize) {
-                            mCircleProgressCreateStore.setValue(currentSize);
+                    });
+                }
+            });
+            //OSS推送上传进度监听事件
+            builder.setPushProgressListener(new OssManager.OnPushProgressListener() {
+                @Override
+                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                    //不要Handler发送消息 ，文件 当前kb大小 和 总kb大小，必须实时传递进度参数设置到水波纹进度上
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //默认Gone失效，有进度值就设置可见VISIBLE
+                            mCircleProgressCreateStore.setVisibility(View.VISIBLE);
+                            //在代码中动态改变渐变色，可能会导致颜色跳跃
+                            mCircleProgressCreateStore.setGradientColors(COLORS);
+                            //OSS当前值 ==  OSS最大值时，证明文件推送上传成功
+                            if (currentSize == totalSize) {
+                                mCircleProgressCreateStore.setValue(currentSize);
+                            }
                         }
-                    }
-                });
-            }
-        });
-        //构建完成，开始调用OSS推送上传图片服务
-        builder.push();
+                    });
+                }
+            });
+            //构建完成，开始调用OSS推送上传图片服务
+            builder.push();
+        }
         Message msg1 = new Message();
-        msg1.obj = imgPath;
+        msg1.obj = list;
         msg1.what = 1;
         mHandler.postDelayed(new Runnable() {   //延迟发送，让进度条的1秒钟绘制执行完，才调用 msg.what = 2中的业务逻辑
             @Override
@@ -587,7 +755,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     /**
      * 初始化门店实拍图片选择适配器配置参数
      */
-    private void initLicencePicSelect(Bundle savedInstanceState) {
+    private void initCreateStorePicSelect(Bundle savedInstanceState) {
         mAdapterStore = new GridStoreImageAdapter(getContext(), onAddStorePicClickListener);//自定义网格布局相册图片适配器参数
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("selectorList") != null) {
             mAdapterStore.setList(savedInstanceState.getParcelableArrayList("selectorList"));
@@ -626,12 +794,58 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             }
         });
         // 注册广播，接收选择的门店实拍图片 + 刷新适配器
-        BroadcastManager.getInstance(getContext()).registerReceiver(licenceBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION);
+        BroadcastManager.getInstance(getContext()).registerReceiver(storeBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION);
         launcherStoreResult = createActivityStoreResultLauncher();
     }
 
     /**
-     * 核酸证明启动相册相机
+     * 初始化店铺Logo图片选择适配器配置参数
+     */
+    private void initCreateStoreLogoSelect(Bundle savedInstanceState) {
+        mAdapterStoreLogo = new GridStoreLogoImageAdapter(getContext(), onAddStoreLogoClickListener);//自定义网格布局相册图片适配器参数
+        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("selectorList") != null) {
+            mAdapterStoreLogo.setList(savedInstanceState.getParcelableArrayList("selectorList"));
+        }
+        mAdapterStoreLogo.setSelectMax(maxSelectNum);//设置网格布局适配最大文件数
+        //自定义网格布局相册图片item监听
+        mAdapterStoreLogo.setOnItemClickListener((v, position) -> {
+            List<LocalMedia> selectList = mAdapterStoreLogo.getData();
+            if (selectList.size() > 0) {
+                LocalMedia media = selectList.get(position);
+                String mimeType = media.getMimeType();
+                int mediaType = PictureMimeType.getMimeType(mimeType);
+                switch (mediaType) {
+                    case PictureConfig.TYPE_VIDEO:// 预览视频
+                        PictureSelector.create(MyCreateStoreActivity.this)
+                                .themeStyle(R.style.picture_default_style)
+                                .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
+                                .externalPictureVideo(TextUtils.isEmpty(media.getAndroidQToPath()) ? media.getPath() : media.getAndroidQToPath());
+                        break;
+                    case PictureConfig.TYPE_AUDIO:// 预览音频
+                        PictureSelector.create(MyCreateStoreActivity.this).externalPictureAudio(PictureMimeType.isContent(media.getPath()) ? media.getAndroidQToPath() : media.getPath());
+                        break;
+
+                    default:
+                        PictureSelector.create(MyCreateStoreActivity.this)
+                                .themeStyle(R.style.picture_default_style) // xml设置主题
+                                .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
+                                //.setPictureWindowAnimationStyle(animationStyle)// 自定义页面启动动画
+                                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                                .isNotPreviewDownload(true)// 预览图片长按是否可以下载
+                                //.bindCustomPlayVideoCallback(new MyVideoSelectedPlayCallback(getContext()))// 自定义播放回调控制，用户可以使用自己的视频播放界面
+                                .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
+                                .openExternalPreview(position, selectList);
+                        break;
+                }
+            }
+        });
+        // 注册广播，接收选择的店铺Logo图片 + 刷新适配器
+        BroadcastManager.getInstance(getContext()).registerReceiver(storeLogoBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_LOGO_PREVIEW_POSITION);
+        launcherStoreLogoResult = createActivityStoreLogoResultLauncher();
+    }
+
+    /**
+     * 门店实拍图启动相册相机
      */
     private final GridStoreImageAdapter.onAddPicClickListener onAddStorePicClickListener = new GridStoreImageAdapter.onAddPicClickListener() {
         @Override
@@ -695,6 +909,70 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
     };
 
     /**
+     * 核酸证明启动相册相机
+     */
+    private final GridStoreLogoImageAdapter.onAddPicClickListener onAddStoreLogoClickListener = new GridStoreLogoImageAdapter.onAddPicClickListener() {
+        @Override
+        public void onAddPicClick() {
+            imgPathStoreLogo = null;
+            PictureSelector.create(MyCreateStoreActivity.this)
+                    .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                    .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
+                    .setPictureUIStyle(PictureSelectorUIStyle.ofDefaultStyle())
+                    .setPictureStyle(mPictureParameterStyle)// 动态自定义相册主题
+                    .setPictureCropStyle(mCropParameterStyle)// 动态自定义裁剪主题
+                    .setPictureWindowAnimationStyle(PictureWindowAnimationStyle.ofCustomWindowAnimationStyle(R.anim.picture_anim_up_in, R.anim.picture_anim_down_out))//自定义相册启动退出动画 上滑动画打开 下滑动画退出
+                    .isWeChatStyle(true)// 是否开启微信图片选择风格
+                    .isUseCustomCamera(false)// 是否使用自定义相机
+                    .setLanguage(LanguageConfig.CHINESE)// 设置语言，默认中文
+                    .isPageStrategy(true)// 是否开启分页策略 & 每页多少条；默认开启
+                    .setRecyclerAnimationMode(AnimationType.SLIDE_IN_BOTTOM_ANIMATION)// 列表动画效果:滑动底部动画
+                    .isWithVideoImage(true)// 图片和视频是否可以同选,只在ofAll模式下有效
+                    .isMaxSelectEnabledMask(true)// 选择数到了最大阀值列表是否启用蒙层效果
+                    .setQuerySandboxDirectory(createCustomCameraOutPath())// 查询自定义相机输出目录
+                    .isGetOnlySandboxDirectory(false) // 是否只显示某个目录下的资源；需与setQuerySandboxDirectory相对应
+                    .setCustomCameraFeatures(CustomCameraType.BUTTON_STATE_BOTH)// 设置自定义相机按钮状态
+                    .setCaptureLoadingColor(ContextCompat.getColor(getContext(), R.color.app_color_blue))
+                    .maxSelectNum(maxSelectNum)// 最大图片选择数量
+                    .minSelectNum(1)// 最小选择数量
+                    .maxVideoSelectNum(1) // 视频最大选择数量
+                    .imageSpanCount(4)// 每行显示个数
+                    .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
+                    .isAndroidQTransform(true)// 是否需要处理Android Q 拷贝至应用沙盒的操作，只针对compress(false); && .isEnableCrop(false);有效,默认处理
+                    .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                    .isOriginalImageControl(true)// 是否显示原图控制按钮，如果设置为true则用户可以自由选择是否使用原图，裁剪功能将会失效
+                    .isDisplayOriginalSize(true)// 是否显示原文件大小，isOriginalImageControl true有效
+                    .isEditorImage(true)//是否编辑图片
+                    .bindCustomPermissionsObtainListener(new MyPermissionsObtainCallback())// 自定义权限拦截
+                    .selectionMode(PictureConfig.MULTIPLE)// MULTIPLE多选 or SINGLE单选
+                    .isPreviewImage(true)// 是否可预览图片
+                    .isPreviewVideo(true)// 是否可预览视频
+                    .isEnablePreviewAudio(false) // 是否可播放音频
+                    .isCamera(true)// 是否显示拍照按钮
+                    .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                    .setCameraImageFormat(PictureMimeType.JPEG) // 相机图片格式后缀,默认.jpeg
+                    .setCameraVideoFormat(PictureMimeType.MP4)// 相机视频格式后缀,默认.mp4
+                    .setCameraAudioFormat(PictureMimeType.AMR)// 录音音频格式后缀,默认.amr
+                    .isEnableCrop(false)// 是否裁剪
+                    .isCompress(true)// 是否压缩
+                    .synOrAsy(false)//同步true或异步false 压缩 默认同步
+                    .withAspectRatio(0, 0)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义 默认0 ， 0
+                    .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+                    .isGif(false)// 是否显示gif图片
+                    .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                    .isCropDragSmoothToCenter(true)// 裁剪框拖动时图片自动跟随居中
+                    .circleDimmedLayer(false)// 是否圆形裁剪
+                    .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                    .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                    .isOpenClickSound(true)// 是否开启点击声音
+                    .selectionData(mAdapterStoreLogo.getData())// 是否传入已选图片
+                    .cutOutQuality(90)// 裁剪输出质量 默认100
+                    .minimumCompressSize(100)// 小于多少kb的图片不压缩
+                    .forResult(launcherStoreLogoResult);
+        }
+    };
+
+    /**
      * 创建ActivityResultLauncher 回调监听门店实拍图片路径地址
      *
      * @return 回调结果
@@ -725,6 +1003,7 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                                 }
                                 //Android Q 特有Path 赋值给目录路径的List集合
                                 imgPathStore = media.getAndroidQToPath();
+                                imgApplyStorePathList.set(0, imgPathStore);
                                 Log.i(TAG, "AndroidQ门店实拍图Path:" + media.getAndroidQToPath());
                             }
                             mAdapterStore.setList(selectList);
@@ -734,6 +1013,46 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                 });
     }
 
+    /**
+     * 创建ActivityResultLauncher 回调监听店铺Logo图片路径地址
+     *
+     * @return 回调结果
+     */
+    private ActivityResultLauncher<Intent> createActivityStoreLogoResultLauncher() {
+        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        int resultCode = result.getResultCode();
+                        if (resultCode == RESULT_OK) {
+                            List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(result.getData());
+                            for (LocalMedia media : selectList) {
+                                if (media.getWidth() == 0 || media.getHeight() == 0) {
+                                    if (PictureMimeType.isHasImage(media.getMimeType())) {
+                                        MediaExtraInfo imageExtraInfo = MediaUtils.getImageSize(media.getPath());
+                                        media.setWidth(imageExtraInfo.getWidth());
+                                        media.setHeight(imageExtraInfo.getHeight());
+                                    } else if (PictureMimeType.isHasVideo(media.getMimeType())) {
+                                        MediaExtraInfo videoExtraInfo = MediaUtils.getVideoSize(getContext(), media.getPath());
+                                        media.setWidth(videoExtraInfo.getWidth());
+                                        media.setHeight(videoExtraInfo.getHeight());
+                                    }
+                                }
+                                if (imgPathStoreLogo != null) {
+                                    imgPathStoreLogo = null;
+                                }
+                                //Android Q 特有Path 赋值给目录路径的List集合
+                                imgPathStoreLogo = media.getAndroidQToPath();
+                                imgApplyStorePathList.set(1, imgPathStoreLogo);
+                                Log.i(TAG, "AndroidQ店铺LogoPath:" + media.getAndroidQToPath());
+                            }
+                            mAdapterStoreLogo.setList(selectList);
+                            mAdapterStoreLogo.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
     /**
      * Bundle数据临时保存状态
      *
@@ -747,29 +1066,59 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             outState.putParcelableArrayList("selectorList",
                     (ArrayList<? extends Parcelable>) mAdapterStore.getData());
         }
+        /* 1.店铺Logo图 */
+        if (mAdapterStoreLogo != null && mAdapterStoreLogo.getData() != null && mAdapterStoreLogo.getData().size() > 0) {
+            outState.putParcelableArrayList("selectorList",
+                    (ArrayList<? extends Parcelable>) mAdapterStoreLogo.getData());
+        }
     }
 
     /**
-     * 广播接受回调的门店实拍图图片
+     * 广播接受回调的门店实拍图片
      */
-    private final BroadcastReceiver licenceBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver storeBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (TextUtils.isEmpty(action)) {
                 return;
             }
-            if (Constant.ACTION_DELETE_STU_CARD_PREVIEW_POSITION.equals(action)) {
+            if (Constant.ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION.equals(action)) {
                 // 外部预览删除按钮回调
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
                     int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
-                    ToastUtils.show("校园帮APP提示：您已删除门店实拍图图片！");
                     mAdapterStore.remove(position);
                     mAdapterStore.notifyItemRemoved(position);
                     //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
                     if (imgPathStore != null) {
                         imgPathStore = null;
+                    }
+                }
+            }
+        }
+    };
+
+    /**
+     * 广播接受回调的店铺Logo图片
+     */
+    private final BroadcastReceiver storeLogoBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (TextUtils.isEmpty(action)) {
+                return;
+            }
+            if (Constant.ACTION_DELETE_CREATE_STORE_LOGO_PREVIEW_POSITION.equals(action)) {
+                // 外部预览删除按钮回调
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    int position = extras.getInt(PictureConfig.EXTRA_PREVIEW_DELETE_POSITION);
+                    mAdapterStoreLogo.remove(position);
+                    mAdapterStoreLogo.notifyItemRemoved(position);
+                    //删除从相册回调的图片目录路径集合对应索引的图片，不设置将导致外部预览右上角删除图标点击后，OSS依旧可以读取之前的路径进行推送上传
+                    if (imgPathStoreLogo != null) {
+                        imgPathStoreLogo = null;
                     }
                 }
             }
@@ -970,8 +1319,13 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
         if (launcherStoreResult != null) {
             launcherStoreResult.unregister();
         }
-        BroadcastManager.getInstance(getContext()).unregisterReceiver(licenceBroadcastReceiver, Constant.ACTION_DELETE_NUCLEIC_PIC_PREVIEW_POSITION);
-        /* 9.清除子线程 */
+        BroadcastManager.getInstance(getContext()).unregisterReceiver(storeBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_PREVIEW_POSITION);
+        /* 3.清除店铺Logo图 */
+        if (launcherStoreLogoResult != null) {
+            launcherStoreLogoResult.unregister();
+        }
+        BroadcastManager.getInstance(getContext()).unregisterReceiver(storeLogoBroadcastReceiver, Constant.ACTION_DELETE_CREATE_STORE_LOGO_PREVIEW_POSITION);
+        /* 4.清除子线程 */
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
@@ -985,7 +1339,8 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             switch (msg.what) {
                 case 1://此处理URL + OCR + 商家信息 上传后端数据库
                     //OSS上传成功重组的URL地址集合，OKGo上传后端数据库
-                    String ossUrlFileName = (String) msg.obj;
+                    List<String> ossUrlFileNameLists = (List<String>) msg.obj;
+                    Log.i(TAG, "重组处理后的OSS地址集合: " + ossUrlFileNameLists);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -993,11 +1348,13 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
                                     .tag("商家创建店铺")
                                     .params("shopCategory", categoryId)
                                     .params("shopName", strGetStoreName)
-                                    .params("shopPic", ossUrlFileName)
+                                    .params("shopPic", ossUrlFileNameLists.get(0))
+                                    .params("shopLogo", ossUrlFileNameLists.get(1))
                                     .params("shopBeginTime", strGetBeginTime)
                                     .params("shopEndTime", strGetEndTime)
                                     .params("shopDesc", strGetStoreDesc)
                                     .params("shopAddress", strGetStoreAddress)
+                                    .params("shopRecommend", strGetStoreRecommend)
                                     .params("shopMobile", strGetStoreMobile)
                                     .params("shopNotice", strGetStoreNotice)
                                     .execute(new StringCallback() {
@@ -1031,5 +1388,40 @@ public class MyCreateStoreActivity extends BaseActivity implements SuperTextView
             }
         }
     };
+
+    /**
+     * 注册定位监听器
+     */
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onReceiveLocation(BDLocation location){
+            String street = location.getStreet();    //获取街道信息
+            String town = location.getTown();    //获取乡镇信息
+            String locationDescribe = location.getLocationDescribe();//获取位置描述信息
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            if (networkInfo == null || !networkInfo.isAvailable()) {
+                XToastUtils.error("请先开启GPS位置服务");
+            }
+            else {
+                //在此处进行你的后续联网操作
+                mEditCreateStoreAddress.setText(street+ town+ "-" + locationDescribe.substring(locationDescribe.indexOf("在")+1));
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == XXPermissions.REQUEST_CODE) {
+            if (XXPermissions.isGranted(this, Permission.ACCESS_FINE_LOCATION) && XXPermissions.isGranted(this, Permission.ACCESS_COARSE_LOCATION)) {
+                initLocationClient();
+                XToastUtils.success("GPS定位服务授权完成");
+            } else {
+                XToastUtils.error("请先开启GPS定位服务，否则开通不了商铺哟",5000);
+            }
+        }
+    }
 }
 

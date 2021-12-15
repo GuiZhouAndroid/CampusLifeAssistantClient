@@ -75,6 +75,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.OtherActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.RepastPracticeActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.UserAddressActivity;
 
 
 /**
@@ -89,6 +90,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     private static final String TAG = "BottomHomeFragment";
     /** 图片轮播 */
 //    @BindView(R2.id.banner) BGABanner mBanner;
+    @BindView(R2.id.go_top_scrollview) GoTopNestedScrollView mGoTopScrollview;
     @BindView(R2.id.banner_bg_container) BannerBgContainer mBanner_bg_container;
     @BindView(R2.id.loop_layout) LoopLayout mLoop_layout;
     /** 网格布局 */
@@ -249,8 +251,36 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
         switch (position) {
             case 0://食堂代取
                 //Constant.mTencent.reportDAU();
-                //Toast.makeText(getActivity(), "食堂代取", Toast.LENGTH_SHORT).show();
-                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), CanteenRunBuyActivity.class));
+                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                        .tag("检查登录")
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onStart(Request<String, ? extends Request> request) {
+                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                            }
+
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), CanteenRunBuyActivity.class));
+                                    OkGo.getInstance().cancelTag("检查登录");
+                                } else {
+                                    CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                            }
+
+                            @Override
+                            public void onError(Response<String> response) {
+                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mGoTopScrollview, "请求错误，服务器连接失败！");
+                            }
+                        });
                 break;
             case 1://快递代取
                 checkQQLogin();
@@ -261,7 +291,35 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Toast.makeText(getActivity(), "笑话百科", Toast.LENGTH_SHORT).show();
                 break;
             case 3://星座运势
-                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), RepastPracticeActivity.class));
+                OkGo.<String>post(Constant.SA_TOKEN_CHECK_LOGIN)
+                        .tag("检查登录")
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onStart(Request<String, ? extends Request> request) {
+                                MyXPopupUtils.getInstance().setShowDialog(getActivity(), "请求信息中...");
+                            }
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
+                                if (200 == OkGoResponseBean.getCode() && "true".equals(OkGoResponseBean.getData()) && "当前账户已登录".equals(OkGoResponseBean.getMsg())) {
+                                    IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), RepastPracticeActivity.class));
+                                    OkGo.getInstance().cancelTag("检查登录");
+                                } else {
+                                    CustomAlertDialogUtil.notification1(getActivity(), "温馨提示", "您还没有登录呀~", "朕知道了");
+                                }
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                MyXPopupUtils.getInstance().setSmartDisDialog();
+                            }
+
+                            @Override
+                            public void onError(Response<String> response) {
+                                OkGoErrorUtil.CustomFragmentOkGoError(response, getActivity(), mGoTopScrollview, "请求错误，服务器连接失败！");
+                            }
+                        });
                 break;
             case 4://六师官网
                 openBottomMapNaviCation();

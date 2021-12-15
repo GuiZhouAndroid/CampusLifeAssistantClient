@@ -26,10 +26,12 @@ public class OkGoUserStoreInfoBean {
         private String ssBeginTime;
         private String ssDesc;
         private String ssEndTime;
+        private String ssLogo;
         private String ssMobile;
         private String ssName;
         private String ssNotice;
         private String ssPic;
+        private String ssRecommend;
         private String ulIdcard;
         private String ulRealname;
         private String ulTel;
