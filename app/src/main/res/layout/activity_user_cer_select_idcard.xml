@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fl_address_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
-        android:fitsSystemWindows="true"
-        android:background="@color/Blue"
-        android:id="@+id/ll_user_info_title"
+        android:id="@+id/ll_user_cer_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
+        android:background="@color/Blue"
+        android:fitsSystemWindows="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -46,4 +48,111 @@
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
+    <work.lpssfxy.www.campuslifeassistantclient.base.pogress.DialProgress
+        android:id="@+id/dial_progress_bar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@+id/ll_user_cer_title"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/medium"
+        app:animTime="1000"
+        app:arcColors="@array/gradient_arc_color"
+        app:arcWidth="@dimen/large"
+        app:dialIntervalDegree="3"
+        app:dialWidth="2dp"
+        app:hint="安全系数"
+        app:hintColor="@color/app_color_green"
+        app:hintSize="35sp"
+        app:maxValue="100"
+        app:startAngle="135"
+        app:sweepAngle="270"
+        app:unit="已实名认证"
+        app:unitColor="@color/Blue"
+        app:unitSize="@dimen/text_size_25"
+        app:valueColor="@color/app_color_green"
+        app:valueSize="@dimen/text_size_35" />
+
+    <LinearLayout
+        android:layout_marginRight="@dimen/dp_30"
+        android:layout_marginStart="@dimen/dp_30"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dial_progress_bar"
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_nation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_birth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_organization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_valid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_margin="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:id="@+id/tv_cer_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:textStyle="bold" />
+    </LinearLayout>
 </RelativeLayout>
