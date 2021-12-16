@@ -295,7 +295,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <!-- 百度地图 -->
+        <!-- 六师官网 -->
+        <activity
+            android:name=".view.activity.WebViewActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <!--使用百度服务功能-->
                 <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"/>

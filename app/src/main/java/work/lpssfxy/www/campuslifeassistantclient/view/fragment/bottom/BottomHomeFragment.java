@@ -68,6 +68,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActi
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.NaviCationActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.RepastPracticeActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.WebViewActivity;
 
 
 /**
@@ -200,7 +201,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
     public void onItemClick(int position, View view) {
         switch (position) {
             case 0://六师官网
-                Toast.makeText(getActivity(), "六师官网", Toast.LENGTH_SHORT).show();
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), WebViewActivity.class));
                 break;
             case 1://食堂代取
                 doCanteenService();
@@ -209,7 +210,7 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 checkQQLogin();
                 Toast.makeText(getActivity(), "快递代取", Toast.LENGTH_SHORT).show();
                 //getUnionId();
-                //IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), NaviCationActivity.class));//笑话百科
+                //IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), NaviCationActivity.class));
                 break;
             case 3://跑腿认证
                 startApplyRunCer();
