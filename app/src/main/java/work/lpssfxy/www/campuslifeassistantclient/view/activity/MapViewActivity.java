@@ -2,8 +2,6 @@ package work.lpssfxy.www.campuslifeassistantclient.view.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,16 +22,11 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
-import com.baidu.navisdk.adapter.IBNTTSManager;
-import com.baidu.navisdk.adapter.IBaiduNaviManager;
-import com.baidu.navisdk.adapter.struct.BNTTsInitConfig;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -131,7 +124,7 @@ public class MapViewActivity extends BaseActivity {
     private void intBadDuMap() {
         /* 1 获取地图控件引用 .*/
         mBaiduMap = mMapView.getMap();
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);//普通地图
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);//普通地图
         mBaiduMap.setTrafficEnabled(true);//开启交通图
         mBaiduMap.setCustomTrafficColor("#ffba0101", "#fff33131", "#ffff9e19", "#00000000");//定制交通图模板
         mBaiduMap.setMyLocationEnabled(true);//开启地图的定位图层
