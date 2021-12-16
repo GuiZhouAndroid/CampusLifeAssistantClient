@@ -384,11 +384,6 @@ public class IndexActivity extends BaseActivity {
 
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.drawer_menu_school:
-                        mDrawer_layout.closeDrawer(GravityCompat.START);
-                        Snackbar.make(mDrawer_layout, "点宝宝干啥", Snackbar.LENGTH_SHORT).show();
-                        IntentUtil.startActivityAnimLeftToRight(IndexActivity.this, new Intent(IndexActivity.this, waimai.class));
-                        return true;
                     case R.id.drawer_menu_setting:
                         mDrawer_layout.closeDrawer(GravityCompat.START);
                         Snackbar.make(mDrawer_layout, "点宝宝11干啥", Snackbar.LENGTH_SHORT).show();

@@ -5,9 +5,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
-import com.mob.MobSDK;
-
-import cn.bmob.v3.Bmob;
 import work.lpssfxy.www.campuslifeassistantclient.base.BasicLibInit;
 
 /**

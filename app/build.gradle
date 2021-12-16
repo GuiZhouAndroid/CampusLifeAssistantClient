@@ -142,6 +142,8 @@ dependencies {
     //工具类
     implementation 'com.github.xuexiangjys.XUtil:xutil-core:2.0.0'
     implementation 'com.github.xuexiangjys.XUtil:xutil-sub:2.0.0'
+    //切片
+    implementation 'com.github.xuexiangjys.XAOP:xaop-runtime:1.1.0'
     // 轮子哥权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:13.2'
     // 轮子哥吐司框架：https://github.com/getActivity/ToastUtils
@@ -206,4 +208,8 @@ dependencies {
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.4.0'
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.4.0'
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Util:7.4.0'
+    //Android图表库
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //ECharts图表库
+    implementation 'com.github.abel533:ECharts:3.0.0.2'
 }

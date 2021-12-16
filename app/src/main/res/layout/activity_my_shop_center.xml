@@ -115,6 +115,30 @@
         </com.xuexiang.xui.widget.button.RippleView>
 
         <com.xuexiang.xui.widget.button.RippleView
+            android:id="@+id/ripple_orders_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            app:rv_color="@color/welcome_colorMain"
+            app:rv_type="doubleRipple">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="?attr/xui_config_content_spacing_horizontal"
+                android:layout_marginEnd="?attr/xui_config_content_spacing_horizontal"
+                android:background="@drawable/btn_bg_shop_orders"
+                android:gravity="center"
+                android:text="订单管理"
+                android:textColor="@color/xui_config_color_white"
+                android:textSize="20sp" />
+
+        </com.xuexiang.xui.widget.button.RippleView>
+
+        <com.xuexiang.xui.widget.button.RippleView
             android:id="@+id/ripple_sales_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -421,7 +421,7 @@ public class Constant {
     public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USER_ID = BASE_URL + "/api/admin/user/role/adminSelectUserAndRoleInfoByUserId";
 
     // 超管通过用户名查询该用户拥有全部对应的用户角色并集信息
-    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/adminSelectOnlyUserToRoleListInfoByUserName";
+    public static final String ADMIN_SELECT_USER_ROLE_INFO_BY_USERNAME = BASE_URL + "/api/admin/user/role/adminSelectUserAndRoleInfoByUserName";
 
     // 超管通过角色ID查询拥有该角色的全部用户角色并集信息
     public static final String ADMIN_SELECT_HAVE_ROLE_USER_INFO_BY_ROLE_ID = BASE_URL + "/api/admin/user/role/adminSelectAllInfoUserAndRoleByRoleId";

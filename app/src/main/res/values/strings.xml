@@ -334,4 +334,21 @@ AppbarLayout是一种支持响应滚动手势的app bar布局, CollapsingToolbar
     <string name="common_permission_setting">系统设置权限</string>
     <string name="common_permission_notification">通知栏权限</string>
     <string name="common_permission_task">查看使用情况权限</string>
+
+    <string name="chart_toggle_values">显示/隐藏图表值</string>
+    <string name="chart_toggle_x_values">显示/隐藏X轴</string>
+    <string name="chart_toggle_y_values">显示/隐藏Y轴</string>
+    <string name="chart_animate_x">X轴动画</string>
+    <string name="chart_animate_y">Y轴动画</string>
+    <string name="chart_animate_xy">XY轴动画</string>
+    <string name="chart_save">图表保存</string>
+
+    <string name="chart_toggle_bar_borders">显示/隐藏边线</string>
+    <string name="chart_toggle_icons">显示/隐藏图标</string>
+    <string name="chart_toggle_percent">数值/百分比</string>
+    <string name="chart_toggle_hole">显示/隐藏中心圆</string>
+    <string name="chart_toggle_center_text">显示/隐藏中心文字</string>
+    <string name="chart_toggle_curved_slices">切换分割线样式</string>
+    <string name="chart_spin_animation">旋转动画</string>
+
 </resources>

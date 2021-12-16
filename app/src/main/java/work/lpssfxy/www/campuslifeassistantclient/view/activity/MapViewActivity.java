@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
+import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
 import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
@@ -294,5 +295,12 @@ public class MapViewActivity extends BaseActivity {
         mMapView.onDestroy();//释放地图资源
         mMapView = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //从下往下结束动画
+        IntentUtil.finishActivityAnimTopToBottom(MapViewActivity.this);
     }
 }

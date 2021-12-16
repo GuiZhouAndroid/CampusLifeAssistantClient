@@ -92,7 +92,7 @@
             app:sRightIconRes="@mipmap/icon_arrow_right_red"
             app:sRightTvDrawableHeight="20dp"
             app:sRightTextColor="@color/Grey500"
-            app:sRightTvDrawableWidth="45dp" />
+            app:sRightTvDrawableWidth="40dp" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
             android:id="@+id/stv_my_cer"

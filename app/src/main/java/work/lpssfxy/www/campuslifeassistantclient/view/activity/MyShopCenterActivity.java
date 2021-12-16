@@ -13,6 +13,7 @@ import butterknife.OnClick;
 import work.lpssfxy.www.campuslifeassistantclient.R;
 import work.lpssfxy.www.campuslifeassistantclient.R2;
 import work.lpssfxy.www.campuslifeassistantclient.utils.IntentUtil;
+import work.lpssfxy.www.campuslifeassistantclient.utils.XToastUtils;
 import work.lpssfxy.www.campuslifeassistantclient.view.BaseActivity;
 
 /**
@@ -30,6 +31,7 @@ public class MyShopCenterActivity extends BaseActivity {
     @BindView(R2.id.iv_my_shop_store_back) ImageView mIvMyShopStoreBack;//返回
     @BindView(R2.id.ripple_store_manager) RippleView mRippleStoreManager;//店铺管理
     @BindView(R2.id.ripple_goods_manager) RippleView mRippleGoodsManager;//商品管理
+    @BindView(R2.id.ripple_orders_manager) RippleView mRippleOrdersManager;//订单管理
     @BindView(R2.id.ripple_sales_status) RippleView mRippleSalesStatus;//销售详情
 
     @Override
@@ -97,7 +99,7 @@ public class MyShopCenterActivity extends BaseActivity {
      *
      * @param view 控件Id
      */
-    @OnClick({R2.id.iv_my_shop_store_back,R2.id.ripple_store_manager,R2.id.ripple_goods_manager,R2.id.ripple_sales_status})
+    @OnClick({R2.id.iv_my_shop_store_back,R2.id.ripple_store_manager,R2.id.ripple_goods_manager,R2.id.ripple_orders_manager,R2.id.ripple_sales_status})
     public void onMyShopCenterViewClick(View view) {
         switch (view.getId()) {
             case R.id.iv_my_shop_store_back://点击返回
@@ -109,8 +111,11 @@ public class MyShopCenterActivity extends BaseActivity {
             case R.id.ripple_goods_manager://商品管理
                 IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, MyGoodsManagerActivity.class));//执行动画跳转
                 break;
+            case R.id.ripple_orders_manager://订单管理
+                XToastUtils.error("正在努力开发中...");
+                break;
             case R.id.ripple_sales_status://销售详情
-                IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, MyGoodsManagerActivity.class));//执行动画跳转
+                IntentUtil.startActivityAnimLeftToRight(MyShopCenterActivity.this, new Intent(MyShopCenterActivity.this, SaleChartActivity.class));//执行动画跳转
                 break;
         }
     }

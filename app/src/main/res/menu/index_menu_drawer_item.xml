@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/drawer_menu_school"
-            android:title="@string/drawer_menu_info_school"
-            android:icon="@drawable/ic_home_black_24dp"/>
-        <item
             android:id="@+id/drawer_menu_setting"
             android:title="@string/drawer_menu_setting_title"
             android:icon="@mipmap/softsetting"/>

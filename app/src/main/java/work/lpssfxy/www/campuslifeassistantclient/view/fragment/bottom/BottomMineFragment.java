@@ -251,12 +251,15 @@ public class BottomMineFragment extends BaseFragment implements SuperTextView.On
                         }
                         if (200 == okGoRoleOrPermissionListBean.getCode() && "success".equals(okGoRoleOrPermissionListBean.getMsg())) {
                             List<String> roleStringList = okGoRoleOrPermissionListBean.getData();
-                            if (roleStringList.contains("超管") && roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
+                            if (roleStringList.contains("超管")) {
                                 mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.supermanager));//设置管理员角色图片
                                 strNowRole = "您目前身份是尊贵的超管开发者";
-                            } else if (roleStringList.contains("学生") && roleStringList.contains("跑腿")) {
+                            } else if (roleStringList.contains("跑腿")) {
                                 strNowRole = "您已成为跑腿认证学生，欢迎您的加入";
                                 mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.run));//设置跑腿角色图片
+                            } else if (roleStringList.contains("商家")) {
+                                strNowRole = "您目前是认证商家，欢迎您的加入";
+                                mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.shopcer));//设置认证商家角色图片
                             } else if (roleStringList.contains("学生")) {
                                 strNowRole = "您目前是普通用户，无资格兼职接单，快去申请加入跑腿大家庭吧";
                                 mStvMyInfo.setRightTvDrawableLeft(getResources().getDrawable(R.mipmap.ordinary));//设置普通用户角色图片

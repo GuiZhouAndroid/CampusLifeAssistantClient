@@ -265,6 +265,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <!-- 销售详情 -->
+        <activity
+            android:name=".view.activity.SaleChartActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!-- 商家添加商品信息 -->
         <activity
             android:name=".view.activity.GoodAddActivity"

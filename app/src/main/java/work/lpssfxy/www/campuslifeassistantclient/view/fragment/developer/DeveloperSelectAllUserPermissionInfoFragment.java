@@ -310,7 +310,8 @@ public class DeveloperSelectAllUserPermissionInfoFragment extends BaseFragment {
                             @Override
                             public void onConfirm(String strPermissionId) {
                                 //开始网络请求，访问后端服务器，执行查询用户操作
-                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_ID + "/" + strPermissionId)
+                                OkGo.<String>post(Constant.ADMIN_SELECT_ALL_INFO_USER_AND_ROLE_PERMISSION_BY_PERMISSION_ID)
+                                        .params("permissionId",strPermissionId)
                                         .tag("权限ID查询用户角色权限信息")
                                         .execute(new StringCallback() {
                                             @Override
