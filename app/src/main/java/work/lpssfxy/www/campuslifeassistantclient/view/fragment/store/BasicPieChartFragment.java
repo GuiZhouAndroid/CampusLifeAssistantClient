@@ -87,7 +87,7 @@ public class BasicPieChartFragment extends BaseFragment implements OnChartValueS
 
     @Override
     protected void doBusiness(Context context) {
-
+        showBottomSheetList();
     }
 
     /**
@@ -140,7 +140,7 @@ public class BasicPieChartFragment extends BaseFragment implements OnChartValueS
     }
 
     protected final String[] parties = new String[]{
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
+            "盖饭类", "炒菜类", "烫菜类", "米粉类", "Party E", "Party F", "Party G", "Party H",
             "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
             "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
             "Party Y", "Party Z"
@@ -159,7 +159,7 @@ public class BasicPieChartFragment extends BaseFragment implements OnChartValueS
             entries.add(new PieEntry((float) ((Math.random() * range) + range / 5), parties[i % parties.length], getResources().getDrawable(R.mipmap.ic_star_green)));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+        PieDataSet dataSet = new PieDataSet(entries, "2022年4月3日");
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
@@ -202,13 +202,12 @@ public class BasicPieChartFragment extends BaseFragment implements OnChartValueS
      * @return
      */
     private SpannableString generateCenterSpannableText() {
-        SpannableString s = new SpannableString("MPAndroidChart\ndeveloped by Philipp Jahoda");
-        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
-        s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
-        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
-        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
-        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
+        SpannableString s = new SpannableString("校园帮商户销售分析\n六盘水师范学院-计算机科学学院");
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 9, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length() , 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() , 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), 9, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), 9, s.length(), 0);
         return s;
     }
 

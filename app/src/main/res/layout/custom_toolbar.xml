@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     app:layout_scrollFlags="scroll|enterAlways"
+    app:title="全国新冠疫情"
+    app:titleTextColor="@color/White"
+    app:subtitleTextColor="@color/White"
+    app:subtitle="实时动态追踪"
+    android:background="@color/Blue"
     app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">

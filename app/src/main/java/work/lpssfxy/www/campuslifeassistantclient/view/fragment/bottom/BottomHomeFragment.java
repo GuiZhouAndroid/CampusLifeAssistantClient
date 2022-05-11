@@ -66,6 +66,7 @@ import work.lpssfxy.www.campuslifeassistantclient.view.BaseFragment;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyRunCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.ApplyShopCerActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.CanteenRunBuyActivity;
+import work.lpssfxy.www.campuslifeassistantclient.view.activity.EpidemicActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.NaviCationActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.RepastPracticeActivity;
 import work.lpssfxy.www.campuslifeassistantclient.view.activity.WebViewActivity;
@@ -225,6 +226,8 @@ public class BottomHomeFragment extends BaseFragment implements AppBarLayout.OnO
                 Toast.makeText(getActivity(), "告白墙", Toast.LENGTH_SHORT).show();
                 break;
             case 7://笑话百科
+                IntentUtil.startActivityAnimLeftToRight(getActivity(), new Intent(getActivity(), EpidemicActivity.class));
+
                 Toast.makeText(getActivity(), "笑话百科", Toast.LENGTH_SHORT).show();
                 break;
         }

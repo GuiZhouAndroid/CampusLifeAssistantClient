@@ -138,50 +138,11 @@ public class DeveloperBannedAccountRealNameFragment extends BaseFragment {
                 .execute(new StringCallback() {
                     @Override
                     public void onStart(Request<String, ? extends Request> request) {
-                        super.onStart(request);
-                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在执行...");
+                        MyXPopupUtils.getInstance().setShowDialog(getActivity(), "正在封号...");
                     }
-
                     @Override
                     public void onSuccess(Response<String> response) {
                         OkGoResponseBean OkGoResponseBean = GsonUtil.gsonToBean(response.body(), OkGoResponseBean.class);
-                        //失败(超管未登录)
-                        if (401 == OkGoResponseBean.getCode() && "未提供Token".equals(OkGoResponseBean.getData()) && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg())) {
-                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "未登录：" + OkGoResponseBean.getMsg(), Snackbar.LENGTH_SHORT).setActionTextColor(getResources().getColor(R.color.colorAccent));
-                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                            snackbar.show();
-                            return;
-                        }
-                        //失败(超管封禁了自己或强制下线了自己)
-                        if (401 == OkGoResponseBean.getCode() && "验证失败，禁止访问".equals(OkGoResponseBean.getMsg()) && "已被系统强制下线".equals(OkGoResponseBean.getData())) {
-                            new CustomAlertDialog(getActivity())
-                                    .builder()
-                                    .setCancelable(false)
-                                    .setTitle("超管提示")
-                                    .setTitleTextColor("#FF0000")
-                                    .setTitleTextSizeSp(18)
-                                    .setTitleTextBold(true)
-                                    .setMsg("已被系统超管强制下线！")
-                                    .setMsgTextBold(true)
-                                    .setOkButton("我知道了", 0, "#FF0000", "", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Snackbar snackbar = Snackbar.make(mRlDevBanAccountRealName, "超过3次提醒，将被永久封号！", Snackbar.LENGTH_INDEFINITE)
-                                                    .setActionTextColor(getResources().getColor(R.color.colorAccent))//设置点击按钮的字体颜色
-                                                    .setAction("我知道了", new View.OnClickListener() {  //设置点击按钮
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            Toast.makeText(getActivity(), "别撒谎喔~", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    });
-                                            //设置Snackbar上提示的字体颜色
-                                            setSnackBarMessageTextColor(snackbar, Color.parseColor("#FFFFFF"));
-                                            snackbar.show();
-                                        }
-                                    })
-                                    .show();
-                            return;
-                        }
                         //成功(真实姓名不存在)
                         if (200 == OkGoResponseBean.getCode() && "封禁账户失败，此真实姓名不存在".equals(OkGoResponseBean.getMsg())) {
                             mEditBanAccountRealName.startShakeAnimation();//抖动输入框
@@ -198,7 +159,6 @@ public class DeveloperBannedAccountRealNameFragment extends BaseFragment {
                         }
 
                     }
-
                     @Override
                     public void onFinish() {
                         super.onFinish();
