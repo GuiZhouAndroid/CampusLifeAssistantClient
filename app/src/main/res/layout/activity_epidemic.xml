@@ -89,6 +89,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="@dimen/sp_20"
+                android:textColor="@color/Blue"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="现存确诊：" />
+
+            <TextView
+                android:textColor="@color/red"
+                android:id="@+id/tv_xl_econNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <TextView
             android:textIsSelectable="true"
             android:id="@+id/tv_xl_api"

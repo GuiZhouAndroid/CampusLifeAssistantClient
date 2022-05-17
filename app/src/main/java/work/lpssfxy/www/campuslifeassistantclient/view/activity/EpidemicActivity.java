@@ -37,6 +37,7 @@ public class EpidemicActivity extends BaseActivity {
     @BindView(R2.id.tv_xl_gntotal) TextView mTvXlGntotal;//累积确诊
     @BindView(R2.id.tv_xl_deathtotal) TextView mTvXlDeathtotal;//累积死亡
     @BindView(R2.id.tv_xl_curetotal) TextView mTvXlCuretotal;//累积治愈
+    @BindView(R2.id.tv_xl_econNum) TextView mTvXlEConNum;//累积治愈
 
     @Override
     protected Boolean isSetSwipeBackLayout() {
@@ -113,6 +114,7 @@ public class EpidemicActivity extends BaseActivity {
                         mTvXlGntotal.setText(data.getGntotal()+"人");
                         mTvXlDeathtotal.setText(data.getDeathtotal()+"人");
                         mTvXlCuretotal.setText(data.getCuretotal()+"人");
+                        mTvXlEConNum.setText(data.getEconNum()+"人");
                         mTvXlApi.setText(data.toString());
                     }
 
